@@ -1,163 +1,67 @@
-
+"use strict";
+exports.__esModule = true;
 /**
- * =========
+ * 游戏主函数
  */
-
-
-
-import "libs/pixi.js";
-import "libs/pako.min.js";
-import "libs/localforage.min.js";
-// import "libs/effekseer.min.js";
-import "rmmz_core.js";
-import "rmmz_managers.js";
-import "rmmz_objects.js";
-import "rmmz_scenes.js";
-import "rmmz_sprites.js";
-import "rmmz_windows.js";
-import "plugins.js";
-
-/**
- * =========
- */
-
-
-
-//=============================================================================
-// main.js v1.5.0
-//=============================================================================
-
-
-
-
-const scriptUrls = [
-];
-const effekseerWasmUrl = "js/libs/effekseer.wasm";
-
-class Main {
-    constructor() {
-        this.xhrSucceeded = false;
-        this.loadCount = 0;
-        this.error = null;
+var Main = /** @class */ (function () {
+    function Main() {
+        this.gl = wx.createCanvas().getContext('webgl');
+        this.gl.enable(this.gl.SCISSOR_TEST);
+        wx.onTouchStart(this.touchEventHandler.bind(this));
+        this.loop(0);
     }
-
-    run() {
-        this.showLoadingSpinner();
-        this.testXhr();
-        this.hookNwjsClose();
-        this.loadMainScripts();
-    }
-
-    showLoadingSpinner() {
-        wx.showLoading({
-            title: '加载中',
-        })
-    }
-
-    eraseLoadingSpinner() {
-        wx.hideLoading()
-    }
-
-    testXhr() {
-        wx.downloadFile({
-            url: 'https://636c-cloud1-4gkzszrnfdcc9814-1307362775.tcb.qcloud.la/IDEPack/register_571296f6.json?sign=ae3e93e21add493980d9c12406412389&t=1663557711', success: () => {
-                this.xhrSucceeded = true
-                this.onWindowLoad()
-            }, fail: console.error
-        })
-
-    }
-
-    hookNwjsClose() {
-        // [Note] When closing the window, the NW.js process sometimes does
-        //   not terminate properly. This code is a workaround for that.
-        if (typeof nw === "object") {
-            nw.Window.get().on("close", () => nw.App.quit());
+    // 全局碰撞检测
+    Main.prototype.collisionDetection = function () {
+    };
+    // 游戏结束后的触摸事件处理逻辑
+    Main.prototype.touchEventHandler = function (eventObj) {
+        var touches = eventObj.touches;
+        console.log(wx.getWindowInfo().windowWidth, wx.getWindowInfo().windowHeight);
+        console.log(touches);
+        touches.forEach(function (toucn) {
+            var x = toucn.clientX;
+            var y = toucn.clientY;
+            console.log(x, y);
+        });
+        for (var i = 0; i < 100; ++i) {
+            var x = this.rand(0, wx.getWindowInfo().windowWidth);
+            var y = this.rand(0, wx.getWindowInfo().windowHeight);
+            var width = this.rand(0, wx.getWindowInfo().windowWidth - x);
+            var height = this.rand(0, wx.getWindowInfo().windowHeight - y);
+            this.drawRect(x, y, width, height, [this.rand(1), this.rand(1), this.rand(1), 1]);
         }
-    }
-
-    loadMainScripts() {
-        for (const url of scriptUrls) {
-            const script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = url;
-            script.async = false;
-            script.defer = true;
-            script.onload = this.onScriptLoad.bind(this);
-            script.onerror = this.onScriptError.bind(this);
-            script._url = url;
-            document.body.appendChild(script);
+    };
+    Main.prototype.rand = function (min, max) {
+        if (max === undefined) {
+            max = min;
+            min = 0;
         }
-        this.numScripts = scriptUrls.length;
-        // window.addEventListener("load", this.onWindowLoad.bind(this));
-        // window.addEventListener("error", this.onWindowError.bind(this));
-    }
-
-    onScriptLoad() {
-        if (++this.loadCount === this.numScripts) {
-            PluginManager.setup($plugins);
-        }
-    }
-
-    onScriptError(e) {
-        this.printError("Failed to load", e.errMsg);
-    }
-
-    printError(name, message) {
-        this.eraseLoadingSpinner();
-        console.error(this.makeErrorHtml(name, message))
-    }
-
-    makeErrorHtml(name, message) {
-        return `[${name}]: ${message}`;
-    }
-
-    onWindowLoad() {
-        if (!this.xhrSucceeded) {
-            const message = "Your browser does not allow to read local files.";
-            this.printError("Error", message);
-        } else if (this.isPathRandomized()) {
-            const message = "Please move the Game.app to a different folder.";
-            this.printError("Error", message);
-        } else if (this.error) {
-            this.printError(this.error.name, this.error.message);
-        } else {
-            this.initEffekseerRuntime();
-        }
-    }
-
-    onWindowError(event) {
-        if (!this.error) {
-            this.error = event.error;
-        }
-    }
-
-    isPathRandomized() {
-        // [Note] We cannot save the game properly when Gatekeeper Path
-        //   Randomization is in effect.
-        return (
-            typeof process === "object" &&
-            process.mainModule.filename.startsWith("/private/var")
-        );
-    }
-
-    initEffekseerRuntime() {
-        // const onLoad = this.onEffekseerLoad.bind(this);
-        // const onError = this.onEffekseerError.bind(this);
-        // effekseer.initRuntime(effekseerWasmUrl, onLoad, onError);
-        this.onEffekseerLoad()
-    }
-
-    onEffekseerLoad() {
-        this.eraseLoadingSpinner();
-        SceneManager.run(Scene_Boot);
-    }
-
-    onEffekseerError() {
-        this.printError("Failed to load", effekseerWasmUrl);
-    }
-}
-//-----------------------------------------------------------------------------
-
-
-GameGlobal.Main = Main;
+        return Math.random() * (max - min) + min;
+    };
+    Main.prototype.drawRect = function (x, y, width, height, color) {
+        var _a;
+        this.gl.scissor(x, y, width, height);
+        (_a = this.gl).clearColor.apply(_a, color);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    };
+    /**
+     * canvas重绘函数
+     * 每一帧重新绘制所有的需要展示的元素
+     */
+    Main.prototype.render = function () {
+    };
+    // 游戏逻辑更新主函数
+    Main.prototype.update = function () {
+        this.collisionDetection();
+    };
+    // 实现游戏帧循环
+    Main.prototype.loop = function (time) {
+        var _this = this;
+        this.update();
+        this.render();
+        requestAnimationFrame(function (t) { return _this.loop(t); });
+    };
+    return Main;
+}());
+exports["default"] = Main;
+//# sourceMappingURL=main.js.map
