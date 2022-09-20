@@ -1,21 +1,25 @@
+import Game from './game'
+
 declare const wx: any;
+
+
 /**
  * 游戏主函数
  */
 export default class Main {
-  gl: WebGLRenderingContext = wx.createCanvas().getContext('webgl')
+  private readonly breakout: Game
+  private deltaTime = 0.0;
+  private lastFrame = 0.0;
   constructor() {
-
-    this.gl.enable(this.gl.SCISSOR_TEST);
-
+    const { windowWidth, windowHeight } = wx.getWindowInfo()
+    this.breakout = new Game(windowWidth, windowHeight);
     wx.onTouchStart(this.touchEventHandler.bind(this));
-    this.loop(0)
+
+    this.breakout.init().then(() => requestAnimationFrame(this.loop.bind(this)));
+
   }
 
 
-  // 全局碰撞检测
-  collisionDetection() {
-  }
 
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(eventObj: any) {
@@ -27,45 +31,17 @@ export default class Main {
       const y = toucn.clientY
       console.log(x, y);
     })
-    for (let i = 0; i < 100; ++i) {
-      const x = this.rand(0, wx.getWindowInfo().windowWidth);
-      const y = this.rand(0, wx.getWindowInfo().windowHeight);
-      const width = this.rand(0, wx.getWindowInfo().windowWidth - x);
-      const height = this.rand(0, wx.getWindowInfo().windowHeight - y);
-      this.drawRect(x, y, width, height, [this.rand(1), this.rand(1), this.rand(1), 1]);
-    }
   }
 
-  rand(min: number, max?: number) {
-    if (max === undefined) {
-      max = min;
-      min = 0;
-    }
-    return Math.random() * (max - min) + min;
-  }
-  drawRect(x: number, y: number, width: number, height: number, color: [number, number, number, number]) {
-    this.gl.scissor(x, y, width, height);
-    this.gl.clearColor(...color);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-  }
-  /**
-   * canvas重绘函数
-   * 每一帧重新绘制所有的需要展示的元素
-   */
-  render() {
-  }
-
-  // 游戏逻辑更新主函数
-  update() {
-
-    this.collisionDetection()
-
-  }
 
   // 实现游戏帧循环
   loop(time: number) {
-    this.update()
-    this.render()
-    requestAnimationFrame((t) => this.loop(t))
+    const currentFrame = time;
+    this.deltaTime = currentFrame - this.lastFrame;
+    this.lastFrame = currentFrame;
+    this.breakout.processInut(this.deltaTime);
+    this.breakout.update(this.deltaTime);
+    this.breakout.render();
+    // requestAnimationFrame((t) => this.loop(t))
   }
 }
