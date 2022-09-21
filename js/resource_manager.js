@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import Shader from "./shader";
 import Texture2D from "./texture";
-const BASE_URL = 'https://636c-cloud1-4gkzszrnfdcc9814-1307362775.tcb.qcloud.la/IDEPack/';
+const BASE_URL = 'cloud://cloud1-4gkzszrnfdcc9814.636c-cloud1-4gkzszrnfdcc9814-1307362775/IDEPack/';
 export default class ResourceManager {
     static loadShader(vShaderFile, fShaderFile, name) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,13 +31,11 @@ export default class ResourceManager {
     }
     static loadStringFromFile(file) {
         return new Promise((resolve) => {
-            wx.request({
-                url: BASE_URL + file,
-                success(response) {
-                    resolve(response.data);
-                },
-                fail(error) {
-                    throw new Error(`${error.errno} - ${error.errMsg}`);
+            wx.cloud.downloadFile({
+                fileID: BASE_URL + file,
+                success(res) {
+                    const string = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'utf-8');
+                    resolve(string);
                 }
             });
         });
@@ -59,10 +57,15 @@ export default class ResourceManager {
             const texture = new Texture2D();
             const image = wx.createImage();
             yield new Promise((resolve) => {
-                image.src = BASE_URL + file;
-                image.onload = () => {
-                    resolve(undefined);
-                };
+                wx.cloud.downloadFile({
+                    fileID: BASE_URL + file,
+                    success(res) {
+                        image.src = res.tempFilePath;
+                        image.onload = () => {
+                            resolve(undefined);
+                        };
+                    }
+                });
             });
             if (alpha) {
                 texture.imageFormat = this.gl.RGBA;

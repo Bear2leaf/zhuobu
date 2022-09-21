@@ -2,6 +2,8 @@ import ResourceManager from "./resource_manager";
 
 export default class Shader {
     program: WebGLProgram | null = null;
+    readonly locations: { [key: string]: WebGLUniformLocation } = {}
+
     compile(vertexSource: string, fragmentSource: string) {
 
         let sVertex: WebGLShader | null, sFragment: WebGLShader | null;
@@ -34,21 +36,27 @@ export default class Shader {
         if (useShader) {
             this.use();
         }
-        ResourceManager.gl.uniform1i(ResourceManager.gl.getUniformLocation(this.program!, name), value);
+        ResourceManager.gl.uniform1i(this.getUniformLocation(this.program!, name), value);
 
     }
     setVector3f(name: string, value: Vec3, useShader: boolean = false) {
         if (useShader) {
             this.use();
         }
-        ResourceManager.gl.uniform3f(ResourceManager.gl.getUniformLocation(this.program!, name), value[0], value[1], value[2]);
+        ResourceManager.gl.uniform3f(this.getUniformLocation(this.program!, name), value[0], value[1], value[2]);
     }
     setMatrix4(name: string, value: Mat4, useShader: boolean = false) {
         if (useShader) {
             this.use();
         }
-        ResourceManager.gl.uniformMatrix4fv(ResourceManager.gl.getUniformLocation(this.program!, name), false, value);
+        ResourceManager.gl.uniformMatrix4fv(this.getUniformLocation(this.program!, name), false, value);
 
+    }
+    getUniformLocation(program: WebGLProgram, name: string) {
+        if (this.locations[name] === undefined) {
+            this.locations[name] = ResourceManager.gl.getUniformLocation(program, name)!
+        }
+        return this.locations[name];
     }
     checkCompileErrors(object: WebGLShader | WebGLProgram, type: string) {
 

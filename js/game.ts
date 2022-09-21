@@ -84,6 +84,7 @@ export default class Game {
     }
     render() {
         if (this.state === GameState.GAME_ACTIVE) {
+            this.renderer!.clear()
             this.renderer!.drawSprite(ResourceManager.getTexture('background'), [0, 0, 0], [this.width, this.height, 0])
             this.levels[this.level].draw(this.renderer!);
             this.player!.draw(this.renderer!);
