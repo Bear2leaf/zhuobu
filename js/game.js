@@ -35,10 +35,10 @@ export default class Game {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             yield ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite");
-            this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite"));
             const projection = m4.ortho(0, this.width, this.height, 0, -1, 1);
             ResourceManager.getShader('sprite').use().setInteger('sprite', 0);
             ResourceManager.getShader('sprite').setMatrix4('projection', projection);
+            this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite"));
             // load textures
             yield ResourceManager.loadTexture("textures/background.jpg", false, "background");
             yield ResourceManager.loadTexture("textures/awesomeface.png", true, "face");
@@ -47,13 +47,13 @@ export default class Game {
             yield ResourceManager.loadTexture("textures/paddle.png", true, "paddle");
             // load levels
             const one = new GameLevel();
-            one.load("levels/one.lvl", this.width, this.height / 2);
+            yield one.load("levels/one.lvl", this.width, this.height / 2);
             const two = new GameLevel();
-            two.load("levels/two.lvl", this.width, this.height / 2);
+            yield two.load("levels/two.lvl", this.width, this.height / 2);
             const three = new GameLevel();
-            three.load("levels/three.lvl", this.width, this.height / 2);
+            yield three.load("levels/three.lvl", this.width, this.height / 2);
             const four = new GameLevel();
-            four.load("levels/four.lvl", this.width, this.height / 2);
+            yield four.load("levels/four.lvl", this.width, this.height / 2);
             this.levels.push(one);
             this.levels.push(two);
             this.levels.push(three);

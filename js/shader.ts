@@ -25,21 +25,6 @@ export default class Shader {
         ResourceManager.gl.deleteShader(sVertex);
         ResourceManager.gl.deleteShader(sFragment);
 
-        const positionLocation: number = ResourceManager.gl.getAttribLocation(this.program, 'a_position')
-        const positionBuffer: WebGLBuffer = ResourceManager.gl.createBuffer()!;
-        ResourceManager.gl.enableVertexAttribArray(positionLocation)
-        ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, positionBuffer)
-        ResourceManager.gl.bufferData(ResourceManager.gl.ARRAY_BUFFER, new Float32Array([
-            // pos      // tex
-            0.0, 1.0, 0.0, 1.0,
-            1.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 0.0,
-
-            0.0, 1.0, 0.0, 1.0,
-            1.0, 1.0, 1.0, 1.0,
-            1.0, 0.0, 1.0, 0.0
-        ]), ResourceManager.gl.STATIC_DRAW);
-        ResourceManager.gl.vertexAttribPointer(positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
     }
     use() {
         ResourceManager.gl.useProgram(this.program)

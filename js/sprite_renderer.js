@@ -3,6 +3,20 @@ import ResourceManager from "./resource_manager";
 export default class SpriteRenderer {
     constructor(shader) {
         this.shader = shader;
+        this.positionLocation = ResourceManager.gl.getAttribLocation(this.shader.program, 'a_position');
+        this.positionBuffer = ResourceManager.gl.createBuffer();
+        ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, this.positionBuffer);
+        ResourceManager.gl.bufferData(ResourceManager.gl.ARRAY_BUFFER, new Float32Array([
+            // pos      // tex
+            0.0, 1.0, 0.0, 1.0,
+            1.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 1.0,
+            1.0, 1.0, 1.0, 1.0,
+            1.0, 0.0, 1.0, 0.0
+        ]), ResourceManager.gl.STATIC_DRAW);
+        ResourceManager.gl.vertexAttribPointer(this.positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
+        ResourceManager.gl.enableVertexAttribArray(this.positionLocation);
     }
     clear() {
         ResourceManager.gl.clearColor(0.0, 0.0, 0.0, 0.0);
