@@ -29,32 +29,23 @@ export default class ResourceManager {
     static getTexture(name) {
         return this.textures[name];
     }
+    static loadStringFromFile(file) {
+        return new Promise((resolve) => {
+            wx.request({
+                url: BASE_URL + file,
+                success(response) {
+                    resolve(response.data);
+                },
+                fail(error) {
+                    throw new Error(`${error.errno} - ${error.errMsg}`);
+                }
+            });
+        });
+    }
     static loadShaderFromFile(vShaderFile, fShaderFile) {
         return __awaiter(this, void 0, void 0, function* () {
-            let vShaderCode;
-            let fShaderCode;
-            vShaderCode = yield new Promise((resolve) => {
-                wx.request({
-                    url: BASE_URL + vShaderFile,
-                    success(response) {
-                        resolve(response.data);
-                    },
-                    fail(error) {
-                        throw new Error(`${error.errno} - ${error.errMsg}`);
-                    }
-                });
-            });
-            fShaderCode = yield new Promise((resolve) => {
-                wx.request({
-                    url: BASE_URL + fShaderFile,
-                    success(response) {
-                        resolve(response.data);
-                    },
-                    fail(error) {
-                        throw new Error(`${error.errno} - ${error.errMsg}`);
-                    }
-                });
-            });
+            let vShaderCode = yield this.loadStringFromFile(vShaderFile);
+            let fShaderCode = yield this.loadStringFromFile(fShaderFile);
             const shader = new Shader();
             shader.compile(vShaderCode, fShaderCode);
             return shader;
@@ -73,8 +64,9 @@ export default class ResourceManager {
                     resolve(undefined);
                 };
             });
-            if (!alpha) {
-                console.warn('opacity not resolved...');
+            if (alpha) {
+                texture.imageFormat = this.gl.RGBA;
+                texture.internalFormat = this.gl.RGBA;
             }
             texture.generate(image);
             return texture;

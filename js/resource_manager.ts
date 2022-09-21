@@ -20,31 +20,24 @@ export default class ResourceManager {
     static getTexture(name: string) {
         return this.textures[name];
     }
+    static loadStringFromFile(file: string) {
+        return new Promise<string>((resolve) => {
+            wx.request({
+                url: BASE_URL + file,
+                success(response: WxRequestResponse) {
+                    resolve(response.data);
+                },
+                fail(error: WxRequestError) {
+                    throw new Error(`${error.errno} - ${error.errMsg}`);
+                }
+            })
+        })
+    }
     private static async loadShaderFromFile(vShaderFile: string, fShaderFile: string) {
-        let vShaderCode: string;
-        let fShaderCode: string;
-        vShaderCode = await new Promise<string>((resolve) => {
-            wx.request({
-                url: BASE_URL + vShaderFile,
-                success(response: WxRequestResponse) {
-                    resolve(response.data);
-                },
-                fail(error: WxRequestError) {
-                    throw new Error(`${error.errno} - ${error.errMsg}`);
-                }
-            })
-        })
-        fShaderCode = await new Promise<string>((resolve) => {
-            wx.request({
-                url: BASE_URL + fShaderFile,
-                success(response: WxRequestResponse) {
-                    resolve(response.data);
-                },
-                fail(error: WxRequestError) {
-                    throw new Error(`${error.errno} - ${error.errMsg}`);
-                }
-            })
-        })
+        let vShaderCode: string = await this.loadStringFromFile(vShaderFile);
+        let fShaderCode: string = await this.loadStringFromFile(fShaderFile);
+
+
         const shader = new Shader();
         shader.compile(vShaderCode, fShaderCode);
         return shader
@@ -62,8 +55,9 @@ export default class ResourceManager {
                 resolve(undefined)
             }
         });
-        if (!alpha) {
-            console.warn('opacity not resolved...')
+        if (alpha) {
+            texture.imageFormat = this.gl.RGBA;
+            texture.internalFormat = this.gl.RGBA;
         }
         texture.generate(image)
         return texture

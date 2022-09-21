@@ -2,8 +2,8 @@ import ResourceManager from "./resource_manager";
 
 export default class Texture2D {
     private readonly texture: WebGLTexture;
-    private readonly internalFormat: number;
-    private readonly imageFormat: number;
+    internalFormat: number;
+    imageFormat: number;
     private readonly wrapS: number;
     private readonly wrapT: number;
     private readonly filterMin: number;

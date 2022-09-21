@@ -7,42 +7,12 @@ export default class Shader {
         let sVertex: WebGLShader | null, sFragment: WebGLShader | null;
         // vertex Shader
         sVertex = ResourceManager.gl.createShader(ResourceManager.gl.VERTEX_SHADER)!;
-        ResourceManager.gl.shaderSource(sVertex, `
-
-             // an attribute will receive data from a buffer
-      attribute vec4 a_position;
-
-      varying vec2 v_texcoords;
-
-uniform mat4 model;
-uniform mat4 projection;
-
-      // all shaders have a main function
-      void main() {
-        // gl_Position is a special variable a vertex shader
-        // is responsible for setting
-    v_texcoords = vec2(a_position.zw);
-    gl_Position = projection * model * vec4(a_position.xy, 0.0, 1.0);
-      }
-        `);
+        ResourceManager.gl.shaderSource(sVertex, vertexSource);
         ResourceManager.gl.compileShader(sVertex);
         this.checkCompileErrors(sVertex, "VERTEX");
         // fragment Shader
         sFragment = ResourceManager.gl.createShader(ResourceManager.gl.FRAGMENT_SHADER)!;
-        ResourceManager.gl.shaderSource(sFragment, `
-              // fragment shaders don't have a default precision so we need
-      // to pick one. mediump is a good default
-      precision mediump float;
-
-uniform sampler2D sprite;
-uniform vec3 spriteColor;
-      varying vec2 v_texcoords;
-      void main() {
-        // gl_FragColor is a special variable a fragment shader
-        // is responsible for setting
-        gl_FragColor = vec4(spriteColor, 1.0) * texture2D(sprite, v_texcoords);
-      }
-`);
+        ResourceManager.gl.shaderSource(sFragment, fragmentSource);
         ResourceManager.gl.compileShader(sFragment);
         this.checkCompileErrors(sFragment, "FRAGMENT");
         // shader program

@@ -12,7 +12,7 @@ export default class SpriteRenderer {
         ResourceManager.gl.clearColor(0.0, 0.0, 0.0, 0.0);
         ResourceManager.gl.clear(ResourceManager.gl.COLOR_BUFFER_BIT);
     }
-    drawSprite(texture: Texture2D, position: Vec3, size: Vec3, rotate: number, color: Vec3) {
+    drawSprite(texture: Texture2D, position: Vec3, size: Vec3, rotate: number = 0, color: Vec3 = [1, 1, 1]) {
         this.shader.use();
         const model: Mat4 = m4.identity();
         m4.translate(model, position, model);

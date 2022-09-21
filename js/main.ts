@@ -1,4 +1,4 @@
-import Game from './game'
+import Game, { GLFW_KEY_A, GLFW_KEY_D } from './game'
 
 declare const wx: any;
 
@@ -13,24 +13,31 @@ export default class Main {
   constructor() {
     const { windowWidth, windowHeight } = wx.getWindowInfo()
     this.breakout = new Game(windowWidth, windowHeight);
-    wx.onTouchStart(this.touchEventHandler.bind(this));
-
+    wx.onTouchStart(this.touchHandler.bind(this));
+    wx.onTouchMove(this.touchHandler.bind(this));
+    wx.onTouchEnd(this.touchEndHandler.bind(this));
+    wx.onTouchCancel(this.touchEndHandler.bind(this));
     this.breakout.init().then(() => requestAnimationFrame(this.loop.bind(this)));
 
   }
 
 
+  touchEndHandler(eventObj: { touches: Touch[] }) {
+
+    this.breakout.keys[GLFW_KEY_A] = false;
+    this.breakout.keys[GLFW_KEY_D] = false;
+  }
 
   // 游戏结束后的触摸事件处理逻辑
-  touchEventHandler(eventObj: any) {
+  touchHandler(eventObj: { touches: Touch[] }) {
     const { touches } = eventObj;
-    console.log(wx.getWindowInfo().windowWidth, wx.getWindowInfo().windowHeight)
-    console.log(touches)
-    touches.forEach((toucn: { clientX: number; clientY: number; }) => {
-      const x = toucn.clientX
-      const y = toucn.clientY
-      console.log(x, y);
-    })
+    if (touches[0].clientX < this.breakout.width / 2) {
+      this.breakout.keys[GLFW_KEY_A] = true;
+      this.breakout.keys[GLFW_KEY_D] = false;
+    } else if (touches[0].clientX >= this.breakout.width / 2) {
+      this.breakout.keys[GLFW_KEY_A] = false;
+      this.breakout.keys[GLFW_KEY_D] = true;
+    }
   }
 
 
@@ -42,6 +49,6 @@ export default class Main {
     this.breakout.processInut(this.deltaTime);
     this.breakout.update(this.deltaTime);
     this.breakout.render();
-    // requestAnimationFrame((t) => this.loop(t))
+    requestAnimationFrame((t) => this.loop(t))
   }
 }
