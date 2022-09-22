@@ -9,7 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import Shader from "./shader";
 import Texture2D from "./texture";
-const BASE_URL = 'cloud://cloud1-4gkzszrnfdcc9814.636c-cloud1-4gkzszrnfdcc9814-1307362775/IDEPack/';
+wx.cloud.init();
+const BASE_FILEID_URL = 'cloud://cloud1-4gkzszrnfdcc9814.636c-cloud1-4gkzszrnfdcc9814-1307362775/IDEPack/';
+const BASE_REQUEST_URL = 'https://636c-cloud1-4gkzszrnfdcc9814-1307362775.tcb.qcloud.la/IDEPack/';
 export default class ResourceManager {
     static loadShader(vShaderFile, fShaderFile, name) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,14 +32,27 @@ export default class ResourceManager {
         return this.textures[name];
     }
     static loadStringFromFile(file) {
-        return new Promise((resolve) => {
-            wx.cloud.downloadFile({
-                fileID: BASE_URL + file,
-                success(res) {
-                    const string = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'utf-8');
-                    resolve(string);
-                }
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.stringCache[file]) {
+                this.stringCache[file] = yield new Promise((resolve) => {
+                    wx.cloud.downloadFile({
+                        fileID: BASE_FILEID_URL + file,
+                        success(response) {
+                            const string = wx.getFileSystemManager().readFileSync(response.tempFilePath, 'utf-8');
+                            resolve(string);
+                        }
+                    });
+                });
+                //     this.stringCache[file] = await new Promise<string>((resolve) => {
+                //     wx.request({
+                //         url: BASE_REQUEST_URL + file,
+                //         success(response: WxRequestResponse) {
+                //             resolve(response.data);
+                //         },
+                //     })
+                // })
+            }
+            return this.stringCache[file];
         });
     }
     static loadShaderFromFile(vShaderFile, fShaderFile) {
@@ -58,15 +73,21 @@ export default class ResourceManager {
             const image = wx.createImage();
             yield new Promise((resolve) => {
                 wx.cloud.downloadFile({
-                    fileID: BASE_URL + file,
-                    success(res) {
-                        image.src = res.tempFilePath;
+                    fileID: BASE_FILEID_URL + file,
+                    success(response) {
+                        image.src = response.tempFilePath;
                         image.onload = () => {
                             resolve(undefined);
                         };
                     }
                 });
             });
+            // await new Promise((resolve) => {
+            //     image.src = BASE_REQUEST_URL + file;
+            //     image.onload = () => {
+            //         resolve(undefined)
+            //     }
+            // })
             if (alpha) {
                 texture.imageFormat = this.gl.RGBA;
                 texture.internalFormat = this.gl.RGBA;
@@ -78,5 +99,6 @@ export default class ResourceManager {
 }
 ResourceManager.shaders = {};
 ResourceManager.textures = {};
+ResourceManager.stringCache = {};
 ResourceManager.gl = wx.createCanvas().getContext('webgl');
 //# sourceMappingURL=resource_manager.js.map

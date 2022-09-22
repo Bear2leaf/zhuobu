@@ -213,7 +213,7 @@ function min(a: Vec3, b: Vec3, dst: Vec3) {
  * @return {module:twgl/v3.Vec3} The scaled vector.
  * @memberOf module:twgl/v3
  */
-function mulScalar(v: Vec3, k: number, dst: Vec3) {
+function mulScalar(v: Vec3, k: number, dst?: Vec3) {
     dst = dst || new VecType(3);
 
     dst[0] = v[0] * k;
@@ -329,7 +329,7 @@ function distanceSq(a: Vec3, b: Vec3) {
  * @return {module:twgl/v3.Vec3} The normalized vector.
  * @memberOf module:twgl/v3
  */
-function normalize(a: Vec3, dst: Vec3) {
+function normalize(a: Vec3, dst?: Vec3) {
     dst = dst || new VecType(3);
 
     const lenSq = a[0] * a[0] + a[1] * a[1] + a[2] * a[2];

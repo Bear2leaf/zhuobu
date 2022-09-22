@@ -1,4 +1,5 @@
-import Game, { GLFW_KEY_A, GLFW_KEY_D } from './game'
+import Game, { GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE } from './game'
+import ResourceManager from './resource_manager';
 
 declare const wx: any;
 
@@ -17,8 +18,11 @@ export default class Main {
     wx.onTouchMove(this.touchHandler.bind(this));
     wx.onTouchEnd(this.touchEndHandler.bind(this));
     wx.onTouchCancel(this.touchEndHandler.bind(this));
-    this.breakout.init().then(() => requestAnimationFrame(this.loop.bind(this)));
 
+    ResourceManager.gl.enable(ResourceManager.gl.BLEND);
+    ResourceManager.gl.blendFunc(ResourceManager.gl.SRC_ALPHA, ResourceManager.gl.ONE_MINUS_SRC_ALPHA);
+
+    this.breakout.init().then(() => requestAnimationFrame(this.loop.bind(this)));
   }
 
 
@@ -26,6 +30,7 @@ export default class Main {
 
     this.breakout.keys[GLFW_KEY_A] = false;
     this.breakout.keys[GLFW_KEY_D] = false;
+    this.breakout.keys[GLFW_KEY_SPACE] = false;
   }
 
   // 游戏结束后的触摸事件处理逻辑
@@ -38,6 +43,7 @@ export default class Main {
       this.breakout.keys[GLFW_KEY_A] = false;
       this.breakout.keys[GLFW_KEY_D] = true;
     }
+    this.breakout.keys[GLFW_KEY_SPACE] = true;
   }
 
 

@@ -1,10 +1,13 @@
 import Shader from "./shader";
 import Texture2D from "./texture";
-const BASE_URL = 'cloud://cloud1-4gkzszrnfdcc9814.636c-cloud1-4gkzszrnfdcc9814-1307362775/IDEPack/';
+wx.cloud.init()
+const BASE_FILEID_URL = 'cloud://cloud1-4gkzszrnfdcc9814.636c-cloud1-4gkzszrnfdcc9814-1307362775/IDEPack/';
+const BASE_REQUEST_URL = 'https://636c-cloud1-4gkzszrnfdcc9814-1307362775.tcb.qcloud.la/IDEPack/';
 
 export default class ResourceManager {
     static readonly shaders: { [key: string]: Shader } = {}
     static readonly textures: { [key: string]: Texture2D } = {}
+    static readonly stringCache: { [key: string]: string } = {}
     static readonly gl: WebGLRenderingContext = wx.createCanvas().getContext('webgl');
     static async loadShader(vShaderFile: string, fShaderFile: string, name: string) {
         this.shaders[name] = await this.loadShaderFromFile(vShaderFile, fShaderFile);
@@ -20,16 +23,28 @@ export default class ResourceManager {
     static getTexture(name: string) {
         return this.textures[name];
     }
-    static loadStringFromFile(file: string) {
-        return new Promise<string>((resolve) => {
-            wx.cloud.downloadFile({
-                fileID: BASE_URL + file,
-                success(res: any) {
-                    const string = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'utf-8')
-                    resolve(string);
-                }
+    static async loadStringFromFile(file: string) {
+        if (!this.stringCache[file]) {
+            this.stringCache[file] = await new Promise<string>((resolve) => {
+                wx.cloud.downloadFile({
+                    fileID: BASE_FILEID_URL + file,
+                    success(response: any) {
+                        const string = wx.getFileSystemManager().readFileSync(response.tempFilePath, 'utf-8')
+                        resolve(string);
+                    }
+                })
             })
-        })
+
+            //     this.stringCache[file] = await new Promise<string>((resolve) => {
+            //     wx.request({
+            //         url: BASE_REQUEST_URL + file,
+            //         success(response: WxRequestResponse) {
+            //             resolve(response.data);
+            //         },
+            //     })
+            // })
+        }
+        return this.stringCache[file];
     }
     private static async loadShaderFromFile(vShaderFile: string, fShaderFile: string) {
         let vShaderCode: string = await this.loadStringFromFile(vShaderFile);
@@ -49,9 +64,9 @@ export default class ResourceManager {
 
         await new Promise((resolve) => {
             wx.cloud.downloadFile({
-                fileID: BASE_URL + file,
-                success(res: any) {
-                    image.src = res.tempFilePath;
+                fileID: BASE_FILEID_URL + file,
+                success(response: any) {
+                    image.src = response.tempFilePath;
                     image.onload = () => {
                         resolve(undefined)
                     }
@@ -59,6 +74,12 @@ export default class ResourceManager {
             }
             );
         });
+        // await new Promise((resolve) => {
+        //     image.src = BASE_REQUEST_URL + file;
+        //     image.onload = () => {
+        //         resolve(undefined)
+        //     }
+        // })
         if (alpha) {
             texture.imageFormat = this.gl.RGBA;
             texture.internalFormat = this.gl.RGBA;
