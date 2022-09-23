@@ -11,6 +11,7 @@ import BallObject from "./ball_object";
 import GameLevel from "./game_level";
 import GameObject from "./game_object";
 import m4 from "./m4";
+import ParticleGenerator from "./particle_generator";
 import ResourceManager from "./resource_manager";
 import SpriteRenderer from "./sprite_renderer";
 import v3 from "./v3";
@@ -48,17 +49,24 @@ export default class Game {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            wx.showLoading({ title: '初始化' });
             yield ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite");
+            yield ResourceManager.loadShader("shaders/particle.vs", "shaders/particle.fs", "particle");
             const projection = m4.ortho(0, this.width, this.height, 0, -1, 1);
             ResourceManager.getShader('sprite').use().setInteger('sprite', 0);
             ResourceManager.getShader('sprite').setMatrix4('projection', projection);
-            this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite"));
+            ResourceManager.getShader('particle').use().setInteger('sprite', 0);
+            ResourceManager.getShader('particle').setMatrix4('projection', projection);
             // load textures
             yield ResourceManager.loadTexture("textures/background.jpg", false, "background");
             yield ResourceManager.loadTexture("textures/awesomeface.png", true, "face");
             yield ResourceManager.loadTexture("textures/block.png", false, "block");
             yield ResourceManager.loadTexture("textures/block_solid.png", false, "block_solid");
             yield ResourceManager.loadTexture("textures/paddle.png", true, "paddle");
+            yield ResourceManager.loadTexture("textures/particle.png", true, "particle");
+            this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite"));
+            this.particles = new ParticleGenerator(ResourceManager.getShader("particle"), ResourceManager.getTexture('particle'), 500);
+            wx.showLoading({ title: '加载关卡' });
             // load levels
             const one = new GameLevel();
             yield one.load("levels/one.lvl", this.width, this.height / 2);
@@ -76,6 +84,7 @@ export default class Game {
             this.player = new GameObject(playerPos, [PLAYER_SIZE_X, PLAYER_SIZE_Y], ResourceManager.getTexture('paddle'));
             const ballPos = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0];
             this.ball = new BallObject(ballPos, BALL_RADIUS, [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y], ResourceManager.getTexture('face'));
+            wx.hideLoading();
         });
     }
     processInut(dt) {
@@ -106,6 +115,7 @@ export default class Game {
     update(dt) {
         this.ball.move(dt, this.width);
         this.doCollisions();
+        this.particles.update(dt, this.ball, 2, [this.ball.radius, this.ball.radius]);
         if (this.ball.position[1] >= this.height) {
             this.resetLevel();
             this.resetPlayer();
@@ -113,10 +123,12 @@ export default class Game {
     }
     render() {
         if (this.state === GameState.GAME_ACTIVE) {
-            this.renderer.clear();
+            ResourceManager.gl.clearColor(0.0, 0.0, 0.0, 0.0);
+            ResourceManager.gl.clear(ResourceManager.gl.COLOR_BUFFER_BIT);
             this.renderer.drawSprite(ResourceManager.getTexture('background'), [0, 0, 0], [this.width, this.height, 0]);
             this.levels[this.level].draw(this.renderer);
             this.player.draw(this.renderer);
+            this.particles.draw();
             this.ball.draw(this.renderer);
         }
     }
@@ -132,8 +144,12 @@ export default class Game {
     }
     resetPlayer() {
         // reset player/ball stats
-        this.player.size = [PLAYER_SIZE_X, PLAYER_SIZE_Y, 0];
-        this.player.position = [this.width / 2.0 - PLAYER_SIZE_X / 2.0, this.height - PLAYER_SIZE_Y, 0];
+        this.player.size[0] = PLAYER_SIZE_X;
+        this.player.size[1] = PLAYER_SIZE_Y;
+        this.player.size[2] = 0;
+        this.player.position[0] = this.width / 2.0 - PLAYER_SIZE_X / 2.0;
+        this.player.position[1] = this.height - PLAYER_SIZE_Y, 0;
+        this.player.position[2] = 0;
         this.ball.reset([this.player.position[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, this.player.position[1] - (BALL_RADIUS * 2.0)], [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y]);
     }
     clamp(value, a, b) {
@@ -236,7 +252,8 @@ export default class Game {
             this.ball.velocity[0] = INITIAL_BALL_VELOCITY_X * percentage * strength;
             //this.ball!.locity.y = -this.ball!.locity.y;
             const velocityVec3 = v3.mulScalar(v3.normalize([...this.ball.velocity, 0]), v3.length([...oldVelocity, 0]));
-            this.ball.velocity = [velocityVec3[0], velocityVec3[1]];
+            this.ball.velocity[0] = velocityVec3[0];
+            this.ball.velocity[1] = velocityVec3[1];
             // fix sticky paddle
             this.ball.velocity[1] = -1.0 * Math.abs(this.ball.velocity[1]);
         }

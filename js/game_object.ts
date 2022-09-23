@@ -2,15 +2,15 @@ import SpriteRenderer from "./sprite_renderer";
 import Texture2D from "./texture";
 
 export default class GameObject {
-    position: Vec3;
-    size: Vec3;
-    velocity: Vec2;
-    color: Vec3;
-    rotation: number;
+    readonly position: Vec3;
+    readonly size: Vec3;
+    readonly velocity: Vec2;
+    readonly color: Vec3;
+    readonly rotation: number;
     isSolid: boolean;
     destroyed: boolean;
 
-    sprite: Texture2D;
+    readonly sprite: Texture2D;
 
     constructor(pos: Vec2 = [0, 0], size: Vec2 = [1, 1], sprite: Texture2D = new Texture2D(), color: Vec3 = [1, 1, 1], velocity: Vec2 = [0, 0]) {
         this.position = [...pos, 0];

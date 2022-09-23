@@ -25,11 +25,11 @@ export default class Main {
     // 游戏结束后的触摸事件处理逻辑
     touchHandler(eventObj) {
         const { touches } = eventObj;
-        if (touches[0].clientX < this.breakout.width / 2) {
+        if (touches[0].clientX < this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
             this.breakout.keys[GLFW_KEY_A] = true;
             this.breakout.keys[GLFW_KEY_D] = false;
         }
-        else if (touches[0].clientX >= this.breakout.width / 2) {
+        else if (touches[0].clientX >= this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
             this.breakout.keys[GLFW_KEY_A] = false;
             this.breakout.keys[GLFW_KEY_D] = true;
         }

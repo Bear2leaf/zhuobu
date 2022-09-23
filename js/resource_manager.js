@@ -57,15 +57,14 @@ export default class ResourceManager {
     }
     static loadShaderFromFile(vShaderFile, fShaderFile) {
         return __awaiter(this, void 0, void 0, function* () {
-            let vShaderCode = yield this.loadStringFromFile(vShaderFile);
-            let fShaderCode = yield this.loadStringFromFile(fShaderFile);
+            let vShaderCode = '';
+            let fShaderCode = '';
+            vShaderCode = yield this.loadStringFromFile(vShaderFile);
+            fShaderCode = yield this.loadStringFromFile(fShaderFile);
             const shader = new Shader();
             shader.compile(vShaderCode, fShaderCode);
             return shader;
         });
-    }
-    static loadTextureFromShaderFile(vShaderFile, fShaderFile, gShaderFile) {
-        return new Texture2D();
     }
     static loadTextureFromFile(file, alpha) {
         return __awaiter(this, void 0, void 0, function* () {

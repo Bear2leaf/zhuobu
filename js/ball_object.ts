@@ -27,9 +27,12 @@ export default class BallObject extends GameObject {
         return this.position
     }
     reset(position: Vec2, velocity: Vec2) {
-        console.log(velocity)
-        this.position = [...position, 0];
-        this.velocity = velocity;
+        this.position[0] = position[0]
+        this.position[1] = position[1]
+        this.position[2] = 0
+        this.velocity[0] = velocity[0]
+        this.velocity[1] = velocity[1]
+
         this.stuck = true;
     }
 }

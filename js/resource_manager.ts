@@ -47,16 +47,14 @@ export default class ResourceManager {
         return this.stringCache[file];
     }
     private static async loadShaderFromFile(vShaderFile: string, fShaderFile: string) {
-        let vShaderCode: string = await this.loadStringFromFile(vShaderFile);
-        let fShaderCode: string = await this.loadStringFromFile(fShaderFile);
-
+        let vShaderCode: string = '';
+        let fShaderCode: string = '';
+        vShaderCode = await this.loadStringFromFile(vShaderFile);
+        fShaderCode = await this.loadStringFromFile(fShaderFile);
 
         const shader = new Shader();
         shader.compile(vShaderCode, fShaderCode);
         return shader
-    }
-    private static loadTextureFromShaderFile(vShaderFile: string, fShaderFile: string, gShaderFile: string | null) {
-        return new Texture2D()
     }
     private static async loadTextureFromFile(file: string, alpha: boolean) {
         const texture: Texture2D = new Texture2D();

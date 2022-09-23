@@ -39,11 +39,23 @@ export default class Shader {
         ResourceManager.gl.uniform1i(this.getUniformLocation(this.program!, name), value);
 
     }
+    setVector2f(name: string, value: Vec2, useShader: boolean = false) {
+        if (useShader) {
+            this.use();
+        }
+        ResourceManager.gl.uniform2f(this.getUniformLocation(this.program!, name), value[0], value[1]);
+    }
     setVector3f(name: string, value: Vec3, useShader: boolean = false) {
         if (useShader) {
             this.use();
         }
         ResourceManager.gl.uniform3f(this.getUniformLocation(this.program!, name), value[0], value[1], value[2]);
+    }
+    setVector4f(name: string, value: Vec4, useShader: boolean = false) {
+        if (useShader) {
+            this.use();
+        }
+        ResourceManager.gl.uniform4f(this.getUniformLocation(this.program!, name), value[0], value[1], value[2], value[3]);
     }
     setMatrix4(name: string, value: Mat4, useShader: boolean = false) {
         if (useShader) {

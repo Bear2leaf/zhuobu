@@ -26,10 +26,6 @@ export default class SpriteRenderer {
 
         ResourceManager.gl.enableVertexAttribArray(this.positionLocation)
     }
-    clear() {
-        ResourceManager.gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        ResourceManager.gl.clear(ResourceManager.gl.COLOR_BUFFER_BIT);
-    }
     drawSprite(texture: Texture2D, position: Vec3, size: Vec3, rotate: number = 0, color: Vec3 = [1, 1, 1]) {
         this.shader.use();
         const model: Mat4 = m4.identity();
