@@ -1,7 +1,7 @@
-import m4 from "./m4";
-import ResourceManager from "./resource_manager";
-import Shader from "./shader";
-import Texture2D from "./texture";
+import m4 from "./m4.js";
+import ResourceManager from "./resource_manager.js";
+import Shader from "./shader.js";
+import Texture2D from "./texture.js";
 
 export default class SpriteRenderer {
     private readonly shader: Shader;

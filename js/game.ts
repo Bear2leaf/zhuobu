@@ -1,11 +1,11 @@
-import BallObject from "./ball_object";
-import GameLevel from "./game_level";
-import GameObject from "./game_object";
-import m4 from "./m4";
-import ParticleGenerator from "./particle_generator";
-import ResourceManager from "./resource_manager";
-import SpriteRenderer from "./sprite_renderer";
-import v3 from "./v3";
+import BallObject from "./ball_object.js";
+import GameLevel from "./game_level.js";
+import GameObject from "./game_object.js";
+import m4 from "./m4.js";
+import ParticleGenerator from "./particle_generator.js";
+import ResourceManager from "./resource_manager.js";
+import SpriteRenderer from "./sprite_renderer.js";
+import v3 from "./v3.js";
 
 enum GameState {
     GAME_ACTIVE,
@@ -37,8 +37,8 @@ export const GLFW_KEY_SPACE = 2;
 export default class Game {
     private readonly state: GameState
     readonly keys: Array<boolean>
-    readonly width: number;
-    readonly height: number;
+    private width: number;
+    private height: number;
     private readonly levels: GameLevel[];
     private level: number;
     player?: GameObject;
@@ -55,7 +55,6 @@ export default class Game {
         this.levels = [];
         this.collision = [false, Direction.UP, [0, 0]];
     }
-
     async init() {
         wx.showLoading({ title: '初始化' })
         await ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite")
@@ -82,16 +81,16 @@ export default class Game {
         // load levels
         const one: GameLevel = new GameLevel();
         await one.load("levels/one.lvl", this.width, this.height / 2);
-        // const two: GameLevel = new GameLevel();
-        // await two.load("levels/two.lvl", this.width, this.height / 2);
-        // const three: GameLevel = new GameLevel();
-        // await three.load("levels/three.lvl", this.width, this.height / 2);
-        // const four: GameLevel = new GameLevel();
-        // await four.load("levels/four.lvl", this.width, this.height / 2);
+        const two: GameLevel = new GameLevel();
+        await two.load("levels/two.lvl", this.width, this.height / 2);
+        const three: GameLevel = new GameLevel();
+        await three.load("levels/three.lvl", this.width, this.height / 2);
+        const four: GameLevel = new GameLevel();
+        await four.load("levels/four.lvl", this.width, this.height / 2);
         this.levels.push(one);
-        // this.levels.push(two);
-        // this.levels.push(three);
-        // this.levels.push(four);
+        this.levels.push(two);
+        this.levels.push(three);
+        this.levels.push(four);
 
 
         const playerPos: Vec2 = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y]

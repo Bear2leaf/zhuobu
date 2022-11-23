@@ -1,13 +1,13 @@
-import Shader from "./shader";
-import Texture2D from "./texture";
-import spriteVS from "./shaders/sprite.vs";
-import spriteFS from "./shaders/sprite.fs";
-import particleVS from "./shaders/particle.vs";
-import particleFS from "./shaders/particle.fs";
-import oneLVL from "./levels/one.lvl";
-import twoLVL from "./levels/two.lvl";
-import threeLVL from "./levels/three.lvl";
-import fourLVL from "./levels/four.lvl";
+import Shader from "./shader.js";
+import Texture2D from "./texture.js";
+import spriteVS from "./shaders/sprite.vs.js";
+import spriteFS from "./shaders/sprite.fs.js";
+import particleVS from "./shaders/particle.vs.js";
+import particleFS from "./shaders/particle.fs.js";
+import oneLVL from "./levels/one.lvl.js";
+import twoLVL from "./levels/two.lvl.js";
+import threeLVL from "./levels/three.lvl.js";
+import fourLVL from "./levels/four.lvl.js";
 
 export default class ResourceManager {
     static readonly shaders: { [key: string]: Shader } = {}

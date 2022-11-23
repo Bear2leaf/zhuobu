@@ -1,5 +1,5 @@
-import m4 from "./m4";
-import ResourceManager from "./resource_manager";
+import m4 from "./m4.js";
+import ResourceManager from "./resource_manager.js";
 export default class SpriteRenderer {
     constructor(shader) {
         this.shader = shader;

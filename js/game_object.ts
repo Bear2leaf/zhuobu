@@ -1,5 +1,5 @@
-import SpriteRenderer from "./sprite_renderer";
-import Texture2D from "./texture";
+import SpriteRenderer from "./sprite_renderer.js";
+import Texture2D from "./texture.js";
 
 export default class GameObject {
     readonly position: Vec3;

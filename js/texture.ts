@@ -1,4 +1,4 @@
-import ResourceManager from "./resource_manager";
+import ResourceManager from "./resource_manager.js";
 
 export default class Texture2D {
     private readonly texture: WebGLTexture;

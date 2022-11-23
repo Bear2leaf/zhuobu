@@ -1,6 +1,6 @@
-import GameObject from "./game_object";
-import Texture2D from "./texture";
-import v3 from "./v3";
+import GameObject from "./game_object.js";
+import Texture2D from "./texture.js";
+import v3 from "./v3.js";
 
 export default class BallObject extends GameObject {
     radius: number;

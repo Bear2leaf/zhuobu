@@ -1,5 +1,5 @@
-import Particle from "./particle";
-import ResourceManager from "./resource_manager";
+import Particle from "./particle.js";
+import ResourceManager from "./resource_manager.js";
 export default class ParticleGenerator {
     constructor(shader, texture, amount) {
         this.shader = shader;

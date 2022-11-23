@@ -7,14 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import BallObject from "./ball_object";
-import GameLevel from "./game_level";
-import GameObject from "./game_object";
-import m4 from "./m4";
-import ParticleGenerator from "./particle_generator";
-import ResourceManager from "./resource_manager";
-import SpriteRenderer from "./sprite_renderer";
-import v3 from "./v3";
+import BallObject from "./ball_object.js";
+import GameLevel from "./game_level.js";
+import GameObject from "./game_object.js";
+import m4 from "./m4.js";
+import ParticleGenerator from "./particle_generator.js";
+import ResourceManager from "./resource_manager.js";
+import SpriteRenderer from "./sprite_renderer.js";
+import v3 from "./v3.js";
 var GameState;
 (function (GameState) {
     GameState[GameState["GAME_ACTIVE"] = 0] = "GAME_ACTIVE";
@@ -70,16 +70,16 @@ export default class Game {
             // load levels
             const one = new GameLevel();
             yield one.load("levels/one.lvl", this.width, this.height / 2);
-            // const two: GameLevel = new GameLevel();
-            // await two.load("levels/two.lvl", this.width, this.height / 2);
-            // const three: GameLevel = new GameLevel();
-            // await three.load("levels/three.lvl", this.width, this.height / 2);
-            // const four: GameLevel = new GameLevel();
-            // await four.load("levels/four.lvl", this.width, this.height / 2);
+            const two = new GameLevel();
+            yield two.load("levels/two.lvl", this.width, this.height / 2);
+            const three = new GameLevel();
+            yield three.load("levels/three.lvl", this.width, this.height / 2);
+            const four = new GameLevel();
+            yield four.load("levels/four.lvl", this.width, this.height / 2);
             this.levels.push(one);
-            // this.levels.push(two);
-            // this.levels.push(three);
-            // this.levels.push(four);
+            this.levels.push(two);
+            this.levels.push(three);
+            this.levels.push(four);
             const playerPos = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y];
             this.player = new GameObject(playerPos, [PLAYER_SIZE_X, PLAYER_SIZE_Y], ResourceManager.getTexture('paddle'));
             const ballPos = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0];

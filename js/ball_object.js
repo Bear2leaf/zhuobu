@@ -1,5 +1,5 @@
-import GameObject from "./game_object";
-import v3 from "./v3";
+import GameObject from "./game_object.js";
+import v3 from "./v3.js";
 export default class BallObject extends GameObject {
     constructor(pos, radius = 12.5, velocity, sprite) {
         super(pos, [radius * 2, radius * 2], sprite, [1, 1, 1], velocity);

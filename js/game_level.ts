@@ -1,6 +1,6 @@
-import GameObject from "./game_object";
-import ResourceManager from "./resource_manager";
-import SpriteRenderer from "./sprite_renderer";
+import GameObject from "./game_object.js";
+import ResourceManager from "./resource_manager.js";
+import SpriteRenderer from "./sprite_renderer.js";
 
 export default class GameLevel {
     bricks: GameObject[] = [];

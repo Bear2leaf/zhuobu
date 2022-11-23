@@ -1,5 +1,5 @@
-import Game, { GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE } from './game';
-import ResourceManager from './resource_manager';
+import Game, { GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE } from './game.js';
+import ResourceManager from './resource_manager.js';
 /**
  * 游戏主函数
  */
@@ -24,12 +24,16 @@ export default class Main {
     }
     // 游戏结束后的触摸事件处理逻辑
     touchHandler(eventObj) {
-        const { touches } = eventObj;
-        if (touches[0].clientX < this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
+        if (!this.breakout.player) {
+            return;
+        }
+        const { touches, clientX } = eventObj;
+        const mx = (touches && touches[0].clientX) || clientX;
+        if (mx < this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
             this.breakout.keys[GLFW_KEY_A] = true;
             this.breakout.keys[GLFW_KEY_D] = false;
         }
-        else if (touches[0].clientX >= this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
+        else if (mx >= this.breakout.player.position[0] + this.breakout.player.size[0] / 2) {
             this.breakout.keys[GLFW_KEY_A] = false;
             this.breakout.keys[GLFW_KEY_D] = true;
         }

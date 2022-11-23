@@ -1,4 +1,4 @@
-import ResourceManager from "./resource_manager";
+import ResourceManager from "./resource_manager.js";
 
 export default class Shader {
     program: WebGLProgram | null = null;

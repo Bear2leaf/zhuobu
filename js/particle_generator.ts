@@ -1,8 +1,8 @@
-import GameObject from "./game_object";
-import Particle from "./particle";
-import ResourceManager from "./resource_manager";
-import Shader from "./shader";
-import Texture2D from "./texture";
+import GameObject from "./game_object.js";
+import Particle from "./particle.js";
+import ResourceManager from "./resource_manager.js";
+import Shader from "./shader.js";
+import Texture2D from "./texture.js";
 
 export default class ParticleGenerator {
     private readonly particles: Particle[];
