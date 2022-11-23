@@ -44,12 +44,12 @@ export default class Main {
     }
     // 实现游戏帧循环
     loop(time) {
-        const currentFrame = time;
+        const currentFrame = time / 1000;
         this.deltaTime = currentFrame - this.lastFrame;
         this.lastFrame = currentFrame;
         this.breakout.processInut(this.deltaTime);
         this.breakout.update(this.deltaTime);
-        this.breakout.render();
+        this.breakout.render(currentFrame);
         requestAnimationFrame((t) => this.loop(t));
     }
 }

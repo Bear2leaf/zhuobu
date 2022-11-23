@@ -4,6 +4,8 @@ import spriteVS from "./shaders/sprite.vs.js";
 import spriteFS from "./shaders/sprite.fs.js";
 import particleVS from "./shaders/particle.vs.js";
 import particleFS from "./shaders/particle.fs.js";
+import post_processingVS from "./shaders/post_processing.vs.js";
+import post_processingFS from "./shaders/post_processing.fs.js";
 import oneLVL from "./levels/one.lvl.js";
 import twoLVL from "./levels/two.lvl.js";
 import threeLVL from "./levels/three.lvl.js";
@@ -17,12 +19,14 @@ export default class ResourceManager {
         "shaders/sprite.fs": spriteFS,
         "shaders/particle.vs": particleVS,
         "shaders/particle.fs": particleFS,
+        "shaders/post_processing.vs": post_processingVS,
+        "shaders/post_processing.fs": post_processingFS,
         "levels/one.lvl": oneLVL,
         "levels/two.lvl": twoLVL,
         "levels/three.lvl": threeLVL,
         "levels/four.lvl": fourLVL,
     }
-    static readonly gl: WebGLRenderingContext = wx.createCanvas().getContext('webgl');
+    static readonly gl: WebGL2RenderingContext = wx.createCanvas().getContext('webgl2');
     static async loadShader(vShaderFile: string, fShaderFile: string, name: string) {
         this.shaders[name] = await this.loadShaderFromFile(vShaderFile, fShaderFile);
         return this.shaders[name];

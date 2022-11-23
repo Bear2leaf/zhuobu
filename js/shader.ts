@@ -39,6 +39,13 @@ export default class Shader {
         ResourceManager.gl.uniform1i(this.getUniformLocation(this.program!, name), value);
 
     }
+    setFloat(name: string, value: number, useShader: boolean = false) {
+        if (useShader) {
+            this.use();
+        }
+        ResourceManager.gl.uniform1f(this.getUniformLocation(this.program!, name), value);
+
+    }
     setVector2f(name: string, value: Vec2, useShader: boolean = false) {
         if (useShader) {
             this.use();

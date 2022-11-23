@@ -13,6 +13,8 @@ import spriteVS from "./shaders/sprite.vs.js";
 import spriteFS from "./shaders/sprite.fs.js";
 import particleVS from "./shaders/particle.vs.js";
 import particleFS from "./shaders/particle.fs.js";
+import post_processingVS from "./shaders/post_processing.vs.js";
+import post_processingFS from "./shaders/post_processing.fs.js";
 import oneLVL from "./levels/one.lvl.js";
 import twoLVL from "./levels/two.lvl.js";
 import threeLVL from "./levels/three.lvl.js";
@@ -89,10 +91,12 @@ ResourceManager.stringCache = {
     "shaders/sprite.fs": spriteFS,
     "shaders/particle.vs": particleVS,
     "shaders/particle.fs": particleFS,
+    "shaders/post_processing.vs": post_processingVS,
+    "shaders/post_processing.fs": post_processingFS,
     "levels/one.lvl": oneLVL,
     "levels/two.lvl": twoLVL,
     "levels/three.lvl": threeLVL,
     "levels/four.lvl": fourLVL,
 };
-ResourceManager.gl = wx.createCanvas().getContext('webgl');
+ResourceManager.gl = wx.createCanvas().getContext('webgl2');
 //# sourceMappingURL=resource_manager.js.map

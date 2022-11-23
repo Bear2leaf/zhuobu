@@ -6,6 +6,14 @@ export default class ParticleGenerator {
         this.texture = texture;
         this.amount = amount;
         this.lastUsedParticle = 0;
+        this.init();
+        this.particles = [];
+        for (let i = 0; i < this.amount; ++i) {
+            this.particles.push(new Particle());
+        }
+    }
+    init() {
+        this.vao = ResourceManager.gl.createVertexArray();
         this.positionLocation = ResourceManager.gl.getAttribLocation(this.shader.program, 'a_position');
         this.positionBuffer = ResourceManager.gl.createBuffer();
         ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, this.positionBuffer);
@@ -18,12 +26,10 @@ export default class ParticleGenerator {
             1.0, 1.0, 1.0, 1.0,
             1.0, 0.0, 1.0, 0.0
         ]), ResourceManager.gl.STATIC_DRAW);
-        ResourceManager.gl.vertexAttribPointer(this.positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
+        ResourceManager.gl.bindVertexArray(this.vao);
         ResourceManager.gl.enableVertexAttribArray(this.positionLocation);
-        this.particles = [];
-        for (let i = 0; i < this.amount; ++i) {
-            this.particles.push(new Particle());
-        }
+        ResourceManager.gl.vertexAttribPointer(this.positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
+        ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, null);
     }
     firstUnusedParticle() {
         // first search from last used particle, this will usually return almost instantly
@@ -66,11 +72,11 @@ export default class ParticleGenerator {
         // update all particles
         for (let i = 0; i < this.amount; ++i) {
             const p = this.particles[i];
-            p.life -= dt / 1000; // reduce life
+            p.life -= dt; // reduce life
             if (p.life > 0.0) { // particle is alive, thus update
-                p.position[0] -= p.velocity[0] * dt / 1000;
-                p.position[1] -= p.velocity[1] * dt / 1000;
-                p.color[3] -= dt / 1000 * 2.5;
+                p.position[0] -= p.velocity[0] * dt;
+                p.position[1] -= p.velocity[1] * dt;
+                p.color[3] -= dt * 2.5;
             }
         }
     }
@@ -83,7 +89,7 @@ export default class ParticleGenerator {
                 this.shader.setVector2f("offset", particle.position);
                 this.shader.setVector4f("color", particle.color);
                 this.texture.bind();
-                ResourceManager.gl.enableVertexAttribArray(this.positionLocation);
+                ResourceManager.gl.bindVertexArray(this.vao);
                 ResourceManager.gl.drawArrays(ResourceManager.gl.TRIANGLES, 0, 6);
             }
         }

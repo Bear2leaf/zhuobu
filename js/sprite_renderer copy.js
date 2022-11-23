@@ -3,10 +3,6 @@ import ResourceManager from "./resource_manager.js";
 export default class SpriteRenderer {
     constructor(shader) {
         this.shader = shader;
-        this.init();
-    }
-    init() {
-        this.vao = ResourceManager.gl.createVertexArray();
         this.positionLocation = ResourceManager.gl.getAttribLocation(this.shader.program, 'a_position');
         this.positionBuffer = ResourceManager.gl.createBuffer();
         ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, this.positionBuffer);
@@ -19,10 +15,8 @@ export default class SpriteRenderer {
             1.0, 1.0, 1.0, 1.0,
             1.0, 0.0, 1.0, 0.0
         ]), ResourceManager.gl.STATIC_DRAW);
-        ResourceManager.gl.bindVertexArray(this.vao);
-        ResourceManager.gl.enableVertexAttribArray(this.positionLocation);
         ResourceManager.gl.vertexAttribPointer(this.positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
-        ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, null);
+        ResourceManager.gl.enableVertexAttribArray(this.positionLocation);
     }
     drawSprite(texture, position, size, rotate = 0, color = [1, 1, 1]) {
         this.shader.use();
@@ -36,8 +30,7 @@ export default class SpriteRenderer {
         this.shader.setVector3f('spriteColor', color);
         ResourceManager.gl.activeTexture(ResourceManager.gl.TEXTURE0);
         texture.bind();
-        ResourceManager.gl.bindVertexArray(this.vao);
         ResourceManager.gl.drawArrays(ResourceManager.gl.TRIANGLES, 0, 6);
     }
 }
-//# sourceMappingURL=sprite_renderer.js.map
+//# sourceMappingURL=sprite_renderer%20copy.js.map

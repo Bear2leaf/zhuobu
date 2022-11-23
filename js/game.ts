@@ -3,6 +3,7 @@ import GameLevel from "./game_level.js";
 import GameObject from "./game_object.js";
 import m4 from "./m4.js";
 import ParticleGenerator from "./particle_generator.js";
+import PostProcessor from "./post_processor.js";
 import ResourceManager from "./resource_manager.js";
 import SpriteRenderer from "./sprite_renderer.js";
 import v3 from "./v3.js";
@@ -23,11 +24,11 @@ enum Direction {
 type Collision = [boolean, Direction, Vec2]
 const PIXEL_RATIO = !wx.getDeviceInfo ? wx.getWindowInfo().pixelRatio : 1;
 const PLAYER_SIZE_X = 100 * PIXEL_RATIO;
-const PLAYER_SIZE_Y = 20* PIXEL_RATIO;
-const PLAYER_VELOCITY = 0.25* PIXEL_RATIO;
-const BALL_RADIUS = 12.5* PIXEL_RATIO;
-const INITIAL_BALL_VELOCITY_X: number = 0.1* PIXEL_RATIO
-const INITIAL_BALL_VELOCITY_Y: number = -0.35* PIXEL_RATIO
+const PLAYER_SIZE_Y = 20 * PIXEL_RATIO;
+const PLAYER_VELOCITY = 500 * PIXEL_RATIO;
+const BALL_RADIUS = 12.5 * PIXEL_RATIO;
+const INITIAL_BALL_VELOCITY_X: number = 100 * PIXEL_RATIO
+const INITIAL_BALL_VELOCITY_Y: number = -350 * PIXEL_RATIO
 
 export const GLFW_KEY_A = 0;
 export const GLFW_KEY_D = 1;
@@ -45,6 +46,9 @@ export default class Game {
     private renderer?: SpriteRenderer;
     private particles?: ParticleGenerator;
     private readonly collision: Collision;
+    private effects?: PostProcessor;
+    private shakeTime: number = 0;
+
     constructor(width: number, height: number) {
         this.state = GameState.GAME_ACTIVE
         this.keys = new Array(1024)
@@ -56,10 +60,12 @@ export default class Game {
     }
     async init() {
         wx.showLoading({ title: '初始化' })
+        const projection: Mat4 = m4.ortho(0, this.width, this.height, 0, -1, 1)
         await ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite")
         await ResourceManager.loadShader("shaders/particle.vs", "shaders/particle.fs", "particle")
-        const projection: Mat4 = m4.ortho(0, this.width, this.height, 0, -1, 1)
-
+        await ResourceManager.loadShader("shaders/post_processing.vs", "shaders/post_processing.fs", "postprocessing");
+        
+        
         ResourceManager.getShader('sprite').use().setInteger('sprite', 0);
         ResourceManager.getShader('sprite').setMatrix4('projection', projection);
         ResourceManager.getShader('particle').use().setInteger('sprite', 0);
@@ -73,9 +79,10 @@ export default class Game {
         await ResourceManager.loadTexture("textures/particle.png", true, "particle");
 
 
-        this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite"));
-        this.particles = new ParticleGenerator(ResourceManager.getShader("particle"), ResourceManager.getTexture('particle'), 500);
-
+        this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite").use());
+        this.particles = new ParticleGenerator(ResourceManager.getShader("particle").use(), ResourceManager.getTexture('particle'), 500);
+        this.effects = new PostProcessor(ResourceManager.getShader('postprocessing').use(), this.width, this.height);
+        
         wx.showLoading({ title: '加载关卡' })
         // load levels
         const one: GameLevel = new GameLevel();
@@ -129,20 +136,27 @@ export default class Game {
         this.ball!.move(dt, this.width);
         this.doCollisions();
         this.particles!.update(dt, this.ball!, 2, [this.ball!.radius, this.ball!.radius])
+        // reduce shake time
+        if (this.shakeTime > 0.0) {
+            this.shakeTime -= dt;
+            if (this.shakeTime <= 0.0)
+                this.effects!.shake = false;
+        }
         if (this.ball!.position[1] >= this.height) {
             this.resetLevel();
             this.resetPlayer();
         }
     }
-    render() {
+    render(time: number) {
         if (this.state === GameState.GAME_ACTIVE) {
-            ResourceManager.gl.clearColor(0.0, 0.0, 0.0, 0.0);
-            ResourceManager.gl.clear(ResourceManager.gl.COLOR_BUFFER_BIT);
+            this.effects!.beginRender();
             this.renderer!.drawSprite(ResourceManager.getTexture('background'), [0, 0, 0], [this.width, this.height, 0])
             this.levels[this.level].draw(this.renderer!);
             this.player!.draw(this.renderer!);
             this.particles!.draw();
             this.ball!.draw(this.renderer!)
+            this.effects!.endRender();
+            this.effects!.render(time);
         }
     }
 
@@ -226,6 +240,9 @@ export default class Game {
                     // destroy block if not solid
                     if (!box.isSolid) {
                         box.destroyed = true;
+                    } else {
+                        this.shakeTime = 0.05;
+                        this.effects!.shake = true;
                     }
                     // collision resolution
                     const dir = collision[1];

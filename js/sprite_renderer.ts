@@ -5,10 +5,15 @@ import Texture2D from "./texture.js";
 
 export default class SpriteRenderer {
     private readonly shader: Shader;
-    private readonly positionLocation: number;
-    private readonly positionBuffer: WebGLBuffer;
+    private vao?: WebGLVertexArrayObject;
+    private positionLocation?: number;
+    private positionBuffer?: WebGLBuffer;
     constructor(shader: Shader) {
         this.shader = shader;
+        this.init();
+    }
+    init() {
+        this.vao = ResourceManager.gl.createVertexArray()!;
         this.positionLocation = ResourceManager.gl.getAttribLocation(this.shader.program!, 'a_position')
         this.positionBuffer = ResourceManager.gl.createBuffer()!;
         ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, this.positionBuffer)
@@ -22,11 +27,14 @@ export default class SpriteRenderer {
             1.0, 1.0, 1.0, 1.0,
             1.0, 0.0, 1.0, 0.0
         ]), ResourceManager.gl.STATIC_DRAW);
+        ResourceManager.gl.bindVertexArray(this.vao);
+        ResourceManager.gl.enableVertexAttribArray(this.positionLocation)
         ResourceManager.gl.vertexAttribPointer(this.positionLocation, 4, ResourceManager.gl.FLOAT, false, 0, 0);
 
-        ResourceManager.gl.enableVertexAttribArray(this.positionLocation)
+        ResourceManager.gl.bindBuffer(ResourceManager.gl.ARRAY_BUFFER, null);
     }
     drawSprite(texture: Texture2D, position: Vec3, size: Vec3, rotate: number = 0, color: Vec3 = [1, 1, 1]) {
+        
         this.shader.use();
         const model: Mat4 = m4.identity();
         m4.translate(model, position, model);
@@ -41,7 +49,9 @@ export default class SpriteRenderer {
         ResourceManager.gl.activeTexture(ResourceManager.gl.TEXTURE0)
         texture.bind()
 
+        ResourceManager.gl.bindVertexArray(this.vao!);
         ResourceManager.gl.drawArrays(ResourceManager.gl.TRIANGLES, 0, 6)
+
     }
 
 }

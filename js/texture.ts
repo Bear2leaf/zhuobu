@@ -1,7 +1,7 @@
 import ResourceManager from "./resource_manager.js";
 
 export default class Texture2D {
-    private readonly texture: WebGLTexture;
+    readonly tex: WebGLTexture;
     internalFormat: number;
     imageFormat: number;
     private readonly wrapS: number;
@@ -9,17 +9,23 @@ export default class Texture2D {
     private readonly filterMin: number;
     private readonly filterMax: number;
     constructor() {
-        this.texture = ResourceManager.gl.createTexture()!;
+        this.tex = ResourceManager.gl.createTexture()!;
         this.internalFormat = ResourceManager.gl.RGB;
         this.imageFormat = ResourceManager.gl.RGB;
-        this.wrapS = ResourceManager.gl.CLAMP_TO_EDGE;
-        this.wrapT = ResourceManager.gl.CLAMP_TO_EDGE;
+        this.wrapS = ResourceManager.gl.REPEAT;
+        this.wrapT = ResourceManager.gl.REPEAT;
         this.filterMin = ResourceManager.gl.LINEAR;
         this.filterMax = ResourceManager.gl.LINEAR;
     }
-    generate(data: Image) {
-        ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, this.texture);
-        ResourceManager.gl.texImage2D(ResourceManager.gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, ResourceManager.gl.UNSIGNED_BYTE, data)
+    generate(data: Image | null, width?: number, height?: number) {
+        ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, this.tex);
+        if (data) {
+            ResourceManager.gl.texImage2D(ResourceManager.gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, ResourceManager.gl.UNSIGNED_BYTE, data)
+        } else if (width && height) {
+            ResourceManager.gl.texImage2D(ResourceManager.gl.TEXTURE_2D, 0, this.internalFormat, width, height, 0,  this.imageFormat, ResourceManager.gl.UNSIGNED_BYTE, data)
+        } else {
+            throw new Error("wrong texture to generate.");
+        }
         ResourceManager.gl.texParameteri(ResourceManager.gl.TEXTURE_2D, ResourceManager.gl.TEXTURE_WRAP_S, this.wrapS)
         ResourceManager.gl.texParameteri(ResourceManager.gl.TEXTURE_2D, ResourceManager.gl.TEXTURE_WRAP_T, this.wrapT)
         ResourceManager.gl.texParameteri(ResourceManager.gl.TEXTURE_2D, ResourceManager.gl.TEXTURE_MIN_FILTER, this.filterMin)
@@ -27,6 +33,6 @@ export default class Texture2D {
         ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, null);
     }
     bind() {
-        ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, this.texture);
+        ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, this.tex);
     }
 }
