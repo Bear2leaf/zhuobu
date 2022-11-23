@@ -70,16 +70,16 @@ export default class Game {
             // load levels
             const one = new GameLevel();
             yield one.load("levels/one.lvl", this.width, this.height / 2);
-            const two = new GameLevel();
-            yield two.load("levels/two.lvl", this.width, this.height / 2);
-            const three = new GameLevel();
-            yield three.load("levels/three.lvl", this.width, this.height / 2);
-            const four = new GameLevel();
-            yield four.load("levels/four.lvl", this.width, this.height / 2);
+            // const two: GameLevel = new GameLevel();
+            // await two.load("levels/two.lvl", this.width, this.height / 2);
+            // const three: GameLevel = new GameLevel();
+            // await three.load("levels/three.lvl", this.width, this.height / 2);
+            // const four: GameLevel = new GameLevel();
+            // await four.load("levels/four.lvl", this.width, this.height / 2);
             this.levels.push(one);
-            this.levels.push(two);
-            this.levels.push(three);
-            this.levels.push(four);
+            // this.levels.push(two);
+            // this.levels.push(three);
+            // this.levels.push(four);
             const playerPos = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y];
             this.player = new GameObject(playerPos, [PLAYER_SIZE_X, PLAYER_SIZE_Y], ResourceManager.getTexture('paddle'));
             const ballPos = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0];
@@ -200,7 +200,7 @@ export default class Game {
             return [true, this.vectorDirection(difference), difference];
         }
         else {
-            return [false, Direction.UP, [0, 0]];
+            return this.collision;
         }
     }
     doCollisions() {

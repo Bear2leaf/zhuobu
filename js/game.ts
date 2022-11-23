@@ -82,16 +82,16 @@ export default class Game {
         // load levels
         const one: GameLevel = new GameLevel();
         await one.load("levels/one.lvl", this.width, this.height / 2);
-        const two: GameLevel = new GameLevel();
-        await two.load("levels/two.lvl", this.width, this.height / 2);
-        const three: GameLevel = new GameLevel();
-        await three.load("levels/three.lvl", this.width, this.height / 2);
-        const four: GameLevel = new GameLevel();
-        await four.load("levels/four.lvl", this.width, this.height / 2);
+        // const two: GameLevel = new GameLevel();
+        // await two.load("levels/two.lvl", this.width, this.height / 2);
+        // const three: GameLevel = new GameLevel();
+        // await three.load("levels/three.lvl", this.width, this.height / 2);
+        // const four: GameLevel = new GameLevel();
+        // await four.load("levels/four.lvl", this.width, this.height / 2);
         this.levels.push(one);
-        this.levels.push(two);
-        this.levels.push(three);
-        this.levels.push(four);
+        // this.levels.push(two);
+        // this.levels.push(three);
+        // this.levels.push(four);
 
 
         const playerPos: Vec2 = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y]
@@ -216,7 +216,7 @@ export default class Game {
         if (v3.length([...difference, 0]) < one.radius) {
             return [true, this.vectorDirection(difference), difference]
         } else {
-            return [false, Direction.UP, [0, 0]]
+            return this.collision
         }
     }
     doCollisions() {
