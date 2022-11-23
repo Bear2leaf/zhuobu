@@ -14,7 +14,7 @@ export default class Main {
   constructor() {
     const { windowWidth, windowHeight } = wx.getWindowInfo()
     this.breakout = new Game(windowWidth, windowHeight);
-    wx.onTouchStart(this.touchHandler.bind(this));
+    wx.onTouchStart(this.touchStartHandler.bind(this));
     wx.onTouchMove(this.touchHandler.bind(this));
     wx.onTouchEnd(this.touchEndHandler.bind(this));
     wx.onTouchCancel(this.touchEndHandler.bind(this));
@@ -30,10 +30,13 @@ export default class Main {
     this.breakout.keys[GLFW_KEY_D] = false;
     this.breakout.keys[GLFW_KEY_SPACE] = false;
   }
-
+  touchStartHandler(eventObj: any) {
+    this.breakout.keys[GLFW_KEY_SPACE] = true;
+    this.touchHandler(eventObj)
+  }
   // 游戏结束后的触摸事件处理逻辑
   touchHandler(eventObj: any) {
-    if (!this.breakout.player) {
+    if (!this.breakout.player) { 
       return;
     }
     const { touches, clientX } = eventObj;
@@ -45,7 +48,6 @@ export default class Main {
       this.breakout.keys[GLFW_KEY_A] = false;
       this.breakout.keys[GLFW_KEY_D] = true;
     }
-    this.breakout.keys[GLFW_KEY_SPACE] = true;
   }
 
 

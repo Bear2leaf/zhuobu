@@ -21,14 +21,13 @@ enum Direction {
 }
 
 type Collision = [boolean, Direction, Vec2]
-
-
-const PLAYER_SIZE_X = 100;
-const PLAYER_SIZE_Y = 20;
-const PLAYER_VELOCITY = 0.25;
-const BALL_RADIUS = 12.5;
-const INITIAL_BALL_VELOCITY_X: number = 0.1
-const INITIAL_BALL_VELOCITY_Y: number = -0.35
+const PIXEL_RATIO = !wx.getDeviceInfo ? wx.getWindowInfo().pixelRatio : 1;
+const PLAYER_SIZE_X = 100 * PIXEL_RATIO;
+const PLAYER_SIZE_Y = 20* PIXEL_RATIO;
+const PLAYER_VELOCITY = 0.25* PIXEL_RATIO;
+const BALL_RADIUS = 12.5* PIXEL_RATIO;
+const INITIAL_BALL_VELOCITY_X: number = 0.1* PIXEL_RATIO
+const INITIAL_BALL_VELOCITY_Y: number = -0.35* PIXEL_RATIO
 
 export const GLFW_KEY_A = 0;
 export const GLFW_KEY_D = 1;
