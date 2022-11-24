@@ -5,6 +5,8 @@ export default class BallObject extends GameObject {
         super(pos, [radius * 2, radius * 2], sprite, [1, 1, 1], velocity);
         this.radius = radius;
         this.stuck = true;
+        this.sticky = false;
+        this.passThrough = false;
     }
     move(dt, windowWidth) {
         if (!this.stuck) {
@@ -30,6 +32,8 @@ export default class BallObject extends GameObject {
         this.velocity[0] = velocity[0];
         this.velocity[1] = velocity[1];
         this.stuck = true;
+        this.sticky = false;
+        this.passThrough = false;
     }
 }
 //# sourceMappingURL=ball_object.js.map

@@ -9,8 +9,11 @@ declare const wx: any;
  */
 export default class Main {
   private readonly breakout: Game
-  private deltaTime = 0.0;
-  private lastFrame = 0.0;
+  /**
+   * in order to fix start time not from zero in wechat minigame.
+   */
+  private startTime = 0.0;
+  private lastTime = 0.0;
   constructor() {
     const { windowWidth, windowHeight } = wx.getWindowInfo()
     this.breakout = new Game(windowWidth, windowHeight);
@@ -32,33 +35,35 @@ export default class Main {
   }
   touchStartHandler(eventObj: any) {
     this.breakout.keys[GLFW_KEY_SPACE] = true;
-    this.touchHandler(eventObj)
-  }
-  // 游戏结束后的触摸事件处理逻辑
-  touchHandler(eventObj: any) {
-    if (!this.breakout.player) { 
-      return;
-    }
     const { touches, clientX } = eventObj;
+    const { windowWidth, windowHeight } = wx.getWindowInfo()
     const mx = (touches && touches[0].clientX) || clientX;
-    if (mx < this.breakout.player.position[0] + this.breakout.player!.size[0] / 2) {
+    if (mx < windowWidth / 2) {
       this.breakout.keys[GLFW_KEY_A] = true;
       this.breakout.keys[GLFW_KEY_D] = false;
-    } else if (mx >= this.breakout.player!.position[0] + this.breakout.player!.size[0] / 2) {
+    } else {
       this.breakout.keys[GLFW_KEY_A] = false;
       this.breakout.keys[GLFW_KEY_D] = true;
     }
+  }
+  // 游戏结束后的触摸事件处理逻辑
+  touchHandler(eventObj: any) {
+   
   }
 
 
   // 实现游戏帧循环
   loop(time: number) {
-    const currentFrame = time / 1000;
-    this.deltaTime = currentFrame - this.lastFrame;
-    this.lastFrame = currentFrame;
-    this.breakout.processInut(this.deltaTime);
-    this.breakout.update(this.deltaTime);
+    if (this.lastTime === 0 && this.startTime === 0) {
+      this.startTime = time;
+    }
+    const currentFrame = (time - this.startTime) / 1000;
+    console.log(currentFrame)
+    const deltaTime = currentFrame - this.lastTime;
+    this.lastTime = currentFrame;
+    this.breakout.processInut(deltaTime);
+    this.breakout.update(deltaTime);
     this.breakout.render(currentFrame);
-    requestAnimationFrame((t) => this.loop(t))
+    requestAnimationFrame(this.loop.bind(this))
   }
 }

@@ -113,7 +113,7 @@ export default class ParticleGenerator {
                 this.shader.setVector2f("offset", particle.position);
                 this.shader.setVector4f("color", particle.color);
                 this.texture.bind();
-                ResourceManager.gl.bindVertexArray(this.vao);
+                ResourceManager.gl.bindVertexArray(this.vao!);
                 ResourceManager.gl.drawArrays(ResourceManager.gl.TRIANGLES, 0, 6);
             }
         }

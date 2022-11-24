@@ -5,10 +5,14 @@ import v3 from "./v3.js";
 export default class BallObject extends GameObject {
     radius: number;
     stuck: boolean;
+    sticky: boolean;
+    passThrough: boolean;
     constructor(pos: Vec2, radius: number = 12.5, velocity: Vec2, sprite: Texture2D) {
         super(pos, [radius * 2, radius * 2], sprite, [1, 1, 1], velocity);
         this.radius = radius;
         this.stuck = true;
+        this.sticky = false;
+        this.passThrough = false;
     }
     move(dt: number, windowWidth: number) {
         if (!this.stuck) {
@@ -34,5 +38,7 @@ export default class BallObject extends GameObject {
         this.velocity[1] = velocity[1]
 
         this.stuck = true;
+        this.sticky = false;
+        this.passThrough = false;
     }
 }
