@@ -1,3 +1,4 @@
+import AudioManager from "./audio_engine.js";
 import BallObject from "./ball_object.js";
 import GameLevel from "./game_level.js";
 import GameObject from "./game_object.js";
@@ -7,6 +8,7 @@ import PostProcessor from "./post_processor.js";
 import PowerUp from "./power_up.js";
 import ResourceManager from "./resource_manager.js";
 import SpriteRenderer from "./sprite_renderer.js";
+import TextRenderer from "./text_renderer.js";
 import v3 from "./v3.js";
 
 enum GameState {
@@ -36,6 +38,8 @@ export const GLFW_KEY_D = 1;
 export const GLFW_KEY_SPACE = 2;
 
 export default class Game {
+
+    private readonly audioManager: AudioManager;
     private readonly state: GameState
     readonly keys: Array<boolean>
     private width: number;
@@ -46,12 +50,14 @@ export default class Game {
     player?: GameObject;
     private ball?: BallObject;
     private renderer?: SpriteRenderer;
+    private text?: TextRenderer;
     private particles?: ParticleGenerator;
     private readonly collision: Collision;
     private effects?: PostProcessor;
     private shakeTime: number = 0;
 
     constructor(width: number, height: number) {
+        this.audioManager = new AudioManager();
         this.state = GameState.GAME_ACTIVE
         this.keys = new Array(1024)
         this.width = width
@@ -65,13 +71,16 @@ export default class Game {
         wx.showLoading({ title: '初始化' })
         const projection: Mat4 = m4.ortho(0, this.width, this.height, 0, -1, 1)
         await ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite")
+        await ResourceManager.loadShader("shaders/text_2d.vs", "shaders/text_2d.fs", "text_2d")
         await ResourceManager.loadShader("shaders/particle.vs", "shaders/particle.fs", "particle")
         await ResourceManager.loadShader("shaders/post_processing.vs", "shaders/post_processing.fs", "postprocessing");
 
 
         ResourceManager.getShader('sprite').use().setInteger('sprite', 0);
         ResourceManager.getShader('sprite').setMatrix4('projection', projection);
-        ResourceManager.getShader('particle').use().setInteger('sprite', 0);
+        ResourceManager.getShader('text_2d').use().setInteger('u_texture', 0);
+        ResourceManager.getShader('text_2d').setMatrix4('projection', projection);
+        ResourceManager.getShader('particle').use().setInteger('text_2d', 0);
         ResourceManager.getShader('particle').setMatrix4('projection', projection);
         // load textures
         await ResourceManager.loadTexture("textures/background.jpg", false, "background");
@@ -86,9 +95,11 @@ export default class Game {
         await ResourceManager.loadTexture("textures/powerup_confuse.png", true, "powerup_confuse");
         await ResourceManager.loadTexture("textures/powerup_chaos.png", true, "powerup_chaos");
         await ResourceManager.loadTexture("textures/powerup_passthrough.png", true, "powerup_passthrough");
+        await ResourceManager.loadTexture("textures/8x8-font.png", true, "8x8-font");
 
 
         this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite").use());
+        this.text = new TextRenderer(ResourceManager.getShader("text_2d").use());
         this.particles = new ParticleGenerator(ResourceManager.getShader("particle").use(), ResourceManager.getTexture('particle'), 500);
         this.effects = new PostProcessor(ResourceManager.getShader('postprocessing').use(), this.width, this.height);
 
@@ -113,7 +124,8 @@ export default class Game {
 
         const ballPos: Vec2 = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0]
         this.ball = new BallObject(ballPos, BALL_RADIUS, [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y], ResourceManager.getTexture('face'));
-
+        wx.showLoading({ title: '加载音乐' })
+        await this.audioManager.playBreakout();
         wx.hideLoading()
     }
     processInut(dt: number) {
@@ -170,6 +182,7 @@ export default class Game {
             }
             this.particles!.draw();
             this.ball!.draw(this.renderer!)
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), `level-${this.level}`, 5, 5, 2, [1, 1, 1])
             this.effects!.endRender();
             this.effects!.render(time);
         }
@@ -275,9 +288,11 @@ export default class Game {
                     if (!box.isSolid) {
                         box.destroyed = true;
                         this.spawnPowerUps(box);
+                        this.audioManager.playBleep();
                     } else {
                         this.shakeTime = 0.05;
                         this.effects!.shake = true;
+                        this.audioManager.playSolid();
                     }
                     // collision resolution
                     const dir = collision[1];
@@ -318,6 +333,7 @@ export default class Game {
                 this.activatePowerUp(powerUp);
                 powerUp.destroyed = true;
                 powerUp.activated = true;
+                this.audioManager.playPowerUp();
             }
         }
         // check collisions for player pad (unless stuck)
@@ -339,6 +355,7 @@ export default class Game {
             // fix sticky paddle
             this.ball!.velocity[1] = -1.0 * Math.abs(this.ball!.velocity[1]);
             this.ball!.stuck = this.ball!.sticky;
+            this.audioManager.playBleepStuck();
         }
     }
 

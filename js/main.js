@@ -28,7 +28,7 @@ export default class Main {
     touchStartHandler(eventObj) {
         this.breakout.keys[GLFW_KEY_SPACE] = true;
         const { touches, clientX } = eventObj;
-        const { windowWidth, windowHeight } = wx.getWindowInfo();
+        const { windowWidth } = wx.getWindowInfo();
         const mx = (touches && touches[0].clientX) || clientX;
         if (mx < windowWidth / 2) {
             this.breakout.keys[GLFW_KEY_A] = true;
@@ -48,7 +48,6 @@ export default class Main {
             this.startTime = time;
         }
         const currentFrame = (time - this.startTime) / 1000;
-        console.log(currentFrame);
         const deltaTime = currentFrame - this.lastTime;
         this.lastTime = currentFrame;
         this.breakout.processInut(deltaTime);

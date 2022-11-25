@@ -11,6 +11,8 @@ import Shader from "./shader.js";
 import Texture2D from "./texture.js";
 import spriteVS from "./shaders/sprite.vs.js";
 import spriteFS from "./shaders/sprite.fs.js";
+import text_2dVS from "./shaders/text_2d.vs.js";
+import text_2dFS from "./shaders/text_2d.fs.js";
 import particleVS from "./shaders/particle.vs.js";
 import particleFS from "./shaders/particle.fs.js";
 import post_processingVS from "./shaders/post_processing.vs.js";
@@ -89,6 +91,8 @@ ResourceManager.textures = {};
 ResourceManager.stringCache = {
     "shaders/sprite.vs": spriteVS,
     "shaders/sprite.fs": spriteFS,
+    "shaders/text_2d.vs": text_2dVS,
+    "shaders/text_2d.fs": text_2dFS,
     "shaders/particle.vs": particleVS,
     "shaders/particle.fs": particleFS,
     "shaders/post_processing.vs": post_processingVS,

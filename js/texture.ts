@@ -12,10 +12,10 @@ export default class Texture2D {
         this.tex = ResourceManager.gl.createTexture()!;
         this.internalFormat = ResourceManager.gl.RGB;
         this.imageFormat = ResourceManager.gl.RGB;
-        this.wrapS = ResourceManager.gl.REPEAT;
-        this.wrapT = ResourceManager.gl.REPEAT;
-        this.filterMin = ResourceManager.gl.LINEAR;
-        this.filterMax = ResourceManager.gl.LINEAR;
+        this.wrapS = ResourceManager.gl.CLAMP_TO_EDGE;
+        this.wrapT = ResourceManager.gl.CLAMP_TO_EDGE;
+        this.filterMin = ResourceManager.gl.NEAREST;
+        this.filterMax = ResourceManager.gl.NEAREST;
     }
     generate(data: Image | null, width?: number, height?: number) {
         ResourceManager.gl.bindTexture(ResourceManager.gl.TEXTURE_2D, this.tex);

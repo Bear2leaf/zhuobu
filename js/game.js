@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import AudioManager from "./audio_engine.js";
 import BallObject from "./ball_object.js";
 import GameLevel from "./game_level.js";
 import GameObject from "./game_object.js";
@@ -16,6 +17,7 @@ import PostProcessor from "./post_processor.js";
 import PowerUp from "./power_up.js";
 import ResourceManager from "./resource_manager.js";
 import SpriteRenderer from "./sprite_renderer.js";
+import TextRenderer from "./text_renderer.js";
 import v3 from "./v3.js";
 var GameState;
 (function (GameState) {
@@ -43,6 +45,7 @@ export const GLFW_KEY_SPACE = 2;
 export default class Game {
     constructor(width, height) {
         this.shakeTime = 0;
+        this.audioManager = new AudioManager();
         this.state = GameState.GAME_ACTIVE;
         this.keys = new Array(1024);
         this.width = width;
@@ -57,11 +60,14 @@ export default class Game {
             wx.showLoading({ title: '初始化' });
             const projection = m4.ortho(0, this.width, this.height, 0, -1, 1);
             yield ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite");
+            yield ResourceManager.loadShader("shaders/text_2d.vs", "shaders/text_2d.fs", "text_2d");
             yield ResourceManager.loadShader("shaders/particle.vs", "shaders/particle.fs", "particle");
             yield ResourceManager.loadShader("shaders/post_processing.vs", "shaders/post_processing.fs", "postprocessing");
             ResourceManager.getShader('sprite').use().setInteger('sprite', 0);
             ResourceManager.getShader('sprite').setMatrix4('projection', projection);
-            ResourceManager.getShader('particle').use().setInteger('sprite', 0);
+            ResourceManager.getShader('text_2d').use().setInteger('u_texture', 0);
+            ResourceManager.getShader('text_2d').setMatrix4('projection', projection);
+            ResourceManager.getShader('particle').use().setInteger('text_2d', 0);
             ResourceManager.getShader('particle').setMatrix4('projection', projection);
             // load textures
             yield ResourceManager.loadTexture("textures/background.jpg", false, "background");
@@ -76,7 +82,9 @@ export default class Game {
             yield ResourceManager.loadTexture("textures/powerup_confuse.png", true, "powerup_confuse");
             yield ResourceManager.loadTexture("textures/powerup_chaos.png", true, "powerup_chaos");
             yield ResourceManager.loadTexture("textures/powerup_passthrough.png", true, "powerup_passthrough");
+            yield ResourceManager.loadTexture("textures/8x8-font.png", true, "8x8-font");
             this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite").use());
+            this.text = new TextRenderer(ResourceManager.getShader("text_2d").use());
             this.particles = new ParticleGenerator(ResourceManager.getShader("particle").use(), ResourceManager.getTexture('particle'), 500);
             this.effects = new PostProcessor(ResourceManager.getShader('postprocessing').use(), this.width, this.height);
             wx.showLoading({ title: '加载关卡' });
@@ -97,6 +105,8 @@ export default class Game {
             this.player = new GameObject(playerPos, [PLAYER_SIZE_X, PLAYER_SIZE_Y], ResourceManager.getTexture('paddle'));
             const ballPos = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0];
             this.ball = new BallObject(ballPos, BALL_RADIUS, [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y], ResourceManager.getTexture('face'));
+            wx.showLoading({ title: '加载音乐' });
+            yield this.audioManager.playBreakout();
             wx.hideLoading();
         });
     }
@@ -154,6 +164,7 @@ export default class Game {
             }
             this.particles.draw();
             this.ball.draw(this.renderer);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), `level-${this.level}`, 5, 5, 2, [1, 1, 1]);
             this.effects.endRender();
             this.effects.render(time);
         }
@@ -257,10 +268,12 @@ export default class Game {
                     if (!box.isSolid) {
                         box.destroyed = true;
                         this.spawnPowerUps(box);
+                        this.audioManager.playBleep();
                     }
                     else {
                         this.shakeTime = 0.05;
                         this.effects.shake = true;
+                        this.audioManager.playSolid();
                     }
                     // collision resolution
                     const dir = collision[1];
@@ -298,6 +311,7 @@ export default class Game {
                 this.activatePowerUp(powerUp);
                 powerUp.destroyed = true;
                 powerUp.activated = true;
+                this.audioManager.playPowerUp();
             }
         }
         // check collisions for player pad (unless stuck)
@@ -318,6 +332,7 @@ export default class Game {
             // fix sticky paddle
             this.ball.velocity[1] = -1.0 * Math.abs(this.ball.velocity[1]);
             this.ball.stuck = this.ball.sticky;
+            this.audioManager.playBleepStuck();
         }
     }
     shouldSpawn(chance) {
