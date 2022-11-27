@@ -138,7 +138,7 @@ export default class Game {
         const ballPos: Vec2 = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0]
         this.ball = new BallObject(ballPos, BALL_RADIUS, [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y], ResourceManager.getTexture('face'));
         Device.showLoading({ title: '加载音乐' })
-        // await this.audioManager.playBreakout();
+        this.audioManager.playBreakout();
         Device.hideLoading()
     }
     processInut(dt: number) {

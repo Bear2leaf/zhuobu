@@ -15,7 +15,6 @@ export default class Main {
   private lastY = 0;
   constructor() {
     const { top, bottom, windowWidth, windowHeight } = Device.getWindowInfo()
-    console.log(Device.getWindowInfo())
     this.breakout = new Game(top, bottom, windowWidth, windowHeight);
     Device.onTouchStart(this.touchStartHandler.bind(this));
     Device.onTouchMove(this.touchHandler.bind(this));
