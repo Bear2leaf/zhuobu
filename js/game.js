@@ -12,6 +12,7 @@ import BallObject from "./ball_object.js";
 import GameLevel from "./game_level.js";
 import GameObject from "./game_object.js";
 import m4 from "./m4.js";
+import { Device } from "./resource_manager.js";
 import ParticleGenerator from "./particle_generator.js";
 import PostProcessor from "./post_processor.js";
 import PowerUp from "./power_up.js";
@@ -19,7 +20,7 @@ import ResourceManager from "./resource_manager.js";
 import SpriteRenderer from "./sprite_renderer.js";
 import TextRenderer from "./text_renderer.js";
 import v3 from "./v3.js";
-var GameState;
+export var GameState;
 (function (GameState) {
     GameState[GameState["GAME_ACTIVE"] = 0] = "GAME_ACTIVE";
     GameState[GameState["GAME_MENU"] = 1] = "GAME_MENU";
@@ -32,7 +33,7 @@ var Direction;
     Direction[Direction["DOWN"] = 2] = "DOWN";
     Direction[Direction["LEFT"] = 3] = "LEFT";
 })(Direction || (Direction = {}));
-const PIXEL_RATIO = !wx.getDeviceInfo ? wx.getWindowInfo().pixelRatio : 1;
+const PIXEL_RATIO = !Device.getDeviceInfo ? Device.getWindowInfo().pixelRatio : 1;
 const PLAYER_SIZE_X = 100 * PIXEL_RATIO;
 const PLAYER_SIZE_Y = 20 * PIXEL_RATIO;
 const PLAYER_VELOCITY = 500 * PIXEL_RATIO;
@@ -42,22 +43,29 @@ const INITIAL_BALL_VELOCITY_Y = -350 * PIXEL_RATIO;
 export const GLFW_KEY_A = 0;
 export const GLFW_KEY_D = 1;
 export const GLFW_KEY_SPACE = 2;
+export const GLFW_KEY_ENTER = 3;
+export const GLFW_KEY_W = 4;
+export const GLFW_KEY_S = 5;
 export default class Game {
-    constructor(width, height) {
+    constructor(top, bottom, windowWidth, windowHeight) {
         this.shakeTime = 0;
         this.audioManager = new AudioManager();
-        this.state = GameState.GAME_ACTIVE;
+        this.state = GameState.GAME_MENU;
         this.keys = new Array(1024);
-        this.width = width;
-        this.height = height;
+        this.keysProcessed = new Array(1024);
+        this.top = top;
+        this.bottom = bottom;
+        this.width = windowWidth;
+        this.height = windowHeight;
         this.level = 0;
+        this.lives = 3;
         this.levels = [];
         this.powerUps = [];
         this.collision = [false, Direction.UP, [0, 0]];
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            wx.showLoading({ title: '初始化' });
+            Device.showLoading({ title: '初始化' });
             const projection = m4.ortho(0, this.width, this.height, 0, -1, 1);
             yield ResourceManager.loadShader("shaders/sprite.vs", "shaders/sprite.fs", "sprite");
             yield ResourceManager.loadShader("shaders/text_2d.vs", "shaders/text_2d.fs", "text_2d");
@@ -82,35 +90,60 @@ export default class Game {
             yield ResourceManager.loadTexture("textures/powerup_confuse.png", true, "powerup_confuse");
             yield ResourceManager.loadTexture("textures/powerup_chaos.png", true, "powerup_chaos");
             yield ResourceManager.loadTexture("textures/powerup_passthrough.png", true, "powerup_passthrough");
-            yield ResourceManager.loadTexture("textures/8x8-font.png", true, "8x8-font");
+            yield ResourceManager.loadTexture("textures/8x8-font.png", true, "8x8-font", true);
             this.renderer = new SpriteRenderer(ResourceManager.getShader("sprite").use());
             this.text = new TextRenderer(ResourceManager.getShader("text_2d").use());
             this.particles = new ParticleGenerator(ResourceManager.getShader("particle").use(), ResourceManager.getTexture('particle'), 500);
             this.effects = new PostProcessor(ResourceManager.getShader('postprocessing').use(), this.width, this.height);
-            wx.showLoading({ title: '加载关卡' });
+            Device.showLoading({ title: '加载关卡' });
             // load levels
             const one = new GameLevel();
-            yield one.load("levels/one.lvl", this.width, this.height / 2);
+            yield one.load("levels/one.lvl", this.width, this.height / 2, this.top);
             const two = new GameLevel();
-            yield two.load("levels/two.lvl", this.width, this.height / 2);
+            yield two.load("levels/two.lvl", this.width, this.height / 2, this.top);
             const three = new GameLevel();
-            yield three.load("levels/three.lvl", this.width, this.height / 2);
+            yield three.load("levels/three.lvl", this.width, this.height / 2, this.top);
             const four = new GameLevel();
-            yield four.load("levels/four.lvl", this.width, this.height / 2);
+            yield four.load("levels/four.lvl", this.width, this.height / 2, this.top);
             this.levels.push(one);
             this.levels.push(two);
             this.levels.push(three);
             this.levels.push(four);
-            const playerPos = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y];
+            const playerPos = [this.width / 2.0 - PLAYER_SIZE_X / 2, this.height - PLAYER_SIZE_Y + this.bottom - this.height];
             this.player = new GameObject(playerPos, [PLAYER_SIZE_X, PLAYER_SIZE_Y], ResourceManager.getTexture('paddle'));
             const ballPos = [playerPos[0] + PLAYER_SIZE_X / 2.0 - BALL_RADIUS, playerPos[1] - BALL_RADIUS * 2.0];
             this.ball = new BallObject(ballPos, BALL_RADIUS, [INITIAL_BALL_VELOCITY_X, INITIAL_BALL_VELOCITY_Y], ResourceManager.getTexture('face'));
-            wx.showLoading({ title: '加载音乐' });
-            yield this.audioManager.playBreakout();
-            wx.hideLoading();
+            Device.showLoading({ title: '加载音乐' });
+            // await this.audioManager.playBreakout();
+            Device.hideLoading();
         });
     }
     processInut(dt) {
+        if (this.state === GameState.GAME_MENU) {
+            if (this.keys[GLFW_KEY_ENTER] && !this.keysProcessed[GLFW_KEY_ENTER]) {
+                this.state = GameState.GAME_ACTIVE;
+                this.keysProcessed[GLFW_KEY_ENTER] = true;
+            }
+            if (this.keys[GLFW_KEY_W] && !this.keysProcessed[GLFW_KEY_W]) {
+                this.level = (this.level + 1) % 4;
+                this.keysProcessed[GLFW_KEY_W] = true;
+            }
+            if (this.keys[GLFW_KEY_S] && !this.keysProcessed[GLFW_KEY_S]) {
+                if (this.level > 0)
+                    --this.level;
+                else
+                    this.level = 3;
+                //this.level = (this.level - 1) % 4;
+                this.keysProcessed[GLFW_KEY_S] = true;
+            }
+        }
+        if (this.state === GameState.GAME_WIN) {
+            if (this.keys[GLFW_KEY_ENTER]) {
+                this.keysProcessed[GLFW_KEY_ENTER] = true;
+                this.effects.chaos = false;
+                this.state = GameState.GAME_MENU;
+            }
+        }
         if (this.state === GameState.GAME_ACTIVE) {
             const velocity = PLAYER_VELOCITY * dt;
             // move playerboard
@@ -147,12 +180,23 @@ export default class Game {
                 this.effects.shake = false;
         }
         if (this.ball.position[1] >= this.height) {
+            --this.lives;
+            if (this.lives === 0) {
+                this.resetLevel();
+                this.state = GameState.GAME_MENU;
+            }
+            this.resetPlayer();
+        }
+        // check win condition
+        if (this.state === GameState.GAME_ACTIVE && this.levels[this.level].isComplete()) {
             this.resetLevel();
             this.resetPlayer();
+            this.effects.chaos = true;
+            this.state = GameState.GAME_WIN;
         }
     }
     render(time) {
-        if (this.state === GameState.GAME_ACTIVE) {
+        if (this.state === GameState.GAME_ACTIVE || this.state === GameState.GAME_MENU || this.state === GameState.GAME_WIN) {
             this.effects.beginRender();
             this.renderer.drawSprite(ResourceManager.getTexture('background'), [0, 0, 0], [this.width, this.height, 0]);
             this.levels[this.level].draw(this.renderer);
@@ -164,20 +208,36 @@ export default class Game {
             }
             this.particles.draw();
             this.ball.draw(this.renderer);
-            this.text.drawText(ResourceManager.getTexture('8x8-font'), `level-${this.level}`, 5, 5, 2, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), `lvl-${this.level}`, 8, 16, 2, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), `${Array(this.lives).fill('*').join('')}`, this.width - 8 * 8, 16, 2, [1, 1, 1]);
             this.effects.endRender();
             this.effects.render(time);
+        }
+        if (this.state === GameState.GAME_MENU) {
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "Press ENTER", 0, this.height / 2.0 - 80, 4.0, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "to start", 0, this.height / 2.0 - 40, 4.0, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "Press W or S", 0, this.height / 2.0, 2, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "Or swipe up or down", 0, this.height / 2.0 + 20.0, 2, [1, 1, 1]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "to select level", 0, this.height / 2.0 + 40.0, 2, [1, 1, 1]);
+        }
+        if (this.state === GameState.GAME_WIN) {
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "You WON!!!", 0, this.height / 2.0 - 80.0, 4.0, [0.0, 1.0, 0.0]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "Press ENTER", 0, this.height / 2.0 - 40, 4.0, [1.0, 1.0, 0.0]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "to retry", 0, this.height / 2.0, 4.0, [1.0, 1.0, 0.0]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "or ESC", 0, this.height / 2.0 + 40, 4.0, [1.0, 1.0, 0.0]);
+            this.text.drawText(ResourceManager.getTexture('8x8-font'), "to quit", 0, this.height / 2.0 + 80, 4.0, [1.0, 1.0, 0.0]);
         }
     }
     resetLevel() {
         if (this.level === 0)
-            this.levels[0].load("levels/one.lvl", this.width, this.height / 2);
+            this.levels[0].load("levels/one.lvl", this.width, this.height / 2, this.top);
         else if (this.level === 1)
-            this.levels[1].load("levels/two.lvl", this.width, this.height / 2);
+            this.levels[1].load("levels/two.lvl", this.width, this.height / 2, this.top);
         else if (this.level === 2)
-            this.levels[2].load("levels/three.lvl", this.width, this.height / 2);
+            this.levels[2].load("levels/three.lvl", this.width, this.height / 2, this.top);
         else if (this.level === 3)
-            this.levels[3].load("levels/four.lvl", this.width, this.height / 2);
+            this.levels[3].load("levels/four.lvl", this.width, this.height / 2, this.top);
+        this.lives = 3;
     }
     resetPlayer() {
         // reset player/ball stats
@@ -378,7 +438,7 @@ export default class Game {
         return false;
     }
     spawnPowerUps(block) {
-        if (this.shouldSpawn(5)) {
+        if (this.shouldSpawn(75)) {
             this.powerUps.push(new PowerUp("speed", [0.5, 0.5, 1], 0, [block.position[0], block.position[1]], ResourceManager.getTexture("powerup_speed")));
         }
         else if (this.shouldSpawn(75)) {

@@ -4,12 +4,12 @@ import SpriteRenderer from "./sprite_renderer.js";
 
 export default class GameLevel {
     bricks: GameObject[] = [];
-    async load(file: string, levelWidth: number, levelHeight: number) {
+    async load(file: string, levelWidth: number, levelHeight: number, top: number) {
         this.bricks = [];
         const tileString = await ResourceManager.loadStringFromFile(file);
         const tileData: number[][] = tileString.replace(/[ \t]/g, '').split('\n').map(line => line.split('').map(c => parseInt(c)))
         if (tileData.length > 0) {
-            this.init(tileData, levelWidth, levelHeight);
+            this.init(tileData, levelWidth, levelHeight, top );
         }
     }
     draw(renderer: SpriteRenderer) {
@@ -25,7 +25,7 @@ export default class GameLevel {
                 return false;
         return true;
     }
-    private init(tileData: number[][], levelWidth: number, levelHeight: number) {
+    private init(tileData: number[][], levelWidth: number, levelHeight: number, offsetTop: number) {
         const height = tileData.length;
         const width = tileData[0].length;
         const unitWidth = levelWidth / width;
@@ -34,7 +34,7 @@ export default class GameLevel {
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
                 if (tileData[y][x] === 1) {
-                    const pos: Vec2 = [unitWidth * x, unitHeight * y];
+                    const pos: Vec2 = [unitWidth * x, unitHeight * y + offsetTop];
                     const obj: GameObject = new GameObject(pos, size, ResourceManager.getTexture('block_solid'), [0.8, 0.8, 0.7]);
                     obj.isSolid = true;
                     this.bricks.push(obj);
@@ -49,7 +49,7 @@ export default class GameLevel {
                     } else if (tileData[y][x] === 5) {
                         color = [1.0, 0.5, 0.0];
                     }
-                    const pos: Vec2 = [unitWidth * x, unitHeight * y];
+                    const pos: Vec2 = [unitWidth * x, unitHeight * y + offsetTop];
                     this.bricks.push(new GameObject(pos, size, ResourceManager.getTexture('block'), color));
                 }
             }

@@ -13,6 +13,21 @@ import twoLVL from "./levels/two.lvl.js";
 import threeLVL from "./levels/three.lvl.js";
 import fourLVL from "./levels/four.lvl.js";
 
+export const Device = {
+    createCanvas: (typeof wx !== 'undefined' && wx.createCanvas) || (() => document.getElementById('canvas')),
+    getWindowInfo: () => (typeof wx !== 'undefined') ? ({ windowWidth: wx.getWindowInfo().windowWidth, windowHeight: wx.getWindowInfo().windowHeight, right: wx.getWindowInfo().safeArea.right, bottom: wx.getWindowInfo().safeArea.bottom, top: wx.getWindowInfo().safeArea.top, left: wx.getWindowInfo().safeArea.left, pixelRatio: wx.getWindowInfo().pixelRatio })
+        : ({ windowWidth: document.body.clientWidth, windowHeight: document.body.clientHeight, right: document.body.clientWidth, bottom: document.body.clientHeight, top: 0, left: 0, pixelRatio: window.devicePixelRatio }),
+    onTouchStart: (typeof wx !== 'undefined' && wx.onTouchStart) || ((handler: any) => { window.addEventListener('mousedown', handler); window.addEventListener('touchstart', handler); }),
+    onTouchMove: (typeof wx !== 'undefined' && wx.onTouchMove) || ((handler: any) => { window.addEventListener('mousemove', handler); window.addEventListener('touchmove', handler); }),
+    onTouchEnd: (typeof wx !== 'undefined' && wx.onTouchEnd) || ((handler: any) => { window.addEventListener('mouseup', handler); window.addEventListener('touchend', handler); }),
+    onTouchCancel: (typeof wx !== 'undefined' && wx.onTouchCancel) || ((handler: any) => { window.addEventListener('mouseup', handler); window.addEventListener('touchcancel', handler); }),
+    showLoading: (typeof wx !== 'undefined' && wx.showLoading) || function () { console.log(`show loading...`, ...arguments) },
+    hideLoading: (typeof wx !== 'undefined' && wx.hideLoading) || (() => console.log('hide loading...')),
+    createImage: (typeof wx !== 'undefined' && wx.createImage) || (() => new Image()),
+    createWebAudioContext: (typeof wx !== 'undefined' && wx.createWebAudioContext) || (() => new AudioContext()),
+    getDeviceInfo: (typeof wx !== 'undefined' && wx.getDeviceInfo) || undefined,
+}
+
 export default class ResourceManager {
     static readonly shaders: { [key: string]: Shader } = {}
     static readonly textures: { [key: string]: Texture2D } = {}
@@ -30,7 +45,7 @@ export default class ResourceManager {
         "levels/three.lvl": threeLVL,
         "levels/four.lvl": fourLVL,
     }
-    static readonly gl: WebGL2RenderingContext = wx.createCanvas().getContext('webgl2');
+    static readonly gl: WebGL2RenderingContext = Device.createCanvas().getContext('webgl2');
     static async loadShader(vShaderFile: string, fShaderFile: string, name: string) {
         this.shaders[name] = await this.loadShaderFromFile(vShaderFile, fShaderFile);
         return this.shaders[name];
@@ -38,8 +53,8 @@ export default class ResourceManager {
     static getShader(name: string) {
         return this.shaders[name];
     }
-    static async loadTexture(file: string, alpha: boolean, name: string) {
-        this.textures[name] = await this.loadTextureFromFile(file, alpha);
+    static async loadTexture(file: string, alpha: boolean, name: string, pixelated: boolean = false) {
+        this.textures[name] = await this.loadTextureFromFile(file, alpha, pixelated);
         return this.textures[name]
     }
     static getTexture(name: string) {
@@ -70,9 +85,9 @@ export default class ResourceManager {
         shader.compile(vShaderCode, fShaderCode);
         return shader
     }
-    private static async loadTextureFromFile(file: string, alpha: boolean) {
+    private static async loadTextureFromFile(file: string, alpha: boolean, pixelated: boolean) {
         const texture: Texture2D = new Texture2D();
-        const image = wx.createImage() as Image;
+        const image = Device.createImage() as Image;
 
         return await new Promise<Texture2D>((resolve) => {
             image.src = file;
@@ -81,7 +96,7 @@ export default class ResourceManager {
                     texture.imageFormat = this.gl.RGBA;
                     texture.internalFormat = this.gl.RGBA;
                 }
-                texture.generate(image)
+                texture.generate(image, undefined, undefined, pixelated)
                 resolve(texture)
             }
         });

@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <canvas id="canvas" width="800" height="629"></canvas>
+    <canvas id="canvas" width="800" height="572"></canvas>
 </body>
 <style>
     body {
@@ -22,21 +22,6 @@
         height: 100%;
     }
 </style>
-<script>
-    var wx = {
-        createCanvas: () => document.getElementById('canvas'),
-        getWindowInfo: () => ({ windowWidth: document.body.clientWidth, windowHeight: document.body.clientHeight, pixelRatio: window.devicePixelRatio }),
-        onTouchStart: (handler) => { window.addEventListener('mousedown', handler); window.addEventListener('touchstart', handler); },
-        onTouchMove: (handler) => { window.addEventListener('mousemove', handler); window.addEventListener('touchmove', handler); },
-        onTouchEnd: (handler) => { window.addEventListener('mouseup', handler); window.addEventListener('touchend', handler); },
-        onTouchCancel: (handler) => { window.addEventListener('mouseup', handler); window.addEventListener('touchcancel', handler); },
-        showLoading: function () { console.log(`show loading...`, ...arguments) },
-        hideLoading: () => console.log('hide loading...'),
-        createImage: () => new Image(),
-        createWebAudioContext: () => new AudioContext()
-    }
-
-</script>
 <script src="game.js" type="module"></script>
 
 </html>

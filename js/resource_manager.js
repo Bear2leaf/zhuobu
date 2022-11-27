@@ -21,6 +21,20 @@ import oneLVL from "./levels/one.lvl.js";
 import twoLVL from "./levels/two.lvl.js";
 import threeLVL from "./levels/three.lvl.js";
 import fourLVL from "./levels/four.lvl.js";
+export const Device = {
+    createCanvas: (typeof wx !== 'undefined' && wx.createCanvas) || (() => document.getElementById('canvas')),
+    getWindowInfo: () => (typeof wx !== 'undefined') ? ({ windowWidth: wx.getWindowInfo().windowWidth, windowHeight: wx.getWindowInfo().windowHeight, right: wx.getWindowInfo().safeArea.right, bottom: wx.getWindowInfo().safeArea.bottom, top: wx.getWindowInfo().safeArea.top, left: wx.getWindowInfo().safeArea.left, pixelRatio: wx.getWindowInfo().pixelRatio })
+        : ({ windowWidth: document.body.clientWidth, windowHeight: document.body.clientHeight, right: document.body.clientWidth, bottom: document.body.clientHeight, top: 0, left: 0, pixelRatio: window.devicePixelRatio }),
+    onTouchStart: (typeof wx !== 'undefined' && wx.onTouchStart) || ((handler) => { window.addEventListener('mousedown', handler); window.addEventListener('touchstart', handler); }),
+    onTouchMove: (typeof wx !== 'undefined' && wx.onTouchMove) || ((handler) => { window.addEventListener('mousemove', handler); window.addEventListener('touchmove', handler); }),
+    onTouchEnd: (typeof wx !== 'undefined' && wx.onTouchEnd) || ((handler) => { window.addEventListener('mouseup', handler); window.addEventListener('touchend', handler); }),
+    onTouchCancel: (typeof wx !== 'undefined' && wx.onTouchCancel) || ((handler) => { window.addEventListener('mouseup', handler); window.addEventListener('touchcancel', handler); }),
+    showLoading: (typeof wx !== 'undefined' && wx.showLoading) || function () { console.log(`show loading...`, ...arguments); },
+    hideLoading: (typeof wx !== 'undefined' && wx.hideLoading) || (() => console.log('hide loading...')),
+    createImage: (typeof wx !== 'undefined' && wx.createImage) || (() => new Image()),
+    createWebAudioContext: (typeof wx !== 'undefined' && wx.createWebAudioContext) || (() => new AudioContext()),
+    getDeviceInfo: (typeof wx !== 'undefined' && wx.getDeviceInfo) || undefined,
+};
 export default class ResourceManager {
     static loadShader(vShaderFile, fShaderFile, name) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,9 +45,9 @@ export default class ResourceManager {
     static getShader(name) {
         return this.shaders[name];
     }
-    static loadTexture(file, alpha, name) {
+    static loadTexture(file, alpha, name, pixelated = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.textures[name] = yield this.loadTextureFromFile(file, alpha);
+            this.textures[name] = yield this.loadTextureFromFile(file, alpha, pixelated);
             return this.textures[name];
         });
     }
@@ -68,10 +82,10 @@ export default class ResourceManager {
             return shader;
         });
     }
-    static loadTextureFromFile(file, alpha) {
+    static loadTextureFromFile(file, alpha, pixelated) {
         return __awaiter(this, void 0, void 0, function* () {
             const texture = new Texture2D();
-            const image = wx.createImage();
+            const image = Device.createImage();
             return yield new Promise((resolve) => {
                 image.src = file;
                 image.onload = () => {
@@ -79,7 +93,7 @@ export default class ResourceManager {
                         texture.imageFormat = this.gl.RGBA;
                         texture.internalFormat = this.gl.RGBA;
                     }
-                    texture.generate(image);
+                    texture.generate(image, undefined, undefined, pixelated);
                     resolve(texture);
                 };
             });
@@ -102,5 +116,5 @@ ResourceManager.stringCache = {
     "levels/three.lvl": threeLVL,
     "levels/four.lvl": fourLVL,
 };
-ResourceManager.gl = wx.createCanvas().getContext('webgl2');
+ResourceManager.gl = Device.createCanvas().getContext('webgl2');
 //# sourceMappingURL=resource_manager.js.map

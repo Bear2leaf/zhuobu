@@ -9,6 +9,7 @@ export default class TextRenderer {
             textureWidth: 64,
             textureHeight: 40,
             glyphInfos: {
+                ' ': { x: 7, y: 0, width: 1, },
                 'a': { x: 0, y: 0, width: 8, },
                 'b': { x: 8, y: 0, width: 8, },
                 'c': { x: 16, y: 0, width: 8, },
@@ -69,17 +70,17 @@ export default class TextRenderer {
         ResourceManager.gl.activeTexture(ResourceManager.gl.TEXTURE0);
         ResourceManager.gl.bindVertexArray(this.vao);
         for (const c of text) {
-            const ch = this.fontInfo.glyphInfos[c];
-            const xpos = x + (ch.width) * scale;
-            const ypos = y + (this.fontInfo.letterHeight) * scale;
-            const w = (ch.width) * scale;
+            const ch = this.fontInfo.glyphInfos[c] || this.fontInfo.glyphInfos[String.fromCharCode(c.charCodeAt(0) + 32)];
+            const xpos = x;
+            const ypos = y;
+            const w = (this.fontInfo.spaceWidth) * scale;
             const h = this.fontInfo.letterHeight * scale;
             // update VBO for each character
             const vertices = new Float32Array([
-                xpos, ypos + h, (ch.x + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y + this.fontInfo.letterHeight) / this.fontInfo.textureHeight,
+                xpos, ypos + h, (ch.x) / this.fontInfo.textureWidth, (ch.y + this.fontInfo.letterHeight) / this.fontInfo.textureHeight,
                 xpos + w, ypos, (ch.x + ch.width + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y) / this.fontInfo.textureHeight,
-                xpos, ypos, (ch.x + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y) / this.fontInfo.textureHeight,
-                xpos, ypos + h, (ch.x + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y + this.fontInfo.letterHeight) / this.fontInfo.textureHeight,
+                xpos, ypos, (ch.x) / this.fontInfo.textureWidth, (ch.y) / this.fontInfo.textureHeight,
+                xpos, ypos + h, (ch.x) / this.fontInfo.textureWidth, (ch.y + this.fontInfo.letterHeight) / this.fontInfo.textureHeight,
                 xpos + w, ypos + h, (ch.x + ch.width + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y + this.fontInfo.letterHeight) / this.fontInfo.textureHeight,
                 xpos + w, ypos, (ch.x + ch.width + this.fontInfo.spacing) / this.fontInfo.textureWidth, (ch.y) / this.fontInfo.textureHeight
             ]);
