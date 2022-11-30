@@ -9,6 +9,9 @@ export default class AudioManager {
     constructor() {
         this.context = Device.createWebAudioContext();
     }
+    get state() {
+        return this.context.state;
+    }
     playBleep() {
         const source = this.context.createBufferSource();
         this.context.decodeAudioData(decodeBase64ToArrayBuffer(bleep), buffer => {
@@ -49,6 +52,12 @@ export default class AudioManager {
             source.connect(this.context.destination);
             source.start();
         }, console.error);
+    }
+    suspend() {
+        this.context.suspend();
+    }
+    resume() {
+        this.context.resume();
     }
 }
 //# sourceMappingURL=audio_engine.js.map

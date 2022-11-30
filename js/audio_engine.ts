@@ -10,6 +10,9 @@ const bleep_stuck = `AAAAHGZ0eXBNNEEgAAAAAE00QSBpc29tbXA0MgAAAAFtZGF0AAAAAAAAKzc
 
 
 export default class AudioManager {
+    get state() {
+        return this.context.state;
+    }
     private readonly context: AudioContext;
     constructor() {
         this.context = Device.createWebAudioContext();
@@ -54,5 +57,11 @@ export default class AudioManager {
             source.connect(this.context.destination);
             source.start()
         }, console.error);
+    }
+    suspend() {
+        this.context.suspend();
+    }
+    resume() {
+        this.context.resume();
     }
 }

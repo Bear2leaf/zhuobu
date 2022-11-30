@@ -63,6 +63,14 @@ export default class Game {
         this.powerUps = [];
         this.collision = [false, Direction.UP, [0, 0]];
     }
+    toggleAudio() {
+        if (this.audioManager.state === 'running') {
+            this.audioManager.suspend();
+        }
+        else {
+            this.audioManager.resume();
+        }
+    }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             Device.showLoading({ title: '初始化' });

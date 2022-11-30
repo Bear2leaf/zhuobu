@@ -55,7 +55,7 @@ export default class Game {
     private readonly powerUps: PowerUp[];
     private level: number;
     private lives: number;
-    player?: GameObject;
+    private player?: GameObject;
     private ball?: BallObject;
     private renderer?: SpriteRenderer;
     private text?: TextRenderer;
@@ -79,6 +79,13 @@ export default class Game {
         this.levels = [];
         this.powerUps = [];
         this.collision = [false, Direction.UP, [0, 0]];
+    }
+    toggleAudio() {
+        if (this.audioManager.state === 'running') {
+            this.audioManager.suspend();
+        } else {
+            this.audioManager.resume();
+        }
     }
     async init() {
         Device.showLoading({ title: '初始化' })
@@ -237,21 +244,19 @@ export default class Game {
             this.effects!.endRender();
             this.effects!.render(time);
         }
-        if (this.state === GameState.GAME_MENU)
-        {
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"Press ENTER", 0, this.height / 2.0 - 80, 4.0, [1,1,1]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"to start", 0, this.height / 2.0 - 40, 4.0, [1,1,1]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"Press W or S", 0, this.height / 2.0, 2, [1,1,1]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"Or swipe up or down", 0, this.height / 2.0 + 20.0, 2, [1,1,1]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"to select level", 0, this.height / 2.0 + 40.0, 2, [1,1,1]);
+        if (this.state === GameState.GAME_MENU) {
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "Press ENTER", 0, this.height / 2.0 - 80, 4.0, [1, 1, 1]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "to start", 0, this.height / 2.0 - 40, 4.0, [1, 1, 1]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "Press W or S", 0, this.height / 2.0, 2, [1, 1, 1]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "Or swipe up or down", 0, this.height / 2.0 + 20.0, 2, [1, 1, 1]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "to select level", 0, this.height / 2.0 + 40.0, 2, [1, 1, 1]);
         }
-        if (this.state === GameState.GAME_WIN)
-        {
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"You WON!!!", 0, this.height / 2.0 - 80.0, 4.0, [0.0, 1.0, 0.0]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"Press ENTER", 0, this.height / 2.0 - 40, 4.0, [1.0, 1.0, 0.0]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"to retry", 0, this.height / 2.0, 4.0, [1.0, 1.0, 0.0]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"or ESC", 0, this.height / 2.0 + 40, 4.0, [1.0, 1.0, 0.0]);
-            this.text!.drawText(ResourceManager.getTexture('8x8-font'),"to quit", 0, this.height / 2.0 + 80, 4.0, [1.0, 1.0, 0.0]);
+        if (this.state === GameState.GAME_WIN) {
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "You WON!!!", 0, this.height / 2.0 - 80.0, 4.0, [0.0, 1.0, 0.0]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "Press ENTER", 0, this.height / 2.0 - 40, 4.0, [1.0, 1.0, 0.0]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "to retry", 0, this.height / 2.0, 4.0, [1.0, 1.0, 0.0]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "or ESC", 0, this.height / 2.0 + 40, 4.0, [1.0, 1.0, 0.0]);
+            this.text!.drawText(ResourceManager.getTexture('8x8-font'), "to quit", 0, this.height / 2.0 + 80, 4.0, [1.0, 1.0, 0.0]);
         }
     }
 

@@ -43,6 +43,10 @@ export default class Main {
     const { windowWidth, windowHeight } = Device.getWindowInfo()
     const mx = (touches && touches[0].clientX) || clientX;
     const my = (touches && touches[0].clientY) || clientY;
+
+    if (my < windowHeight / 4) {
+      this.breakout.toggleAudio();
+    }
     if (this.breakout.state === GameState.GAME_MENU || this.breakout.state === GameState.GAME_WIN) {
       if (mx > windowWidth / 2 - 40 && mx < windowWidth/2 + 40 && my > windowHeight / 2 - 40 && my < windowHeight / 2 + 40) {
         this.breakout.keys[GLFW_KEY_ENTER] = true;
