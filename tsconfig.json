@@ -1,7 +1,0 @@
-{
-    "compilerOptions": {
-        "sourceMap": true, /* Create source map files for emitted JavaScript files. */
-        "strict": true, /* Enable all strict type-checking options. */
-        "target": "ES2015"
-    }
-}
