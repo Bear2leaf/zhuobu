@@ -1,5 +1,6 @@
 
 import TextRenderer from "./TextRenderer.js";
+import playAudio from "./audio.js";
 class Game {
   constructor() {
     /**
@@ -10,8 +11,9 @@ class Game {
 
   }
   drawSomething() {
-    this.textRenderer.drawText(10, 100, 2, [1, 1, 1, 1], ..."abc","nono",..."def")
-    
+    this.textRenderer.drawText(10, 100, 2, [1, 1, 1, 1], ..."abc", "nono", ..."def")
+
+    playAudio();
   }
 }
 const game = new Game();

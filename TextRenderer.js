@@ -274,7 +274,7 @@ export default class TextRenderer {
   }
   async init() {
     const img = wx.createImage();
-    img.src = "textures/8x8-font.png";
+    img.src = "8x8-font.png";
     await new Promise((resolve, reject) => {img.onload = resolve; img.onerror = reject;})
     this.texture.generate(img);
   }
