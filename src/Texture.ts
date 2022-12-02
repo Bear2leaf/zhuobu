@@ -1,7 +1,14 @@
 import {
   gl
-} from "./utils.js";
+} from "./utils";
 export default class Texture {
+  tex: WebGLTexture;
+  internalFormat: number;
+  imageFormat: number;
+  wrapS: number;
+  wrapT: number;
+  filterMin: number;
+  filterMax: number;
   constructor() {
     this.tex = gl.createTexture();
     this.internalFormat = gl.RGBA;

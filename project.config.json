@@ -5,8 +5,18 @@
   "appid": "wxd826cd1b3a0d6ab3",
   "projectname": "%E5%8D%93%E5%8D%9C",
   "packOptions": {
-    "ignore": [],
-    "include": []
+    "ignore": [
+      {
+        "value": "src",
+        "type": "folder"
+      }
+    ],
+    "include": [
+      {
+        "value": "src/dist",
+        "type": "folder"
+      }
+    ]
   },
   "condition": {},
   "setting": {
@@ -15,9 +25,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "ignoreUploadUnusedFiles": true,
-    "es6": true,
-    "enhance": true
+    "ignoreUploadUnusedFiles": true
   },
   "editorSetting": {
     "tabIndent": "insertSpaces",

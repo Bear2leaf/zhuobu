@@ -1,11 +1,11 @@
-import {gl} from "./utils.js";
+import {gl} from "./utils";
 export default class Shader {
+    program: any;
     constructor() {
         this.program = null;
-        this.locations = {};
     }
-    compile(vertexSource, fragmentSource) {
-        let sVertex, sFragment;
+    compile(vertexSource: string, fragmentSource: string) {
+        let sVertex: any, sFragment: any;
         // vertex Shader
         sVertex = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(sVertex, vertexSource);
@@ -30,49 +30,46 @@ export default class Shader {
         gl.useProgram(this.program);
         return this;
     }
-    setInteger(name, value, useShader = false) {
+    setInteger(name: string, value: number, useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniform1i(this.getUniformLocation(this.program, name), value);
     }
-    setFloat(name, value, useShader = false) {
+    setFloat(name: string, value: number, useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniform1f(this.getUniformLocation(this.program, name), value);
     }
-    setVector2f(name, value, useShader = false) {
+    setVector2f(name: string, value: [number, number], useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniform2f(this.getUniformLocation(this.program, name), value[0], value[1]);
     }
-    setVector3f(name, value, useShader = false) {
+    setVector3f(name: string, value: [number, number, number], useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniform3f(this.getUniformLocation(this.program, name), value[0], value[1], value[2]);
     }
-    setVector4f(name, value, useShader = false) {
+    setVector4f(name: string, value: [number, number, number, number], useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniform4f(this.getUniformLocation(this.program, name), value[0], value[1], value[2], value[3]);
     }
-    setMatrix4(name, value, useShader = false) {
+    setMatrix4(name: string, value: number[], useShader = false) {
         if (useShader) {
             this.use();
         }
         gl.uniformMatrix4fv(this.getUniformLocation(this.program, name), false, value);
     }
-    getUniformLocation(program, name) {
-        if (this.locations[name] === undefined) {
-            this.locations[name] = gl.getUniformLocation(program, name);
-        }
-        return this.locations[name];
+    getUniformLocation(program: WebGLProgram, name: string) {
+        return gl.getUniformLocation(program, name);
     }
-    checkCompileErrors(object, type) {
+    checkCompileErrors(object: WebGLShader | WebGLProgram, type: string) {
         if (type != "PROGRAM") {
             const success = gl.getShaderParameter(object, gl.COMPILE_STATUS);
             if (!success) {

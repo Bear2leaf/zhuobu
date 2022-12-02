@@ -49,14 +49,8 @@ let currentNotes = [0, 3, 0, 7, 8, 7, 3, 2]
 
 
 // CONTEXT AND MASTER VOLUME
-/**
- * @type {AudioContext}
- */
-const context = typeof AudioContext === "undefined" ? wx.createWebAudioContext() : new AudioContext();
+const context = wx.createWebAudioContext();
 
-/**
- * @type {AudioContext}
- */
 const masterVolume = context.createGain();
 masterVolume.connect(context.destination);
 masterVolume.gain.value = 0.2
@@ -155,8 +149,11 @@ feedback.gain.value = 0;
 //     feedback.gain.value = this.value;
 // })
 
+let isPlaying = false;
 export default function () {
-
+    if (isPlaying) {
+        return;
+    }
 
     //LOOP CONTROLS
     // const startButton = document.querySelector('#start-button');
@@ -164,7 +161,6 @@ export default function () {
     // const tempoControl = document.querySelector('#tempo-control');
     let tempo = 120.0;
     let currentNoteIndex = 0;
-    let isPlaying = false;
     let lfoGain, lfo;
 
 
@@ -231,7 +227,6 @@ export default function () {
         noteGain.connect(masterVolume);
         noteGain.connect(delay);
     }
-
     if (!isPlaying) {
         isPlaying = true;
         noteLoop();

@@ -1,0 +1,30 @@
+{
+  "name": "bearstory",
+  "version": "0.0.1",
+  "description": "Bearstory for Phaser 3 in TypeScript",
+  "keywords": [],
+  "source": "index.html",
+  "main": "../Main.js",
+  "devDependencies": {
+    "minigame-api-typings": "latest",
+    "parcel": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bear2leaf/bearstory.git"
+  },
+  "author": {
+    "name": "Jake Chen",
+    "email": "845708495@qq.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bear2leaf/bearstory#readme"
+  },
+  "homepage": "https://github.com/Bear2leaf/bearstory#readme"
+}

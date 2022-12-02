@@ -1,16 +1,20 @@
-import Shader from "./Shader.js";
-import Texture from "./Texture.js";
+import Renderer from "./Renderer";
+import Shader from "./Shader";
+import Texture from "./Texture";
 import {
   ortho,
   gl
-} from "./utils.js";
+} from "./utils";
 
-export default class TextRenderer {
+export default class TextRenderer implements Renderer {
+  shader: Shader;
+  texture: Texture;
+  fontInfo: { letterHeight: number; spaceWidth: number; spacing: number; textureWidth: number; textureHeight: number; glyphInfos: { a: { x: number; y: number; width: number; }; b: { x: number; y: number; width: number; }; c: { x: number; y: number; width: number; }; d: { x: number; y: number; width: number; }; e: { x: number; y: number; width: number; }; f: { x: number; y: number; width: number; }; g: { x: number; y: number; width: number; }; h: { x: number; y: number; width: number; }; i: { x: number; y: number; width: number; }; j: { x: number; y: number; width: number; }; k: { x: number; y: number; width: number; }; l: { x: number; y: number; width: number; }; m: { x: number; y: number; width: number; }; n: { x: number; y: number; width: number; }; o: { x: number; y: number; width: number; }; p: { x: number; y: number; width: number; }; q: { x: number; y: number; width: number; }; r: { x: number; y: number; width: number; }; s: { x: number; y: number; width: number; }; t: { x: number; y: number; width: number; }; u: { x: number; y: number; width: number; }; v: { x: number; y: number; width: number; }; w: { x: number; y: number; width: number; }; x: { x: number; y: number; width: number; }; y: { x: number; y: number; width: number; }; z: { x: number; y: number; width: number; }; '0': { x: number; y: number; width: number; }; '1': { x: number; y: number; width: number; }; '2': { x: number; y: number; width: number; }; '3': { x: number; y: number; width: number; }; '4': { x: number; y: number; width: number; }; '5': { x: number; y: number; width: number; }; '6': { x: number; y: number; width: number; }; '7': { x: number; y: number; width: number; }; '8': { x: number; y: number; width: number; }; '9': { x: number; y: number; width: number; }; '-': { x: number; y: number; width: number; }; '*': { x: number; y: number; width: number; }; '!': { x: number; y: number; width: number; }; '?': { x: number; y: number; width: number; }; ' ': { x: number; y: number; width: number; }; ':': { x: number; y: number; width: number; }; ',': { x: number; y: number; width: number; }; player: { x: number; y: number; width: number; }; }; };
+  vao: WebGLVertexArrayObject;
+  positionLocation: number;
+  positionBuffer: WebGLBuffer;
   constructor() {
 
-    /**
-     * @type {Shader}
-     */
     this.shader = new Shader();
 
     /**
@@ -254,8 +258,18 @@ export default class TextRenderer {
           y: 40,
           width: 8,
         },
-        'nono': {
-          x: 0,
+        ':': {
+          x: 8,
+          y: 40,
+          width: 8,
+        },
+        ',': {
+          x: 16,
+          y: 40,
+          width: 8,
+        },
+        'player': {
+          x: 24,
           y: 40,
           width: 8,
         },
@@ -286,9 +300,7 @@ export default class TextRenderer {
    * @param {[number, number, number, number]} color 
    * @param  {...string} chars 
    */
-  drawText(x, y, scale, color, ...chars) {
-    gl.clearColor(0.3, 0.3, 0.3, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+  drawText(x: number, y: number, scale: number, color: [number, number, number, number], ...chars: string[]) {
     this.shader.use();
     this.shader.setVector4f("textColor", color);
     gl.activeTexture(gl.TEXTURE0);
