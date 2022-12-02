@@ -3,8 +3,9 @@ import Shader from "./Shader.js";
 import Texture from "./Texture.js";
 import {
   ortho,
-  gl
-} from "./utils.js";
+  gl,
+  device
+} from "./global.js";
 
 export default class TextRenderer implements Renderer {
   shader: Shader;
@@ -47,7 +48,7 @@ export default class TextRenderer implements Renderer {
       color = textColor * texture(u_texture, v_texcoord); 
     }`);
     this.shader.use().setInteger("u_texture", 0);
-    this.shader.use().setMatrix4("projection", ortho(0, wx.getWindowInfo().windowWidth, wx.getWindowInfo().windowHeight, 0, -1, 1));
+    this.shader.use().setMatrix4("projection", ortho(0, device.getWindowInfo().windowWidth, device.getWindowInfo().windowHeight, 0, -1, 1));
     this.fontInfo = {
       letterHeight: 8,
       spaceWidth: 8,
@@ -287,7 +288,7 @@ export default class TextRenderer implements Renderer {
     gl.vertexAttribPointer(this.positionLocation, 4, gl.FLOAT, false, 0, 0);
   }
   async init() {
-    const img = wx.createImage() as HTMLImageElement;
+    const img = device.createImage() as HTMLImageElement;
     img.src = "8x8-font.png";
     await new Promise((resolve, reject) => {img.onload = resolve; img.onerror = reject;})
     this.texture.generate(img);

@@ -1,4 +1,4 @@
-import {gl} from "./utils.js";
+import {gl} from "./global.js";
 export default class Shader {
     program: WebGLProgram;
     constructor() {

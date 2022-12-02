@@ -2,7 +2,7 @@
 import TextRenderer from "./TextRenderer.js";
 import Renderer from "./Renderer.js";
 import Player from "./Player.js";
-import { gl } from "./utils.js";
+import { device, gl } from "./global.js";
 import playAudio from "./audio.js";
 class Game {
   movePlayerTo(position: [number, number]) {
@@ -35,7 +35,7 @@ class Game {
 
 const game = new Game();
 game.init();
-wx.onTouchStart((event) => {
+device.onTouchStart((event) => {
   const position: [number, number] = [0, 0];
   if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) {// desktop browser
     position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);

@@ -11,16 +11,4 @@
         height: 100%;
     }
 </style>
-<script>
-    globalThis['wx'] = {
-        createCanvas: () => document.getElementById("canvas"),
-        createImage: () => new Image(),
-        getWindowInfo: () => ({
-            windowWidth: wx.createCanvas().width,
-            windowHeight: wx.createCanvas().height,
-        }),
-        createWebAudioContext: () => new AudioContext(),
-        onTouchStart: (listener) => {window.onclick = listener;window.ontouchstart = listener;}
-    }
-</script>
 <script src="game.js" type="module"></script>

@@ -1,6 +1,6 @@
 import {
   gl
-} from "./utils.js";
+} from "./global.js";
 export default class Texture {
   tex: WebGLTexture;
   internalFormat: number;

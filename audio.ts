@@ -1,3 +1,4 @@
+import { device } from "./global";
 
 const notes = {
     "C4": 261.63,
@@ -49,7 +50,7 @@ let currentNotes = [0, 3, 0, 7, 8, 7, 3, 2]
 
 
 // CONTEXT AND MASTER VOLUME
-const context = wx.createWebAudioContext();
+const context = device.createWebAudioContext();
 
 const masterVolume = context.createGain();
 masterVolume.connect(context.destination);
