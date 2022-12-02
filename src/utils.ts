@@ -1,6 +1,7 @@
 
 export const gl = wx.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 
+
 export function ortho(left: number, right: number, bottom: number, top: number, near: number, far: number, dst?: any[]) {
     dst = dst || new Array(16);
 

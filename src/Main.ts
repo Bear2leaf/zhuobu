@@ -3,11 +3,16 @@ import TextRenderer from "./TextRenderer";
 import Renderer from "./Renderer";
 import Player from "./Player";
 import { gl } from "./utils";
-import GameObject from "./GameObject";
 import playAudio from "./audio";
 export default class Game {
+  movePlayerTo(position: [number, number]) {
+    this.player.destX = position[0];
+    this.player.destY = position[1];
+    this.player.update();
+    this.drawSomething();
+  }
   private readonly textRenderer: Renderer;
-  private readonly player: GameObject;
+  private readonly player: Player;
   constructor() {
     this.textRenderer = new TextRenderer();
     this.player = new Player();
@@ -31,4 +36,22 @@ export default class Game {
 const game = new Game();
 game.init();
 
-wx.onTouchStart(() => playAudio())
+wx.onTouchStart((event) => {
+  console.log(event);
+  const position: [number, number] = [0, 0];
+  if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent) {// desktop browser
+    position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
+    position[1] = event.clientY * (gl.canvas.height / gl.canvas.clientHeight);
+  } else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent) {// mobile browser
+    const { touches } = event;
+    position[0] = touches[0].clientX * (gl.canvas.width / gl.canvas.clientWidth);
+    position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);
+  } else {// wechat minigame
+    const { touches } = event;
+    position[0] = touches[0].clientX;
+    position[1] = touches[0].clientY;
+
+  }
+  game.movePlayerTo(position)
+  // playAudio();
+})
