@@ -12,16 +12,16 @@ export default class Player implements GameObject {
     constructor() {
         this.destX = this.x = 0;
         this.destY = this.y = 0;
-        this.originX = 4;
-        this.originY = 8;
+        this.originX = 0;
+        this.originY = 0;
         this.color = [1, 1, 1, 1];
-        this.scale = 10;
+        this.scale = 5;
     }
     update() {
         this.x = this.destX;
         this.y = this.destY;
     }
     draw(renderer: Renderer) {
-        renderer.drawText(this.x - this.originX * this.scale, this.y - this.originY * this.scale, this.scale, this.color, 'player');
+        renderer.drawText(this.x - this.originX * this.scale, this.y - this.originY * this.scale, this.scale, this.color, ...'!1 2<\n!211212!<\n<<<');
     }
 }
