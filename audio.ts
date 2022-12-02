@@ -220,7 +220,7 @@ export default function () {
         lfo.stop(context.currentTime + noteLength);
         lfo.connect(lfoGain);
         osc.type = waveform;
-        osc.frequency.setValueAtTime(Object.values(notes)[`${currentNotes[currentNoteIndex]}`], 0);
+        osc.frequency.setValueAtTime(notes[Object.keys(notes)[`${currentNotes[currentNoteIndex]}`]], 0);
         osc.start(0);
         osc.stop(context.currentTime + noteLength);
         osc.connect(noteGain);

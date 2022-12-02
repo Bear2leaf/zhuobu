@@ -1,10 +1,10 @@
 
-import TextRenderer from "./TextRenderer";
-import Renderer from "./Renderer";
-import Player from "./Player";
-import { gl } from "./utils";
-import playAudio from "./audio";
-export default class Game {
+import TextRenderer from "./TextRenderer.js";
+import Renderer from "./Renderer.js";
+import Player from "./Player.js";
+import { gl } from "./utils.js";
+import playAudio from "./audio.js";
+class Game {
   movePlayerTo(position: [number, number]) {
     this.player.destX = position[0];
     this.player.destY = position[1];
@@ -35,14 +35,12 @@ export default class Game {
 
 const game = new Game();
 game.init();
-
 wx.onTouchStart((event) => {
-  console.log(event);
   const position: [number, number] = [0, 0];
-  if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent) {// desktop browser
+  if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) {// desktop browser
     position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
     position[1] = event.clientY * (gl.canvas.height / gl.canvas.clientHeight);
-  } else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent) {// mobile browser
+  } else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent && gl.canvas instanceof HTMLCanvasElement) {// mobile browser
     const { touches } = event;
     position[0] = touches[0].clientX * (gl.canvas.width / gl.canvas.clientWidth);
     position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);

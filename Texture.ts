@@ -1,6 +1,6 @@
 import {
   gl
-} from "./utils";
+} from "./utils.js";
 export default class Texture {
   tex: WebGLTexture;
   internalFormat: number;
@@ -10,15 +10,15 @@ export default class Texture {
   filterMin: number;
   filterMax: number;
   constructor() {
-    this.tex = gl.createTexture();
+    this.tex = gl.createTexture()!;
     this.internalFormat = gl.RGBA;
     this.imageFormat = gl.RGBA;
-    this.wrapS = gl.REPEAT;
-    this.wrapT = gl.REPEAT;
+    this.wrapS = gl.CLAMP_TO_EDGE;
+    this.wrapT = gl.CLAMP_TO_EDGE;
     this.filterMin = gl.NEAREST;
     this.filterMax = gl.NEAREST;
   }
-  generate(data) {
+  generate(data: HTMLImageElement) {
     gl.bindTexture(gl.TEXTURE_2D, this.tex);
     gl.texImage2D(gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);

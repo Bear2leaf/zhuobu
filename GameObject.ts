@@ -1,4 +1,4 @@
-import Renderer from "./Renderer";
+import Renderer from "./Renderer.js";
 
 export default interface GameObject {
     update(): void;

@@ -1,23 +1,22 @@
-import {gl} from "./utils";
+import {gl} from "./utils.js";
 export default class Shader {
-    program: any;
+    program: WebGLProgram;
     constructor() {
-        this.program = null;
+        this.program = gl.createProgram()!;
     }
     compile(vertexSource: string, fragmentSource: string) {
-        let sVertex: any, sFragment: any;
+        let sVertex: WebGLShader, sFragment: WebGLShader;
         // vertex Shader
-        sVertex = gl.createShader(gl.VERTEX_SHADER);
+        sVertex = gl.createShader(gl.VERTEX_SHADER)!;
         gl.shaderSource(sVertex, vertexSource);
         gl.compileShader(sVertex);
         this.checkCompileErrors(sVertex, "VERTEX");
         // fragment Shader
-        sFragment = gl.createShader(gl.FRAGMENT_SHADER);
+        sFragment = gl.createShader(gl.FRAGMENT_SHADER)!;
         gl.shaderSource(sFragment, fragmentSource);
         gl.compileShader(sFragment);
         this.checkCompileErrors(sFragment, "FRAGMENT");
         // shader program
-        this.program = gl.createProgram();
         gl.attachShader(this.program, sVertex);
         gl.attachShader(this.program, sFragment);
         gl.linkProgram(this.program);

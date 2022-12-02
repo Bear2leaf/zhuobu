@@ -1,22 +1,11 @@
 {
-  "description": "项目配置文件。",
-  "compileType": "game",
-  "libVersion": "2.26.0",
   "appid": "wxd826cd1b3a0d6ab3",
   "projectname": "%E5%8D%93%E5%8D%9C",
+  "compileType": "game",
+  "libVersion": "2.26.0",
   "packOptions": {
-    "ignore": [
-      {
-        "value": "src",
-        "type": "folder"
-      }
-    ],
-    "include": [
-      {
-        "value": "src/dist",
-        "type": "folder"
-      }
-    ]
+    "ignore": [],
+    "include": []
   },
   "condition": {},
   "setting": {
@@ -25,7 +14,9 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "ignoreUploadUnusedFiles": true
+    "ignoreUploadUnusedFiles": true,
+    "es6": true,
+    "enhance": true
   },
   "editorSetting": {
     "tabIndent": "insertSpaces",

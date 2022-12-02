@@ -1,10 +1,10 @@
-import Renderer from "./Renderer";
-import Shader from "./Shader";
-import Texture from "./Texture";
+import Renderer from "./Renderer.js";
+import Shader from "./Shader.js";
+import Texture from "./Texture.js";
 import {
   ortho,
   gl
-} from "./utils";
+} from "./utils.js";
 
 export default class TextRenderer implements Renderer {
   shader: Shader;
@@ -16,6 +16,8 @@ export default class TextRenderer implements Renderer {
   constructor() {
 
     this.shader = new Shader();
+    this.vao = gl.createVertexArray()!;
+    this.positionBuffer = gl.createBuffer()!;
 
     /**
      * @type {Texture}
@@ -277,9 +279,7 @@ export default class TextRenderer implements Renderer {
     };
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    this.vao = gl.createVertexArray();
     this.positionLocation = gl.getAttribLocation(this.shader.program, 'a_position');
-    this.positionBuffer = gl.createBuffer();
     gl.bindVertexArray(this.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, 6 * 4 * 4, gl.DYNAMIC_DRAW);
@@ -287,7 +287,7 @@ export default class TextRenderer implements Renderer {
     gl.vertexAttribPointer(this.positionLocation, 4, gl.FLOAT, false, 0, 0);
   }
   async init() {
-    const img = wx.createImage();
+    const img = wx.createImage() as HTMLImageElement;
     img.src = "8x8-font.png";
     await new Promise((resolve, reject) => {img.onload = resolve; img.onerror = reject;})
     this.texture.generate(img);

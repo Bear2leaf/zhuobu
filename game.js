@@ -1,1 +1,2 @@
-require("./src/dist/index.603df935");
+import "./Main.js";
+//# sourceMappingURL=game.js.map
