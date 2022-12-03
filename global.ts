@@ -1,5 +1,5 @@
 
-declare const wx : any;
+declare const wx: any;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
@@ -8,8 +8,10 @@ export const device = {
         windowHeight: device.createCanvas().height,
     }),
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
-    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener) => {window.onclick = listener;window.ontouchstart = listener;},
-    request: typeof wx !== 'undefined' ? wx.request: () => {}
+    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener) => { window.onclick = listener; window.ontouchstart = listener; },
+    readJson: typeof wx !== 'undefined'
+        ? (file: string) => JSON.parse(String.fromCharCode.apply(null, new Uint8Array(wx.getFileSystemManager().readFileSync(file))))
+        : (file: string) => fetch(file).then(response => response.json())
 }
 export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 

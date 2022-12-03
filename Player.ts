@@ -15,7 +15,7 @@ export default class Player implements GameObject {
         this.originX = 0;
         this.originY = 0;
         this.color = [1, 1, 1, 1];
-        this.scale = 5;
+        this.scale = 10;
     }
     update() {
         this.x = this.destX;

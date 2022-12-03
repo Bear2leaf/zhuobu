@@ -49,44 +49,7 @@ export default class TextRenderer implements Renderer {
     }`);
     this.shader.use().setInteger("u_texture", 0);
     this.shader.use().setMatrix4("projection", ortho(0, device.getWindowInfo().windowWidth, device.getWindowInfo().windowHeight, 0, -1, 1));
-    this.fontInfo = {
-      ' ': {
-        x:50,
-        y:18,
-        height:0,
-        width:4
-      },
-      '\n': {
-        x:0,
-        y:0,
-        height:8,
-        width:0
-      },
-      '!': {
-        x: 1,
-        y: 0,
-        height: 8,
-        width: 4
-      },
-      '1': {
-        x: 9,
-        y: 9,
-        height: 8,
-        width: 4
-      },
-      '2': {
-        x: 14,
-        y: 9,
-        height: 8,
-        width: 7
-      },
-      '<': {
-        x: 11,
-        y: 18,
-        height: 8,
-        width: 6
-      },
-    };
+    
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     this.positionLocation = gl.getAttribLocation(this.shader.program, 'a_position');
@@ -101,6 +64,7 @@ export default class TextRenderer implements Renderer {
     img.src = "boxy_bold_font.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     this.texture.generate(img);
+    this.fontInfo = await device.readJson("font_info.json");
   }
   /**
    * 
