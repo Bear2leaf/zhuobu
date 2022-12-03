@@ -15,13 +15,14 @@ export default class Player implements GameObject {
         this.originX = 0;
         this.originY = 0;
         this.color = [1, 1, 1, 1];
-        this.scale = 10;
+        this.scale = 9;
     }
     update() {
         this.x = this.destX;
         this.y = this.destY;
     }
     draw(renderer: Renderer) {
-        renderer.drawText(this.x - this.originX * this.scale, this.y - this.originY * this.scale, this.scale, this.color, ...'!1 2<\n!211212!<\n<<<');
+        renderer.drawText(this.x - this.originX * this.scale, this.y - this.originY * this.scale, this.scale, this.scale, this.color,
+            ...'!"#$%&\'()*+,-./\n0123456789\n:;<=>?@\nABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n[\\]^_`{|}~\nabcdefghijklmn\nopqrstuvwxyz');
     }
 }

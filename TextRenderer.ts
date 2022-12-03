@@ -74,7 +74,7 @@ export default class TextRenderer implements Renderer {
    * @param {[number, number, number, number]} color 
    * @param  {...string} chars 
    */
-  drawText(x: number, y: number, scale: number, color: [number, number, number, number], ...chars: string[]) {
+  drawText(x: number, y: number, scale: number, spacing: number, color: [number, number, number, number], ...chars: string[]) {
     this.shader.use();
     this.shader.setVector4f("textColor", color);
     gl.activeTexture(gl.TEXTURE0);
@@ -87,22 +87,22 @@ export default class TextRenderer implements Renderer {
       const ypos = y;
       const w = ch.width * scale;
       const h = ch.height * scale;
-      x += w;
+      x += w + spacing;
       if (c === '\n') {
         x = ox;
-        y += h;
+        y += h + spacing;
         continue;
       } else if (c === ' ') {
         continue;
       }
       // update VBO for each character
       const vertices = new Float32Array([
-        xpos, ypos + h, (ch.x - 0.5) / 111, (ch.y + ch.height + 0.5) / 80,
-        xpos + w, ypos, (ch.x + ch.width + 0.5) / 111, (ch.y - 0.5) / 80,
-        xpos, ypos, (ch.x - 0.5) / 111, (ch.y - 0.5) / 80,
-        xpos, ypos + h, (ch.x - 0.5) / 111, (ch.y + ch.height + 0.5) / 80,
-        xpos + w, ypos + h, (ch.x + ch.width + 0.5) / 111, (ch.y + ch.height + 0.5) / 80,
-        xpos + w, ypos, (ch.x + ch.width + 0.5) / 111, (ch.y - 0.5) / 80
+        xpos, ypos + h, (ch.x) / 111, (ch.y + ch.height) / 80,
+        xpos + w, ypos, (ch.x + ch.width) / 111, (ch.y) / 80,
+        xpos, ypos, (ch.x) / 111, (ch.y) / 80,
+        xpos, ypos + h, (ch.x) / 111, (ch.y + ch.height) / 80,
+        xpos + w, ypos + h, (ch.x + ch.width) / 111, (ch.y + ch.height) / 80,
+        xpos + w, ypos, (ch.x + ch.width) / 111, (ch.y) / 80
       ]);
       this.texture.bind();
       gl.bindVertexArray(this.vao);
