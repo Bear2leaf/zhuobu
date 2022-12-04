@@ -4,17 +4,22 @@ import Renderer from "./Renderer.js";
 import Player from "./Player.js";
 import { device, gl } from "./global.js";
 import playAudio from "./audio.js";
+import Camera from "./Camera.js";
 class Game {
-  movePlayerTo(position: [number, number]) {
+  onClick(position: [number, number]) {
+    const playerWorldPos = this.camera.getWorldPosition([...position, 0, 0]);
     this.player.destX = position[0];
     this.player.destY = position[1];
     this.player.update();
+    // this.camera.moveTo(...position)
     this.drawSomething();
   }
   private readonly textRenderer: Renderer;
   private readonly player: Player;
+  private readonly camera: Camera;
   constructor() {
-    this.textRenderer = new TextRenderer();
+    this.camera = new Camera();
+    this.textRenderer = new TextRenderer(this.camera);
     this.player = new Player();
 
   }
@@ -35,7 +40,7 @@ class Game {
 
 const game = new Game();
 game.init();
-device.onTouchStart((event) => {
+device.onTouchStart((event: { clientX?: number; clientY?: number; touches?: any; }) => {
   const position: [number, number] = [0, 0];
   if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) {// desktop browser
     position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
@@ -50,6 +55,6 @@ device.onTouchStart((event) => {
     position[1] = touches[0].clientY;
 
   }
-  game.movePlayerTo(position)
+  game.onClick(position)
   // playAudio();
 })

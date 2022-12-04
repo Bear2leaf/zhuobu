@@ -2,30 +2,30 @@ import Renderer from "./Renderer.js";
 import Shader from "./Shader.js";
 import Texture from "./Texture.js";
 import {
-  ortho,
   gl,
   device
 } from "./global.js";
+import Camera from "./Camera.js";
 
 export default class TextRenderer implements Renderer {
-  shader: Shader;
-  texture: Texture;
-  fontInfo: { [key: string]: { width: number, height: number, x: number, y: number } };
-  vao: WebGLVertexArrayObject;
-  positionLocation: number;
-  positionBuffer: WebGLBuffer;
-  constructor() {
-
+  private readonly shader: Shader;
+  private readonly texture: Texture;
+  private readonly camera: Camera;
+  private fontInfo!: { [key: string]: { width: number, height: number, x: number, y: number } };
+  private readonly vao: WebGLVertexArrayObject;
+  private readonly vbo: WebGLBuffer;
+  constructor(camera: Camera) {
+    this.camera = camera;
     this.shader = new Shader();
     this.vao = gl.createVertexArray()!;
-    this.positionBuffer = gl.createBuffer()!;
+    this.vbo = gl.createBuffer()!;
 
     /**
      * @type {Texture}
      */
     this.texture = new Texture();
     this.shader.compile(`#version 300 es 
-    in vec4 a_position; 
+    layout (location = 0) in vec4 a_position; 
     uniform mat4 projection; 
     out vec2 v_texcoord; 
      
@@ -48,16 +48,14 @@ export default class TextRenderer implements Renderer {
       color = textColor * texture(u_texture, v_texcoord); 
     }`);
     this.shader.use().setInteger("u_texture", 0);
-    this.shader.use().setMatrix4("projection", ortho(0, device.getWindowInfo().windowWidth, device.getWindowInfo().windowHeight, 0, -1, 1));
     
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    this.positionLocation = gl.getAttribLocation(this.shader.program, 'a_position');
     gl.bindVertexArray(this.vao);
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
     gl.bufferData(gl.ARRAY_BUFFER, 6 * 4 * 4, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(this.positionLocation);
-    gl.vertexAttribPointer(this.positionLocation, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
   }
   async init() {
     const img = device.createImage() as HTMLImageElement;
@@ -65,6 +63,8 @@ export default class TextRenderer implements Renderer {
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     this.texture.generate(img);
     this.fontInfo = await device.readJson("font_info.json");
+    this.camera.setZoom(5)
+    this.camera.moveTo(0, 0);
   }
   /**
    * 
@@ -74,9 +74,10 @@ export default class TextRenderer implements Renderer {
    * @param {[number, number, number, number]} color 
    * @param  {...string} chars 
    */
-  drawText(x: number, y: number, scale: number, spacing: number, color: [number, number, number, number], ...chars: string[]) {
+  drawText(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
     this.shader.use();
     this.shader.setVector4f("textColor", color);
+    this.shader.use().setMatrix4("projection", this.camera.getMartix());
     gl.activeTexture(gl.TEXTURE0);
     gl.bindVertexArray(this.vao);
     const ox = x;
@@ -106,7 +107,7 @@ export default class TextRenderer implements Renderer {
       ]);
       this.texture.bind();
       gl.bindVertexArray(this.vao);
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices, 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
