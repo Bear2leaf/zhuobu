@@ -6,6 +6,8 @@ import {
   device
 } from "./global.js";
 import Camera from "./Camera.js";
+import GameObject from "./GameObject.js";
+import Text from "./Text.js";
 
 export default class TextRenderer implements Renderer {
   private readonly shader: Shader;
@@ -14,9 +16,11 @@ export default class TextRenderer implements Renderer {
   private fontInfo!: { [key: string]: { width: number, height: number, x: number, y: number } };
   private readonly vao: WebGLVertexArrayObject;
   private readonly vbo: WebGLBuffer;
+  private readonly textObjects: Text[];
   constructor(camera: Camera) {
     this.camera = camera;
     this.shader = new Shader();
+    this.textObjects = [];
     this.vao = gl.createVertexArray()!;
     this.vbo = gl.createBuffer()!;
 
@@ -24,31 +28,15 @@ export default class TextRenderer implements Renderer {
      * @type {Texture}
      */
     this.texture = new Texture();
-    this.shader.compile(`#version 300 es 
-    layout (location = 0) in vec4 a_position; 
-    uniform mat4 projection; 
-    out vec2 v_texcoord; 
-     
-    void main() { 
-      // Multiply the position by the matrix. 
-      gl_Position = projection * vec4(a_position.xy, 0, 1); 
-     
-      // Pass the texcoord to the fragment shader. 
-      v_texcoord = a_position.zw; 
-    } `, `#version 300 es 
-    precision highp float; 
-     
-    // Passed in from the vertex shader. 
-    in vec2 v_texcoord; 
-    out vec4 color; 
-    uniform sampler2D u_texture; 
-     
-    uniform vec4 textColor; 
-    void main() { 
-      color = textColor * texture(u_texture, v_texcoord); 
-    }`);
+  }
+  add(text: Text): void {
+    this.textObjects.push(text);
+  }
+  async init() {
+    const shader = await device.readJson("shader.json");
+    this.shader.compile(shader.vs, shader.fs);
     this.shader.use().setInteger("u_texture", 0);
-    
+
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.bindVertexArray(this.vao);
@@ -56,8 +44,6 @@ export default class TextRenderer implements Renderer {
     gl.bufferData(gl.ARRAY_BUFFER, 6 * 4 * 4, gl.DYNAMIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-  }
-  async init() {
     const img = device.createImage() as HTMLImageElement;
     img.src = "boxy_bold_font.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
@@ -66,15 +52,13 @@ export default class TextRenderer implements Renderer {
     this.camera.setZoom(5)
     this.camera.moveTo(0, 0);
   }
-  /**
-   * 
-   * @param {number} x 
-   * @param {number} y 
-   * @param {number} scale 
-   * @param {[number, number, number, number]} color 
-   * @param  {...string} chars 
-   */
-  drawText(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
+  render() {
+    for (const text of this.textObjects) {
+      this.renderText(text);
+    }
+  }
+  private renderText(text: Text) {
+    let { x, y, scale, color, spacing, chars } = text;
     this.shader.use();
     this.shader.setVector4f("textColor", color);
     this.shader.use().setMatrix4("projection", this.camera.getMartix());

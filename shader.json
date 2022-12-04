@@ -1,0 +1,4 @@
+{
+    "fs":"#version 300 es \n    precision highp float; \n     \n    // Passed in from the vertex shader. \n    in vec2 v_texcoord; \n    out vec4 color; \n    uniform sampler2D u_texture; \n     \n    uniform vec4 textColor; \n    void main() { \n      color = textColor * texture(u_texture, v_texcoord); \n    }",
+    "vs":"#version 300 es \n    layout (location = 0) in vec4 a_position; \n    uniform mat4 projection; \n    out vec2 v_texcoord; \n     \n    void main() { \n      // Multiply the position by the matrix. \n      gl_Position = projection * vec4(a_position.xy, 0, 1); \n     \n      // Pass the texcoord to the fragment shader. \n      v_texcoord = a_position.zw; \n    } "
+}

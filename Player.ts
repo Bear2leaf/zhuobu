@@ -1,28 +1,18 @@
-import GameObject from "./GameObject.js";
-import Renderer from "./Renderer.js";
-export default class Player implements GameObject {
-    private x: number;
-    private y: number;
-    private originX: number;
-    private originY: number;
-    destX: number;
-    destY: number;
-    private color: [number, number, number, number];
-    private scale: number;
+import Text from "./Text.js";
+export default class Player extends Text {
+    private step: number = 0;
+    private readonly spawnPosition = [20, 80];
     constructor() {
-        this.destX = this.x = 0;
-        this.destY = this.y = 0;
-        this.originX = 0;
-        this.originY = 0;
-        this.color = [1, 1, 1, 1];
-        this.scale = 1;
+        super(20, 80, 1, [0, 1, 1, 1], 1, '@')
+    }
+    setSpawnPosition(x: number, y: number) {
+        this.spawnPosition[0] = x;
+        this.spawnPosition[1] = y;
     }
     update() {
-        this.x = this.destX;
-        this.y = this.destY;
-    }
-    draw(renderer: Renderer) {
-        renderer.drawText(this.x - this.originX * this.scale, this.y - this.originY * this.scale, this.scale, this.color, this.scale,
-            ...'!"#$%&\'()*+,-./\n0123456789\n:;<=>?@\nABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n[\\]^_`{|}~\nabcdefghijklmn\nopqrstuvwxyz');
+        this.step++;
+        this.color[0] = Math.sin(this.step / 100);
+        this.x = this.spawnPosition[0] + Math.sin(this.step / 100) * 10;
+        this.y = this.spawnPosition[1] - Math.cos(this.step / 100) * 10;
     }
 }
