@@ -6,8 +6,8 @@ import {
   device
 } from "./global.js";
 import Camera from "./Camera.js";
-import GameObject from "./GameObject.js";
 import Text from "./Text.js";
+import { text_2d } from "./shader_source.js";
 
 export default class TextRenderer implements Renderer {
   private readonly shader: Shader;
@@ -33,7 +33,7 @@ export default class TextRenderer implements Renderer {
     this.textObjects.push(text);
   }
   async init() {
-    const shader = await device.readJson("shader.json");
+    const shader = text_2d;
     this.shader.compile(shader.vs, shader.fs);
     this.shader.use().setInteger("u_texture", 0);
 
@@ -49,7 +49,7 @@ export default class TextRenderer implements Renderer {
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     this.texture.generate(img);
     this.fontInfo = await device.readJson("font_info.json");
-    this.camera.setZoom(5)
+    this.camera.setZoom(1)
     this.camera.moveTo(0, 0);
   }
   render() {

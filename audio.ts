@@ -1,6 +1,6 @@
 import { device } from "./global";
 
-const notes = {
+const notes: {[key:string]: number} = {
     "C4": 261.63,
     "Db4": 277.18,
     "D4": 293.66,

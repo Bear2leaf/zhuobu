@@ -10,8 +10,8 @@ export const device = {
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
     onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener: any) => { window.onclick = listener; window.ontouchstart = listener; },
     readJson: typeof wx !== 'undefined'
-        ? (file: string) => JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))
-        : (file: string) => fetch(file).then(response => response.json())
+        ? (file: string): Promise<any> => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
+        : (file: string): Promise<any> => fetch(file).then(response => response.json())
 }
 export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 
@@ -158,4 +158,22 @@ export function multiplyVectorAndMartix(a: [number, number, number, number], b: 
     dst[3] = x * b03 + y * b13 + z * b23 + w * b33;
 
     return dst;
+}
+
+export function hexToRGBA(hexString: string): [number, number, number, number] {
+    if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
+        const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;
+        const r = Number.parseInt(hexString.slice(3, 5), 16) / 255;
+        const g = Number.parseInt(hexString.slice(5, 7), 16) / 255;
+        const b = Number.parseInt(hexString.slice(7, 9), 16) / 255;
+        return [r, g, b, a];
+    } else if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
+        const r = Number.parseInt(hexString.slice(1, 3), 16) / 255;
+        const g = Number.parseInt(hexString.slice(3, 5), 16) / 255;
+        const b = Number.parseInt(hexString.slice(5, 7), 16) / 255;
+        return [r, g, b, 255];
+    }
+    else {
+        throw new Error(`unsupport hex color string: ${hexString}`);
+    }
 }
