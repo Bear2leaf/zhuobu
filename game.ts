@@ -5,27 +5,40 @@ import Main from "./Main.js"
 const game = new Main();
 console.log(game)
 
-device.onTouchStart((event: { clientX?: number; clientY?: number; touches?: {clientX: number, clientY: number}[]; }) => {
+device.onTouchStart((event: { clientX?: number; clientY?: number; touches?: { clientX: number, clientY: number }[]; }) => {
+  game.updateInput(getEventPosition(event), true);
+})
+device.onTouchMove((event: { clientX?: number; clientY?: number; touches?: { clientX: number, clientY: number }[]; }) => {
+  game.updateInput(getEventPosition(event), true);
+})
+device.onTouchEnd((event: { clientX?: number; clientY?: number; touches?: { clientX: number, clientY: number }[]; }) => {
+  game.updateInput(getEventPosition(event), false);
+})
+device.onTouchCancel((event: { clientX?: number; clientY?: number; touches?: { clientX: number, clientY: number }[]; }) => {
+  game.updateInput(getEventPosition(event), false);
+})
+function getEventPosition(event: { clientX?: number | undefined; clientY?: number | undefined; touches?: { clientX: number; clientY: number; }[] | undefined; }) {
   const position: [number, number] = [0, 0];
-  if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) {// desktop browser
+  if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) { // desktop browser
     position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
     position[1] = event.clientY * (gl.canvas.height / gl.canvas.clientHeight);
-  } else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent && gl.canvas instanceof HTMLCanvasElement) {// mobile browser
+  } else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent && gl.canvas instanceof HTMLCanvasElement) { // mobile browser
     const { touches } = event;
     position[0] = touches[0].clientX * (gl.canvas.width / gl.canvas.clientWidth);
     position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);
-  } else if (event.touches) {// wechat minigame
-    const { touches } = event;
-    position[0] = touches[0].clientX;
-    position[1] = touches[0].clientY;
-
+  } else if (event.touches) { // wechat minigame
+    if (event.touches.length) {
+      // only start and move have touches, cancel and end have empty touches.
+      const { touches } = event;
+      position[0] = touches[0].clientX;
+      position[1] = touches[0].clientY;
+    }
   } else {
     throw new Error("unknow event");
-    
   }
-  game.onClick(position)
-  // playAudio();
-})
+  return position;
+}
+
 function tick() {
   game.update();
   game.render();

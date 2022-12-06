@@ -19,5 +19,8 @@ export default class Text implements GameObject {
         this.originX = 0;
         this.originY = 0;
     }
+    update(): void {
+        throw new Error("Method not implemented.");
+    }
 
 }

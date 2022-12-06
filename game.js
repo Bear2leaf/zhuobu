@@ -3,6 +3,18 @@ import Main from "./Main.js";
 const game = new Main();
 console.log(game);
 device.onTouchStart((event) => {
+    game.updateInput(getEventPosition(event), true);
+});
+device.onTouchMove((event) => {
+    game.updateInput(getEventPosition(event), true);
+});
+device.onTouchEnd((event) => {
+    game.updateInput(getEventPosition(event), false);
+});
+device.onTouchCancel((event) => {
+    game.updateInput(getEventPosition(event), false);
+});
+function getEventPosition(event) {
     const position = [0, 0];
     if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) { // desktop browser
         position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
@@ -14,16 +26,18 @@ device.onTouchStart((event) => {
         position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);
     }
     else if (event.touches) { // wechat minigame
-        const { touches } = event;
-        position[0] = touches[0].clientX;
-        position[1] = touches[0].clientY;
+        if (event.touches.length) {
+            // only start and move have touches, cancel and end have empty touches.
+            const { touches } = event;
+            position[0] = touches[0].clientX;
+            position[1] = touches[0].clientY;
+        }
     }
     else {
         throw new Error("unknow event");
     }
-    game.onClick(position);
-    // playAudio();
-});
+    return position;
+}
 function tick() {
     game.update();
     game.render();

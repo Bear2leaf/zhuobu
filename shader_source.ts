@@ -24,3 +24,22 @@ export const text_2d = {
       v_texcoord = a_position.zw; 
     } `
 }
+export const graphic_2d = {
+    fs: `#version 300 es 
+    precision highp float; 
+    out vec4 color; 
+          
+    uniform vec4 graphicColor; 
+    void main() { 
+        color = graphicColor; 
+    }`,
+    vs: `#version 300 es 
+    layout (location = 0) in vec3 a_position; 
+    uniform mat4 projection; 
+     
+    void main() { 
+      // Multiply the position by the matrix. 
+      gl_Position = projection * vec4(a_position.xy, 0, 1); 
+      gl_PointSize = a_position.z;
+    } `
+}

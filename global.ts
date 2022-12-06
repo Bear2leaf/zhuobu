@@ -1,5 +1,7 @@
 
 declare const wx: any;
+
+let isMouseDown = false;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
@@ -8,7 +10,10 @@ export const device = {
         windowHeight: device.createCanvas().height,
     }),
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
-    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener: any) => { window.onclick = listener; window.ontouchstart = listener; },
+    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener: any) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
+    onTouchMove: typeof wx !== 'undefined' ? wx.onTouchMove : (listener: any) => { window.onpointermove = (e) => isMouseDown && listener(e); window.ontouchmove = listener; },
+    onTouchEnd: typeof wx !== 'undefined' ? wx.onTouchEnd : (listener: any) => { window.onpointerup = (e) => { isMouseDown = false; listener(e); window.ontouchend = listener; } },
+    onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener: any) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; } },
     readJson: typeof wx !== 'undefined'
         ? (file: string): Promise<any> => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
         : (file: string): Promise<any> => fetch(file).then(response => response.json())
