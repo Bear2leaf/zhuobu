@@ -24,7 +24,7 @@ export default class PostPocessor implements Renderer {
         const height = device.getWindowInfo().windowHeight;
         this.texture = new Texture()
         this.confuse = false;
-        this.chaos = false;
+        this.chaos = true;
         this.shake = true;
         this.shader = new Shader();
         this.width = width;
@@ -73,7 +73,7 @@ export default class PostPocessor implements Renderer {
         gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
 
         this.shader.setInteger('scene', 0, true);
-        const offset = 1;
+        const offset = 1 / 300;
         const offsets = [
             -offset, offset,  // top-left
             0.0, offset,  // top-center

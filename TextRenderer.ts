@@ -41,7 +41,7 @@ export default class TextRenderer implements Renderer {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.bindVertexArray(this.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-    gl.bufferData(gl.ARRAY_BUFFER, 6 * 4 * 4, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, 1024 * 4 * 4, gl.DYNAMIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
     const img = device.createImage() as HTMLImageElement;
@@ -66,6 +66,7 @@ export default class TextRenderer implements Renderer {
     gl.bindVertexArray(this.vao);
     const ox = x;
     const oy = y;
+    const batch: number[] = [];
     for (const c of chars) {
       const ch = this.fontInfo[c];
       const xpos = x;
@@ -81,21 +82,21 @@ export default class TextRenderer implements Renderer {
         continue;
       }
       // update VBO for each character
-      const vertices = new Float32Array([
+      const vertices = [
         xpos, ypos + h, (ch.x) / 111, (ch.y + ch.height) / 80,
         xpos + w, ypos, (ch.x + ch.width) / 111, (ch.y) / 80,
         xpos, ypos, (ch.x) / 111, (ch.y) / 80,
         xpos, ypos + h, (ch.x) / 111, (ch.y + ch.height) / 80,
         xpos + w, ypos + h, (ch.x + ch.width) / 111, (ch.y + ch.height) / 80,
         xpos + w, ypos, (ch.x + ch.width) / 111, (ch.y) / 80
-      ]);
-      this.texture.bind();
-      gl.bindVertexArray(this.vao);
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      ];
+      batch.push(...vertices);
     }
+    this.texture.bind();
+    gl.bindVertexArray(this.vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(batch), 0);
+    gl.drawArrays(gl.TRIANGLES, 0, chars.length * 6);
     gl.bindVertexArray(null);
     gl.bindTexture(gl.TEXTURE_2D, null);
   }
