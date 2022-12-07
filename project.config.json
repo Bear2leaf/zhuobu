@@ -4,12 +4,7 @@
   "compileType": "game",
   "libVersion": "2.26.0",
   "packOptions": {
-    "ignore": [
-      {
-        "value": ".vscode",
-        "type": "folder"
-      }
-    ],
+    "ignore": [],
     "include": []
   },
   "condition": {},
@@ -19,9 +14,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "ignoreUploadUnusedFiles": true,
-    "es6": true,
-    "enhance": true
+    "ignoreUploadUnusedFiles": true
   },
   "editorSetting": {
     "tabIndent": "insertSpaces",
