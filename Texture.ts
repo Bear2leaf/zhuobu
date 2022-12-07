@@ -1,4 +1,5 @@
 import {
+  device,
   gl
 } from "./global.js";
 export default class Texture {
@@ -18,9 +19,14 @@ export default class Texture {
     this.filterMin = gl.NEAREST;
     this.filterMax = gl.NEAREST;
   }
-  generate(data: HTMLImageElement) {
+  generate(data?: HTMLImageElement) {
     gl.bindTexture(gl.TEXTURE_2D, this.tex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, gl.UNSIGNED_BYTE, data);
+    if (data) {
+      gl.texImage2D(gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, gl.UNSIGNED_BYTE, data);
+    } else {
+      gl.texImage2D(gl.TEXTURE_2D, 0, this.internalFormat, device.getWindowInfo().windowWidth, device.getWindowInfo().windowHeight, 0,  this.imageFormat, gl.UNSIGNED_BYTE, null)
+
+    }
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filterMin);

@@ -48,8 +48,6 @@ export default class TiledRenderer implements Renderer {
     this.camera.moveTo(0, 0);
   }
   render() {
-    gl.clearColor(...hexToRGBA(this.world.maps[0].backgroundcolor));
-    gl.clear(gl.COLOR_BUFFER_BIT);
     this.shader.use();
     this.shader.setVector4f("textColor", [1, 1, 1, 1]);
     this.camera.setZoom(5)
