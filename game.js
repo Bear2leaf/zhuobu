@@ -1,60 +1,47 @@
-globalThis.Module = {
-  preRun: [],
-  postRun: [],
-  print: (function() {
-    return function(text) {
-      if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-      console.log(text);
-    };
-  })(),
-  canvas: (() => {
-    const canvas = typeof wx !== 'undefined' ? wx.createCanvas() : document.getElementById("canvas");
-
-    canvas.addEventListener = console.warn
-    canvas.style.removeProperty = console.warn
-    return canvas;
-  })(),
-  setStatus: function(text) {
-    if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
-    if (text === Module.setStatus.last.text) return;
-    var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
-    var now = Date.now();
-    if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
-    Module.setStatus.last.time = now;
-    Module.setStatus.last.text = text;
-    console.log(text)
-  },
-  totalDependencies: 0,
-  monitorRunDependencies: function(left) {
-    this.totalDependencies = Math.max(this.totalDependencies, left);
-    Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-  }
-};
-Module.setStatus('Downloading...');
-globalThis.onerror = function(event) {
-  // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
-  Module.setStatus('Exception thrown, see JavaScript console');
-  Module.setStatus = function(text) {
-    if (text) console.error('[post-exception status] ' + text);
-  };
-};
-const wxinst = WXWebAssembly.instantiate;
-globalThis.WebAssembly = WXWebAssembly
-globalThis.WebAssembly.instantiate = (path, info) => {console.log(path); return wxinst(String.fromCharCode(...path), info)};
-globalThis.WebAssembly.RuntimeError = Error
-globalThis.document = {
-    addEventListener: console.warn
-}
-globalThis.window = {
-    addEventListener: console.warn
-}
-globalThis.XMLHttpRequest = class XMLHttpRequest {
-    open(method, url, async) {
+import { device, gl } from "./global.js";
+import Main from "./Main.js";
+const game = new Main();
+console.log(game);
+device.onTouchStart((event) => {
+    game.updateInput(getEventPosition(event), true);
+});
+device.onTouchMove((event) => {
+    game.updateInput(getEventPosition(event), true);
+});
+device.onTouchEnd((event) => {
+    game.updateInput(getEventPosition(event), false);
+});
+device.onTouchCancel((event) => {
+    game.updateInput(getEventPosition(event), false);
+});
+function getEventPosition(event) {
+    const position = [0, 0];
+    if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) { // desktop browser
+        position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
+        position[1] = event.clientY * (gl.canvas.height / gl.canvas.clientHeight);
     }
-    send() {
-        this.response =new Uint8Array([..."hello.wasm"].map(c => c.charCodeAt(0))).buffer;
-        this.status = 0;
-        this.onload();
+    else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent && gl.canvas instanceof HTMLCanvasElement) { // mobile browser
+        const { touches } = event;
+        position[0] = touches[0].clientX * (gl.canvas.width / gl.canvas.clientWidth);
+        position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);
     }
+    else if (event.touches) { // wechat minigame
+        if (event.touches.length) {
+            // only start and move have touches, cancel and end have empty touches.
+            const { touches } = event;
+            position[0] = touches[0].clientX;
+            position[1] = touches[0].clientY;
+        }
+    }
+    else {
+        throw new Error("unknow event");
+    }
+    return position;
 }
-require("hello.js")
+function tick() {
+    game.update();
+    game.render();
+    requestAnimationFrame(tick);
+}
+game.init().then(tick);
+//# sourceMappingURL=game.js.map
