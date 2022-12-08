@@ -35,8 +35,6 @@ export default class GraphicsRenderer implements Renderer {
     gl.bufferData(gl.ARRAY_BUFFER, 1 * 3 * 4, gl.DYNAMIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
-    this.camera.setZoom(1)
-    this.camera.moveTo(0, 0);
   }
   render() {
     for (const graphic of this.graphicObjects) {

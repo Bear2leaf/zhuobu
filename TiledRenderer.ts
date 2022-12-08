@@ -19,7 +19,7 @@ export default class TiledRenderer implements Renderer {
   private readonly world: TiledWorld;
   private readonly vao: WebGLVertexArrayObject;
   private readonly vbo: WebGLBuffer;
-  constructor(camera: Camera, world: string) {
+  constructor(camera: Camera) {
     this.camera = camera;
     this.shader = new Shader();
     this.vao = gl.createVertexArray()!;
@@ -45,18 +45,18 @@ export default class TiledRenderer implements Renderer {
     await this.world.init();
     this.texture.generate(this.world.maps[0].tilesets[0].image);
     this.camera.setZoom(1)
-    this.camera.moveTo(0, 0);
+    this.camera.moveBy(0, 0);
   }
   render() {
     this.shader.use();
     this.shader.setVector4f("textColor", [1, 1, 1, 1]);
-    this.camera.setZoom(5)
-
+    gl.clearColor(...hexToRGBA(this.world.maps[0].backgroundcolor));
+    gl.clear(gl.COLOR_BUFFER_BIT);
     this.shader.use().setMatrix4("projection", this.camera.getMartix());
     gl.activeTexture(gl.TEXTURE0);
     gl.bindVertexArray(this.vao);
-    const xpos = 2 * 16;
-    const ypos = 2 * 16;
+    const xpos = 0;
+    const ypos = 0;
     const h = 16;
     const w = 16;
     const tex_h = 16;
@@ -82,6 +82,5 @@ export default class TiledRenderer implements Renderer {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
     gl.bindTexture(gl.TEXTURE_2D, null);
-    this.camera.setZoom(1)
   }
 }

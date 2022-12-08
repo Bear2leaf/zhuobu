@@ -50,7 +50,7 @@ export default class TextRenderer implements Renderer {
     this.texture.generate(img);
     this.fontInfo = await device.readJson("font_info.json");
     this.camera.setZoom(1)
-    this.camera.moveTo(0, 0);
+    this.camera.moveBy(0, 0);
   }
   render() {
     for (const text of this.textObjects) {
