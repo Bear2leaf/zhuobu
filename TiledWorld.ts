@@ -1,4 +1,5 @@
 import { device } from "./global.js";
+import Texture from "./Texture.js";
 import TiledMap from "./TiledMap.js";
 
 export default class TiledWorld {
@@ -20,10 +21,9 @@ export default class TiledWorld {
     getBgColor(): string {
         return this.maps[0].backgroundcolor;
     }
-    getVertices() {
-        return this.maps.reduce<number[]>((prev, cur) => {
-            prev.push(...cur.getVertices());
-            return prev;
-        },[]);
+    draw(textures: Map<string, Texture>) {
+        this.maps.forEach(map => {
+            map.draw(textures)
+        })
     }
 }

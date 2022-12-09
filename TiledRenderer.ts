@@ -58,13 +58,9 @@ export default class TiledRenderer implements Renderer {
     this.shader.use().setMatrix4("projection", this.camera.getMartix());
     gl.activeTexture(gl.TEXTURE0);
     gl.bindVertexArray(this.vao);
-    const vertices = this.world.getVertices();
-    this.textures.values().next().value.bind();
-    gl.bindVertexArray(this.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(vertices), 0);
+    this.world.draw(this.textures);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 4);
     gl.bindVertexArray(null);
     gl.bindTexture(gl.TEXTURE_2D, null);
   }

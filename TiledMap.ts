@@ -1,3 +1,4 @@
+import Texture from "./Texture.js";
 import TiledLayer from "./TiledLayer.js";
 import TiledTileSet from "./TiledTileSet.js";
 
@@ -18,6 +19,7 @@ export default class TiledMap {
         for (const tileset of info.tilesets) {
             this.tilesets.push(new TiledTileSet(this.project, tileset));
         }
+        this.tilesets.sort((b, a) => a.firstgid - b.firstgid)
         for (const layer of info.layers) {
             this.layers.push(new TiledLayer(layer));
         }
@@ -29,10 +31,9 @@ export default class TiledMap {
         }
         
     }
-    getVertices(): number[] {
-        return this.layers.reduce<number[]>((prev, cur) => {
-            prev.push(...cur.getVertices(this.tilesets));
-            return prev;
-        }, [])
+    draw(textures: Map<string, Texture>) {
+        this.layers.forEach(layer => {
+            layer.draw(this.tilesets, textures)
+        })
     }
 }
