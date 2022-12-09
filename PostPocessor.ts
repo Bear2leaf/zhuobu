@@ -24,8 +24,8 @@ export default class PostPocessor implements Renderer {
         const height = device.getWindowInfo().windowHeight;
         this.texture = new Texture()
         this.confuse = false;
-        this.chaos = false;
-        this.shake = false;
+        this.chaos = true;
+        this.shake = true;
         this.shader = new Shader();
         this.width = width;
         this.height = height;

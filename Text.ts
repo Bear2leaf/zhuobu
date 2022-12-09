@@ -19,6 +19,9 @@ export default class Text implements GameObject {
         this.originX = 0;
         this.originY = 0;
     }
+    updateText(chars: string) {
+        this.chars.splice(0, this.chars.length, ...chars);
+    }
     update(): void {
     }
 

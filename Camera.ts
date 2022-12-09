@@ -15,6 +15,9 @@ export default class Camera {
     private get rect(): [number, number, number, number] {
         return [this.left, this.right, this.bottom, this.top]
     }
+    getCameraPosition() {
+        return [this.left, this.top]
+    }
     getWorldPosition(position: [number, number, number, number]) {
         return multiplyVectorAndMartix(position, this.getMartix())
     }

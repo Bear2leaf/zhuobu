@@ -17,6 +17,7 @@ export default class Main {
   private readonly postProcessor: PostPocessor;
   private readonly input: Input;
   private readonly objects: GameObject[];
+  private readonly text: Text;
   constructor() {
     this.renderers = [];
     this.input = new Input();
@@ -27,14 +28,14 @@ export default class Main {
     const character = new Character()
     const origin = new Point(this.input.origin, [1, 1, 0, 1]);
     const cursor = new Point(this.input.current, [0, 0, 1, 1]);
-    const text = new Text(0, 0, 3, [1, 1, 1, 1], 1, ...'Hello!');
+    this.text = new Text(0, 0, 3, [1, 1, 1, 1], 1, ...'Hello!');
 
     this.objects = [];
-    this.objects.push(text);
+    this.objects.push(this.text);
     this.objects.push(character);
     this.objects.push(origin);
     this.objects.push(cursor);
-    textRenderer.add(text);
+    textRenderer.add(this.text);
     characterRenderer.add(character);
     this.renderers.push(new TiledRenderer(this.camera));
     const graphicsRenderer = new GraphicsRenderer(uiCamera);
@@ -60,6 +61,7 @@ export default class Main {
     for (const object of this.objects) {
       object.update();
     }
+    this.text.updateText(`Cam:[${this.camera.getCameraPosition()}]`)
   }
 
   render() {
