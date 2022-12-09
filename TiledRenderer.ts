@@ -47,12 +47,10 @@ export default class TiledRenderer implements Renderer {
         this.textures.set(tileset.source, texture);
       })
     })
-    this.camera.moveBy(0, 0);
   }
   render() {
     this.shader.use();
     this.shader.setVector4f("textColor", [1, 1, 1, 1]);
-    this.camera.setZoom(2)
     gl.clearColor(...hexToRGBA(this.world.getBgColor()));
     gl.clear(gl.COLOR_BUFFER_BIT);
     this.shader.use().setMatrix4("projection", this.camera.getMartix());

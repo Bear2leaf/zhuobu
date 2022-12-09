@@ -1,19 +1,27 @@
 import GameObject from "./GameObject.js";
 
 export default class Character implements GameObject {
-    private step;
-    x;
-    y;
-    private readonly spawnPosition;
+    getPosition(): [number, number] {
+        return [this.x, this.y];
+    }
+    private velocityX: number;
+    private x: number;
+    private velocityY: number;
+    private y: number;
+    private readonly speed: number;
     constructor() {
-        this.step = 0;
+        this.speed = 0.01;
         this.x = 0;
         this.y = 0;
-        this.spawnPosition = [20, 80];
+        this.velocityX = 0;
+        this.velocityY = 0;
+    }
+    setVelocity(velocity: [number, number]) {
+        this.velocityX = velocity[0];
+        this.velocityY = velocity[1];
     }
     update() {
-        this.step++;
-        this.x = this.spawnPosition[0] + Math.sin(this.step / 100) * 10;
-        this.y = this.spawnPosition[1] - Math.cos(this.step / 100) * 10;
+        this.x += this.velocityX * this.speed;
+        this.y += this.velocityY * this.speed;
     }
 }

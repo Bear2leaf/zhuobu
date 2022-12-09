@@ -27,8 +27,8 @@
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 160.5,
-                "y": 120.5
+                "x": 75.25,
+                "y": 148.25
             }
         },
         "DemoMap.tmj": {
@@ -70,7 +70,7 @@
     },
     "last.exportedFilePath": "/Users/bear/Downloads/Sprout Lands - Sprites - Basic pack",
     "last.externalTilesetPath": "/Users/bear/WeChatProjects/zhuobu/tiled/Sprout Lands - Sprites - Basic pack",
-    "last.imagePath": "/Users/bear/Downloads/Sprout Lands - Sprites - Basic pack/Tilesets",
+    "last.imagePath": "/Users/bear/WeChatProjects/zhuobu/tiled/Sprout Lands - Sprites - Basic pack/Tilesets",
     "last.worldFilePath": "/Users/bear/WeChatProjects/zhuobu/tiled/Sprout Lands - Sprites - Basic pack",
     "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
     "loadedWorlds": [

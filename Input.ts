@@ -2,7 +2,7 @@ export default class Input {
     private pressed: boolean;
     readonly origin: [number, number];
     readonly current: [number, number];
-    get delta() {
+    get delta(): [number, number] {
         return [this.current[0] - this.origin[0], this.current[1] - this.origin[1]];
     }
     constructor() {

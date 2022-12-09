@@ -14,8 +14,8 @@ export default class Texture {
     this.tex = gl.createTexture()!;
     this.internalFormat = gl.RGBA;
     this.imageFormat = gl.RGBA;
-    this.wrapS = gl.REPEAT;
-    this.wrapT = gl.REPEAT;
+    this.wrapS = gl.CLAMP_TO_EDGE;
+    this.wrapT = gl.CLAMP_TO_EDGE;
     this.filterMin = gl.NEAREST;
     this.filterMax = gl.NEAREST;
   }

@@ -43,8 +43,6 @@ export default class CharacterRenderer implements Renderer {
     img.src = "Basic Charakter Spritesheet.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     this.texture.generate(img);
-    this.camera.setZoom(1)
-    this.camera.moveBy(0, 0);
   }
   render() {
     this.shader.use();
@@ -53,9 +51,9 @@ export default class CharacterRenderer implements Renderer {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindVertexArray(this.vao);
     for (const character of this.characters) {
-
-      const xpos = character.x;
-      const ypos = character.y;
+      const pos = character.getPosition();
+      const xpos = pos[0];
+      const ypos = pos[1];
       const h = 16;
       const w = 16;
       const tex_h = 16;

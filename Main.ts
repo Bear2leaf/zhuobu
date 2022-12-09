@@ -18,6 +18,7 @@ export default class Main {
   private readonly input: Input;
   private readonly objects: GameObject[];
   private readonly text: Text;
+  private readonly character: Character;
   constructor() {
     this.renderers = [];
     this.input = new Input();
@@ -25,22 +26,24 @@ export default class Main {
     const uiCamera = new Camera();
     const textRenderer = new TextRenderer(uiCamera);
     const characterRenderer = new CharacterRenderer(this.camera);
-    const character = new Character()
+    this.character = new Character()
     const origin = new Point(this.input.origin, [1, 1, 0, 1]);
     const cursor = new Point(this.input.current, [0, 0, 1, 1]);
     this.text = new Text(0, 0, 3, [1, 1, 1, 1], 1, ...'Hello!');
 
     this.objects = [];
     this.objects.push(this.text);
-    this.objects.push(character);
+    this.objects.push(this.character);
     this.objects.push(origin);
     this.objects.push(cursor);
     textRenderer.add(this.text);
-    characterRenderer.add(character);
+    characterRenderer.add(this.character);
     this.renderers.push(new TiledRenderer(this.camera));
+    this.camera.setFollow(this.character);
+    this.camera.setZoom(2)
     const graphicsRenderer = new GraphicsRenderer(uiCamera);
-    this.renderers.push(textRenderer);
     this.renderers.push(characterRenderer);
+    this.renderers.push(textRenderer);
     this.renderers.push(graphicsRenderer);
     graphicsRenderer.add(origin);
     graphicsRenderer.add(cursor);
@@ -48,7 +51,7 @@ export default class Main {
   }
   updateInput(current: [number, number], pressed: boolean) {
     this.input.update(current, pressed);
-    this.camera.moveBy(this.input.delta[0], this.input.delta[1])
+    this.character.setVelocity(this.input.delta)
   }
   async init() {
     for (const renderer of this.renderers) {
@@ -62,6 +65,7 @@ export default class Main {
       object.update();
     }
     this.text.updateText(`Cam:[${this.camera.getCameraPosition()}]`)
+    this.camera.update();
   }
 
   render() {

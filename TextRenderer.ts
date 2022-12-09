@@ -49,8 +49,6 @@ export default class TextRenderer implements Renderer {
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     this.texture.generate(img);
     this.fontInfo = await device.readJson("font_info.json");
-    this.camera.setZoom(1)
-    this.camera.moveBy(0, 0);
   }
   render() {
     for (const text of this.textObjects) {

@@ -1,6 +1,11 @@
+import Character from "./Character.js";
 import { ortho, device, multiplyVectorAndMartix, inverse } from "./global.js";
 
 export default class Camera {
+    setFollow(character: Character) {
+        this.follow = character
+    }
+    private follow?: Character;
     private zoom: number = 1;
     private left: number = 0;
     private get right(): number {
@@ -16,7 +21,7 @@ export default class Camera {
         return [this.left, this.right, this.bottom, this.top]
     }
     getCameraPosition() {
-        return [this.left, this.top]
+        return [this.left.toFixed(0), this.top.toFixed(0)]
     }
     getWorldPosition(position: [number, number, number, number]) {
         return multiplyVectorAndMartix(position, this.getMartix())
@@ -24,15 +29,18 @@ export default class Camera {
     getScreenPosition(position: [number, number, number, number]) {
         return multiplyVectorAndMartix(position, inverse(this.getMartix()))
     }
-    moveBy(x: number, y: number) {
-        this.left += x;
-        this.top += y;
-    }
     setZoom(zoom: number) {
         this.zoom = zoom;
     }
     getMartix(): number[] {
         return ortho(...this.rect, -1, 1);
+    }
+    update() {
+        if (this.follow) {
+            const pos = this.follow.getPosition();
+            this.left = Math.round(pos[0] - this.width / 4);
+            this.top = Math.round(pos[1] - this.height / 4);
+        }
     }
 
 }
