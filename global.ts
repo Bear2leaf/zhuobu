@@ -8,6 +8,7 @@ export const device = {
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
         windowHeight: device.createCanvas().height,
+        pixelRatio: devicePixelRatio,
     }),
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
     onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener: any) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
@@ -20,12 +21,12 @@ export const device = {
 }
 export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 
-if (wx && typeof document === 'undefined') {
-    const {windowWidth, windowHeight} = device.getWindowInfo();
-    (gl.canvas.clientWidth as any) = windowWidth;
-    (gl.canvas.clientHeight as any) = windowHeight;
-    (gl.canvas.width as any) = windowWidth;
-    (gl.canvas.height as any) = windowHeight;
+if (typeof wx !== 'undefined' && typeof document === 'undefined') {
+    const {windowWidth, windowHeight, pixelRatio} = device.getWindowInfo();
+    (gl.canvas.clientWidth as any) = windowWidth * pixelRatio;
+    (gl.canvas.clientHeight as any) = windowHeight * pixelRatio;
+    (gl.canvas.width as any) = windowWidth * pixelRatio;
+    (gl.canvas.height as any) = windowHeight * pixelRatio;
 }
 
 export function ortho(left: number, right: number, bottom: number, top: number, near: number, far: number, dst?: number[]) {

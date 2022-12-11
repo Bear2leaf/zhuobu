@@ -5,6 +5,7 @@ export const device = {
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
         windowHeight: device.createCanvas().height,
+        pixelRatio: devicePixelRatio,
     }),
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
     onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
@@ -16,12 +17,12 @@ export const device = {
         : (file) => fetch(file).then(response => response.json())
 };
 export const gl = device.createCanvas().getContext('webgl2');
-if (wx && typeof document === 'undefined') {
-    const { windowWidth, windowHeight } = device.getWindowInfo();
-    gl.canvas.clientWidth = windowWidth;
-    gl.canvas.clientHeight = windowHeight;
-    gl.canvas.width = windowWidth;
-    gl.canvas.height = windowHeight;
+if (typeof wx !== 'undefined' && typeof document === 'undefined') {
+    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
+    gl.canvas.clientWidth = windowWidth * pixelRatio;
+    gl.canvas.clientHeight = windowHeight * pixelRatio;
+    gl.canvas.width = windowWidth * pixelRatio;
+    gl.canvas.height = windowHeight * pixelRatio;
 }
 export function ortho(left, right, bottom, top, near, far, dst) {
     dst = dst || new Array(16);

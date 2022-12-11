@@ -147,7 +147,7 @@ export type UniformBlockInfo = {
     buffer: WebGLBuffer;
     offset?: number;
     uniforms: {
-        [key: string]: ArrayBufferView;
+        [key: string]: m4.Mat4;
     };
     setters: {
         [key: string]: (...params: any[]) => any;

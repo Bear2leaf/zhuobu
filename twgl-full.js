@@ -2377,7 +2377,7 @@ function createAttribsFromArrays(gl, arrays) {
         };
       } else {
         let fn;
-        if (array.buffer && array.buffer instanceof WebGLBuffer) {
+        if (array.buffer && typeof array.buffer === "WebGLBuffer") {
           fn = attribBufferFromBuffer;
         } else if (typeof array === "number" || typeof array.data === "number") {
           fn = attribBufferFromSize;
