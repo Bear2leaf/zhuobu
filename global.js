@@ -14,7 +14,10 @@ export const device = {
     onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; }; },
     readJson: typeof wx !== 'undefined'
         ? (file) => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
-        : (file) => fetch(file).then(response => response.json())
+        : (file) => fetch(file).then(response => response.json()),
+    readTxt: typeof wx !== 'undefined'
+        ? (file) => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')))
+        : (file) => fetch(file).then(response => response.text())
 };
 export const gl = device.createCanvas().getContext('webgl2');
 if (typeof wx !== 'undefined' && typeof document === 'undefined') {

@@ -17,12 +17,15 @@ export const device = {
     onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener: any) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; } },
     readJson: typeof wx !== 'undefined'
         ? (file: string): Promise<any> => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
-        : (file: string): Promise<any> => fetch(file).then(response => response.json())
+        : (file: string): Promise<any> => fetch(file).then(response => response.json()),
+    readTxt: typeof wx !== 'undefined'
+        ? (file: string): Promise<any> => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')))
+        : (file: string): Promise<any> => fetch(file).then(response => response.text())
 }
 export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 
 if (typeof wx !== 'undefined' && typeof document === 'undefined') {
-    const {windowWidth, windowHeight, pixelRatio} = device.getWindowInfo();
+    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
     (gl.canvas.clientWidth as any) = windowWidth * pixelRatio;
     (gl.canvas.clientHeight as any) = windowHeight * pixelRatio;
     (gl.canvas.width as any) = windowWidth * pixelRatio;

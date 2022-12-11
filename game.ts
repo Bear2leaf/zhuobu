@@ -1,4 +1,4 @@
-import { gl } from "./global.js";
+import { device, gl } from "./global.js";
 import * as twgl from "./twgl-full.js";
 console.log(twgl);
 
@@ -220,3 +220,4 @@ requestAnimationFrame(function (time: number) {
     lastTime = time;
     render(time);
 });
+device.readTxt('test.txt').then(console.log)

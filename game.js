@@ -1,4 +1,4 @@
-import { gl } from "./global.js";
+import { device, gl } from "./global.js";
 import * as twgl from "./twgl-full.js";
 console.log(twgl);
 const programInfo = twgl.createProgramInfoFromProgram(gl, twgl.createProgramFromSources(gl, [`
@@ -196,4 +196,5 @@ requestAnimationFrame(function (time) {
     lastTime = time;
     render(time);
 });
+device.readTxt('test.txt').then(console.log);
 //# sourceMappingURL=game.js.map
