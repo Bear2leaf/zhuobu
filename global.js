@@ -1,6 +1,3 @@
-
-declare const wx: any;
-
 let isMouseDown = false;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
@@ -10,53 +7,44 @@ export const device = {
         windowHeight: device.createCanvas().height,
     }),
     createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
-    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener: any) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
-    onTouchMove: typeof wx !== 'undefined' ? wx.onTouchMove : (listener: any) => { window.onpointermove = (e) => isMouseDown && listener(e); window.ontouchmove = listener; },
-    onTouchEnd: typeof wx !== 'undefined' ? wx.onTouchEnd : (listener: any) => { window.onpointerup = (e) => { isMouseDown = false; listener(e); window.ontouchend = listener; } },
-    onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener: any) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; } },
+    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
+    onTouchMove: typeof wx !== 'undefined' ? wx.onTouchMove : (listener) => { window.onpointermove = (e) => isMouseDown && listener(e); window.ontouchmove = listener; },
+    onTouchEnd: typeof wx !== 'undefined' ? wx.onTouchEnd : (listener) => { window.onpointerup = (e) => { isMouseDown = false; listener(e); window.ontouchend = listener; }; },
+    onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; }; },
     readJson: typeof wx !== 'undefined'
-        ? (file: string): Promise<any> => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
-        : (file: string): Promise<any> => fetch(file).then(response => response.json())
-}
-export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
-
+        ? (file) => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
+        : (file) => fetch(file).then(response => response.json())
+};
+export const gl = device.createCanvas().getContext('webgl2');
 if (wx && typeof document === 'undefined') {
-    const {windowWidth, windowHeight} = device.getWindowInfo();
-    (gl.canvas.clientWidth as any) = windowWidth;
-    (gl.canvas.clientHeight as any) = windowHeight;
-    (gl.canvas.width as any) = windowWidth;
-    (gl.canvas.height as any) = windowHeight;
+    const { windowWidth, windowHeight } = device.getWindowInfo();
+    gl.canvas.clientWidth = windowWidth;
+    gl.canvas.clientHeight = windowHeight;
+    gl.canvas.width = windowWidth;
+    gl.canvas.height = windowHeight;
 }
-
-export function ortho(left: number, right: number, bottom: number, top: number, near: number, far: number, dst?: number[]) {
+export function ortho(left, right, bottom, top, near, far, dst) {
     dst = dst || new Array(16);
-
     dst[0] = 2 / (right - left);
     dst[1] = 0;
     dst[2] = 0;
     dst[3] = 0;
-
     dst[4] = 0;
     dst[5] = 2 / (top - bottom);
     dst[6] = 0;
     dst[7] = 0;
-
     dst[8] = 0;
     dst[9] = 0;
     dst[10] = 2 / (near - far);
     dst[11] = 0;
-
     dst[12] = (right + left) / (left - right);
     dst[13] = (top + bottom) / (bottom - top);
     dst[14] = (far + near) / (near - far);
     dst[15] = 1;
-
     return dst;
 }
-
-export function inverse(m: number[], dst?: number[]) {
+export function inverse(m, dst) {
     dst = dst || new Array(16);
-
     const m00 = m[0 * 4 + 0];
     const m01 = m[0 * 4 + 1];
     const m02 = m[0 * 4 + 2];
@@ -97,7 +85,6 @@ export function inverse(m: number[], dst?: number[]) {
     const tmp_21 = m20 * m01;
     const tmp_22 = m00 * m11;
     const tmp_23 = m10 * m01;
-
     const t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
         (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
     const t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
@@ -106,9 +93,7 @@ export function inverse(m: number[], dst?: number[]) {
         (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
     const t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
         (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
-
     const d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
-
     dst[0] = d * t0;
     dst[1] = d * t1;
     dst[2] = d * t2;
@@ -137,12 +122,10 @@ export function inverse(m: number[], dst?: number[]) {
         (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12));
     dst[15] = d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
         (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02));
-
     return dst;
 }
-export function multiplyVectorAndMartix(a: [number, number, number, number], b: number[], dst?: [number, number, number, number]) {
+export function multiplyVectorAndMartix(a, b, dst) {
     dst = dst || [0, 0, 0, 0];
-
     const x = a[0];
     const y = a[1];
     const z = a[2];
@@ -163,23 +146,21 @@ export function multiplyVectorAndMartix(a: [number, number, number, number], b: 
     const b31 = b[12 + 1];
     const b32 = b[12 + 2];
     const b33 = b[12 + 3];
-
     dst[0] = x * b00 + y * b10 + z * b20 + w * b30;
     dst[1] = x * b01 + y * b11 + z * b21 + w * b31;
     dst[2] = x * b02 + y * b12 + z * b22 + w * b32;
     dst[3] = x * b03 + y * b13 + z * b23 + w * b33;
-
     return dst;
 }
-
-export function hexToRGBA(hexString: string): [number, number, number, number] {
+export function hexToRGBA(hexString) {
     if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
         const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;
         const r = Number.parseInt(hexString.slice(3, 5), 16) / 255;
         const g = Number.parseInt(hexString.slice(5, 7), 16) / 255;
         const b = Number.parseInt(hexString.slice(7, 9), 16) / 255;
         return [r, g, b, a];
-    } else if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
+    }
+    else if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
         const r = Number.parseInt(hexString.slice(1, 3), 16) / 255;
         const g = Number.parseInt(hexString.slice(3, 5), 16) / 255;
         const b = Number.parseInt(hexString.slice(5, 7), 16) / 255;
@@ -189,3 +170,4 @@ export function hexToRGBA(hexString: string): [number, number, number, number] {
         throw new Error(`unsupport hex color string: ${hexString}`);
     }
 }
+//# sourceMappingURL=global.js.map

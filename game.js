@@ -1,47 +1,53 @@
-import { device, gl } from "./global.js";
-import Main from "./Main.js";
-const game = new Main();
-console.log(game);
-device.onTouchStart((event) => {
-    game.updateInput(getEventPosition(event), true);
-});
-device.onTouchMove((event) => {
-    game.updateInput(getEventPosition(event), true);
-});
-device.onTouchEnd((event) => {
-    game.updateInput(getEventPosition(event), false);
-});
-device.onTouchCancel((event) => {
-    game.updateInput(getEventPosition(event), false);
-});
-function getEventPosition(event) {
-    const position = [0, 0];
-    if (typeof PointerEvent !== 'undefined' && event instanceof PointerEvent && gl.canvas instanceof HTMLCanvasElement) { // desktop browser
-        position[0] = event.clientX * (gl.canvas.width / gl.canvas.clientWidth);
-        position[1] = event.clientY * (gl.canvas.height / gl.canvas.clientHeight);
-    }
-    else if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent && gl.canvas instanceof HTMLCanvasElement) { // mobile browser
-        const { touches } = event;
-        position[0] = touches[0].clientX * (gl.canvas.width / gl.canvas.clientWidth);
-        position[1] = touches[0].clientY * (gl.canvas.height / gl.canvas.clientHeight);
-    }
-    else if (event.touches) { // wechat minigame
-        if (event.touches.length) {
-            // only start and move have touches, cancel and end have empty touches.
-            const { touches } = event;
-            position[0] = touches[0].clientX;
-            position[1] = touches[0].clientY;
-        }
-    }
-    else {
-        throw new Error("unknow event");
-    }
-    return position;
+import { gl } from "./global.js";
+import * as twgl from "./twgl-full.js";
+console.log(twgl);
+const programInfo = twgl.createProgramInfoFromProgram(gl, twgl.createProgramFromSources(gl, [`
+attribute vec4 position;
+
+void main() {
+  gl_Position = position;
 }
-function tick() {
-    game.update();
-    game.render();
-    requestAnimationFrame(tick);
+  `, `
+  precision mediump float;
+  
+  uniform vec2 resolution;
+  uniform float time;
+  
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution;
+    float color = 0.0;
+    // lifted from glslsandbox.com
+    color += sin( uv.x * cos( time / 3.0 ) * 60.0 ) + cos( uv.y * cos( time / 2.80 ) * 10.0 );
+    color += sin( uv.y * sin( time / 2.0 ) * 40.0 ) + cos( uv.x * sin( time / 1.70 ) * 40.0 );
+    color += sin( uv.x * sin( time / 1.0 ) * 10.0 ) + sin( uv.y * sin( time / 3.50 ) * 80.0 );
+    color *= sin( time / 10.0 ) * 0.5;
+  
+    gl_FragColor = vec4( vec3( color * 0.5, sin( color + time / 2.5 ) * 0.75, color ), 1.0 );
+  }
+    `]));
+const arrays = {
+    position: [-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0],
+};
+const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+let delta = 0, lastTime = 0, lastTick = 0;
+function render(time) {
+    delta = time - lastTime;
+    lastTick += delta;
+    lastTime = time;
+    twgl.resizeCanvasToDisplaySize(gl.canvas);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    const uniforms = {
+        time: lastTick * 0.001,
+        resolution: [gl.canvas.width, gl.canvas.height],
+    };
+    gl.useProgram(programInfo.program);
+    twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
+    twgl.setUniforms(programInfo, uniforms);
+    twgl.drawBufferInfo(gl, bufferInfo);
+    requestAnimationFrame(render);
 }
-game.init().then(tick);
+requestAnimationFrame(function (time) {
+    lastTime = time;
+    render(time);
+});
 //# sourceMappingURL=game.js.map
