@@ -1,14 +1,7 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+export const libs = {
+    twgl: null
 };
 let isMouseDown = false;
-export let twgl;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
     createWorker: (path, opt) => typeof wx !== 'undefined' ? new Promise(resolve => {
@@ -27,7 +20,7 @@ export const device = {
             console.log(res.totalBytesWritten);
             console.log(res.totalBytesExpectedToWrite);
         });
-    }) : (() => __awaiter(void 0, void 0, void 0, function* () { return new Worker(path, opt); }))(),
+    }) : (async () => new Worker(path, opt))(),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
@@ -52,9 +45,10 @@ export const device = {
 export const gl = device.createCanvas().getContext('webgl2');
 export const phyObjs = [];
 export const NUM = 200;
-export const promise = device.createWorker("workers/worker.wasm.js", { type: 'module' }).then((worker) => __awaiter(void 0, void 0, void 0, function* () {
+export default device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
     device.readTxt("static/txt/hello.txt").then(console.log);
     device.readBuffer("static/obj/hello.obj").then(console.log);
+    device.readBuffer("static/mtl/hello.mtl").then(console.log);
     function physicsCallback(event) {
         var data = event.data;
         if (data.isReady) {
@@ -70,9 +64,8 @@ export const promise = device.createWorker("workers/worker.wasm.js", { type: 'mo
         worker.onmessage = physicsCallback;
         worker.onerror = console.error;
     }
-    const libs = yield import("./static/game.js");
-    twgl = libs.twgl;
-}));
+    Object.assign(libs, await import("./static/game.js"));
+});
 if (typeof wx !== 'undefined' && typeof document === 'undefined') {
     const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
     (gl.canvas.clientWidth) = windowWidth * pixelRatio;

@@ -1,4 +1,4 @@
-import { promise } from "./global.js";
+import ready from "./global.js";
 import Main from "./Main.js";
-promise.then(() => new Main());
+ready.then(() => new Main());
 //# sourceMappingURL=game.js.map

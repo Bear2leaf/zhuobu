@@ -1,1 +1,2 @@
-export * as twgl from './lib/twgl-full.module.js'
+import * as twgl from './lib/twgl-full.module.js'
+export {twgl}

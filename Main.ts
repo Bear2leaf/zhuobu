@@ -1,10 +1,10 @@
-import { gl, NUM, phyObjs, twgl } from "./global.js";
-import { UniformBlockInfo, m4 } from "./static/lib/twgl-full.module.js";
+import { gl, NUM, phyObjs, libs } from "./global.js";
+import { twgl } from "./static/game.js";
+
 
 export default class Main {
     constructor() {
-
-        const programInfo = twgl.createProgramInfoFromProgram(gl, twgl.createProgramFromSources(gl, [`
+        const programInfo = libs.twgl.createProgramInfoFromProgram(gl, libs.twgl.createProgramFromSources(gl, [`
     #version 300 es
     uniform View {
       mat4 u_viewInverse;
@@ -88,16 +88,16 @@ export default class Main {
             diffuseColor.a);
         theColor = outColor;
       }`]));
-        const m4 = twgl.m4;
-        twgl.setDefaults({ attribPrefix: "a_" });
+        const m4 = libs.twgl.m4;
+        libs.twgl.setDefaults({ attribPrefix: "a_" });
 
-        if (!twgl.isWebGL2(gl)) {
+        if (!libs.twgl.isWebGL2(gl)) {
             throw Error("Sorry, this example requires WebGL 2.0");  // eslint-disable-line
         }
 
 
-        const bufferInfo = twgl.primitives.createCubeBufferInfo(gl, 2);
-        const tex = twgl.createTexture(gl, {
+        const bufferInfo = libs.twgl.primitives.createCubeBufferInfo(gl, 2);
+        const tex = libs.twgl.createTexture(gl, {
             min: gl.NEAREST,
             mag: gl.NEAREST,
             src: [
@@ -129,45 +129,45 @@ export default class Main {
         // get optimized away. So, the `|| Float32Array` basically just makes a dummy in that case
         // so the rest of the code doesn't have to check for existence.
 
-        const viewUboInfo = twgl.createUniformBlockInfo(gl, programInfo, "View");
+        const viewUboInfo = libs.twgl.createUniformBlockInfo(gl, programInfo, "View");
         const viewProjection = viewUboInfo.uniforms.u_viewProjection || new Float32Array(16);
         const viewInverse = viewUboInfo.uniforms.u_viewInverse || new Float32Array(16);
 
         const lightUboInfos = [];
         for (let ii = 0; ii < 10; ++ii) {
-            const lightUbo = twgl.createUniformBlockInfo(gl, programInfo, "Lights[0]");
-            twgl.setBlockUniforms(lightUbo, {
+            const lightUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Lights[0]");
+            libs.twgl.setBlockUniforms(lightUbo, {
                 u_lightColor: [rand(0.5), 0.6, 0.8],
                 u_lightWorldPos: [rand(-100, 100), rand(-100, 100), rand(-100, 100)],
             });
-            twgl.setUniformBlock(gl, programInfo, lightUbo);
+            libs.twgl.setUniformBlock(gl, programInfo, lightUbo);
             lightUboInfos.push(lightUbo);
         }
 
         const materialUboInfos = [];
         for (let ii = 0; ii < 4; ++ii) {
-            const materialUbo = twgl.createUniformBlockInfo(gl, programInfo, "Material");
-            twgl.setBlockUniforms(materialUbo, {
+            const materialUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Material");
+            libs.twgl.setBlockUniforms(materialUbo, {
                 u_ambient: [0, 0, 0, 1],
                 u_specular: [rand(0.5), 1, 0.5],
                 u_shininess: rand(25, 250),
                 u_specularFactor: rand(0.5, 1),
             });
-            twgl.setUniformBlock(gl, programInfo, materialUbo);
+            libs.twgl.setUniformBlock(gl, programInfo, materialUbo);
 
             materialUboInfos.push(materialUbo);
         }
 
-        const objects: { modelUboInfo: UniformBlockInfo; materialUboInfo: UniformBlockInfo; lightUboInfo: UniformBlockInfo; world: m4.Mat4; }[] = [];
+        const objects: { modelUboInfo: twgl.UniformBlockInfo; materialUboInfo: twgl.UniformBlockInfo; lightUboInfo: twgl.UniformBlockInfo; world: twgl.m4.Mat4; }[] = [];
         for (let ii = 0; ii < NUM; ++ii) {
-            const modelUbo = twgl.createUniformBlockInfo(gl, programInfo, "Model");
+            const modelUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Model");
             const world = m4.rotateY(m4.rotateX(m4.translation([rand(-30, 30), rand(-30, 30), rand(-30, 30)]), rand(Math.PI * 2)), rand(Math.PI));
 
-            twgl.setBlockUniforms(modelUbo, {
+            libs.twgl.setBlockUniforms(modelUbo, {
                 u_world: world,
                 u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
             });
-            twgl.setUniformBlock(gl, programInfo, modelUbo);
+            libs.twgl.setUniformBlock(gl, programInfo, modelUbo);
 
             const o = {
                 modelUboInfo: modelUbo,
@@ -177,13 +177,12 @@ export default class Main {
             };
             objects.push(o);
         }
-        let triggered = false;
         let delta: number = 0, lastTime: number = 0;
         function render(time: number) {
             delta = time - lastTime;
             lastTime = time;
             time = time / 1000;
-            twgl.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement)
+            libs.twgl.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement)
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             gl.enable(gl.DEPTH_TEST);
             gl.enable(gl.CULL_FACE);
@@ -201,27 +200,27 @@ export default class Main {
             m4.multiply(projection, view, viewProjection);
 
             gl.useProgram(programInfo.program);
-            twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
-            twgl.setUniforms(programInfo, uniforms);
+            libs.twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
+            libs.twgl.setUniforms(programInfo, uniforms);
             gl.bindTexture(gl.TEXTURE_2D, tex);
-            twgl.setUniformBlock(gl, programInfo, viewUboInfo);
+            libs.twgl.setUniformBlock(gl, programInfo, viewUboInfo);
             objects.forEach(function (o, index) {
-                twgl.bindUniformBlock(gl, programInfo, o.lightUboInfo);
-                twgl.bindUniformBlock(gl, programInfo, o.materialUboInfo);
-                twgl.bindUniformBlock(gl, programInfo, o.modelUboInfo);
+                libs.twgl.bindUniformBlock(gl, programInfo, o.lightUboInfo);
+                libs.twgl.bindUniformBlock(gl, programInfo, o.materialUboInfo);
+                libs.twgl.bindUniformBlock(gl, programInfo, o.modelUboInfo);
                 if (phyObjs.length && phyObjs[index]) {
 
                     const world = m4.translation([phyObjs[index][0], phyObjs[index][1], phyObjs[index][2]]);
 
-                    twgl.setBlockUniforms(o.modelUboInfo, {
+                    libs.twgl.setBlockUniforms(o.modelUboInfo, {
                         u_world: world,
                         u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
                     });
-                    twgl.setUniformBlock(gl, programInfo, o.modelUboInfo);
+                    libs.twgl.setUniformBlock(gl, programInfo, o.modelUboInfo);
                 }
 
 
-                twgl.drawBufferInfo(gl, bufferInfo);
+                libs.twgl.drawBufferInfo(gl, bufferInfo);
             });
             requestAnimationFrame(render);
         }

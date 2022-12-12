@@ -1,8 +1,12 @@
-import * as t from "./static/lib/twgl-full.module.js";
+import { twgl } from "./static/game.js";
 
+export const libs: {
+    twgl: typeof twgl
+} = {
+    twgl: null!
+};
 declare const wx: any;
 let isMouseDown = false;
-export let twgl: typeof t;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
     createWorker: (path: string, opt: WorkerOptions): Promise<Worker> => typeof wx !== 'undefined' ? new Promise(resolve => {
@@ -49,9 +53,10 @@ export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingC
 export const phyObjs: number[][] = [];
 export const NUM = 200;
 
-export const promise = device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
+export default device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
     device.readTxt("static/txt/hello.txt").then(console.log)
     device.readBuffer("static/obj/hello.obj").then(console.log)
+    device.readBuffer("static/mtl/hello.mtl").then(console.log)
     function physicsCallback(event: MessageEvent) {
         var data = event.data;
         if (data.isReady) {
@@ -66,8 +71,7 @@ export const promise = device.createWorker("workers/worker.wasm.js", { type: 'mo
         worker.onmessage = physicsCallback
         worker.onerror = console.error
     }
-    const libs = await import("./static/game.js");
-    twgl = libs.twgl;
+    Object.assign(libs, await import("./static/game.js"));
 });
 
 

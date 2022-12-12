@@ -4,12 +4,7 @@
   "compileType": "game",
   "libVersion": "2.26.0",
   "packOptions": {
-    "ignore": [
-      {
-        "value": ".vscode",
-        "type": "folder"
-      }
-    ],
+    "ignore": [],
     "include": []
   },
   "condition": {},
