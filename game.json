@@ -1,3 +1,9 @@
 {
-    
+    "subpackages": [
+        {
+            "name": "static",
+            "root": "static/"
+        }
+    ],
+    "workers": "workers"
 }

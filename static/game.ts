@@ -1,0 +1,1 @@
+export * as twgl from './lib/twgl-full.module.js'
