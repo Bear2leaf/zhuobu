@@ -43,9 +43,9 @@ export default class Main {
             bufferInfo: sphereBufferInfo,
             vertexArrayInfo: sphereVAOInfo
         };
-        twgl.m4.scaling([5, 5, 5], sunNode.localMatrix);
+        twgl.v3.copy([5, 5, 5], sunNode.source.scale);
         const earthNode = new Node();
-        twgl.m4.scaling([2, 2, 2], earthNode.localMatrix);
+        twgl.v3.copy([2, 2, 2], earthNode.source.scale);
         earthNode.drawInfo = {
             uniforms: {
                 u_colorOffset: [0.2, 0.5, 0.8, 1],
@@ -56,7 +56,7 @@ export default class Main {
             vertexArrayInfo: sphereVAOInfo,
         };
         const moonNode = new Node();
-        twgl.m4.scaling([0.4, 0.4, 0.4], moonNode.localMatrix);
+        twgl.v3.copy([0.4, 0.4, 0.4], moonNode.source.scale);
         moonNode.drawInfo = {
             uniforms: {
                 u_colorOffset: [0.6, 0.6, 0.6, 1],
@@ -66,11 +66,11 @@ export default class Main {
             bufferInfo: sphereBufferInfo,
             vertexArrayInfo: sphereVAOInfo,
         };
-        const solarSystemNode = new Node();
-        const earthOrbitNode = new Node();
+        const solarSystemNode = new Node(false);
+        const earthOrbitNode = new Node(false);
         // earth orbit 100 units from the sun
         twgl.m4.translation([100, 0, 0], earthOrbitNode.localMatrix);
-        const moonOrbitNode = new Node();
+        const moonOrbitNode = new Node(false);
         // moon 30 units from the earth
         twgl.m4.translation([30, 0, 0], moonOrbitNode.localMatrix);
         // connect the celetial objects
@@ -89,6 +89,7 @@ export default class Main {
             earthNode.drawInfo,
             moonNode.drawInfo,
         ];
+        console.log(solarSystemNode);
         requestAnimationFrame(drawScene);
         // Draw the scene.
         function drawScene(time) {
@@ -116,11 +117,11 @@ export default class Main {
             twgl.m4.multiply(twgl.m4.rotationY(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
             twgl.m4.multiply(twgl.m4.rotationY(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
             // spin the sun
-            twgl.m4.multiply(twgl.m4.rotationY(0.005), sunNode.localMatrix, sunNode.localMatrix);
+            sunNode.source.rotation[1] += 0.005;
             // spin the earth
-            twgl.m4.multiply(twgl.m4.rotationY(0.05), earthNode.localMatrix, earthNode.localMatrix);
+            earthNode.source.rotation[1] += 0.05;
             // spin the moon
-            twgl.m4.multiply(twgl.m4.rotationY(-0.01), moonNode.localMatrix, moonNode.localMatrix);
+            moonNode.source.rotation[1] -= 0.01;
             // Update all world matrices in the scene graph
             solarSystemNode.updateWorldMatrix();
             // Compute all the matrices for rendering

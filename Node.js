@@ -1,9 +1,13 @@
 import { twgl } from "./global.js";
+import TRS from "./TRS.js";
 export default class Node {
-    constructor() {
+    constructor(useSource = true) {
         this.children = [];
         this.localMatrix = twgl.m4.identity();
         this.worldMatrix = twgl.m4.identity();
+        if (useSource) {
+            this.source = new TRS();
+        }
     }
     setParent(parent) {
         if (this.parent) {
@@ -17,11 +21,15 @@ export default class Node {
         }
         this.parent = parent;
     }
-    updateWorldMatrix(parentWorldMatrix) {
-        if (parentWorldMatrix) {
+    updateWorldMatrix(matrix) {
+        const source = this.source;
+        if (source) {
+            source.getMatrix(this.localMatrix);
+        }
+        if (matrix) {
             // a matrix was passed in so do the math and
             // store the result in `this.worldMatrix`.
-            twgl.m4.multiply(parentWorldMatrix, this.localMatrix, this.worldMatrix);
+            twgl.m4.multiply(matrix, this.localMatrix, this.worldMatrix);
         }
         else {
             // no matrix was passed in so just copy.
