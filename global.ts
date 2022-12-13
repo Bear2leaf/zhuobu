@@ -1,12 +1,9 @@
-import { twgl } from "./static/game.js";
 
-export const libs: {
-    twgl: typeof twgl
-} = {
-    twgl: null!
-};
 declare const wx: any;
 let isMouseDown = false;
+export let twgl: typeof import("./static/game.js").twgl;
+export let fs: string;
+export let vs: string;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
     createWorker: (path: string, opt: WorkerOptions): Promise<Worker> => typeof wx !== 'undefined' ? new Promise(resolve => {
@@ -51,12 +48,14 @@ export const device = {
 }
 export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
 export const phyObjs: number[][] = [];
-export const NUM = 200;
+export const NUM = 0;
 
-export default device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
-    device.readTxt("static/txt/hello.txt").then(console.log)
-    device.readBuffer("static/obj/hello.obj").then(console.log)
-    device.readBuffer("static/mtl/hello.mtl").then(console.log)
+export default (cb: Function) => device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
+    await device.readTxt("static/txt/hello.txt").then(console.log)
+    vs = await device.readTxt("static/txt/vs.txt");
+    fs = await device.readTxt("static/txt/fs.txt");
+    await device.readBuffer("static/obj/hello.obj").then(console.log)
+    await device.readBuffer("static/mtl/hello.mtl").then(console.log)
     function physicsCallback(event: MessageEvent) {
         var data = event.data;
         if (data.isReady) {
@@ -71,8 +70,9 @@ export default device.createWorker("workers/worker.wasm.js", { type: 'module' })
         worker.onmessage = physicsCallback
         worker.onerror = console.error
     }
-    Object.assign(libs, await import("./static/game.js"));
-});
+    const m = await import("./static/game.js");
+    twgl = m.twgl;
+}).then(() => cb());
 
 
 if (typeof wx !== 'undefined' && typeof document === 'undefined') {

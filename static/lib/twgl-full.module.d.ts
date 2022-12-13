@@ -1,4 +1,4 @@
-
+export as namespace twgl;
 export type Defaults = {
     attribPrefix?: string;
     textureColor?: number[];

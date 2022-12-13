@@ -1,209 +1,136 @@
-import { gl, NUM, phyObjs, libs } from "./global.js";
+import { fs, gl, twgl, vs } from "./global.js";
+import Node from "./Node.js";
+function degToRad(d) {
+    return d * Math.PI / 180;
+}
+// this function takes a set of indexed vertices
+// It deindexed them. It then adds random vertex
+// colors to each triangle. Finally it passes
+// the result to createBufferInfoFromArrays and
+// returns a twgl.BufferInfo
+function createFlattenedVertices(gl, vertices, vertsPerColor) {
+    let last;
+    return twgl.createBufferInfoFromArrays(gl, twgl.primitives.makeRandomVertexColors(twgl.primitives.deindexVertices(vertices), {
+        vertsPerColor: vertsPerColor || 1,
+        rand: function (ndx, channel) {
+            if (channel === 0) {
+                last = 128 + Math.random() * 128 | 0;
+            }
+            return channel < 3 ? last : 255;
+        },
+    }));
+}
+function createFlattenedFunc(createVerticesFunc, vertsPerColor) {
+    return function (...args) {
+        const arrays = createVerticesFunc.apply(null, Array.prototype.slice.call(args, 1));
+        return createFlattenedVertices(gl, arrays, vertsPerColor);
+    };
+}
 export default class Main {
     constructor() {
-        const programInfo = libs.twgl.createProgramInfoFromProgram(gl, libs.twgl.createProgramFromSources(gl, [`
-    #version 300 es
-    uniform View {
-      mat4 u_viewInverse;
-      mat4 u_viewProjection;
-    };
-    
-    uniform Lights {
-      mediump vec3 u_lightWorldPos;
-      mediump vec4 u_lightColor;
-    } lights[2];
-    
-    uniform Model {
-      mat4 u_world;
-      mat4 u_worldInverseTranspose;
-    } foo;
-    
-    in vec4 a_position;
-    in vec3 a_normal;
-    in vec2 a_texcoord;
-    
-    out vec4 v_position;
-    out vec2 v_texCoord;
-    out vec3 v_normal;
-    out vec3 v_surfaceToLight;
-    out vec3 v_surfaceToView;
-    
-    void main() {
-      v_texCoord = a_texcoord;
-    //  v_position = (foo.u_world * u_viewProjection * a_position);
-      v_position = (u_viewProjection * foo.u_world * a_position);
-      v_normal = (foo.u_worldInverseTranspose * vec4(a_normal, 0)).xyz;
-      v_surfaceToLight = lights[0].u_lightWorldPos - (foo.u_world * a_position).xyz;
-      v_surfaceToView = (u_viewInverse[3] - (foo.u_world * a_position)).xyz;
-      gl_Position = v_position;
-    }
-      `, `#version 300 es
-      precision mediump float;
-      
-      in vec4 v_position;
-      in vec2 v_texCoord;
-      in vec3 v_normal;
-      in vec3 v_surfaceToLight;
-      in vec3 v_surfaceToView;
-      
-      uniform Lights {
-        vec3 u_lightWorldPos;
-        vec4 u_lightColor;
-      } lights[2];
-      
-      uniform sampler2D u_diffuse;
-      
-      uniform Material {
-        vec4 u_ambient;
-        vec4 u_specular;
-        float u_shininess;
-        float u_specularFactor;
-      };
-      
-      out vec4 theColor;
-      
-      vec4 lit(float l ,float h, float m) {
-        return vec4(1.0,
-                    max(abs(l), 0.0),
-                    (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
-                    1.0);
-      }
-      
-      
-      
-      void main() {
-        vec4 diffuseColor = texture(u_diffuse, v_texCoord);
-        vec3 a_normal = normalize(v_normal);
-        vec3 surfaceToLight = normalize(v_surfaceToLight);
-        vec3 surfaceToView = normalize(v_surfaceToView);
-        vec3 halfVector = normalize(surfaceToLight + surfaceToView);
-        vec4 litR = lit(dot(a_normal, surfaceToLight),
-                          dot(a_normal, halfVector), u_shininess);
-        vec4 outColor = vec4((
-        lights[0].u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
-                      u_specular * litR.z * u_specularFactor)).rgb,
-            diffuseColor.a);
-        theColor = outColor;
-      }`]));
-        const m4 = libs.twgl.m4;
-        libs.twgl.setDefaults({ attribPrefix: "a_" });
-        if (!libs.twgl.isWebGL2(gl)) {
-            throw Error("Sorry, this example requires WebGL 2.0"); // eslint-disable-line
-        }
-        const bufferInfo = libs.twgl.primitives.createCubeBufferInfo(gl, 2);
-        const tex = libs.twgl.createTexture(gl, {
-            min: gl.NEAREST,
-            mag: gl.NEAREST,
-            src: [
-                255, 255, 255, 255,
-                192, 192, 192, 255,
-                192, 192, 192, 255,
-                255, 255, 255, 255,
-            ],
-        });
-        function rand(min, max) {
-            if (max === undefined) {
-                max = min;
-                min = 0;
-            }
-            return min + Math.random() * (max - min);
-        }
-        function randElement(array) {
-            return array[rand(array.length) | 0];
-        }
-        const uniforms = {
-            u_diffuse: tex,
+        twgl.setAttributePrefix("a_");
+        const sphereBufferInfo = createFlattenedFunc(twgl.primitives.createSphereVertices, 6)(gl, 10, 12, 16);
+        const programInfo = twgl.createProgramInfo(gl, [vs, fs]);
+        const sphereVAOInfo = twgl.createVertexArrayInfo(gl, programInfo, sphereBufferInfo);
+        const fieldOfViewRadians = degToRad(60);
+        const sunNode = new Node();
+        sunNode.drawInfo = {
+            uniforms: {
+                u_colorOffset: [0.6, 0.6, 0, 1],
+                u_colorMult: [0.4, 0.4, 0, 1],
+            },
+            programInfo,
+            bufferInfo: sphereBufferInfo,
+            vertexArrayInfo: sphereVAOInfo
         };
-        // We pull out the Float32Array views for viewProjection and viewInverse (and world below)
-        // from the viewUboInfo but, if we're modifying the shaders it's possible they might
-        // get optimized away. So, the `|| Float32Array` basically just makes a dummy in that case
-        // so the rest of the code doesn't have to check for existence.
-        const viewUboInfo = libs.twgl.createUniformBlockInfo(gl, programInfo, "View");
-        const viewProjection = viewUboInfo.uniforms.u_viewProjection || new Float32Array(16);
-        const viewInverse = viewUboInfo.uniforms.u_viewInverse || new Float32Array(16);
-        const lightUboInfos = [];
-        for (let ii = 0; ii < 10; ++ii) {
-            const lightUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Lights[0]");
-            libs.twgl.setBlockUniforms(lightUbo, {
-                u_lightColor: [rand(0.5), 0.6, 0.8],
-                u_lightWorldPos: [rand(-100, 100), rand(-100, 100), rand(-100, 100)],
-            });
-            libs.twgl.setUniformBlock(gl, programInfo, lightUbo);
-            lightUboInfos.push(lightUbo);
-        }
-        const materialUboInfos = [];
-        for (let ii = 0; ii < 4; ++ii) {
-            const materialUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Material");
-            libs.twgl.setBlockUniforms(materialUbo, {
-                u_ambient: [0, 0, 0, 1],
-                u_specular: [rand(0.5), 1, 0.5],
-                u_shininess: rand(25, 250),
-                u_specularFactor: rand(0.5, 1),
-            });
-            libs.twgl.setUniformBlock(gl, programInfo, materialUbo);
-            materialUboInfos.push(materialUbo);
-        }
-        const objects = [];
-        for (let ii = 0; ii < NUM; ++ii) {
-            const modelUbo = libs.twgl.createUniformBlockInfo(gl, programInfo, "Model");
-            const world = m4.rotateY(m4.rotateX(m4.translation([rand(-30, 30), rand(-30, 30), rand(-30, 30)]), rand(Math.PI * 2)), rand(Math.PI));
-            libs.twgl.setBlockUniforms(modelUbo, {
-                u_world: world,
-                u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
-            });
-            libs.twgl.setUniformBlock(gl, programInfo, modelUbo);
-            const o = {
-                modelUboInfo: modelUbo,
-                materialUboInfo: randElement(materialUboInfos),
-                lightUboInfo: randElement(lightUboInfos),
-                world: modelUbo.uniforms.u_world || new Float32Array(16), // See above
-            };
-            objects.push(o);
-        }
-        let delta = 0, lastTime = 0;
-        function render(time) {
-            delta = time - lastTime;
-            lastTime = time;
-            time = time / 1000;
-            libs.twgl.resizeCanvasToDisplaySize(gl.canvas);
+        twgl.m4.scaling([5, 5, 5], sunNode.localMatrix);
+        const earthNode = new Node();
+        twgl.m4.scaling([2, 2, 2], earthNode.localMatrix);
+        earthNode.drawInfo = {
+            uniforms: {
+                u_colorOffset: [0.2, 0.5, 0.8, 1],
+                u_colorMult: [0.8, 0.5, 0.2, 1],
+            },
+            programInfo: programInfo,
+            bufferInfo: sphereBufferInfo,
+            vertexArrayInfo: sphereVAOInfo,
+        };
+        const moonNode = new Node();
+        twgl.m4.scaling([0.4, 0.4, 0.4], moonNode.localMatrix);
+        moonNode.drawInfo = {
+            uniforms: {
+                u_colorOffset: [0.6, 0.6, 0.6, 1],
+                u_colorMult: [0.1, 0.1, 0.1, 1],
+            },
+            programInfo: programInfo,
+            bufferInfo: sphereBufferInfo,
+            vertexArrayInfo: sphereVAOInfo,
+        };
+        const solarSystemNode = new Node();
+        const earthOrbitNode = new Node();
+        // earth orbit 100 units from the sun
+        twgl.m4.translation([100, 0, 0], earthOrbitNode.localMatrix);
+        const moonOrbitNode = new Node();
+        // moon 30 units from the earth
+        twgl.m4.translation([30, 0, 0], moonOrbitNode.localMatrix);
+        // connect the celetial objects
+        sunNode.setParent(solarSystemNode);
+        earthOrbitNode.setParent(solarSystemNode);
+        earthNode.setParent(earthOrbitNode);
+        moonOrbitNode.setParent(earthOrbitNode);
+        moonNode.setParent(moonOrbitNode);
+        const objects = [
+            sunNode,
+            earthNode,
+            moonNode,
+        ];
+        const objectsToDraw = [
+            sunNode.drawInfo,
+            earthNode.drawInfo,
+            moonNode.drawInfo,
+        ];
+        requestAnimationFrame(drawScene);
+        // Draw the scene.
+        function drawScene(time) {
+            time *= 0.001;
+            twgl.resizeCanvasToDisplaySize(gl.canvas);
+            // Tell WebGL how to convert from clip space to pixels
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-            gl.enable(gl.DEPTH_TEST);
             gl.enable(gl.CULL_FACE);
+            gl.enable(gl.DEPTH_TEST);
+            // Clear the canvas AND the depth buffer.
+            gl.clearColor(0, 0, 0, 1);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            const projection = m4.perspective(30 * Math.PI / 180, gl.canvas.width / gl.canvas.height, 0.5, 250);
-            const radius = 70;
-            const eye = [Math.sin(time) * radius, Math.sin(time * 0.3) * radius * 0.6, Math.cos(time) * radius];
-            // const eye = [0, 0, -100];
+            // Compute the projection matrix
+            const aspect = gl.canvas.width / gl.canvas.height;
+            const projectionMatrix = twgl.m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+            // Compute the camera's matrix using look at.
+            const cameraPosition = [0, -400, 0];
             const target = [0, 0, 0];
-            const up = [0, 1, 0];
-            const camera = m4.lookAt(eye, target, up, viewInverse);
-            const view = m4.inverse(camera);
-            m4.multiply(projection, view, viewProjection);
-            gl.useProgram(programInfo.program);
-            libs.twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
-            libs.twgl.setUniforms(programInfo, uniforms);
-            gl.bindTexture(gl.TEXTURE_2D, tex);
-            libs.twgl.setUniformBlock(gl, programInfo, viewUboInfo);
-            objects.forEach(function (o, index) {
-                libs.twgl.bindUniformBlock(gl, programInfo, o.lightUboInfo);
-                libs.twgl.bindUniformBlock(gl, programInfo, o.materialUboInfo);
-                libs.twgl.bindUniformBlock(gl, programInfo, o.modelUboInfo);
-                if (phyObjs.length && phyObjs[index]) {
-                    const world = m4.translation([phyObjs[index][0], phyObjs[index][1], phyObjs[index][2]]);
-                    libs.twgl.setBlockUniforms(o.modelUboInfo, {
-                        u_world: world,
-                        u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
-                    });
-                    libs.twgl.setUniformBlock(gl, programInfo, o.modelUboInfo);
-                }
-                libs.twgl.drawBufferInfo(gl, bufferInfo);
+            const up = [0, 0, 1];
+            const cameraMatrix = twgl.m4.lookAt(cameraPosition, target, up);
+            // Make a view matrix from the camera matrix.
+            const viewMatrix = twgl.m4.inverse(cameraMatrix);
+            const viewProjectionMatrix = twgl.m4.multiply(projectionMatrix, viewMatrix);
+            // update the local matrices for each object.
+            twgl.m4.multiply(twgl.m4.rotationY(0.01), earthOrbitNode.localMatrix, earthOrbitNode.localMatrix);
+            twgl.m4.multiply(twgl.m4.rotationY(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
+            // spin the sun
+            twgl.m4.multiply(twgl.m4.rotationY(0.005), sunNode.localMatrix, sunNode.localMatrix);
+            // spin the earth
+            twgl.m4.multiply(twgl.m4.rotationY(0.05), earthNode.localMatrix, earthNode.localMatrix);
+            // spin the moon
+            twgl.m4.multiply(twgl.m4.rotationY(-0.01), moonNode.localMatrix, moonNode.localMatrix);
+            // Update all world matrices in the scene graph
+            solarSystemNode.updateWorldMatrix();
+            // Compute all the matrices for rendering
+            objects.forEach(function (object) {
+                object.drawInfo.uniforms.u_matrix = twgl.m4.multiply(viewProjectionMatrix, object.worldMatrix);
             });
-            requestAnimationFrame(render);
+            // ------ Draw the objects --------
+            twgl.drawObjectList(gl, objectsToDraw);
+            requestAnimationFrame(drawScene);
         }
-        requestAnimationFrame(function (time) {
-            lastTime = time;
-            render(time);
-        });
     }
 }
 //# sourceMappingURL=Main.js.map
