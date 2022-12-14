@@ -1,13 +1,10 @@
 import { twgl } from "./global.js";
-import TRS from "./TRS.js";
 export default class Node {
-    constructor(useSource = true) {
+    constructor(trs) {
         this.children = [];
         this.localMatrix = twgl.m4.identity();
         this.worldMatrix = twgl.m4.identity();
-        if (useSource) {
-            this.source = new TRS();
-        }
+        this.trs = trs;
     }
     setParent(parent) {
         if (this.parent) {
@@ -22,7 +19,7 @@ export default class Node {
         this.parent = parent;
     }
     updateWorldMatrix(matrix) {
-        const source = this.source;
+        const source = this.trs;
         if (source) {
             source.getMatrix(this.localMatrix);
         }

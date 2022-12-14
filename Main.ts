@@ -1,5 +1,7 @@
 import { fs, gl, twgl, vs } from "./global.js";
 import Node from "./Node.js";
+import TRS from "./TRS.js";
+
 
 function degToRad(d: number) {
     return d * Math.PI / 180;
@@ -28,7 +30,7 @@ function createFlattenedVertices(gl: WebGL2RenderingContext, vertices: { [key: s
 }
 
 function createFlattenedFunc(createVerticesFunc: Function, vertsPerColor: number) {
-    return function (...args: any[]) {
+    return function (...args: [WebGL2RenderingContext, number, number, number]) {
         const arrays = createVerticesFunc.apply(null, Array.prototype.slice.call(args, 1));
         return createFlattenedVertices(gl, arrays, vertsPerColor);
     };
@@ -43,47 +45,49 @@ export default class Main {
             , [vs, fs])
         const sphereVAOInfo = twgl.createVertexArrayInfo(gl, programInfo, sphereBufferInfo)!;
         const fieldOfViewRadians = degToRad(60);
-        const sunNode = new Node();
+
+
+        const sunTRS = new TRS();
+        twgl.v3.copy([5, 5, 5], sunTRS.scale);
+        const sunNode = new Node(sunTRS);
         sunNode.drawInfo = {
             uniforms: {
-                u_colorOffset: [0.6, 0.6, 0, 1], // yellow
+                u_colorOffset: [0.6, 0.6, 0, 1],
                 u_colorMult: [0.4, 0.4, 0, 1],
             },
             programInfo,
             bufferInfo: sphereBufferInfo,
             vertexArrayInfo: sphereVAOInfo
         };
-
-        twgl.v3.copy([5, 5, 5], sunNode.source!.scale);
-
-        const earthNode = new Node();
-        twgl.v3.copy([2, 2, 2], earthNode.source!.scale);
+        const earthTRS = new TRS();
+        twgl.v3.copy([2, 2, 2], earthTRS.scale);
+        const earthNode = new Node(earthTRS);
         earthNode.drawInfo = {
             uniforms: {
-                u_colorOffset: [0.2, 0.5, 0.8, 1],  // blue-green
+                u_colorOffset: [0.2, 0.5, 0.8, 1],
                 u_colorMult: [0.8, 0.5, 0.2, 1],
             },
             programInfo: programInfo,
             bufferInfo: sphereBufferInfo,
             vertexArrayInfo: sphereVAOInfo,
         };
-        const moonNode = new Node();
-        twgl.v3.copy([0.4, 0.4, 0.4], moonNode.source!.scale);
+        const moonTRS = new TRS();
+        twgl.v3.copy([0.4, 0.4, 0.4], moonTRS.scale);
+        const moonNode = new Node(moonTRS);
         moonNode.drawInfo = {
             uniforms: {
-                u_colorOffset: [0.6, 0.6, 0.6, 1],  // gray
+                u_colorOffset: [0.6, 0.6, 0.6, 1],
                 u_colorMult: [0.1, 0.1, 0.1, 1],
             },
             programInfo: programInfo,
             bufferInfo: sphereBufferInfo,
             vertexArrayInfo: sphereVAOInfo,
         };
-        const solarSystemNode = new Node(false);
-        const earthOrbitNode = new Node(false);
-
+        const solarSystemNode = new Node();
+        const earthOrbitNode = new Node();
         // earth orbit 100 units from the sun
-        twgl.m4.translation([100, 0, 0], earthOrbitNode.localMatrix)
-        const moonOrbitNode = new Node(false);
+        twgl.m4.translation([100, 0, 0], earthOrbitNode.localMatrix);
+        const moonOrbitNode = new Node();
 
         // moon 30 units from the earth
         twgl.m4.translation([30, 0, 0], moonOrbitNode.localMatrix)
@@ -107,12 +111,15 @@ export default class Main {
             earthNode.drawInfo,
             moonNode.drawInfo,
         ];
-
         console.log(solarSystemNode)
         requestAnimationFrame(drawScene);
 
         // Draw the scene.
         function drawScene(time: number) {
+
+            if (!sunNode.trs || !earthNode.trs || !moonNode.trs || solarSystemNode.trs || earthOrbitNode.trs || moonOrbitNode.trs) {
+                throw new Error("wrong trs set");
+            }
             time *= 0.001;
 
             twgl.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
@@ -148,20 +155,24 @@ export default class Main {
             twgl.m4.multiply(twgl.m4.rotationY(0.01), moonOrbitNode.localMatrix, moonOrbitNode.localMatrix);
 
             // spin the sun
-            sunNode.source!.rotation[1] += 0.005;
+            sunNode.trs.rotation[1] += 0.005;
 
             // spin the earth
-            earthNode.source!.rotation[1] += 0.05;
+            earthNode.trs.rotation[1] += 0.05;
 
             // spin the moon
-            moonNode.source!.rotation[1] -= 0.01;
+            moonNode.trs.rotation[1] -= 0.01;
 
             // Update all world matrices in the scene graph
             solarSystemNode.updateWorldMatrix();
 
             // Compute all the matrices for rendering
             objects.forEach(function (object) {
-                object.drawInfo!.uniforms.u_matrix = twgl.m4.multiply(viewProjectionMatrix, object.worldMatrix);
+
+                if (!object.drawInfo) {
+                    throw new Error("no draw Info");
+                }
+                object.drawInfo.uniforms.u_matrix = twgl.m4.multiply(viewProjectionMatrix, object.worldMatrix);
             });
             // ------ Draw the objects --------
 

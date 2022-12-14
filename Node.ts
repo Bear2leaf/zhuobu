@@ -5,17 +5,14 @@ export default class Node {
     private readonly children: Node[];
     readonly localMatrix: twgl.m4.Mat4;
     readonly worldMatrix: twgl.m4.Mat4;
-    readonly source?: TRS;
+    readonly trs?: TRS;
     private parent?: Node;
     drawInfo?: twgl.DrawObject;
-    constructor(useSource: boolean = true) {
+    constructor(trs?: TRS) {
         this.children = [];
         this.localMatrix = twgl.m4.identity();
         this.worldMatrix = twgl.m4.identity();
-        if (useSource) {
-
-            this.source = new TRS();
-        }
+        this.trs = trs;
     }
     setParent(parent: Node) {
         if (this.parent) {
@@ -31,7 +28,7 @@ export default class Node {
     }
     updateWorldMatrix(matrix?: twgl.m4.Mat4) {
 
-        const source = this.source;
+        const source = this.trs;
         if (source) {
             source.getMatrix(this.localMatrix);
         }
