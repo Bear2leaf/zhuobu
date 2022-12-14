@@ -6,16 +6,15 @@ export let fs: string;
 export let vs: string;
 export const device = {
     createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
-    createWorker: (path: string, opt: WorkerOptions): Promise<Worker> => typeof wx !== 'undefined' ? new Promise(resolve => {
-
-        var task = wx.loadSubpackage({
+    loadSubpackage: typeof wx !== 'undefined' ? () => new Promise<null>(resolve => {
+        const task = wx.loadSubpackage({
             name: "static",
             success(res: any) {
                 console.log("load static success", res)
-                resolve(wx.createWorker(path, opt))
+                resolve(null)
             },
             fail(res: any) {
-                console.log("load static fail", res)
+                console.error("load static fail", res)
             }
         })
 
@@ -24,7 +23,8 @@ export const device = {
             console.log(res.totalBytesWritten)
             console.log(res.totalBytesExpectedToWrite)
         })
-    }) : (async () => new Worker(path, opt))(),
+    }) : (async () => {}),
+    createWorker: (path: string, opt: WorkerOptions): Promise<Worker> => typeof wx !== 'undefined' ? wx.createWorler(path, opt): (async () => new Worker(path, opt))(),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
@@ -50,27 +50,12 @@ export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingC
 export const phyObjs: number[][] = [];
 export const NUM = 0;
 
-export default (cb: Function) => device.createWorker("workers/worker.wasm.js", { type: 'module' }).then(async (worker) => {
+export default (cb: Function) => device.loadSubpackage().then(() => import("./static/game.js")).then(async (m) => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
     vs = await device.readTxt("static/txt/vs.txt");
     fs = await device.readTxt("static/txt/fs.txt");
     await device.readBuffer("static/obj/hello.obj").then(console.log)
     await device.readBuffer("static/mtl/hello.mtl").then(console.log)
-    function physicsCallback(event: MessageEvent) {
-        var data = event.data;
-        if (data.isReady) {
-            worker.postMessage(typeof wx !== 'undefined' ? { data: NUM } : NUM);
-            return
-        }
-        (data as { objects: number[][], currFPS: number, allFPS: number }).objects.forEach((object, index) => phyObjs[index] = object);
-    }
-    if (typeof wx !== 'undefined') {
-        (worker as any).onMessage(physicsCallback)
-    } else {
-        worker.onmessage = physicsCallback
-        worker.onerror = console.error
-    }
-    const m = await import("./static/game.js");
     twgl = m.twgl;
 }).then(() => cb());
 
