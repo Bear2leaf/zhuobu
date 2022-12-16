@@ -1,8 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
-        "target": "es2017",
-        "module": "ESNext",
+        "target": "ES2015",
         "sourceMap": true
     }
 }

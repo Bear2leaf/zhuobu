@@ -1,7 +1,6 @@
 
 declare const wx: any;
 let isMouseDown = false;
-export let twgl: typeof import("./static/game.js").twgl;
 export let fs: string;
 export let vs: string;
 export const device = {
@@ -24,7 +23,6 @@ export const device = {
             console.log(res.totalBytesExpectedToWrite)
         })
     }) : (async () => {}),
-    createWorker: (path: string, opt: WorkerOptions): Promise<Worker> => typeof wx !== 'undefined' ? wx.createWorler(path, opt): (async () => new Worker(path, opt))(),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
@@ -50,23 +48,14 @@ export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingC
 export const phyObjs: number[][] = [];
 export const NUM = 0;
 
-export default (cb: Function) => device.loadSubpackage().then(() => import("./static/game.js")).then(async (m) => {
+export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
     vs = await device.readTxt("static/txt/vs.txt");
     fs = await device.readTxt("static/txt/fs.txt");
-    await device.readBuffer("static/obj/hello.obj").then(console.log)
-    await device.readBuffer("static/mtl/hello.mtl").then(console.log)
-    twgl = m.twgl;
+    await device.readJson("static/gltf/hello.gltf").then(console.log)
+    await device.readBuffer("static/gltf/hello.bin").then(console.log)
 }).then(() => cb());
 
-
-if (typeof wx !== 'undefined' && typeof document === 'undefined') {
-    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
-    ((gl.canvas as any).clientWidth) = windowWidth * pixelRatio;
-    ((gl.canvas as any).clientHeight) = windowHeight * pixelRatio;
-    ((gl.canvas as any).width) = windowWidth * pixelRatio;
-    ((gl.canvas as any).height) = windowHeight * pixelRatio;
-}
 
 
 export function hexToRGBA(hexString: string): [number, number, number, number] {

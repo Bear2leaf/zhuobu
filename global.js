@@ -1,5 +1,13 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 let isMouseDown = false;
-export let twgl;
 export let fs;
 export let vs;
 export const device = {
@@ -20,8 +28,7 @@ export const device = {
             console.log(res.totalBytesWritten);
             console.log(res.totalBytesExpectedToWrite);
         });
-    }) : (async () => { }),
-    createWorker: (path, opt) => typeof wx !== 'undefined' ? wx.createWorler(path, opt) : (async () => new Worker(path, opt))(),
+    }) : (() => __awaiter(void 0, void 0, void 0, function* () { })),
     createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
     getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
@@ -46,21 +53,13 @@ export const device = {
 export const gl = device.createCanvas().getContext('webgl2');
 export const phyObjs = [];
 export const NUM = 0;
-export default (cb) => device.loadSubpackage().then(() => import("./static/game.js")).then(async (m) => {
-    await device.readTxt("static/txt/hello.txt").then(console.log);
-    vs = await device.readTxt("static/txt/vs.txt");
-    fs = await device.readTxt("static/txt/fs.txt");
-    await device.readBuffer("static/obj/hello.obj").then(console.log);
-    await device.readBuffer("static/mtl/hello.mtl").then(console.log);
-    twgl = m.twgl;
-}).then(() => cb());
-if (typeof wx !== 'undefined' && typeof document === 'undefined') {
-    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
-    (gl.canvas.clientWidth) = windowWidth * pixelRatio;
-    (gl.canvas.clientHeight) = windowHeight * pixelRatio;
-    (gl.canvas.width) = windowWidth * pixelRatio;
-    (gl.canvas.height) = windowHeight * pixelRatio;
-}
+export default (cb) => device.loadSubpackage().then(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield device.readTxt("static/txt/hello.txt").then(console.log);
+    vs = yield device.readTxt("static/txt/vs.txt");
+    fs = yield device.readTxt("static/txt/fs.txt");
+    yield device.readJson("static/gltf/hello.gltf").then(console.log);
+    yield device.readBuffer("static/gltf/hello.bin").then(console.log);
+})).then(() => cb());
 export function hexToRGBA(hexString) {
     if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
         const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;

@@ -1,2 +1,2 @@
-export * as twgl from './lib/twgl-full.module.js';
+"use strict";
 //# sourceMappingURL=game.js.map
