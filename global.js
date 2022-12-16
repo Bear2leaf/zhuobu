@@ -10,9 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 let isMouseDown = false;
 export let fs;
 export let vs;
+const isWX = typeof wx !== 'undefined';
 export const device = {
-    createCanvas: typeof wx !== 'undefined' ? wx.createCanvas : () => document.getElementById("canvas"),
-    loadSubpackage: typeof wx !== 'undefined' ? () => new Promise(resolve => {
+    isWX: isWX,
+    createCanvas: isWX ? wx.createCanvas : () => document.getElementById("canvas"),
+    loadSubpackage: isWX ? () => new Promise(resolve => {
         const task = wx.loadSubpackage({
             name: "static",
             success(res) {
@@ -29,24 +31,24 @@ export const device = {
             console.log(res.totalBytesExpectedToWrite);
         });
     }) : (() => __awaiter(void 0, void 0, void 0, function* () { })),
-    createImage: typeof wx !== 'undefined' ? wx.createImage : () => new Image(),
-    getWindowInfo: typeof wx !== 'undefined' ? wx.getWindowInfo : () => ({
+    createImage: isWX ? wx.createImage : () => new Image(),
+    getWindowInfo: isWX ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
         windowHeight: device.createCanvas().height,
         pixelRatio: devicePixelRatio,
     }),
-    createWebAudioContext: typeof wx !== 'undefined' ? wx.createWebAudioContext : () => new AudioContext(),
-    onTouchStart: typeof wx !== 'undefined' ? wx.onTouchStart : (listener) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
-    onTouchMove: typeof wx !== 'undefined' ? wx.onTouchMove : (listener) => { window.onpointermove = (e) => isMouseDown && listener(e); window.ontouchmove = listener; },
-    onTouchEnd: typeof wx !== 'undefined' ? wx.onTouchEnd : (listener) => { window.onpointerup = (e) => { isMouseDown = false; listener(e); window.ontouchend = listener; }; },
-    onTouchCancel: typeof wx !== 'undefined' ? wx.onTouchCancel : (listener) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; }; },
-    readJson: typeof wx !== 'undefined'
+    createWebAudioContext: isWX ? wx.createWebAudioContext : () => new AudioContext(),
+    onTouchStart: isWX ? wx.onTouchStart : (listener) => { window.onpointerdown = (e) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
+    onTouchMove: isWX ? wx.onTouchMove : (listener) => { window.onpointermove = (e) => isMouseDown && listener(e); window.ontouchmove = listener; },
+    onTouchEnd: isWX ? wx.onTouchEnd : (listener) => { window.onpointerup = (e) => { isMouseDown = false; listener(e); window.ontouchend = listener; }; },
+    onTouchCancel: isWX ? wx.onTouchCancel : (listener) => { window.onpointercancel = (e) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; }; },
+    readJson: isWX
         ? (file) => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
         : (file) => fetch(file).then(response => response.json()),
-    readTxt: typeof wx !== 'undefined'
+    readTxt: isWX
         ? (file) => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')))
         : (file) => fetch(file).then(response => response.text()),
-    readBuffer: typeof wx !== 'undefined'
+    readBuffer: isWX
         ? (file) => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file)))
         : (file) => fetch(file).then(response => response.arrayBuffer())
 };
