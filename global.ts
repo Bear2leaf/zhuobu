@@ -60,6 +60,15 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
 
 
 
+if (typeof wx !== 'undefined' && typeof document === 'undefined') {
+    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
+    ((gl.canvas as any).clientWidth) = windowWidth * pixelRatio;
+    ((gl.canvas as any).clientHeight) = windowHeight * pixelRatio;
+    ((gl.canvas as any).width) = windowWidth * pixelRatio;
+    ((gl.canvas as any).height) = windowHeight * pixelRatio;
+}
+
+
 export function hexToRGBA(hexString: string): [number, number, number, number] {
     if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
         const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;

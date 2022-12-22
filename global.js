@@ -62,6 +62,13 @@ export default (cb) => device.loadSubpackage().then(() => __awaiter(void 0, void
     yield device.readJson("static/gltf/hello.gltf").then(console.log);
     yield device.readBuffer("static/gltf/hello.bin").then(console.log);
 })).then(() => cb());
+if (typeof wx !== 'undefined' && typeof document === 'undefined') {
+    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
+    (gl.canvas.clientWidth) = windowWidth * pixelRatio;
+    (gl.canvas.clientHeight) = windowHeight * pixelRatio;
+    (gl.canvas.width) = windowWidth * pixelRatio;
+    (gl.canvas.height) = windowHeight * pixelRatio;
+}
 export function hexToRGBA(hexString) {
     if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
         const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;
