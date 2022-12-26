@@ -25,9 +25,11 @@ export class DemoRenderer extends Renderer {
             0.5, -0.5, 0, 1,
             0, 0.5, 0, 1
         ]), gl.STATIC_DRAW);
+        gl.clearColor(0, 0, 0, 1)
     }
     render(): void {
         super.render()
+        gl.clear(gl.COLOR_BUFFER_BIT)
         gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
 }
