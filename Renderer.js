@@ -5,6 +5,10 @@ import { flatten } from "./Vertices.js";
 export default class Renderer {
     constructor(shader) {
         this.shader = shader;
+        this.vao = gl.createVertexArray();
+        this.vbo = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+        gl.bindVertexArray(this.vao);
     }
     render() {
         this.shader.useAndGetProgram();
@@ -13,17 +17,13 @@ export default class Renderer {
 export class DemoRenderer extends Renderer {
     constructor() {
         super(new DemoShader());
-        const vao = gl.createVertexArray();
-        const vbo = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-        gl.bindVertexArray(vao);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
     }
     render() {
         super.render();
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
             -0.5, -0.5, 0, 1,
             0.5, -0.5, 0, 1,
@@ -35,12 +35,6 @@ export class DemoRenderer extends Renderer {
 export class GasketRenderer extends Renderer {
     constructor() {
         super(new RedPointShader());
-        const vao = gl.createVertexArray();
-        const vbo = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-        gl.bindVertexArray(vao);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
     }
     render() {
         super.render();
@@ -60,6 +54,8 @@ export class GasketRenderer extends Renderer {
             const j = Math.floor(Math.random() * 3);
             positions.push(positions[index].clone().add(vertices[j]).multiply(0.5));
         }
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
         gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
         gl.drawArrays(gl.POINTS, 0, positions.length);
     }
