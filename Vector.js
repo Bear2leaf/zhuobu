@@ -19,6 +19,9 @@ export class Vec4 {
         this.w += vec4.w;
         return this;
     }
+    lerp(vec4, t) {
+        return this.add(vec4).multiply(t);
+    }
     clone() {
         return new Vec4(this.x, this.y, this.z, this.w);
     }

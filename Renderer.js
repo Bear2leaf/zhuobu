@@ -46,13 +46,13 @@ export class GasketRenderer extends Renderer {
         ];
         vertices.forEach(vec => vec.w = 1);
         const positions = [];
-        const u = vertices[0].clone().add(vertices[1]).multiply(0.5);
-        const v = vertices[0].clone().add(vertices[2]).multiply(0.5);
-        const p = u.clone().add(v).multiply(0.5);
+        const u = vertices[0].clone().lerp(vertices[1], 0.5);
+        const v = vertices[0].clone().lerp(vertices[2], 0.5);
+        const p = u.clone().lerp(v, 0.5);
         positions.push(p);
         for (let index = 0; index < numPositions - 1; index++) {
             const j = Math.floor(Math.random() * 3);
-            positions.push(positions[index].clone().add(vertices[j]).multiply(0.5));
+            positions.push(positions[index].clone().lerp(vertices[j], 0.5));
         }
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
