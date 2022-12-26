@@ -56,7 +56,8 @@ export class DemoRedShader extends Shader {
             layout (location = 0) in vec4 a_position; 
              
             void main() { 
-              gl_Position = a_position; 
+              gl_Position = a_position;
+              gl_PointSize = 1.0;
             }`, `#version 300 es 
             precision highp float; 
              
