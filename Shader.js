@@ -46,7 +46,7 @@ export class DemoShader extends Shader {
             out vec4 color; 
              
             void main() { 
-              color = vec4(1.0); 
+              color = vec4(1.0, 0.0, 0.0, 1.0); 
             }`);
     }
 }
@@ -57,14 +57,14 @@ export class DemoRedShader extends Shader {
              
             void main() { 
               gl_Position = a_position;
-              gl_PointSize = 1.0;
+              gl_PointSize = 10.0;
             }`, `#version 300 es 
             precision highp float; 
              
             out vec4 color; 
              
             void main() { 
-              color = vec4(1.0, 0.0, 0.0, 1.0); 
+              color = vec4(0.0, 1.0, 0.0, 1.0); 
             }`);
     }
 }
