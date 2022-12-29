@@ -1,63 +1,59 @@
+import { Point, Points, Triangle } from "./Geometry.js";
 import { gl } from "./global.js";
-import { DemoRedShader as RedPointShader, DemoShader } from "./Shader.js";
-import { Vec2 } from "./Vector.js";
-import { flatten } from "./Vertices.js";
+import { DemoRedShader as RedPointShader, DemoShader as TriangleShader } from "./Shader.js";
+import { flatten } from "./Vector.js";
 export default class Renderer {
-    constructor(shader) {
+    constructor(shader, mode) {
+        this.mode = mode;
+        this.vertices = [];
         this.shader = shader;
         this.vao = gl.createVertexArray();
         this.vbo = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
         gl.bindVertexArray(this.vao);
     }
+    setVertices(vertices) {
+        vertices.forEach(vec => {
+            vec.w = 1;
+            this.vertices.push(vec);
+        });
+    }
     render() {
         this.shader.useAndGetProgram();
-    }
-}
-export class DemoRenderer extends Renderer {
-    constructor() {
-        super(new DemoShader());
-    }
-    render() {
-        super.render();
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            -0.5, -0.5, 0, 1,
-            0.5, -0.5, 0, 1,
-            0, 0.5, 0, 1
-        ]), gl.STATIC_DRAW);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(this.vertices), gl.STATIC_DRAW);
+        gl.drawArrays(this.mode, 0, this.vertices.length);
     }
 }
-export class GasketRenderer extends Renderer {
+export class TriangleRenderer extends Renderer {
     constructor() {
-        super(new RedPointShader());
+        super(new TriangleShader(), gl.TRIANGLES);
     }
     render() {
+        const triangle = new Triangle(new Point(-0.5, -0.5), new Point(0.5, -0.5), new Point(0, 0.5));
+        this.setVertices(triangle.vertices);
         super.render();
+    }
+}
+export class PointRenderer extends Renderer {
+    constructor() {
+        super(new RedPointShader(), gl.POINTS);
+    }
+    render() {
         const numPositions = 5000;
-        const vertices = [
-            new Vec2(-1.0, -1.0),
-            new Vec2(0.0, 1.0),
-            new Vec2(1.0, -1.0),
-        ];
-        vertices.forEach(vec => vec.w = 1);
-        const positions = [];
-        const u = vertices[0].clone().lerp(vertices[1], 0.5);
-        const v = vertices[0].clone().lerp(vertices[2], 0.5);
+        const triangle = new Triangle(new Point(-1.0, -1.0), new Point(0.0, 1.0), new Point(1.0, -1.0));
+        const u = triangle.vertices[0].clone().lerp(triangle.vertices[1], 0.5);
+        const v = triangle.vertices[0].clone().lerp(triangle.vertices[2], 0.5);
         const p = u.clone().lerp(v, 0.5);
-        positions.push(p);
+        const points = new Points();
+        points.add(Point.fromVec(p));
         for (let index = 0; index < numPositions - 1; index++) {
             const j = Math.floor(Math.random() * 3);
-            positions.push(positions[index].clone().lerp(vertices[j], 0.5));
+            points.add(Point.fromVec(points.vertices[index].clone().lerp(triangle.vertices[j], 0.5)));
         }
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-        gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
-        gl.drawArrays(gl.POINTS, 0, positions.length);
+        this.setVertices(points.vertices);
+        super.render();
     }
 }
 //# sourceMappingURL=Renderer.js.map

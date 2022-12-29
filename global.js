@@ -87,4 +87,8 @@ export function hexToRGBA(hexString) {
         throw new Error(`unsupport hex color string: ${hexString}`);
     }
 }
+gl.clearColor(0, 0, 0, 1);
+export function clear() {
+    gl.clear(gl.COLOR_BUFFER_BIT);
+}
 //# sourceMappingURL=global.js.map

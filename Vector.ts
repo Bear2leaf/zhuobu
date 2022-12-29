@@ -1,4 +1,13 @@
 
+export function flatten(vec4Array: Vec4[]): Float32Array {
+    return vec4Array.reduce(function (prev, current, index) {
+        prev[index * 4] = current.x;
+        prev[index * 4 + 1] = current.y;
+        prev[index * 4 + 2] = current.z;
+        prev[index * 4 + 3] = current.w;
+        return prev;
+    }, new Float32Array(vec4Array.length * 4));
+}
 export class Vec4 {
     x: number;
     y: number;
@@ -17,14 +26,14 @@ export class Vec4 {
         this.w *= scalar;
         return this;
     }
-    add (vec4: Vec4) {
+    add(vec4: Vec4) {
         this.x += vec4.x;
         this.y += vec4.y;
         this.z += vec4.z;
         this.w += vec4.w;
         return this;
     }
-    lerp (vec4: Vec4, t: number) {
+    lerp(vec4: Vec4, t: number) {
         return this.add(vec4).multiply(t);
     }
     clone() {

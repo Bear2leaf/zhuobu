@@ -5,7 +5,7 @@ export let fs: string;
 export let vs: string;
 const isWX = typeof wx !== 'undefined';
 export const device = {
-    isWX:  isWX,
+    isWX: isWX,
     createCanvas: isWX ? wx.createCanvas : () => document.getElementById("canvas"),
     loadSubpackage: isWX ? () => new Promise<null>(resolve => {
         const task = wx.loadSubpackage({
@@ -24,7 +24,7 @@ export const device = {
             console.log(res.totalBytesWritten)
             console.log(res.totalBytesExpectedToWrite)
         })
-    }) : (async () => {}),
+    }) : (async () => { }),
     createImage: isWX ? wx.createImage : () => new Image(),
     getWindowInfo: isWX ? wx.getWindowInfo : () => ({
         windowWidth: device.createCanvas().width,
@@ -85,4 +85,10 @@ export function hexToRGBA(hexString: string): [number, number, number, number] {
     else {
         throw new Error(`unsupport hex color string: ${hexString}`);
     }
+}
+
+gl.clearColor(0, 0, 0, 1)
+
+export function clear() {
+    gl.clear(gl.COLOR_BUFFER_BIT)
 }

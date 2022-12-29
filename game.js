@@ -1,8 +1,9 @@
-import ready from "./global.js";
-import { GasketRenderer, DemoRenderer } from "./Renderer.js";
+import ready, { clear } from "./global.js";
+import { PointRenderer, TriangleRenderer } from "./Renderer.js";
 ready(() => {
-    const renderer = new DemoRenderer();
-    const rendererRed = new GasketRenderer();
+    clear();
+    const renderer = new TriangleRenderer();
+    const rendererRed = new PointRenderer();
     renderer.render();
     rendererRed.render();
 });
