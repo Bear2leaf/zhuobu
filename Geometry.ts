@@ -56,11 +56,11 @@ export class LineSegment implements Geometory {
 }
 export class Triangle implements Geometory {
     divide(): [Triangle, Triangle, Triangle] {
-            return [
-                new Triangle(this.c, this.bc.midPoint, this.ca.midPoint)
-                , new Triangle(this.ab.midPoint, this.a, this.ca.midPoint)
-                , new Triangle(this.ab.midPoint, this.bc.midPoint, this.b)
-            ];
+        return [
+            new Triangle(this.c, this.bc.midPoint, this.ca.midPoint)
+            , new Triangle(this.ab.midPoint, this.a, this.ca.midPoint)
+            , new Triangle(this.ab.midPoint, this.bc.midPoint, this.b)
+        ];
 
     }
     private readonly a: Point;
@@ -76,22 +76,27 @@ export class Triangle implements Geometory {
         this.b = b;
         this.c = c;
     }
+    static makeColorTriangle(color: Vec4) {
+        const point = new Point(color.x, color.y, color.z, color.w);
+        return new Triangle(point, point, point);
+    }
 }
 export class Tetrahedron implements Geometory {
     divide(): [Tetrahedron, Tetrahedron, Tetrahedron, Tetrahedron] {
-            return [
-                new Tetrahedron(this.a, this.ab.midPoint, this.ca.midPoint, this.ad.midPoint)
-                , new Tetrahedron(this.b, this.ab.midPoint, this.bc.midPoint, this.bd.midPoint)
-                , new Tetrahedron(this.c, this.ca.midPoint, this.bc.midPoint, this.dc.midPoint)
-                , new Tetrahedron(this.d, this.ad.midPoint, this.bd.midPoint, this.dc.midPoint)
-            ];
+        return [
+            new Tetrahedron(this.d, this.dc.midPoint, this.bd.midPoint, this.ad.midPoint)
+            , new Tetrahedron(this.dc.midPoint, this.c, this.bc.midPoint, this.ca.midPoint)
+            , new Tetrahedron(this.bd.midPoint, this.bc.midPoint, this.b, this.ab.midPoint)
+            , new Tetrahedron(this.ad.midPoint, this.ca.midPoint, this.ab.midPoint, this.a)
+        ];
 
     }
     private readonly a: Point;
     private readonly b: Point;
     private readonly c: Point;
     private readonly d: Point;
-    get triangles(): [Triangle, Triangle, Triangle, Triangle] { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c), ] }
+    get triangles(): [Triangle, Triangle, Triangle, Triangle] { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c)] }
+    get colorTriangles(): [Triangle, Triangle, Triangle, Triangle] { return [Triangle.makeColorTriangle(new Vec4(1, 1, 1, 1)), Triangle.makeColorTriangle(new Vec4(0.75, 0.75, 0.75, 1)), Triangle.makeColorTriangle(new Vec4(0.5, 0.5, 0.5, 1)), Triangle.makeColorTriangle(new Vec4(0.25, 0.25, 0.25, 1))] }
     get points(): [Point, Point, Point, Point] { return [this.a, this.b, this.c, this.d] }
     get vertices(): [Vec4, Vec4, Vec4, Vec4] { return [this.a.vertices[0], this.b.vertices[0], this.c.vertices[0], this.d.vertices[0]] }
     get ab(): LineSegment { return new LineSegment(this.a, this.b) }

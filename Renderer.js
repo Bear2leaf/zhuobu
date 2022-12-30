@@ -1,7 +1,7 @@
-import { Point, PointCollection, Tetrahedron, Triangle } from "./Geometry.js";
+import { Point, PointCollection, Tetrahedron } from "./Geometry.js";
 import { gl } from "./global.js";
 import { PointShader, TriangleShader } from "./Shader.js";
-import { Vec4, flatten } from "./Vector.js";
+import { flatten } from "./Vector.js";
 export default class Renderer {
     constructor(shader, mode) {
         this.mode = mode;
@@ -38,13 +38,32 @@ export class TriangleRenderer extends Renderer {
         super(new TriangleShader(), gl.TRIANGLES);
     }
     render() {
-        const triangle = new Triangle(new Point(-0.5, -0.5), new Point(0.0, 0.5), new Point(0.5, -0.5));
-        this.setVertices(triangle.vertices);
-        const colors = [];
-        triangle.vertices.forEach(vec => {
-            colors.push(new Vec4(1, 1, 1, 1));
-        });
-        this.setColors(colors);
+        const points = new PointCollection();
+        const colors = new PointCollection();
+        function divideRecursiveTetrahedron(tetrahedron, level) {
+            if (!level) {
+                tetrahedron.triangles.forEach(triangle => {
+                    points.add(triangle.points[0]);
+                    points.add(triangle.points[1]);
+                    points.add(triangle.points[2]);
+                });
+                tetrahedron.colorTriangles.forEach(triangle => {
+                    colors.add(triangle.points[0]);
+                    colors.add(triangle.points[1]);
+                    colors.add(triangle.points[2]);
+                });
+            }
+            else {
+                level--;
+                tetrahedron.divide().forEach(function (o) {
+                    divideRecursiveTetrahedron(o, level);
+                });
+            }
+        }
+        const recursiveLevel = 2;
+        divideRecursiveTetrahedron(new Tetrahedron(new Point(0, 0, -1.0), new Point(0.0, 1.0, 1.0), new Point(1.0, -1.0, 1.0), new Point(-1.0, -1.0, 1.0)), recursiveLevel);
+        this.setVertices(points.vertices);
+        this.setColors(colors.vertices);
         super.render();
     }
 }
@@ -54,25 +73,18 @@ export class PointRenderer extends Renderer {
     }
     render() {
         const points = new PointCollection();
-        function divideRecursiveTriangle(triangle, level) {
-            if (!level) {
-                points.add(triangle.points[0]);
-                points.add(triangle.points[1]);
-                points.add(triangle.points[2]);
-            }
-            else {
-                level--;
-                triangle.divide().forEach(function (o) {
-                    divideRecursiveTriangle(o, level);
-                });
-            }
-        }
+        const colors = new PointCollection();
         function divideRecursiveTetrahedron(tetrahedron, level) {
             if (!level) {
                 tetrahedron.triangles.forEach(triangle => {
                     points.add(triangle.points[0]);
                     points.add(triangle.points[1]);
                     points.add(triangle.points[2]);
+                });
+                tetrahedron.colorTriangles.forEach(triangle => {
+                    colors.add(triangle.points[0]);
+                    colors.add(triangle.points[1]);
+                    colors.add(triangle.points[2]);
                 });
             }
             else {
@@ -83,17 +95,9 @@ export class PointRenderer extends Renderer {
             }
         }
         const recursiveLevel = 5;
-        // divideRecursiveTriangle(new Triangle(
-        //     new Point(-0.5, -0.5),
-        //     new Point(0.0, 0.5),
-        //     new Point(0.5, -0.5)), recursiveLevel);
-        divideRecursiveTetrahedron(new Tetrahedron(new Point(-1.0, -1.0, -1.0), new Point(1.0, -1.0, -1.0), new Point(0.0, 1.0, 0.0), new Point(0.2, -0.8, 1.0)), recursiveLevel);
+        divideRecursiveTetrahedron(new Tetrahedron(new Point(0, 0, -1.0), new Point(0.0, 1.0, 1.0), new Point(1.0, -1.0, 1.0), new Point(-1.0, -1.0, 1.0)), recursiveLevel);
         this.setVertices(points.vertices);
-        const colors = [];
-        points.vertices.forEach(vec => {
-            colors.push(new Vec4(1, 0, 0, 1));
-        });
-        this.setColors(colors);
+        this.setColors(colors.vertices);
         super.render();
     }
 }

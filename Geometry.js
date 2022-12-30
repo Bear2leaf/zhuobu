@@ -60,6 +60,10 @@ export class Triangle {
     get ab() { return new LineSegment(this.a, this.b); }
     get ca() { return new LineSegment(this.c, this.a); }
     get bc() { return new LineSegment(this.b, this.c); }
+    static makeColorTriangle(color) {
+        const point = new Point(color.x, color.y, color.z, color.w);
+        return new Triangle(point, point, point);
+    }
 }
 export class Tetrahedron {
     constructor(a, b, c, d) {
@@ -70,13 +74,14 @@ export class Tetrahedron {
     }
     divide() {
         return [
-            new Tetrahedron(this.a, this.ab.midPoint, this.ca.midPoint, this.ad.midPoint),
-            new Tetrahedron(this.b, this.ab.midPoint, this.bc.midPoint, this.bd.midPoint),
-            new Tetrahedron(this.c, this.ca.midPoint, this.bc.midPoint, this.dc.midPoint),
-            new Tetrahedron(this.d, this.ad.midPoint, this.bd.midPoint, this.dc.midPoint)
+            new Tetrahedron(this.d, this.dc.midPoint, this.bd.midPoint, this.ad.midPoint),
+            new Tetrahedron(this.dc.midPoint, this.c, this.bc.midPoint, this.ca.midPoint),
+            new Tetrahedron(this.bd.midPoint, this.bc.midPoint, this.b, this.ab.midPoint),
+            new Tetrahedron(this.ad.midPoint, this.ca.midPoint, this.ab.midPoint, this.a)
         ];
     }
-    get triangles() { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c),]; }
+    get triangles() { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c)]; }
+    get colorTriangles() { return [Triangle.makeColorTriangle(new Vec4(1, 1, 1, 1)), Triangle.makeColorTriangle(new Vec4(0.75, 0.75, 0.75, 1)), Triangle.makeColorTriangle(new Vec4(0.5, 0.5, 0.5, 1)), Triangle.makeColorTriangle(new Vec4(0.25, 0.25, 0.25, 1))]; }
     get points() { return [this.a, this.b, this.c, this.d]; }
     get vertices() { return [this.a.vertices[0], this.b.vertices[0], this.c.vertices[0], this.d.vertices[0]]; }
     get ab() { return new LineSegment(this.a, this.b); }

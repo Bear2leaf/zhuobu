@@ -46,16 +46,36 @@ export class TriangleRenderer extends Renderer {
         super(new TriangleShader(), gl.TRIANGLES)
     }
     render(): void {
-        const triangle = new Triangle(
-            new Point(-0.5, -0.5),
-            new Point(0.0, 0.5),
-            new Point(0.5, -0.5),);
-        this.setVertices(triangle.vertices);
-        const colors: Vec4[] = [];
-        triangle.vertices.forEach(vec => {
-            colors.push(new Vec4(1, 1, 1, 1));
-        });
-        this.setColors(colors);
+        const points = new PointCollection()
+        const colors = new PointCollection();
+        function divideRecursiveTetrahedron(tetrahedron: Tetrahedron, level: number) {
+            if (!level) {
+                tetrahedron.triangles.forEach(triangle => {
+                    points.add(triangle.points[0])
+                    points.add(triangle.points[1])
+                    points.add(triangle.points[2])
+                })
+                tetrahedron.colorTriangles.forEach(triangle => {
+                    colors.add(triangle.points[0])
+                    colors.add(triangle.points[1])
+                    colors.add(triangle.points[2])
+                })
+            } else {
+                level--;
+                tetrahedron.divide().forEach(function (o) {
+                    divideRecursiveTetrahedron(o, level);
+                })
+            }
+        }
+        const recursiveLevel = 2;
+        divideRecursiveTetrahedron(new Tetrahedron(
+            new Point(0, 0, -1.0)
+            , new Point(0.0, 1.0, 1.0)
+            , new Point(1.0, -1.0, 1.0)
+            , new Point(-1.0, -1.0, 1.0)
+        ), recursiveLevel);
+        this.setVertices(points.vertices);
+        this.setColors(colors.vertices);
         
         super.render()
     }
@@ -66,24 +86,18 @@ export class PointRenderer extends Renderer {
     }
     render(): void {
         const points = new PointCollection()
-        function divideRecursiveTriangle(triangle: Triangle, level: number) {
-            if (!level) {
-                points.add(triangle.points[0])
-                points.add(triangle.points[1])
-                points.add(triangle.points[2])
-            } else {
-                level--;
-                triangle.divide().forEach(function (o) {
-                    divideRecursiveTriangle(o, level);
-                })
-            }
-        }
+        const colors = new PointCollection();
         function divideRecursiveTetrahedron(tetrahedron: Tetrahedron, level: number) {
             if (!level) {
                 tetrahedron.triangles.forEach(triangle => {
                     points.add(triangle.points[0])
                     points.add(triangle.points[1])
                     points.add(triangle.points[2])
+                })
+                tetrahedron.colorTriangles.forEach(triangle => {
+                    colors.add(triangle.points[0])
+                    colors.add(triangle.points[1])
+                    colors.add(triangle.points[2])
                 })
             } else {
                 level--;
@@ -93,22 +107,15 @@ export class PointRenderer extends Renderer {
             }
         }
         const recursiveLevel = 5;
-        // divideRecursiveTriangle(new Triangle(
-        //     new Point(-0.5, -0.5),
-        //     new Point(0.0, 0.5),
-        //     new Point(0.5, -0.5)), recursiveLevel);
         divideRecursiveTetrahedron(new Tetrahedron(
-            new Point(-1.0, -1.0, -1.0)
-            , new Point(1.0, -1.0, -1.0)
-            , new Point(0.0, 1.0, 0.0)
-            , new Point(0.2, -0.8, 1.0)
+            new Point(0, 0, -1.0)
+            , new Point(0.0, 1.0, 1.0)
+            , new Point(1.0, -1.0, 1.0)
+            , new Point(-1.0, -1.0, 1.0)
         ), recursiveLevel);
         this.setVertices(points.vertices);
-        const colors: Vec4[] = [];
-        points.vertices.forEach(vec => {
-            colors.push(new Vec4(1, 0, 0, 1));
-        });
-        this.setColors(colors);
+        this.setColors(colors.vertices);
+        
         super.render()
     }
 }
