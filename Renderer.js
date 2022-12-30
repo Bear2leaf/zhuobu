@@ -60,7 +60,7 @@ export class TriangleRenderer extends Renderer {
                 });
             }
         }
-        const recursiveLevel = 2;
+        const recursiveLevel = 5;
         divideRecursiveTetrahedron(new Tetrahedron(new Point(0, 0, -1.0), new Point(0.0, 1.0, 1.0), new Point(1.0, -1.0, 1.0), new Point(-1.0, -1.0, 1.0)), recursiveLevel);
         this.setVertices(points.vertices);
         this.setColors(colors.vertices);

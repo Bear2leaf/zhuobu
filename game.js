@@ -3,8 +3,8 @@ import { PointRenderer, TriangleRenderer } from "./Renderer.js";
 ready(() => {
     clear();
     const renderer = new TriangleRenderer();
-    const rendererRed = new PointRenderer();
+    const pointRenderer = new PointRenderer();
     renderer.render();
-    rendererRed.render();
+    pointRenderer.render();
 });
 //# sourceMappingURL=game.js.map
