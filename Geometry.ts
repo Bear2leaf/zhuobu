@@ -77,3 +77,34 @@ export class Triangle implements Geometory {
         this.c = c;
     }
 }
+export class Tetrahedron implements Geometory {
+    divide(): [Tetrahedron, Tetrahedron, Tetrahedron, Tetrahedron] {
+            return [
+                new Tetrahedron(this.a, this.ab.midPoint, this.ca.midPoint, this.ad.midPoint)
+                , new Tetrahedron(this.b, this.ab.midPoint, this.bc.midPoint, this.bd.midPoint)
+                , new Tetrahedron(this.c, this.ca.midPoint, this.bc.midPoint, this.dc.midPoint)
+                , new Tetrahedron(this.d, this.ad.midPoint, this.bd.midPoint, this.dc.midPoint)
+            ];
+
+    }
+    private readonly a: Point;
+    private readonly b: Point;
+    private readonly c: Point;
+    private readonly d: Point;
+    get triangles(): [Triangle, Triangle, Triangle, Triangle] { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c), ] }
+    get points(): [Point, Point, Point, Point] { return [this.a, this.b, this.c, this.d] }
+    get vertices(): [Vec4, Vec4, Vec4, Vec4] { return [this.a.vertices[0], this.b.vertices[0], this.c.vertices[0], this.d.vertices[0]] }
+    get ab(): LineSegment { return new LineSegment(this.a, this.b) }
+    get ca(): LineSegment { return new LineSegment(this.c, this.a) }
+    get bc(): LineSegment { return new LineSegment(this.b, this.c) }
+    get cd(): LineSegment { return new LineSegment(this.c, this.d) }
+    get ad(): LineSegment { return new LineSegment(this.a, this.d) }
+    get bd(): LineSegment { return new LineSegment(this.b, this.d) }
+    get dc(): LineSegment { return new LineSegment(this.d, this.c) }
+    constructor(a: Point, b: Point, c: Point, d: Point) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
+}

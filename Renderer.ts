@@ -1,23 +1,23 @@
-import { LineSegment, Point, PointCollection, Triangle } from "./Geometry.js";
+import { LineSegment, Point, PointCollection, Tetrahedron, Triangle } from "./Geometry.js";
 import { gl } from "./global.js";
-import Shader, { DemoRedShader as RedPointShader, DemoShader as TriangleShader } from "./Shader.js";
+import Shader, { PointShader, TriangleShader } from "./Shader.js";
 import { Vec4, flatten } from "./Vector.js";
 
 
 export default class Renderer {
     private readonly vertices: Vec4[];
+    private readonly colors: Vec4[];
     private readonly mode: number;
-    private readonly vao: WebGLVertexArrayObject | null;
     private readonly vbo: WebGLBuffer | null;
+    private readonly vao: WebGLVertexArrayObject | null;
     private readonly shader: Shader;
     constructor(shader: Shader, mode: number) {
         this.mode = mode;
         this.vertices = [];
+        this.colors = [];
         this.shader = shader;
-        this.vao = gl.createVertexArray();
         this.vbo = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-        gl.bindVertexArray(this.vao);
+        this.vao = gl.createVertexArray();
     }
     setVertices(vertices: Vec4[]) {
         vertices.forEach(vec => {
@@ -25,11 +25,19 @@ export default class Renderer {
             this.vertices.push(vec);
         });
     }
+    setColors(colors: Vec4[]) {
+        this.colors.push(...colors);
+    }
     render() {
         this.shader.useAndGetProgram();
+        gl.bindVertexArray(this.vao);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo)
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-        gl.bufferData(gl.ARRAY_BUFFER, flatten(this.vertices), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(1);
+        gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, this.vertices.length * 4 * 4);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), gl.STATIC_DRAW);
         gl.drawArrays(this.mode, 0, this.vertices.length)
     }
 }
@@ -38,39 +46,69 @@ export class TriangleRenderer extends Renderer {
         super(new TriangleShader(), gl.TRIANGLES)
     }
     render(): void {
-        const points = new PointCollection()
-        function divideRecursive(triangle: Triangle, count: number) {
-            if (!count) {
-                points.add(triangle.points[0])
-                points.add(triangle.points[1])
-                points.add(triangle.points[2])
-            } else {
-                count--;
-                triangle.divide().forEach(function (o) {
-                    divideRecursive(o, count);
-                })
-            }
-        }
-        const recursiveLevel = 5;
-        divideRecursive(new Triangle(
-            new Point(-1.0, -1.0),
-            new Point(0.0, 1.0),
-            new Point(1.0, -1.0)), recursiveLevel);
-        this.setVertices(points.vertices);
-        super.render()
-    }
-}
-export class PointRenderer extends Renderer {
-    constructor() {
-        super(new RedPointShader(), gl.POINTS)
-    }
-    render(): void {
-        const numPositions = 5000;
         const triangle = new Triangle(
             new Point(-0.5, -0.5),
             new Point(0.0, 0.5),
             new Point(0.5, -0.5),);
         this.setVertices(triangle.vertices);
+        const colors: Vec4[] = [];
+        triangle.vertices.forEach(vec => {
+            colors.push(new Vec4(1, 1, 1, 1));
+        });
+        this.setColors(colors);
+        
+        super.render()
+    }
+}
+export class PointRenderer extends Renderer {
+    constructor() {
+        super(new PointShader(), gl.POINTS)
+    }
+    render(): void {
+        const points = new PointCollection()
+        function divideRecursiveTriangle(triangle: Triangle, level: number) {
+            if (!level) {
+                points.add(triangle.points[0])
+                points.add(triangle.points[1])
+                points.add(triangle.points[2])
+            } else {
+                level--;
+                triangle.divide().forEach(function (o) {
+                    divideRecursiveTriangle(o, level);
+                })
+            }
+        }
+        function divideRecursiveTetrahedron(tetrahedron: Tetrahedron, level: number) {
+            if (!level) {
+                tetrahedron.triangles.forEach(triangle => {
+                    points.add(triangle.points[0])
+                    points.add(triangle.points[1])
+                    points.add(triangle.points[2])
+                })
+            } else {
+                level--;
+                tetrahedron.divide().forEach(function (o) {
+                    divideRecursiveTetrahedron(o, level);
+                })
+            }
+        }
+        const recursiveLevel = 5;
+        // divideRecursiveTriangle(new Triangle(
+        //     new Point(-0.5, -0.5),
+        //     new Point(0.0, 0.5),
+        //     new Point(0.5, -0.5)), recursiveLevel);
+        divideRecursiveTetrahedron(new Tetrahedron(
+            new Point(-1.0, -1.0, -1.0)
+            , new Point(1.0, -1.0, -1.0)
+            , new Point(0.0, 1.0, 0.0)
+            , new Point(0.2, -0.8, 1.0)
+        ), recursiveLevel);
+        this.setVertices(points.vertices);
+        const colors: Vec4[] = [];
+        points.vertices.forEach(vec => {
+            colors.push(new Vec4(1, 0, 0, 1));
+        });
+        this.setColors(colors);
         super.render()
     }
 }

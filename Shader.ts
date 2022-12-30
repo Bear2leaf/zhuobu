@@ -36,43 +36,49 @@ export default class Shader {
     }
 }
 
-export class DemoShader extends Shader {
+export class TriangleShader extends Shader {
     constructor() {
         super(
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
+            layout (location = 1) in vec4 a_color; 
+            out vec4 v_color; 
              
             void main() { 
+              v_color = a_color;
               gl_Position = a_position; 
             }`,
             `#version 300 es 
             precision highp float; 
-             
+            in vec4 v_color; 
             out vec4 color; 
              
             void main() { 
-              color = vec4(1.0, 0.0, 0.0, 1.0); 
+              color = v_color; 
             }`
         )
     }
 }
-export class DemoRedShader extends Shader {
+export class PointShader extends Shader {
     constructor() {
         super(
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
-             
+            layout (location = 1) in vec4 a_color; 
+            out vec4 v_color; 
+            
             void main() { 
               gl_Position = a_position;
-              gl_PointSize = 10.0;
+              v_color = a_color;
+              gl_PointSize = 3.0;
             }`,
             `#version 300 es 
             precision highp float; 
-             
+            in vec4 v_color; 
             out vec4 color; 
              
             void main() { 
-              color = vec4(0.0, 1.0, 0.0, 1.0); 
+              color = v_color; 
             }`
         )
     }

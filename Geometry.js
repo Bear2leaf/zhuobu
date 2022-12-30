@@ -61,4 +61,30 @@ export class Triangle {
     get ca() { return new LineSegment(this.c, this.a); }
     get bc() { return new LineSegment(this.b, this.c); }
 }
+export class Tetrahedron {
+    constructor(a, b, c, d) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
+    divide() {
+        return [
+            new Tetrahedron(this.a, this.ab.midPoint, this.ca.midPoint, this.ad.midPoint),
+            new Tetrahedron(this.b, this.ab.midPoint, this.bc.midPoint, this.bd.midPoint),
+            new Tetrahedron(this.c, this.ca.midPoint, this.bc.midPoint, this.dc.midPoint),
+            new Tetrahedron(this.d, this.ad.midPoint, this.bd.midPoint, this.dc.midPoint)
+        ];
+    }
+    get triangles() { return [new Triangle(this.a, this.b, this.c), new Triangle(this.d, this.b, this.c), new Triangle(this.a, this.b, this.d), new Triangle(this.a, this.d, this.c),]; }
+    get points() { return [this.a, this.b, this.c, this.d]; }
+    get vertices() { return [this.a.vertices[0], this.b.vertices[0], this.c.vertices[0], this.d.vertices[0]]; }
+    get ab() { return new LineSegment(this.a, this.b); }
+    get ca() { return new LineSegment(this.c, this.a); }
+    get bc() { return new LineSegment(this.b, this.c); }
+    get cd() { return new LineSegment(this.c, this.d); }
+    get ad() { return new LineSegment(this.a, this.d); }
+    get bd() { return new LineSegment(this.b, this.d); }
+    get dc() { return new LineSegment(this.d, this.c); }
+}
 //# sourceMappingURL=Geometry.js.map
