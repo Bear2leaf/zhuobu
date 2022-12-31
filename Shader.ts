@@ -1,36 +1,36 @@
-import { gl } from "./global.js"
+import { device } from "./global.js"
 
 export default class Shader {
     private readonly program: WebGLProgram;
     useAndGetProgram() {
-        gl.useProgram(this.program);
+        device.gl.useProgram(this.program);
         return this.program;
     }
     constructor(vs: string, fs: string) {
-        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        const vertexShader = device.gl.createShader(device.gl.VERTEX_SHADER);
+        const fragmentShader = device.gl.createShader(device.gl.FRAGMENT_SHADER);
         if (!vertexShader || !fragmentShader) {
             throw new Error("shader not created");
         }
-        gl.shaderSource(vertexShader, vs);
-        gl.shaderSource(fragmentShader, fs);
-        gl.compileShader(vertexShader);
-        gl.compileShader(fragmentShader);
-        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-            throw new Error(gl.getShaderInfoLog(vertexShader) || "vertex shader compile error");
+        device.gl.shaderSource(vertexShader, vs);
+        device.gl.shaderSource(fragmentShader, fs);
+        device.gl.compileShader(vertexShader);
+        device.gl.compileShader(fragmentShader);
+        if (!device.gl.getShaderParameter(vertexShader, device.gl.COMPILE_STATUS)) {
+            throw new Error(device.gl.getShaderInfoLog(vertexShader) || "vertex shader compile error");
         }
-        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-            throw new Error(gl.getShaderInfoLog(fragmentShader) || "fragment shader compile error");
+        if (!device.gl.getShaderParameter(fragmentShader, device.gl.COMPILE_STATUS)) {
+            throw new Error(device.gl.getShaderInfoLog(fragmentShader) || "fragment shader compile error");
         }
-        const program = gl.createProgram();
+        const program = device.gl.createProgram();
         if (!program) {
             throw new Error("program not created")
         }
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-            throw new Error(gl.getProgramInfoLog(program) || "program link error");
+        device.gl.attachShader(program, vertexShader);
+        device.gl.attachShader(program, fragmentShader);
+        device.gl.linkProgram(program);
+        if (!device.gl.getProgramParameter(program, device.gl.LINK_STATUS)) {
+            throw new Error(device.gl.getProgramInfoLog(program) || "program link error");
         }
         this.program = program;
     }

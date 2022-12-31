@@ -1,95 +1,172 @@
 
 declare const wx: any;
-let isMouseDown = false;
-export let fs: string;
-export let vs: string;
-const isWX = typeof wx !== 'undefined';
-export const device = {
-    isWX: isWX,
-    createCanvas: isWX ? wx.createCanvas : () => document.getElementById("canvas"),
-    loadSubpackage: isWX ? () => new Promise<null>(resolve => {
-        const task = wx.loadSubpackage({
-            name: "static",
-            success(res: any) {
-                console.log("load static success", res)
-                resolve(null)
-            },
-            fail(res: any) {
-                console.error("load static fail", res)
-            }
-        })
 
-        task.onProgressUpdate((res: any) => {
-            console.log(res.progress) // 可通过 onProgressUpdate 接口监听下载进度
-            console.log(res.totalBytesWritten)
-            console.log(res.totalBytesExpectedToWrite)
-        })
-    }) : (async () => { }),
-    createImage: isWX ? wx.createImage : () => new Image(),
-    getWindowInfo: isWX ? wx.getWindowInfo : () => ({
-        windowWidth: device.createCanvas().width,
-        windowHeight: device.createCanvas().height,
-        pixelRatio: devicePixelRatio,
-    }),
-    createWebAudioContext: isWX ? wx.createWebAudioContext : () => new AudioContext(),
-    onTouchStart: isWX ? wx.onTouchStart : (listener: any) => { window.onpointerdown = (e: PointerEvent) => (isMouseDown = true) && listener(e); window.ontouchstart = listener; },
-    onTouchMove: isWX ? wx.onTouchMove : (listener: any) => { window.onpointermove = (e: PointerEvent) => isMouseDown && listener(e); window.ontouchmove = listener; },
-    onTouchEnd: isWX ? wx.onTouchEnd : (listener: any) => { window.onpointerup = (e: PointerEvent) => { isMouseDown = false; listener(e); window.ontouchend = listener; } },
-    onTouchCancel: isWX ? wx.onTouchCancel : (listener: any) => { window.onpointercancel = (e: PointerEvent) => { isMouseDown = false; listener(e); window.ontouchcancel = listener; } },
-    readJson: isWX
-        ? (file: string): Promise<any> => new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))))
-        : (file: string): Promise<any> => fetch(file).then(response => response.json()),
-    readTxt: isWX
-        ? (file: string): Promise<string> => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')))
-        : (file: string): Promise<string> => fetch(file).then(response => response.text()),
-    readBuffer: isWX
-        ? (file: string): Promise<ArrayBuffer> => new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file)))
-        : (file: string): Promise<ArrayBuffer> => fetch(file).then(response => response.arrayBuffer())
+interface Device {
+    readonly gl: WebGL2RenderingContext;
+    createCanvas(): HTMLCanvasElement;
+    loadSubpackage(): Promise<null>;
+    createImage(): HTMLImageElement;
+    getWindowInfo(): { windowWidth: number, windowHeight: number, pixelRatio: number };
+    createWebAudioContext(): AudioContext;
+    onTouchStart(listener: Function): void;
+    onTouchMove(listener: Function): void;
+    onTouchEnd(listener: Function): void;
+    onTouchCancel(listener: Function): void;
+    readJson(file: string): Promise<Object>;
+    readTxt(file: string): Promise<string>;
+    readBuffer(file: string): Promise<ArrayBuffer>;
+    clearRenderer(): void;
 }
-export const gl = device.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
-export const phyObjs: number[][] = [];
-export const NUM = 0;
+class WxDevice implements Device {
+    gl: WebGL2RenderingContext;
+    constructor() {
+        this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+    }
+    clearRenderer(): void {
+        this.gl.clearColor(0, 0, 0, 1)
+        this.gl.enable(this.gl.DEPTH_TEST)
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
+    }
+    createCanvas(): HTMLCanvasElement {
+        const canvas = wx.createCanvas()
+        if (typeof document === 'undefined') {
+            const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+            (canvas.clientWidth) = windowWidth * pixelRatio;
+            (canvas.clientHeight) = windowHeight * pixelRatio;
+            (canvas.width) = windowWidth * pixelRatio;
+            (canvas.height) = windowHeight * pixelRatio;
+        }
+        return canvas
+    }
+    loadSubpackage(): Promise<null> {
+        return new Promise<null>(resolve => {
+            const task = wx.loadSubpackage({
+                name: "static",
+                success(res: any) {
+                    console.log("load static success", res)
+                    resolve(null)
+                },
+                fail(res: any) {
+                    console.error("load static fail", res)
+                }
+            })
+
+            task.onProgressUpdate((res: any) => {
+                console.log(res.progress) // 可通过 onProgressUpdate 接口监听下载进度
+                console.log(res.totalBytesWritten)
+                console.log(res.totalBytesExpectedToWrite)
+            })
+        });
+    }
+    createImage(): HTMLImageElement {
+        return wx.createImage();
+    }
+    getWindowInfo(): { windowWidth: number; windowHeight: number; pixelRatio: number; } {
+        return wx.getWindowInfo();
+    }
+    createWebAudioContext(): AudioContext {
+        return wx.createWebAudioContext();
+    }
+    onTouchStart(listener: Function): void {
+        wx.onTouchStart(listener);
+    }
+    onTouchMove(listener: Function): void {
+        wx.onTouchMove(listener);
+    }
+    onTouchEnd(listener: Function): void {
+        wx.onTouchEnd(listener);
+    }
+    onTouchCancel(listener: Function): void {
+        wx.onTouchCancel(listener);
+    }
+    readJson(file: string): Promise<Object> {
+        return new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))));
+    }
+    readTxt(file: string): Promise<string> {
+        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')));
+    }
+    readBuffer(file: string): Promise<ArrayBuffer> {
+        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file)));
+    }
+}
+
+class BrowserDevice implements Device {
+    gl: WebGL2RenderingContext;
+    private isMouseDown: boolean;
+    constructor() {
+        this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+        this.isMouseDown = false;
+    }
+    clearRenderer(): void {
+        this.gl.clearColor(0, 0, 0, 1)
+        this.gl.enable(this.gl.DEPTH_TEST)
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
+    }
+    createCanvas(): HTMLCanvasElement {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
+        if (!canvas) {
+            throw new Error("canvas not exist");
+        }
+        return canvas;
+    }
+    async loadSubpackage(): Promise<null> {
+        return null;
+    }
+    createImage(): HTMLImageElement {
+        return new Image();
+    }
+    getWindowInfo(): { windowWidth: number; windowHeight: number; pixelRatio: number; } {
+        return {
+            windowWidth: device.createCanvas().width,
+            windowHeight: device.createCanvas().height,
+            pixelRatio: devicePixelRatio,
+        };
+    }
+    createWebAudioContext(): AudioContext {
+        return new AudioContext();
+    }
+    onTouchStart(listener: Function): void {
+        window.onpointerdown = (e: PointerEvent) => (this.isMouseDown = true) && listener(e);
+    }
+    onTouchMove(listener: Function): void {
+        window.onpointermove = (e: PointerEvent) => this.isMouseDown && listener(e);
+    }
+    onTouchEnd(listener: Function): void {
+        window.onpointerup = (e: PointerEvent) => {
+            this.isMouseDown = false;
+            listener(e);
+        }
+    }
+    onTouchCancel(listener: Function): void {
+        window.onpointercancel = (e: PointerEvent) => {
+            this.isMouseDown = false;
+            listener(e);
+        }
+    }
+    async readJson(file: string): Promise<Object> {
+        const response = await fetch(file);
+        return await response.json();
+    }
+    async readTxt(file: string): Promise<string> {
+        const response = await fetch(file);
+        return await response.text();
+    }
+    async readBuffer(file: string): Promise<ArrayBuffer> {
+        const response = await fetch(file);
+        return await response.arrayBuffer();
+    }
+}
+
+export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new BrowserDevice()
+
+device.onTouchStart(console.log)
+device.onTouchMove(console.log)
+device.onTouchEnd(console.log)
+device.onTouchCancel(console.log)
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
-    vs = await device.readTxt("static/txt/vs.txt");
-    fs = await device.readTxt("static/txt/fs.txt");
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
 }).then(() => cb());
 
-
-
-if (typeof wx !== 'undefined' && typeof document === 'undefined') {
-    const { windowWidth, windowHeight, pixelRatio } = device.getWindowInfo();
-    ((gl.canvas as any).clientWidth) = windowWidth * pixelRatio;
-    ((gl.canvas as any).clientHeight) = windowHeight * pixelRatio;
-    ((gl.canvas as any).width) = windowWidth * pixelRatio;
-    ((gl.canvas as any).height) = windowHeight * pixelRatio;
-}
-
-
-export function hexToRGBA(hexString: string): [number, number, number, number] {
-    if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
-        const a = Number.parseInt(hexString.slice(1, 3), 16) / 255;
-        const r = Number.parseInt(hexString.slice(3, 5), 16) / 255;
-        const g = Number.parseInt(hexString.slice(5, 7), 16) / 255;
-        const b = Number.parseInt(hexString.slice(7, 9), 16) / 255;
-        return [r, g, b, a];
-    } else if (/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/g.test(hexString)) {
-        const r = Number.parseInt(hexString.slice(1, 3), 16) / 255;
-        const g = Number.parseInt(hexString.slice(3, 5), 16) / 255;
-        const b = Number.parseInt(hexString.slice(5, 7), 16) / 255;
-        return [r, g, b, 255];
-    }
-    else {
-        throw new Error(`unsupport hex color string: ${hexString}`);
-    }
-}
-
-gl.clearColor(0, 0, 0, 1)
-
-export function clear() {
-    gl.enable(gl.DEPTH_TEST)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-}

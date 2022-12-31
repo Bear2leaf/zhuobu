@@ -1,5 +1,5 @@
 import { Point, PointCollection, Tetrahedron } from "./Geometry.js";
-import { gl } from "./global.js";
+import { device } from "./global.js";
 import { PointShader, TriangleShader } from "./Shader.js";
 import { flatten } from "./Vector.js";
 export default class Renderer {
@@ -8,8 +8,8 @@ export default class Renderer {
         this.vertices = [];
         this.colors = [];
         this.shader = shader;
-        this.vbo = gl.createBuffer();
-        this.vao = gl.createVertexArray();
+        this.vbo = device.gl.createBuffer();
+        this.vao = device.gl.createVertexArray();
     }
     setVertices(vertices) {
         vertices.forEach(vec => {
@@ -22,20 +22,20 @@ export default class Renderer {
     }
     render() {
         this.shader.useAndGetProgram();
-        gl.bindVertexArray(this.vao);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(1);
-        gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, this.vertices.length * 4 * 4);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-        gl.bufferData(gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), gl.STATIC_DRAW);
-        gl.drawArrays(this.mode, 0, this.vertices.length);
+        device.gl.bindVertexArray(this.vao);
+        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
+        device.gl.enableVertexAttribArray(0);
+        device.gl.vertexAttribPointer(0, 4, device.gl.FLOAT, false, 0, 0);
+        device.gl.enableVertexAttribArray(1);
+        device.gl.vertexAttribPointer(1, 4, device.gl.FLOAT, false, 0, this.vertices.length * 4 * 4);
+        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
+        device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), device.gl.STATIC_DRAW);
+        device.gl.drawArrays(this.mode, 0, this.vertices.length);
     }
 }
 export class TriangleRenderer extends Renderer {
     constructor() {
-        super(new TriangleShader(), gl.TRIANGLES);
+        super(new TriangleShader(), device.gl.TRIANGLES);
     }
     render() {
         const points = new PointCollection();
@@ -69,7 +69,7 @@ export class TriangleRenderer extends Renderer {
 }
 export class PointRenderer extends Renderer {
     constructor() {
-        super(new PointShader(), gl.POINTS);
+        super(new PointShader(), device.gl.POINTS);
     }
     render() {
         const points = new PointCollection();
