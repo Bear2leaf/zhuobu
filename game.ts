@@ -1,11 +1,15 @@
-import ready, { device } from "./global.js";
-import { PointRenderer, TriangleRenderer } from "./Renderer.js";
+import ready, { device } from "./Device.js";
+import PointerRenderer from "./PointerRenderer.js";
+import { TriangleRenderer } from "./Renderer.js";
 
 
 ready(() => {
-  device.clearRenderer();
+  const pointerRenderer = new PointerRenderer();
   const renderer = new TriangleRenderer();
-  const pointRenderer = new PointRenderer();
-  renderer.render();
-  pointRenderer.render()
+  function tick (frame: number) {
+    pointerRenderer.render()
+    renderer.render()
+    requestAnimationFrame(() => tick(frame++));
+  }
+  tick(0);
 })

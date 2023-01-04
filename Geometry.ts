@@ -26,7 +26,7 @@ export class Point implements Geometory {
     private readonly y: number;
     private readonly z: number;
     private readonly w: number;
-    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 0) {
+    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
         this.x = x;
         this.y = y;
         this.z = z;

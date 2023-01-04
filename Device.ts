@@ -1,5 +1,6 @@
 
 declare const wx: any;
+type TouchInfoFunction = (info?: { x: number, y: number }) => void
 
 interface Device {
     readonly gl: WebGL2RenderingContext;
@@ -8,10 +9,10 @@ interface Device {
     createImage(): HTMLImageElement;
     getWindowInfo(): { windowWidth: number, windowHeight: number, pixelRatio: number };
     createWebAudioContext(): AudioContext;
-    onTouchStart(listener: Function): void;
-    onTouchMove(listener: Function): void;
-    onTouchEnd(listener: Function): void;
-    onTouchCancel(listener: Function): void;
+    onTouchStart(listener: TouchInfoFunction): void;
+    onTouchMove(listener: TouchInfoFunction): void;
+    onTouchEnd(listener: TouchInfoFunction): void;
+    onTouchCancel(listener: TouchInfoFunction): void;
     readJson(file: string): Promise<Object>;
     readTxt(file: string): Promise<string>;
     readBuffer(file: string): Promise<ArrayBuffer>;
@@ -67,17 +68,33 @@ class WxDevice implements Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    onTouchStart(listener: Function): void {
-        wx.onTouchStart(listener);
+    onTouchStart(listener: TouchInfoFunction): void {
+        wx.onTouchStart((e: any) => {
+            const touch = e.touches[0];
+            if (!touch) {
+                throw new Error("touch not exist")
+            }
+            listener({ x: touch.clientX, y: touch.clientY });
+        });
     }
-    onTouchMove(listener: Function): void {
-        wx.onTouchMove(listener);
+    onTouchMove(listener: TouchInfoFunction): void {
+        wx.onTouchMove((e: any) => {
+            const touch = e.touches[0];
+            if (!touch) {
+                throw new Error("touch not exist")
+            }
+            listener({ x: touch.clientX, y: touch.clientY });
+        });
     }
-    onTouchEnd(listener: Function): void {
-        wx.onTouchEnd(listener);
+    onTouchEnd(listener: TouchInfoFunction): void {
+        wx.onTouchEnd((e: any) => {
+            listener();
+        });
     }
-    onTouchCancel(listener: Function): void {
-        wx.onTouchCancel(listener);
+    onTouchCancel(listener: TouchInfoFunction): void {
+        wx.onTouchCancel((e: any) => {
+            listener();
+        });
     }
     readJson(file: string): Promise<Object> {
         return new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))));
@@ -127,22 +144,29 @@ class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    onTouchStart(listener: Function): void {
-        window.onpointerdown = (e: PointerEvent) => (this.isMouseDown = true) && listener(e);
+    onTouchStart(listener: TouchInfoFunction): void {
+        window.onpointerdown = (e: PointerEvent) => {
+            this.isMouseDown = true;
+            listener({ x: e.clientX, y: e.clientY });
+        };
     }
-    onTouchMove(listener: Function): void {
-        window.onpointermove = (e: PointerEvent) => this.isMouseDown && listener(e);
+    onTouchMove(listener: TouchInfoFunction): void {
+        window.onpointermove = (e: PointerEvent) => {
+            if (this.isMouseDown) {
+                listener({ x: e.clientX, y: e.clientY })
+            }
+        };
     }
-    onTouchEnd(listener: Function): void {
+    onTouchEnd(listener: TouchInfoFunction): void {
         window.onpointerup = (e: PointerEvent) => {
             this.isMouseDown = false;
-            listener(e);
+            listener({ x: e.clientX, y: e.clientY });
         }
     }
-    onTouchCancel(listener: Function): void {
+    onTouchCancel(listener: TouchInfoFunction): void {
         window.onpointercancel = (e: PointerEvent) => {
             this.isMouseDown = false;
-            listener(e);
+            listener({ x: e.clientX, y: e.clientY });
         }
     }
     async readJson(file: string): Promise<Object> {
@@ -161,10 +185,6 @@ class BrowserDevice implements Device {
 
 export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new BrowserDevice()
 
-device.onTouchStart(console.log)
-device.onTouchMove(console.log)
-device.onTouchEnd(console.log)
-device.onTouchCancel(console.log)
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)

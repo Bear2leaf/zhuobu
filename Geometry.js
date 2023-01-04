@@ -17,7 +17,7 @@ export class PointCollection {
     }
 }
 export class Point {
-    constructor(x = 0, y = 0, z = 0, w = 0) {
+    constructor(x = 0, y = 0, z = 0, w = 1) {
         this.x = x;
         this.y = y;
         this.z = z;

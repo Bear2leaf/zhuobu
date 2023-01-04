@@ -1,4 +1,4 @@
-import { device } from "./global.js";
+import { device } from "./Device.js";
 export default class Shader {
     constructor(vs, fs) {
         const vertexShader = device.gl.createShader(device.gl.VERTEX_SHADER);
@@ -63,7 +63,7 @@ export class PointShader extends Shader {
             void main() { 
               gl_Position = a_position;
               v_color = a_color;
-              gl_PointSize = 3.0;
+              gl_PointSize = 10.0;
             }`, `#version 300 es 
             precision highp float; 
             in vec4 v_color; 
