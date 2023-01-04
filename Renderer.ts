@@ -1,4 +1,4 @@
-import { LineSegment, Point, PointCollection, Tetrahedron, Triangle } from "./Geometry.js";
+import { Point, PointCollection, Tetrahedron } from "./Geometry.js";
 import { device } from "./global.js";
 import Shader, { PointShader, TriangleShader } from "./Shader.js";
 import { Vec4, flatten } from "./Vector.js";

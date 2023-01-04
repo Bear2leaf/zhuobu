@@ -92,6 +92,8 @@ class BrowserDevice {
         if (!canvas) {
             throw new Error("canvas not exist");
         }
+        canvas.width = this.getWindowInfo().windowWidth * this.getWindowInfo().pixelRatio;
+        canvas.height = this.getWindowInfo().windowHeight * this.getWindowInfo().pixelRatio;
         return canvas;
     }
     loadSubpackage() {
@@ -104,8 +106,8 @@ class BrowserDevice {
     }
     getWindowInfo() {
         return {
-            windowWidth: device.createCanvas().width,
-            windowHeight: device.createCanvas().height,
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
             pixelRatio: devicePixelRatio,
         };
     }
