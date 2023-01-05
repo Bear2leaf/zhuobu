@@ -4,26 +4,19 @@ import { Vec4 } from "./Vector.js";
 export default class PointerRenderer extends PointRenderer {
     constructor() {
         super();
-        device.onTouchStart((e) => {
-            if (!e) {
-                throw new Error("event not exist");
-            }
-            this.setPosition(e.x, e.y);
-        });
-        device.onTouchMove((e) => {
-            if (!e) {
-                throw new Error("event not exist");
-            }
-            this.setPosition(e.x, e.y);
-        });
+        device.onTouchStart((e) => this.setPosition(e));
+        device.onTouchMove((e) => this.setPosition(e));
         device.onTouchEnd(() => { });
         device.onTouchCancel(() => { });
         this.setVertices([new Vec4(0, 0, 0, 0)]);
         this.setColors([new Vec4(1, 1, 1, 1)]);
     }
-    setPosition(x, y) {
+    setPosition(e) {
+        if (!e) {
+            throw new Error("event not exist");
+        }
         const windowInfo = device.getWindowInfo();
-        this.setVertices([new Vec4(x / windowInfo.windowWidth * 2 - 1, 1 - y / windowInfo.windowHeight * 2, 0, 1)]);
+        this.setVertices([new Vec4(e.x - windowInfo.windowWidth / 2, e.y - windowInfo.windowHeight / 2, 0, 1)]);
     }
     render() {
         device.clearRenderer();

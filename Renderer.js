@@ -1,16 +1,21 @@
+import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
 import { device } from "./Device.js";
 import { PointCollection, Tetrahedron, Point } from "./Geometry.js";
+import Matrix from "./Matrix.js";
 import { PointShader, TriangleShader } from "./Shader.js";
-import { flatten } from "./Vector.js";
+import { Vec4, flatten } from "./Vector.js";
 export default class Renderer {
-    constructor(shader, mode) {
+    constructor(shader, mode, camera) {
         this.mode = mode;
         this.vertices = [];
         this.colors = [];
         this.shader = shader;
+        this.camera = camera;
         this.vbo = device.gl.createBuffer();
         this.vao = device.gl.createVertexArray();
-        this.shader.useAndGetProgram();
+        const program = this.shader.useAndGetProgram();
+        const viewLoc = device.gl.getUniformLocation(program, "u_view");
+        device.gl.uniformMatrix4fv(viewLoc, false, camera.matrix.getVertics());
         device.gl.bindVertexArray(this.vao);
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
     }
@@ -33,7 +38,8 @@ export default class Renderer {
 }
 export class TriangleRenderer extends Renderer {
     constructor() {
-        super(new TriangleShader(), device.gl.TRIANGLES);
+        super(new TriangleShader(), device.gl.TRIANGLES, new PerspectiveCamera());
+        this.frame = 0;
     }
     render() {
         const points = new PointCollection();
@@ -58,8 +64,19 @@ export class TriangleRenderer extends Renderer {
                 });
             }
         }
-        const recursiveLevel = 1;
-        divideRecursiveTetrahedron(new Tetrahedron(new Point(0, 0, -1.0), new Point(0.0, 1.0, 1.0), new Point(1.0, -1.0, 1.0), new Point(-1.0, -1.0, 1.0)), recursiveLevel);
+        const recursiveLevel = 5;
+        const windowInfo = device.getWindowInfo();
+        const left = -windowInfo.windowWidth / 2;
+        const right = -left;
+        const top = -windowInfo.windowHeight / 2;
+        const bottom = -top;
+        divideRecursiveTetrahedron(new Tetrahedron(new Point(0, 0, left), new Point(0, bottom, left * 2), new Point(right, top, left * 2), new Point(left, top, left * 2)), recursiveLevel);
+        const ctm = Matrix.identity()
+            .translate(new Vec4(0, 0, left * 2, 0))
+            .rotateY(Math.PI / 360 * this.frame++)
+            .multiply(Matrix.identity().translate(new Vec4(0, 0, left * 2, 0)).inverse());
+        const transformLoc = device.gl.getUniformLocation(this.shader.useAndGetProgram(), "u_transform");
+        device.gl.uniformMatrix4fv(transformLoc, false, ctm.getVertics());
         this.setVertices(points.vertices);
         this.setColors(colors.vertices);
         super.render();
@@ -67,7 +84,7 @@ export class TriangleRenderer extends Renderer {
 }
 export class PointRenderer extends Renderer {
     constructor() {
-        super(new PointShader(), device.gl.POINTS);
+        super(new PointShader(), device.gl.POINTS, new OrthoCamera());
     }
     render() {
         super.render();

@@ -38,11 +38,13 @@ export class TriangleShader extends Shader {
         super(`#version 300 es 
             layout (location = 0) in vec4 a_position; 
             layout (location = 1) in vec4 a_color; 
+            uniform mat4 u_view;
+            uniform mat4 u_transform;
             out vec4 v_color; 
              
             void main() { 
               v_color = a_color;
-              gl_Position = a_position; 
+              gl_Position = u_view * u_transform * a_position; 
             }`, `#version 300 es 
             precision highp float; 
             in vec4 v_color; 
@@ -58,10 +60,11 @@ export class PointShader extends Shader {
         super(`#version 300 es 
             layout (location = 0) in vec4 a_position; 
             layout (location = 1) in vec4 a_color; 
+            uniform mat4 u_view;
             out vec4 v_color; 
             
             void main() { 
-              gl_Position = a_position;
+              gl_Position = u_view * a_position;
               v_color = a_color;
               gl_PointSize = 10.0;
             }`, `#version 300 es 

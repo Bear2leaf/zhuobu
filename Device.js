@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 class WxDevice {
     constructor() {
+        this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2');
     }
     clearRenderer() {
@@ -19,7 +20,7 @@ class WxDevice {
     createCanvas() {
         const canvas = wx.createCanvas();
         if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+            const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
             (canvas.clientWidth) = windowWidth * pixelRatio;
             (canvas.clientHeight) = windowHeight * pixelRatio;
             (canvas.width) = windowWidth * pixelRatio;
@@ -50,7 +51,7 @@ class WxDevice {
         return wx.createImage();
     }
     getWindowInfo() {
-        return wx.getWindowInfo();
+        return this.deviceInfo;
     }
     createWebAudioContext() {
         return wx.createWebAudioContext();

@@ -1,7 +1,7 @@
 
 declare const wx: any;
-type TouchInfoFunction = (info?: { x: number, y: number }) => void
-
+export type TouchInfoFunction = (info?: { x: number, y: number }) => void
+type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: number; }
 interface Device {
     readonly gl: WebGL2RenderingContext;
     createCanvas(): HTMLCanvasElement;
@@ -19,8 +19,10 @@ interface Device {
     clearRenderer(): void;
 }
 class WxDevice implements Device {
-    gl: WebGL2RenderingContext;
+    readonly gl: WebGL2RenderingContext;
+    private readonly deviceInfo: DeviceInfo
     constructor() {
+        this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
     clearRenderer(): void {
@@ -31,7 +33,7 @@ class WxDevice implements Device {
     createCanvas(): HTMLCanvasElement {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+            const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
             (canvas.clientWidth) = windowWidth * pixelRatio;
             (canvas.clientHeight) = windowHeight * pixelRatio;
             (canvas.width) = windowWidth * pixelRatio;
@@ -62,8 +64,8 @@ class WxDevice implements Device {
     createImage(): HTMLImageElement {
         return wx.createImage();
     }
-    getWindowInfo(): { windowWidth: number; windowHeight: number; pixelRatio: number; } {
-        return wx.getWindowInfo();
+    getWindowInfo(): DeviceInfo{
+        return this.deviceInfo;
     }
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
