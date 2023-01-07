@@ -4,6 +4,8 @@ export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: number; }
 interface Device {
     readonly gl: WebGL2RenderingContext;
+    readonly imageCache : Map<string, HTMLImageElement>;
+    readonly fontCache : Map<string, import("./TextRenderer").FontInfo>;
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
     createImage(): HTMLImageElement;
@@ -21,7 +23,11 @@ interface Device {
 class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
     private readonly deviceInfo: DeviceInfo
+    readonly imageCache: Map<string, HTMLImageElement>;
+    readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
     constructor() {
+        this.imageCache = new Map();
+        this.fontCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
@@ -41,8 +47,8 @@ class WxDevice implements Device {
         }
         return canvas
     }
-    loadSubpackage(): Promise<null> {
-        return new Promise<null>(resolve => {
+    async loadSubpackage(): Promise<null> {
+        await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "static",
                 success(res: any) {
@@ -59,7 +65,11 @@ class WxDevice implements Device {
                 console.log(res.totalBytesWritten)
                 console.log(res.totalBytesExpectedToWrite)
             })
-        });
+        })
+        const img = device.createImage() as HTMLImageElement;
+        img.src = "static/boxy_bold_font.png";
+        await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
+        return null;
     }
     createImage(): HTMLImageElement {
         return wx.createImage();
@@ -112,7 +122,11 @@ class WxDevice implements Device {
 class BrowserDevice implements Device {
     gl: WebGL2RenderingContext;
     private isMouseDown: boolean;
+    readonly imageCache: Map<string, HTMLImageElement>;
+    readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
     constructor() {
+        this.imageCache = new Map();
+        this.fontCache = new Map();
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
@@ -192,5 +206,11 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
+    device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as import("./TextRenderer").FontInfo);
+    const img = device.createImage() as HTMLImageElement;
+    img.src = "static/font/boxy_bold_font.png";
+    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
+    device.imageCache.set("static/font/boxy_bold_font.png", img);
+    console.log(device)
 }).then(() => cb());
 

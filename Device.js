@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 class WxDevice {
     constructor() {
+        this.imageCache = new Map();
+        this.fontCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2');
     }
@@ -29,22 +31,28 @@ class WxDevice {
         return canvas;
     }
     loadSubpackage() {
-        return new Promise(resolve => {
-            const task = wx.loadSubpackage({
-                name: "static",
-                success(res) {
-                    console.log("load static success", res);
-                    resolve(null);
-                },
-                fail(res) {
-                    console.error("load static fail", res);
-                }
+        return __awaiter(this, void 0, void 0, function* () {
+            yield new Promise(resolve => {
+                const task = wx.loadSubpackage({
+                    name: "static",
+                    success(res) {
+                        console.log("load static success", res);
+                        resolve(null);
+                    },
+                    fail(res) {
+                        console.error("load static fail", res);
+                    }
+                });
+                task.onProgressUpdate((res) => {
+                    console.log(res.progress); // 可通过 onProgressUpdate 接口监听下载进度
+                    console.log(res.totalBytesWritten);
+                    console.log(res.totalBytesExpectedToWrite);
+                });
             });
-            task.onProgressUpdate((res) => {
-                console.log(res.progress); // 可通过 onProgressUpdate 接口监听下载进度
-                console.log(res.totalBytesWritten);
-                console.log(res.totalBytesExpectedToWrite);
-            });
+            const img = device.createImage();
+            img.src = "static/boxy_bold_font.png";
+            yield new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+            return null;
         });
     }
     createImage() {
@@ -96,6 +104,8 @@ class WxDevice {
 }
 class BrowserDevice {
     constructor() {
+        this.imageCache = new Map();
+        this.fontCache = new Map();
         this.gl = this.createCanvas().getContext('webgl2');
         this.isMouseDown = false;
     }
@@ -180,5 +190,11 @@ export default (cb) => device.loadSubpackage().then(() => __awaiter(void 0, void
     yield device.readTxt("static/txt/hello.txt").then(console.log);
     yield device.readJson("static/gltf/hello.gltf").then(console.log);
     yield device.readBuffer("static/gltf/hello.bin").then(console.log);
+    device.fontCache.set("static/font/font_info.json", yield device.readJson("static/font/font_info.json"));
+    const img = device.createImage();
+    img.src = "static/font/boxy_bold_font.png";
+    yield new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+    device.imageCache.set("static/font/boxy_bold_font.png", img);
+    console.log(device);
 })).then(() => cb());
 //# sourceMappingURL=Device.js.map

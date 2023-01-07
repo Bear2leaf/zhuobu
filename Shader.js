@@ -1,4 +1,5 @@
 import { device } from "./Device.js";
+import { flatten } from "./Vector.js";
 export default class Shader {
     constructor(vs, fs) {
         const vertexShader = device.gl.createShader(device.gl.VERTEX_SHADER);
@@ -28,7 +29,22 @@ export default class Shader {
         }
         this.program = program;
     }
-    useAndGetProgram() {
+    setMatrix4fv(name, data) {
+        device.gl.useProgram(this.program);
+        const viewLoc = device.gl.getUniformLocation(this.program, name);
+        device.gl.uniformMatrix4fv(viewLoc, false, data);
+    }
+    setVector4f(name, data) {
+        device.gl.useProgram(this.program);
+        const viewLoc = device.gl.getUniformLocation(this.program, name);
+        device.gl.uniform4fv(viewLoc, flatten([data]));
+    }
+    setInteger(name, data) {
+        device.gl.useProgram(this.program);
+        const viewLoc = device.gl.getUniformLocation(this.program, name);
+        device.gl.uniform1i(viewLoc, data);
+    }
+    use() {
         device.gl.useProgram(this.program);
         return this.program;
     }
@@ -52,6 +68,32 @@ export class TriangleShader extends Shader {
              
             void main() { 
               color = v_color; 
+            }`);
+    }
+}
+export class TextShader extends Shader {
+    constructor() {
+        super(`#version 300 es 
+            layout (location = 0) in vec4 a_position; 
+            uniform mat4 u_view; 
+            out vec2 v_texcoord; 
+             
+            void main() { 
+              // Multiply the position by the matrix. 
+              gl_Position = u_view * vec4(a_position.xy, 0, 1); 
+             
+              // Pass the texcoord to the fragment shader. 
+              v_texcoord = a_position.zw; 
+            }`, `#version 300 es 
+            precision highp float; 
+             
+            // Passed in from the vertex shader. 
+            in vec2 v_texcoord; 
+            out vec4 color; 
+            uniform sampler2D u_texture; 
+             
+            void main() { 
+              color = texture(u_texture, v_texcoord); 
             }`);
     }
 }

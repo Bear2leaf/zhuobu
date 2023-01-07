@@ -10,10 +10,10 @@ export default class Renderer {
     private readonly vertices: Vec4[];
     private readonly colors: Vec4[];
     private readonly mode: number;
-    readonly camera: Camera;
+    private readonly camera: Camera;
     private readonly vbo: WebGLBuffer | null;
     private readonly vao: WebGLVertexArrayObject | null;
-    readonly shader: Shader;
+    private readonly shader: Shader;
     constructor(shader: Shader, mode: number, camera: Camera) {
         this.mode = mode;
         this.vertices = [];
@@ -22,9 +22,7 @@ export default class Renderer {
         this.camera = camera;
         this.vbo = device.gl.createBuffer();
         this.vao = device.gl.createVertexArray();
-        const program = this.shader.useAndGetProgram();
-        const viewLoc = device.gl.getUniformLocation(program, "u_view");
-        device.gl.uniformMatrix4fv(viewLoc, false, camera.matrix.getVertics())
+        this.shader.setMatrix4fv("u_view", camera.matrix.getVertics())
         device.gl.bindVertexArray(this.vao);
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
     }
@@ -34,8 +32,14 @@ export default class Renderer {
     setColors(colors: Vec4[]) {
         this.colors.splice(0, this.colors.length, ...colors)
     }
+    updateTransform(matrix: Matrix) {
+        this.shader.setMatrix4fv("u_transform", matrix.getVertics())
+    }
+    setTextureUnit() {
+        this.shader.setInteger("u_texture", 0);
+    }
     render() {
-        this.shader.useAndGetProgram();
+        this.shader.use();
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
         device.gl.enableVertexAttribArray(0);
         device.gl.vertexAttribPointer(0, 4, device.gl.FLOAT, false, 0, 0);
@@ -89,8 +93,7 @@ export class TriangleRenderer extends Renderer {
             .translate(new Vec4(0, 0, left * 2 , 0))
             .rotateY(Math.PI / 360 * this.frame++)
             .multiply(Matrix.identity().translate(new Vec4(0, 0, left * 2 , 0)).inverse());
-        const transformLoc = device.gl.getUniformLocation(this.shader.useAndGetProgram(), "u_transform");
-        device.gl.uniformMatrix4fv(transformLoc, false, ctm.getVertics())
+        this.updateTransform(ctm);
         this.setVertices(points.vertices);
         this.setColors(colors.vertices);
 
