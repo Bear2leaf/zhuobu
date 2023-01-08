@@ -23,6 +23,7 @@ export class PerspectiveCamera implements Camera {
     readonly projection: Matrix;
 
     constructor(fieldOfViewYInRadians: number = Math.PI / 4, aspect: number = 1, zNear: number = 1, zFar: number = 2000) {
+        aspect = device.getWindowInfo().windowWidth / device.getWindowInfo().windowHeight;
         this.view = Matrix.lookAt(new Vec3(0, 0, 4), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
         this.projection = Matrix.perspective(fieldOfViewYInRadians, aspect, zNear, zFar);
     }
