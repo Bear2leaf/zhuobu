@@ -13,9 +13,19 @@ export default class TextRenderer extends Renderer {
     private readonly fontInfo: FontInfo;
     private readonly textObjects: Text[];
     constructor() {
-        super(new TextShader(), device.gl.TRIANGLES, new OrthoCamera())
+        
+        const windowInfo = device.getWindowInfo();
+        console.log(windowInfo)
+        const left = - windowInfo.windowWidth / 2;
+        const right = windowInfo.windowWidth / 2;
+        const bottom = windowInfo.windowHeight / 2;
+        const top = -windowInfo.windowHeight / 2;
+        const near = 1;
+        const far = -1;
+        const camera = new OrthoCamera(left, right, bottom, top, near, far);
+        camera.projection.translate(new Vec4(left, top, 0, 1))
+        super(new TextShader(), device.gl.TRIANGLES, camera)
         this.textObjects = [];
-
         this.texture = new Texture();
         const fontInfo = device.fontCache.get("static/font/font_info.json");
         if (!fontInfo) {
@@ -30,6 +40,7 @@ export default class TextRenderer extends Renderer {
         this.setTextureUnit();
         device.gl.enable(device.gl.BLEND);
         device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
+        console.log(this)
     }
     add(text: Text): void {
         this.textObjects.push(text);
@@ -50,8 +61,8 @@ export default class TextRenderer extends Renderer {
         const batch: Vec4[] = [];
         for (const c of chars) {
             const ch = this.fontInfo[c];
-            const xpos = x - device.getWindowInfo().windowWidth / 2;
-            const ypos = y - device.getWindowInfo().windowHeight / 2;
+            const xpos = x;
+            const ypos = y;
             const w = ch.width * scale;
             const h = ch.height * scale;
             x += w + spacing;

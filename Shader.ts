@@ -58,13 +58,14 @@ export class TriangleShader extends Shader {
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
             layout (location = 1) in vec4 a_color; 
+            uniform mat4 u_projection; 
             uniform mat4 u_view;
-            uniform mat4 u_transform;
+            uniform mat4 u_world;
             out vec4 v_color; 
              
             void main() { 
               v_color = a_color;
-              gl_Position = u_view * u_transform * a_position; 
+              gl_Position = u_projection * u_view * u_world * a_position; 
             }`,
             `#version 300 es 
             precision highp float; 
@@ -82,12 +83,13 @@ export class TextShader extends Shader {
         super(
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
+            uniform mat4 u_projection; 
             uniform mat4 u_view; 
             out vec2 v_texcoord; 
              
             void main() { 
               // Multiply the position by the matrix. 
-              gl_Position = u_view * vec4(a_position.xy, 0, 1); 
+              gl_Position = u_projection * u_view * vec4(a_position.xy, 0, 1); 
              
               // Pass the texcoord to the fragment shader. 
               v_texcoord = a_position.zw; 
@@ -112,11 +114,12 @@ export class PointShader extends Shader {
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
             layout (location = 1) in vec4 a_color; 
+            uniform mat4 u_projection; 
             uniform mat4 u_view;
             out vec4 v_color; 
             
             void main() { 
-              gl_Position = u_view * a_position;
+              gl_Position = u_projection * u_view * a_position;
               v_color = a_color;
               gl_PointSize = 10.0;
             }`,

@@ -10,12 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 class WxDevice {
     constructor() {
         this.imageCache = new Map();
+        this.txtCache = new Map();
         this.fontCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2');
     }
     clearRenderer() {
-        this.gl.clearColor(0, 0, 0, 1);
+        this.gl.clearColor(0.3, 0.3, 0.3, 1);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
@@ -50,7 +51,7 @@ class WxDevice {
                 });
             });
             const img = device.createImage();
-            img.src = "static/boxy_bold_font.png";
+            img.src = "static/font/boxy_bold_font.png";
             yield new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
             return null;
         });
@@ -105,12 +106,13 @@ class WxDevice {
 class BrowserDevice {
     constructor() {
         this.imageCache = new Map();
+        this.txtCache = new Map();
         this.fontCache = new Map();
         this.gl = this.createCanvas().getContext('webgl2');
         this.isMouseDown = false;
     }
     clearRenderer() {
-        this.gl.clearColor(0, 0, 0, 1);
+        this.gl.clearColor(0.3, 0.3, 0.3, 1);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
@@ -190,11 +192,11 @@ export default (cb) => device.loadSubpackage().then(() => __awaiter(void 0, void
     yield device.readTxt("static/txt/hello.txt").then(console.log);
     yield device.readJson("static/gltf/hello.gltf").then(console.log);
     yield device.readBuffer("static/gltf/hello.bin").then(console.log);
+    device.txtCache.set("static/obj/cube.obj", yield device.readTxt("static/obj/cube.obj"));
     device.fontCache.set("static/font/font_info.json", yield device.readJson("static/font/font_info.json"));
     const img = device.createImage();
     img.src = "static/font/boxy_bold_font.png";
     yield new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
     device.imageCache.set("static/font/boxy_bold_font.png", img);
-    console.log(device);
 })).then(() => cb());
 //# sourceMappingURL=Device.js.map

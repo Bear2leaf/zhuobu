@@ -5,6 +5,7 @@ type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: numb
 interface Device {
     readonly gl: WebGL2RenderingContext;
     readonly imageCache : Map<string, HTMLImageElement>;
+    readonly txtCache : Map<string, string>;
     readonly fontCache : Map<string, import("./TextRenderer").FontInfo>;
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
@@ -24,15 +25,17 @@ class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
     private readonly deviceInfo: DeviceInfo
     readonly imageCache: Map<string, HTMLImageElement>;
+    readonly txtCache : Map<string, string>;
     readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
     constructor() {
         this.imageCache = new Map();
+        this.txtCache = new Map();
         this.fontCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
     clearRenderer(): void {
-        this.gl.clearColor(0, 0, 0, 1)
+        this.gl.clearColor(0.3, 0.3, 0.3, 1)
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     }
@@ -67,7 +70,7 @@ class WxDevice implements Device {
             })
         })
         const img = device.createImage() as HTMLImageElement;
-        img.src = "static/boxy_bold_font.png";
+        img.src = "static/font/boxy_bold_font.png";
         await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
         return null;
     }
@@ -123,15 +126,17 @@ class BrowserDevice implements Device {
     gl: WebGL2RenderingContext;
     private isMouseDown: boolean;
     readonly imageCache: Map<string, HTMLImageElement>;
+    readonly txtCache : Map<string, string>;
     readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
     constructor() {
         this.imageCache = new Map();
+        this.txtCache = new Map();
         this.fontCache = new Map();
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
     clearRenderer(): void {
-        this.gl.clearColor(0, 0, 0, 1)
+        this.gl.clearColor(0.3, 0.3, 0.3, 1)
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     }
@@ -206,11 +211,11 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
+    device.txtCache.set("static/obj/cube.obj", await device.readTxt("static/obj/cube.obj"));
     device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as import("./TextRenderer").FontInfo);
     const img = device.createImage() as HTMLImageElement;
     img.src = "static/font/boxy_bold_font.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     device.imageCache.set("static/font/boxy_bold_font.png", img);
-    console.log(device)
 }).then(() => cb());
 

@@ -22,7 +22,8 @@ export default class Renderer {
         this.camera = camera;
         this.vbo = device.gl.createBuffer();
         this.vao = device.gl.createVertexArray();
-        this.shader.setMatrix4fv("u_view", camera.matrix.getVertics())
+        this.shader.setMatrix4fv("u_view", camera.view.getVertics())
+        this.shader.setMatrix4fv("u_projection", camera.projection.getVertics())
         device.gl.bindVertexArray(this.vao);
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
     }
@@ -33,7 +34,7 @@ export default class Renderer {
         this.colors.splice(0, this.colors.length, ...colors)
     }
     updateTransform(matrix: Matrix) {
-        this.shader.setMatrix4fv("u_transform", matrix.getVertics())
+        this.shader.setMatrix4fv("u_world", matrix.getVertics())
     }
     setTextureUnit() {
         this.shader.setInteger("u_texture", 0);
@@ -77,7 +78,7 @@ export class TriangleRenderer extends Renderer {
                 })
             }
         }
-        const recursiveLevel = 5;
+        const recursiveLevel = 1;
         const windowInfo = device.getWindowInfo();
         const left = - windowInfo.windowWidth / 2;
         const right = -left;
@@ -90,9 +91,9 @@ export class TriangleRenderer extends Renderer {
             , new Point(left, top, left * 2)
         ), recursiveLevel);
         const ctm = Matrix.identity()
-            .translate(new Vec4(0, 0, left * 2 , 0))
+            .translate(new Vec4(0, 0, left * 2, 0))
             .rotateY(Math.PI / 360 * this.frame++)
-            .multiply(Matrix.identity().translate(new Vec4(0, 0, left * 2 , 0)).inverse());
+            .multiply(Matrix.identity().translate(new Vec4(0, 0, left * 2, 0)).inverse());
         this.updateTransform(ctm);
         this.setVertices(points.vertices);
         this.setColors(colors.vertices);
@@ -102,7 +103,15 @@ export class TriangleRenderer extends Renderer {
 }
 export class PointRenderer extends Renderer {
     constructor() {
-        super(new PointShader(), device.gl.POINTS, new OrthoCamera())
+        const windowInfo = device.getWindowInfo();
+        const left = - windowInfo.windowWidth / 2;
+        const right = windowInfo.windowWidth / 2;
+        const bottom = windowInfo.windowHeight / 2;
+        const top = - windowInfo.windowHeight / 2;
+        const near = 1;
+        const far = -1;
+
+        super(new PointShader(), device.gl.POINTS, new OrthoCamera(left, right, bottom, top, near, far))
     }
     render(): void {
         super.render()

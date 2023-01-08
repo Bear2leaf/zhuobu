@@ -1,4 +1,4 @@
-import { flatten, Vec4 } from "./Vector.js";
+import { cross, flatten, normalize, subtract, Vec3, Vec4 } from "./Vector.js";
 export default class Matrix {
     constructor(a00 = 0, a01 = 0, a02 = 0, a03 = 0, a10 = 0, a11 = 0, a12 = 0, a13 = 0, a20 = 0, a21 = 0, a22 = 0, a23 = 0, a30 = 0, a31 = 0, a32 = 0, a33 = 0) {
         this.columns = [
@@ -193,6 +193,40 @@ export default class Matrix {
         mat.columns[2].z = 1;
         mat.columns[3].w = 1;
         return mat;
+    }
+    static lookAt(eye, target, up, dst) {
+        dst = dst || new Matrix();
+        const xAxis = new Vec3();
+        const yAxis = new Vec3();
+        const zAxis = new Vec3();
+        normalize(subtract(eye, target, zAxis), zAxis);
+        normalize(cross(up, zAxis, xAxis), xAxis);
+        normalize(cross(zAxis, xAxis, yAxis), yAxis);
+        dst.columns[0].x = xAxis.x;
+        dst.columns[0].y = xAxis.y;
+        dst.columns[0].z = xAxis.z;
+        dst.columns[0].w = 0;
+        dst.columns[1].x = yAxis.x;
+        dst.columns[1].y = yAxis.y;
+        dst.columns[1].z = yAxis.z;
+        dst.columns[1].w = 0;
+        dst.columns[2].x = zAxis.x;
+        dst.columns[2].y = zAxis.y;
+        dst.columns[2].z = zAxis.z;
+        dst.columns[2].w = 0;
+        dst.columns[3].x = eye.x;
+        dst.columns[3].y = eye.y;
+        dst.columns[3].z = eye.z;
+        dst.columns[3].w = 1;
+        return dst;
+    }
+    static ortho(left, right, bottom, top, near, far) {
+        return new Matrix(2 / (right - left), 0, 0, 0, 0, 2 / (top - bottom), 0, 0, 0, 0, 2 / (near - far), 0, (right + left) / (left - right), (top + bottom) / (bottom - top), (far + near) / (near - far), 1);
+    }
+    static perspective(fieldOfViewYInRadians, aspect, zNear, zFar) {
+        const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewYInRadians);
+        const rangeInv = 1.0 / (zNear - zFar);
+        return new Matrix(f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (zNear + zFar) * rangeInv, -1, 0, 0, zNear * zFar * rangeInv * 2, 0);
     }
 }
 //# sourceMappingURL=Matrix.js.map

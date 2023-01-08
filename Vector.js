@@ -7,6 +7,38 @@ export function flatten(vec4Array) {
         return prev;
     }, new Float32Array(vec4Array.length * 4));
 }
+export function normalize(a, dst) {
+    dst = dst || new Vec3();
+    const lenSq = a.x * a.x + a.y * a.y + a.z * a.z;
+    const len = Math.sqrt(lenSq);
+    if (len > 0.00001) {
+        dst.x = a.x / len;
+        dst.y = a.y / len;
+        dst.z = a.z / len;
+    }
+    else {
+        dst.x = 0;
+        dst.y = 0;
+        dst.z = 0;
+    }
+    return dst;
+}
+export function subtract(a, b, dst) {
+    dst = dst || new Vec3();
+    dst.x = a.x - b.x;
+    dst.y = a.y - b.y;
+    dst.z = a.z - b.z;
+    return dst;
+}
+export function cross(a, b, dst) {
+    dst = dst || new Vec3();
+    const t1 = a.z * b.x - a.x * b.z;
+    const t2 = a.x * b.y - a.y * b.x;
+    dst.x = a.y * b.z - a.z * b.y;
+    dst.y = t1;
+    dst.z = t2;
+    return dst;
+}
 export class Vec4 {
     constructor(x = 0, y = 0, z = 0, w = 0) {
         this.x = x;
@@ -33,6 +65,11 @@ export class Vec4 {
     }
     clone() {
         return new Vec4(this.x, this.y, this.z, this.w);
+    }
+}
+export class Vec3 extends Vec4 {
+    constructor(x = 0, y = 0, z = 0) {
+        super(x, y, z);
     }
 }
 export class Vec2 extends Vec4 {
