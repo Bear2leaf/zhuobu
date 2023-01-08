@@ -35,8 +35,6 @@ class WxDevice implements Device {
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
     clearRenderer(): void {
-        this.gl.clearColor(0.3, 0.3, 0.3, 1)
-        this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     }
     createCanvas(): HTMLCanvasElement {
@@ -217,5 +215,8 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     img.src = "static/font/boxy_bold_font.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     device.imageCache.set("static/font/boxy_bold_font.png", img);
+
+    device.gl.clearColor(0.3, 0.3, 0.3, 1)
+    device.gl.enable(device.gl.DEPTH_TEST)
 }).then(() => cb());
 

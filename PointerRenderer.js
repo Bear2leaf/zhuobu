@@ -19,7 +19,6 @@ export default class PointerRenderer extends PointRenderer {
         this.setVertices([new Vec4(e.x - windowInfo.windowWidth / 2, e.y - windowInfo.windowHeight / 2, 0, 1)]);
     }
     render() {
-        device.clearRenderer();
         super.render();
     }
 }

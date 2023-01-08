@@ -79,10 +79,9 @@ export class TriangleRenderer extends Renderer {
             }
         }
         const recursiveLevel = 1;
-        const windowInfo = device.getWindowInfo();
-        const left = - windowInfo.windowWidth / 2;
+        const left = - 250;
         const right = -left;
-        const top = -windowInfo.windowHeight / 2;
+        const top = -250;
         const bottom = -top;
         divideRecursiveTetrahedron(new Tetrahedron(
             new Point(0, 0, left)
