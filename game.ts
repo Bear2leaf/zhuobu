@@ -1,4 +1,6 @@
-import ready from "./Device.js";
+import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
+import RendererDecorator from "./RendererDecorator.js";
+import ready, { device, ViewPortType } from "./Device.js";
 import ObjRenderer from "./ObjRenderer.js";
 import PointerRenderer from "./PointerRenderer.js";
 import { TriangleRenderer } from "./Renderer.js";
@@ -7,16 +9,20 @@ import TextRenderer from "./TextRenderer.js";
 
 
 ready(() => {
+  
   const pointerRenderer = new PointerRenderer();
-  const renderer = new TriangleRenderer();
   const textRenderer = new TextRenderer();
-  const objRenderer = new ObjRenderer();
+  const renderer = new TriangleRenderer();
+  const cameraRenderer = new RendererDecorator(renderer);
   textRenderer.add(new Text(0, 0, 5, [1,1,1,1], 0, ..."h`elE_lo\n12D3\n*_+\nFGS"))
   function tick (frame: number) {
+    device.clearRenderer();
+    device.viewportTo(ViewPortType.Full)
     pointerRenderer.render()
     renderer.render()
-    objRenderer.render()
     textRenderer.render();
+    device.viewportTo(ViewPortType.TopRight)
+    cameraRenderer.render()
     requestAnimationFrame(() => tick(frame++));
   }
   tick(0);

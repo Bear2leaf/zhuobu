@@ -1,23 +1,23 @@
 {
-    // "files.exclude": {
-    //     "**/.git": true,
-    //     "**/.svn": true,
-    //     "**/.hg": true,
-    //     "**/CVS": true,
-    //     "**/.DS_Store": true,
-    //     "**/Thumbs.db": true,
-    //     "**/*.js": true,
-    //     "**/*.js.map": true
-    // },
-    // "search.exclude": {
-    //     "**/node_modules": true,
-    //     "**/bower_components": true,
-    //     "**/*.code-search": true,
-    //     "**/*.js": true,
-    //     "**/*.js.map": true
-    // },
-    // "workbench.localHistory.exclude": {
-    //     "**/*.js": true,
-    //     "**/*.js.map": true
-    // }
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.js": true,
+        "**/*.js.map": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/*.js": true,
+        "**/*.js.map": true
+    },
+    "workbench.localHistory.exclude": {
+        "**/*.js": true,
+        "**/*.js.map": true
+    }
 }

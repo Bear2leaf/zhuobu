@@ -7,16 +7,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+export var ViewPortType;
+(function (ViewPortType) {
+    ViewPortType[ViewPortType["Full"] = 0] = "Full";
+    ViewPortType[ViewPortType["TopRight"] = 1] = "TopRight";
+})(ViewPortType || (ViewPortType = {}));
+function viewportTo(type) {
+    const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+    switch (type) {
+        case ViewPortType.TopRight:
+            this.gl.viewport(windowWidth * (2 / 3) * pixelRatio, windowHeight * (2 / 3) * pixelRatio, windowWidth * (1 / 3) * pixelRatio, windowHeight * (1 / 3) * pixelRatio);
+            break;
+        default:
+            this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+            break;
+    }
+}
+function clearRenderer() {
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+}
+function getWindowInfo() {
+    return this.deviceInfo;
+}
 class WxDevice {
     constructor() {
+        this.getWindowInfo = getWindowInfo;
+        this.clearRenderer = clearRenderer;
+        this.viewportTo = viewportTo;
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
+        if (typeof document !== 'undefined') {
+            this.deviceInfo.pixelRatio = 1;
+        }
         this.gl = this.createCanvas().getContext('webgl2');
-    }
-    clearRenderer() {
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
     createCanvas() {
         const canvas = wx.createCanvas();
@@ -56,9 +81,6 @@ class WxDevice {
     }
     createImage() {
         return wx.createImage();
-    }
-    getWindowInfo() {
-        return this.deviceInfo;
     }
     createWebAudioContext() {
         return wx.createWebAudioContext();
@@ -103,24 +125,27 @@ class WxDevice {
 }
 class BrowserDevice {
     constructor() {
+        this.getWindowInfo = getWindowInfo;
+        this.clearRenderer = clearRenderer;
+        this.viewportTo = viewportTo;
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
+        this.deviceInfo = {
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            pixelRatio: devicePixelRatio,
+        };
         this.gl = this.createCanvas().getContext('webgl2');
         this.isMouseDown = false;
-    }
-    clearRenderer() {
-        this.gl.clearColor(0.3, 0.3, 0.3, 1);
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
     createCanvas() {
         const canvas = document.getElementById("canvas");
         if (!canvas) {
             throw new Error("canvas not exist");
         }
-        canvas.width = this.getWindowInfo().windowWidth * this.getWindowInfo().pixelRatio;
-        canvas.height = this.getWindowInfo().windowHeight * this.getWindowInfo().pixelRatio;
+        canvas.width = this.deviceInfo.windowWidth * this.deviceInfo.pixelRatio;
+        canvas.height = this.deviceInfo.windowHeight * this.deviceInfo.pixelRatio;
         return canvas;
     }
     loadSubpackage() {
@@ -130,13 +155,6 @@ class BrowserDevice {
     }
     createImage() {
         return new Image();
-    }
-    getWindowInfo() {
-        return {
-            windowWidth: window.innerWidth,
-            windowHeight: window.innerHeight,
-            pixelRatio: devicePixelRatio,
-        };
     }
     createWebAudioContext() {
         return new AudioContext();

@@ -20,6 +20,9 @@ export default class Matrix {
     translate(v) {
         return this.multiply(Matrix.translation(v));
     }
+    scale(v) {
+        return this.multiply(Matrix.scaling(v));
+    }
     rotateY(angleInRadians) {
         return this.multiply(Matrix.rotationY(angleInRadians));
     }
@@ -132,6 +135,26 @@ export default class Matrix {
         dst.columns[3].y = d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) - (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02));
         dst.columns[3].z = d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) - (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12));
         dst.columns[3].w = d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) - (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02));
+        return dst;
+    }
+    static scaling(v, dst) {
+        dst = dst || new Matrix();
+        dst.columns[0].x = v.x;
+        dst.columns[0].y = 0;
+        dst.columns[0].z = 0;
+        dst.columns[0].w = 0;
+        dst.columns[1].x = 0;
+        dst.columns[1].y = v.y;
+        dst.columns[1].z = 0;
+        dst.columns[1].w = 0;
+        dst.columns[2].x = 0;
+        dst.columns[2].y = 0;
+        dst.columns[2].z = v.z;
+        dst.columns[2].w = 0;
+        dst.columns[3].x = 0;
+        dst.columns[3].y = 0;
+        dst.columns[3].z = 0;
+        dst.columns[3].w = 1;
         return dst;
     }
     static multiply(a, b, dst) {

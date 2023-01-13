@@ -7,7 +7,6 @@ import { Vec4 } from "./Vector.js";
 export default class TextRenderer extends Renderer {
     constructor() {
         const windowInfo = device.getWindowInfo();
-        console.log(windowInfo);
         const left = -windowInfo.windowWidth / 2;
         const right = windowInfo.windowWidth / 2;
         const bottom = windowInfo.windowHeight / 2;
@@ -32,7 +31,6 @@ export default class TextRenderer extends Renderer {
         this.setTextureUnit();
         device.gl.enable(device.gl.BLEND);
         device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
-        console.log(this);
     }
     add(text) {
         this.textObjects.push(text);
@@ -78,6 +76,7 @@ export default class TextRenderer extends Renderer {
             batch.push(...vertices);
         }
         this.setVertices(batch);
+        this.setIndices(new Array(batch.length).fill(0).map((_, index) => index));
         this.texture.bind();
         super.render();
     }

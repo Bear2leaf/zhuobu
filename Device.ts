@@ -2,11 +2,36 @@
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: number; }
+export enum ViewPortType {
+    Full,
+    TopRight
+}
+
+
+function viewportTo(this: Device, type: ViewPortType): void {
+    const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+    switch (type) {
+        case ViewPortType.TopRight:
+            this.gl.viewport(windowWidth * (2 / 3) * pixelRatio, windowHeight * (2 / 3) * pixelRatio, windowWidth * (1 / 3) * pixelRatio, windowHeight * (1 / 3) * pixelRatio);
+            break;
+    
+        default:
+            this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+            break;
+    }
+}
+function clearRenderer(this: Device): void {
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
+}
+function getWindowInfo(this: Device): DeviceInfo{
+    return this.deviceInfo;
+}
 interface Device {
     readonly gl: WebGL2RenderingContext;
     readonly imageCache : Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
     readonly fontCache : Map<string, import("./TextRenderer").FontInfo>;
+    readonly deviceInfo: DeviceInfo
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
     createImage(): HTMLImageElement;
@@ -20,23 +45,27 @@ interface Device {
     readTxt(file: string): Promise<string>;
     readBuffer(file: string): Promise<ArrayBuffer>;
     clearRenderer(): void;
+    viewportTo(type: ViewPortType): void;
 }
 class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
-    private readonly deviceInfo: DeviceInfo
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
     readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
+    readonly deviceInfo: DeviceInfo;
     constructor() {
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
-        this.deviceInfo = wx.getWindowInfo();
+        this.deviceInfo =  wx.getWindowInfo();
+        if (typeof document !== 'undefined') {
+            this.deviceInfo.pixelRatio = 1;
+        }
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
-    clearRenderer(): void {
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
-    }
+    getWindowInfo = getWindowInfo
+    clearRenderer = clearRenderer
+    viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
@@ -74,9 +103,6 @@ class WxDevice implements Device {
     }
     createImage(): HTMLImageElement {
         return wx.createImage();
-    }
-    getWindowInfo(): DeviceInfo{
-        return this.deviceInfo;
     }
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
@@ -126,25 +152,29 @@ class BrowserDevice implements Device {
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
     readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
+    readonly deviceInfo: DeviceInfo;
     constructor() {
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
+        this.deviceInfo = {
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            pixelRatio: devicePixelRatio,
+        };
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
-    clearRenderer(): void {
-        this.gl.clearColor(0.3, 0.3, 0.3, 1)
-        this.gl.enable(this.gl.DEPTH_TEST)
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
-    }
+    getWindowInfo = getWindowInfo
+    clearRenderer = clearRenderer
+    viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
         if (!canvas) {
             throw new Error("canvas not exist");
         }
-        canvas.width = this.getWindowInfo().windowWidth * this.getWindowInfo().pixelRatio;
-        canvas.height = this.getWindowInfo().windowHeight * this.getWindowInfo().pixelRatio;
+        canvas.width = this.deviceInfo.windowWidth * this.deviceInfo.pixelRatio;
+        canvas.height = this.deviceInfo.windowHeight * this.deviceInfo.pixelRatio;
         return canvas;
     }
     async loadSubpackage(): Promise<null> {
@@ -152,13 +182,6 @@ class BrowserDevice implements Device {
     }
     createImage(): HTMLImageElement {
         return new Image();
-    }
-    getWindowInfo(): { windowWidth: number; windowHeight: number; pixelRatio: number; } {
-        return {
-            windowWidth: window.innerWidth,
-            windowHeight: window.innerHeight,
-            pixelRatio: devicePixelRatio,
-        };
     }
     createWebAudioContext(): AudioContext {
         return new AudioContext();
@@ -217,6 +240,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     device.imageCache.set("static/font/boxy_bold_font.png", img);
 
     device.gl.clearColor(0.3, 0.3, 0.3, 1)
+
     device.gl.enable(device.gl.DEPTH_TEST)
 }).then(() => cb());
 
