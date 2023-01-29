@@ -29,6 +29,24 @@ export default class Matrix {
             , new Vec4(a03, a13, a23, a33)
         ];
     }
+    set(matrix: Matrix) {
+        this.columns[0].x = matrix.columns[0].x;
+        this.columns[1].x = matrix.columns[1].x;
+        this.columns[2].x = matrix.columns[2].x;
+        this.columns[3].x = matrix.columns[3].x;
+        this.columns[0].y = matrix.columns[0].y;
+        this.columns[1].y = matrix.columns[1].y;
+        this.columns[2].y = matrix.columns[2].y;
+        this.columns[3].y = matrix.columns[3].y;
+        this.columns[0].z = matrix.columns[0].z;
+        this.columns[1].z = matrix.columns[1].z;
+        this.columns[2].z = matrix.columns[2].z;
+        this.columns[3].z = matrix.columns[3].z;
+        this.columns[0].w = matrix.columns[0].w;
+        this.columns[1].w = matrix.columns[1].w;
+        this.columns[2].w = matrix.columns[2].w;
+        this.columns[3].w = matrix.columns[3].w;
+    }
     getVertics() {
         return flatten(this.columns);
     }

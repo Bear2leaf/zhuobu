@@ -1,6 +1,6 @@
 import { PointCollection, Tetrahedron, Point } from "../Geometry.js";
 import Matrix from "../Matrix.js";
-import { Vec4 } from "../Vector.js";
+import { Vec3 } from "../Vector.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Gasket extends DrawObject {
@@ -39,5 +39,11 @@ export default class Gasket extends DrawObject {
         this.setColors(colors.vertices);
         this.setIndices(new Array(points.vertices.length).fill(0).map((_, index) => index))
 
+    }
+    update(): void {
+
+        const matrix = Matrix.identity();
+        matrix.translate(new Vec3(0, 0, -8));
+        this.setWorldMatrix(matrix);
     }
 }

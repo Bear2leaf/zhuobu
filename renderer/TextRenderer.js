@@ -27,7 +27,7 @@ export default class TextRenderer extends Renderer {
     }
     add(text) {
         text.create(this.texture, this.fontInfo);
-        this.drawObjects.push(text);
+        super.add(text);
     }
     render() {
         this.texture.bind();

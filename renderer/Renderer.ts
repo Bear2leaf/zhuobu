@@ -1,9 +1,8 @@
 import Camera from "../Camera.js";
 import { device } from "../Device.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import Matrix from "../Matrix.js";
 import Shader from "../Shader.js";
-import { Vec4, flatten } from "../Vector.js";
+import { flatten } from "../Vector.js";
 
 
 export default class Renderer {
@@ -25,49 +24,33 @@ export default class Renderer {
         device.gl.bindVertexArray(this.vao);
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
         device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
+        console.log(this)
     }
-
-    private get vertices() {
-        return this.drawObjects.reduce<Vec4[]>((prev, cur) => {
-            prev.push(...cur.getVertices());
-            return prev;
-        }, [])
+    add(drawObject: DrawObject) {
+        this.drawObjects.push(drawObject);
     }
-    private get indices() {
-        return this.drawObjects.reduce<number[]>((prev, cur) => {
-            prev.push(...cur.getIndices());
-            return prev;
-        }, [])
-    }
-    private get colors() {
-        return this.drawObjects.reduce<Vec4[]>((prev, cur) => {
-            prev.push(...cur.getColors());
-            return prev;
-        }, [])
-    }
-
     getCamera() {
         return this.camera;
-    }
-
-    updateTransform(matrix: Matrix) {
-        this.shader.setMatrix4fv("u_world", matrix.getVertics())
     }
     setTextureUnit() {
         this.shader.setInteger("u_texture", 0);
     }
     render() {
         this.shader.use();
-        this.shader.setMatrix4fv("u_view", this.camera.view.getVertics())
-        this.shader.setMatrix4fv("u_projection", this.camera.projection.getVertics())
-        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
-        device.gl.enableVertexAttribArray(0);
-        device.gl.vertexAttribPointer(0, 4, device.gl.FLOAT, false, 0, 0);
-        device.gl.enableVertexAttribArray(1);
-        device.gl.vertexAttribPointer(1, 4, device.gl.FLOAT, false, 0, this.vertices.length * 4 * 4);
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), device.gl.STATIC_DRAW);
-        device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
-        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), device.gl.STATIC_DRAW)
-        device.gl.drawElements(this.mode, this.indices.length, device.gl.UNSIGNED_SHORT, 0)
+        this.drawObjects.forEach(drawObject => {
+            drawObject.update();
+            this.shader.setMatrix4fv("u_world", drawObject.getWorldMatrix().getVertics())
+            this.shader.setMatrix4fv("u_view", this.camera.view.getVertics())
+            this.shader.setMatrix4fv("u_projection", this.camera.projection.getVertics())
+            device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
+            device.gl.enableVertexAttribArray(0);
+            device.gl.vertexAttribPointer(0, 4, device.gl.FLOAT, false, 0, 0);
+            device.gl.enableVertexAttribArray(1);
+            device.gl.vertexAttribPointer(1, 4, device.gl.FLOAT, false, 0, drawObject.getVertices().length * 4 * 4);
+            device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...drawObject.getVertices(), ...drawObject.getColors()]), device.gl.STATIC_DRAW);
+            device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
+            device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(drawObject.getIndices()), device.gl.STATIC_DRAW)
+            device.gl.drawElements(this.mode, drawObject.getIndices().length, device.gl.UNSIGNED_SHORT, 0)
+        })
     }
 }

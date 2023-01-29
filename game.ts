@@ -5,6 +5,10 @@ import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
 import CameraCube from "./drawobject/CameraCube.js";
+import Gasket from "./drawobject/Gasket.js";
+import Matrix from "./Matrix.js";
+import { Vec3, Vec4 } from "./Vector.js";
+import { OrthoCamera } from "./Camera.js";
 
 
 ready(() => {
@@ -12,10 +16,16 @@ ready(() => {
   const pointerRenderer = new PointerRenderer();
   const textRenderer = new TextRenderer();
   const renderer = new TriangleRenderer();
-  const cameraRenderer = new LineRenderer();
+  const camera = new OrthoCamera(-1, 1, 1, -1, 1, -2000)
+  const rendererWithCam = new TriangleRenderer(camera);
+  const gasket = new Gasket();
+  renderer.add(gasket)
+  rendererWithCam.add(gasket);
+  const cameraRenderer = new LineRenderer(camera);
   cameraRenderer.add(new CameraCube(renderer.getCamera()));
   textRenderer.add(new Text(0, 0, 5, [1,1,1,1], 0, ..."Hello"))
   function tick (frame: number) {
+    renderer.getCamera().view.rotateY((Math.PI / 360))
     device.clearRenderer();
     device.viewportTo(ViewPortType.Full)
     pointerRenderer.render()
@@ -23,7 +33,8 @@ ready(() => {
     textRenderer.render();
     device.viewportTo(ViewPortType.TopRight)
     cameraRenderer.render()
-    requestAnimationFrame(() => tick(frame++));
+    rendererWithCam.render()
+    requestAnimationFrame(() => tick(++frame));
   }
   tick(0);
 })
