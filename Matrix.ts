@@ -65,6 +65,9 @@ export default class Matrix {
     rotateY(angleInRadians: number) {
         return this.multiply(Matrix.rotationY(angleInRadians));
     }
+    rotateX(angleInRadians: number) {
+        return this.multiply(Matrix.rotationX(angleInRadians));
+    }
     transformPoint(v:Vec4, dst?: Vec4) {
         dst = dst || new Vec4();
         const v0 = v.x;
@@ -77,32 +80,58 @@ export default class Matrix {
       
         return dst;
       }
-    static rotationY(angleInRadians: number, dst?: Matrix) {
-        dst = dst || new Matrix();
-
-        const c = Math.cos(angleInRadians);
-        const s = Math.sin(angleInRadians);
-
-        dst.columns[0].x = c;
-        dst.columns[0].y = 0;
-        dst.columns[0].z = -s;
-        dst.columns[0].w = 0;
-        dst.columns[1].x = 0;
-        dst.columns[1].y = 1;
-        dst.columns[1].z = 0;
-        dst.columns[1].w = 0;
-        dst.columns[2].x = s;
-        dst.columns[2].y = 0;
-        dst.columns[2].z = c;
-        dst.columns[2].w = 0;
-        dst.columns[3].x = 0;
-        dst.columns[3].y = 0;
-        dst.columns[3].z = 0;
-        dst.columns[3].w = 1;
-
-        return dst;
-
-    }
+      static rotationY(angleInRadians: number, dst?: Matrix) {
+          dst = dst || new Matrix();
+  
+          const c = Math.cos(angleInRadians);
+          const s = Math.sin(angleInRadians);
+  
+          dst.columns[0].x = c;
+          dst.columns[0].y = 0;
+          dst.columns[0].z = -s;
+          dst.columns[0].w = 0;
+          dst.columns[1].x = 0;
+          dst.columns[1].y = 1;
+          dst.columns[1].z = 0;
+          dst.columns[1].w = 0;
+          dst.columns[2].x = s;
+          dst.columns[2].y = 0;
+          dst.columns[2].z = c;
+          dst.columns[2].w = 0;
+          dst.columns[3].x = 0;
+          dst.columns[3].y = 0;
+          dst.columns[3].z = 0;
+          dst.columns[3].w = 1;
+  
+          return dst;
+  
+      }
+      static rotationX(angleInRadians: number, dst?: Matrix) {
+          dst = dst || new Matrix();
+  
+          const c = Math.cos(angleInRadians);
+          const s = Math.sin(angleInRadians);
+  
+          dst.columns[0].x = 1;
+          dst.columns[0].y = 0;
+          dst.columns[0].z = 0;
+          dst.columns[0].w = 0;
+          dst.columns[1].x = 0;
+          dst.columns[1].y = c;
+          dst.columns[1].z = s;
+          dst.columns[1].w = 0;
+          dst.columns[2].x = 0;
+          dst.columns[2].y = -s;
+          dst.columns[2].z = c;
+          dst.columns[2].w = 0;
+          dst.columns[3].x = 0;
+          dst.columns[3].y = 0;
+          dst.columns[3].z = 0;
+          dst.columns[3].w = 1;
+  
+          return dst;
+  
+      }
     static translation(v: Vec4, dst?: Matrix) {
 
         dst = dst || new Matrix();

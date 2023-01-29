@@ -43,7 +43,7 @@ export default class Gasket extends DrawObject {
     update(): void {
 
         const matrix = Matrix.identity();
-        matrix.translate(new Vec3(0, 0, -8));
+        matrix.translate(new Vec3(0, 0, -2));
         this.setWorldMatrix(matrix);
     }
 }

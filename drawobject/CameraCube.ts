@@ -30,7 +30,7 @@ export default class CameraCube extends DrawObject {
     }
     update(): void {
         
-        this.setWorldMatrix(this.camera.projection.inverse().multiply(this.camera.view.inverse()))
+        this.setWorldMatrix(this.camera.view.inverse().multiply(this.camera.projection.inverse()))
 
     }
 }
