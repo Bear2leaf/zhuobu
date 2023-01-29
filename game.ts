@@ -4,6 +4,7 @@ import TextRenderer from "./renderer/TextRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
+import CameraCube from "./drawobject/CameraCube.js";
 
 
 ready(() => {
@@ -11,7 +12,8 @@ ready(() => {
   const pointerRenderer = new PointerRenderer();
   const textRenderer = new TextRenderer();
   const renderer = new TriangleRenderer();
-  // const cameraRenderer = new LineRenderer();
+  const cameraRenderer = new LineRenderer();
+  cameraRenderer.add(new CameraCube(renderer.getCamera()));
   textRenderer.add(new Text(0, 0, 5, [1,1,1,1], 0, ..."Hello"))
   function tick (frame: number) {
     device.clearRenderer();
@@ -19,8 +21,8 @@ ready(() => {
     pointerRenderer.render()
     renderer.render()
     textRenderer.render();
-    // device.viewportTo(ViewPortType.TopRight)
-    // cameraRenderer.render()
+    device.viewportTo(ViewPortType.TopRight)
+    cameraRenderer.render()
     requestAnimationFrame(() => tick(frame++));
   }
   tick(0);

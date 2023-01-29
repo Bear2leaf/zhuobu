@@ -47,6 +47,18 @@ export default class Matrix {
     rotateY(angleInRadians: number) {
         return this.multiply(Matrix.rotationY(angleInRadians));
     }
+    transformPoint(v:Vec4, dst?: Vec4) {
+        dst = dst || new Vec4();
+        const v0 = v.x;
+        const v1 = v.y;
+        const v2 = v.z;
+        const d = v0 * this.columns[0].w + v1 * this.columns[1].w + v2 * this.columns[2].w + this.columns[3].w;
+        dst.x =  (v0 * this.columns[0].x + v1 * this.columns[1].x + v2 * this.columns[2].x + this.columns[3].x) / d;
+        dst.y =  (v0 * this.columns[0].y + v1 * this.columns[1].y + v2 * this.columns[2].y + this.columns[3].y) / d;
+        dst.z =  (v0 * this.columns[0].z + v1 * this.columns[1].z + v2 * this.columns[2].z + this.columns[3].z) / d;
+      
+        return dst;
+      }
     static rotationY(angleInRadians: number, dst?: Matrix) {
         dst = dst || new Matrix();
 

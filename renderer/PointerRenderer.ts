@@ -20,7 +20,6 @@ export default class PointerRenderer extends PointRenderer {
         device.onTouchEnd(() => { })
         device.onTouchCancel(() => { })
         this.drawObjects.push(new Pointer())
-        console.log(this)
     }
     private setPosition(e: { x: number, y: number } | undefined) {
         if (!e) {
