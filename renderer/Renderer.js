@@ -1,31 +1,38 @@
-import { device } from "./Device.js";
-import { flatten } from "./Vector.js";
+import { device } from "../Device.js";
+import { flatten } from "../Vector.js";
 export default class Renderer {
     constructor(shader, mode, camera) {
         this.mode = mode;
-        this.vertices = [];
-        this.colors = [];
-        this.indices = [];
         this.shader = shader;
         this.ebo = device.gl.createBuffer();
         this.vbo = device.gl.createBuffer();
         this.vao = device.gl.createVertexArray();
         this.camera = camera;
+        this.drawObjects = [];
         device.gl.bindVertexArray(this.vao);
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo);
         device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo);
     }
+    get vertices() {
+        return this.drawObjects.reduce((prev, cur) => {
+            prev.push(...cur.getVertices());
+            return prev;
+        }, []);
+    }
+    get indices() {
+        return this.drawObjects.reduce((prev, cur) => {
+            prev.push(...cur.getIndices());
+            return prev;
+        }, []);
+    }
+    get colors() {
+        return this.drawObjects.reduce((prev, cur) => {
+            prev.push(...cur.getColors());
+            return prev;
+        }, []);
+    }
     getCamera() {
         return this.camera;
-    }
-    setVertices(vertices) {
-        this.vertices.splice(0, this.vertices.length, ...vertices);
-    }
-    setIndices(indices) {
-        this.indices.splice(0, this.indices.length, ...indices);
-    }
-    setColors(colors) {
-        this.colors.splice(0, this.colors.length, ...colors);
     }
     updateTransform(matrix) {
         this.shader.setMatrix4fv("u_world", matrix.getVertics());

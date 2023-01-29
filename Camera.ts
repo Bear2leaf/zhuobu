@@ -7,11 +7,12 @@ export default interface Camera {
     readonly projection: Matrix;
 }
 
+const windowInfo = device.getWindowInfo();
 export class OrthoCamera implements Camera {
     readonly view: Matrix;
     readonly projection: Matrix;
 
-    constructor(left: number, right: number, bottom: number, top: number, near: number, far: number) {
+    constructor(left: number= - windowInfo.windowWidth / 2, right: number = windowInfo.windowWidth / 2, bottom: number = windowInfo.windowHeight / 2, top: number = -windowInfo.windowHeight / 2, near: number = 1, far: number = -1) {
         this.view = Matrix.lookAt(new Vec3(0, 0, 0), new Vec3(0, 0, -1), new Vec3(0, 1, 0));
         this.projection = Matrix.ortho(left, right, bottom, top, near, far);
 

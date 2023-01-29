@@ -2,6 +2,7 @@
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: number; }
+type FontInfo = import("./renderer/TextRenderer").FontInfo;
 export enum ViewPortType {
     Full,
     TopRight
@@ -30,7 +31,7 @@ interface Device {
     readonly gl: WebGL2RenderingContext;
     readonly imageCache : Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
-    readonly fontCache : Map<string, import("./TextRenderer").FontInfo>;
+    readonly fontCache : Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
@@ -51,7 +52,7 @@ class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
-    readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
+    readonly fontCache: Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo;
     constructor() {
         this.imageCache = new Map();
@@ -151,7 +152,7 @@ class BrowserDevice implements Device {
     private isMouseDown: boolean;
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
-    readonly fontCache: Map<string, import("./TextRenderer").FontInfo>;
+    readonly fontCache: Map<string, import("./renderer/TextRenderer").FontInfo>;
     readonly deviceInfo: DeviceInfo;
     constructor() {
         this.imageCache = new Map();
@@ -233,7 +234,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
     device.txtCache.set("static/obj/cube.obj", await device.readTxt("static/obj/cube.obj"));
-    device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as import("./TextRenderer").FontInfo);
+    device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as FontInfo);
     const img = device.createImage() as HTMLImageElement;
     img.src = "static/font/boxy_bold_font.png";
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })

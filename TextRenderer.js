@@ -6,15 +6,9 @@ import Texture from "./Texture.js";
 import { Vec4 } from "./Vector.js";
 export default class TextRenderer extends Renderer {
     constructor() {
+        const camera = new OrthoCamera();
         const windowInfo = device.getWindowInfo();
-        const left = -windowInfo.windowWidth / 2;
-        const right = windowInfo.windowWidth / 2;
-        const bottom = windowInfo.windowHeight / 2;
-        const top = -windowInfo.windowHeight / 2;
-        const near = 1;
-        const far = -1;
-        const camera = new OrthoCamera(left, right, bottom, top, near, far);
-        camera.projection.translate(new Vec4(left, top, 0, 1));
+        camera.projection.translate(new Vec4(-windowInfo.windowWidth / 2, -windowInfo.windowHeight / 2, 0, 1));
         super(new TextShader(), device.gl.TRIANGLES, camera);
         this.textObjects = [];
         this.texture = new Texture();

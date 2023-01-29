@@ -3,7 +3,7 @@ import { device } from "./Device.js";
 import Renderer from "./renderer/Renderer.js";
 import { LineShader } from "./Shader.js";
 import { Vec4 } from "./Vector.js";
-export default class RendererDecorator extends Renderer {
+export default class VisualCamera extends Renderer {
     constructor(renderer) {
         renderer.getCamera().projection.rotateY(Math.PI / 8);
         super(new LineShader(), device.gl.LINE_LOOP, new OrthoCamera());
@@ -12,7 +12,6 @@ export default class RendererDecorator extends Renderer {
         this.frame = 0;
     }
     render() {
-        this.updateTransform(this.getCamera().projection.inverse());
         const positions = [
             new Vec4(-1, -1, -1, 1),
             new Vec4(1, -1, -1, 1),
@@ -34,4 +33,4 @@ export default class RendererDecorator extends Renderer {
         super.render();
     }
 }
-//# sourceMappingURL=RendererDecorator.js.map
+//# sourceMappingURL=VisualCamera.js.map

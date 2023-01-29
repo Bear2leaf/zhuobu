@@ -35,8 +35,8 @@ export default class Matrix {
     multiply(b: Matrix) {
         return Matrix.multiply(this, b, this);
     }
-    inverse() {
-        return Matrix.inverse(this);
+    inverse(dst?: Matrix) {
+        return Matrix.inverse(this, dst);
     }
     translate(v: Vec4) {
         return this.multiply(Matrix.translation(v));
