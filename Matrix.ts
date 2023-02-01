@@ -6,20 +6,20 @@ export default class Matrix {
     private readonly columns: Mat4
     constructor(
         a00: number = 0,
-        a01: number = 0,
-        a02: number = 0,
-        a03: number = 0,
         a10: number = 0,
-        a11: number = 0,
-        a12: number = 0,
-        a13: number = 0,
         a20: number = 0,
-        a21: number = 0,
-        a22: number = 0,
-        a23: number = 0,
         a30: number = 0,
+        a01: number = 0,
+        a11: number = 0,
+        a21: number = 0,
         a31: number = 0,
+        a02: number = 0,
+        a12: number = 0,
+        a22: number = 0,
         a32: number = 0,
+        a03: number = 0,
+        a13: number = 0,
+        a23: number = 0,
         a33: number = 0
     ) {
         this.columns = [

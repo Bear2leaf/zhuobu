@@ -11,13 +11,21 @@ export enum ViewPortType {
 
 function viewportTo(this: Device, type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+    const leftWidth = windowWidth * (2 / 3) * pixelRatio
+    const rightWidth = windowWidth * (1 / 3) * pixelRatio;
+    const leftHeight = windowHeight * (2 / 3) * pixelRatio
+    const rightHeight = windowHeight * (1 / 3) * pixelRatio;
     switch (type) {
         case ViewPortType.TopRight:
-            this.gl.viewport(windowWidth * (2 / 3) * pixelRatio, windowHeight * (2 / 3) * pixelRatio, windowWidth * (1 / 3) * pixelRatio, windowHeight * (1 / 3) * pixelRatio);
+            this.gl.viewport(leftWidth, leftHeight, rightWidth, rightHeight);
+            this.gl.scissor(leftWidth, leftHeight, rightWidth, rightHeight);
+            device.gl.clearColor(0.4, 0.4, 0.4, 1)
             break;
     
         default:
             this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+            this.gl.scissor(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+            device.gl.clearColor(0.3, 0.3, 0.3, 1)
             break;
     }
 }
@@ -240,8 +248,9 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
     device.imageCache.set("static/font/boxy_bold_font.png", img);
 
-    device.gl.clearColor(0.3, 0.3, 0.3, 1)
 
+    device.gl.enable(device.gl.CULL_FACE)
     device.gl.enable(device.gl.DEPTH_TEST)
+    device.gl.enable(device.gl.SCISSOR_TEST)
 }).then(() => cb());
 

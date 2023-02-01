@@ -1,11 +1,8 @@
-import { device } from "../Device.js";
 import { Vec4 } from "../Vector.js";
 import DrawObject from "./DrawObject.js";
-const windowInfo = device.getWindowInfo();
 export default class CameraCube extends DrawObject {
-    constructor(camera) {
+    constructor() {
         super();
-        this.camera = camera;
         const positions = [
             new Vec4(-1, -1, -1, 1),
             new Vec4(1, -1, -1, 1),
@@ -25,7 +22,6 @@ export default class CameraCube extends DrawObject {
         this.setIndices(indices);
     }
     update() {
-        this.setWorldMatrix(this.camera.view.inverse().multiply(this.camera.projection.inverse()));
     }
 }
 //# sourceMappingURL=CameraCube.js.map

@@ -17,9 +17,6 @@ export default class Renderer {
     add(drawObject) {
         this.drawObjects.push(drawObject);
     }
-    getCamera() {
-        return this.camera;
-    }
     setTextureUnit() {
         this.shader.setInteger("u_texture", 0);
     }

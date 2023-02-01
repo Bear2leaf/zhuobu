@@ -1,15 +1,9 @@
-import Camera from "../Camera.js";
-import { device } from "../Device.js";
-import Matrix from "../Matrix.js";
 import { Vec4 } from "../Vector.js";
 import DrawObject from "./DrawObject.js";
 
-const windowInfo = device.getWindowInfo();
 export default class CameraCube extends DrawObject {
-    readonly camera: Camera;
-    constructor(camera: Camera) {
+    constructor() {
         super();
-        this.camera = camera;
         const positions = [
             new Vec4(-1, -1, -1, 1),  // cube vertices
             new Vec4( 1, -1, -1, 1),
@@ -29,8 +23,6 @@ export default class CameraCube extends DrawObject {
         this.setIndices(indices)
     }
     update(): void {
-        
-        this.setWorldMatrix(this.camera.view.inverse().multiply(this.camera.projection.inverse()))
 
     }
 }

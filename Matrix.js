@@ -1,6 +1,6 @@
 import { cross, flatten, normalize, subtract, Vec3, Vec4 } from "./Vector.js";
 export default class Matrix {
-    constructor(a00 = 0, a01 = 0, a02 = 0, a03 = 0, a10 = 0, a11 = 0, a12 = 0, a13 = 0, a20 = 0, a21 = 0, a22 = 0, a23 = 0, a30 = 0, a31 = 0, a32 = 0, a33 = 0) {
+    constructor(a00 = 0, a10 = 0, a20 = 0, a30 = 0, a01 = 0, a11 = 0, a21 = 0, a31 = 0, a02 = 0, a12 = 0, a22 = 0, a32 = 0, a03 = 0, a13 = 0, a23 = 0, a33 = 0) {
         this.columns = [
             new Vec4(a00, a10, a20, a30),
             new Vec4(a01, a11, a21, a31),

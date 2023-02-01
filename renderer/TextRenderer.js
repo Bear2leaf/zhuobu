@@ -1,12 +1,10 @@
-import { OrthoCamera } from "../Camera.js";
 import { device } from "../Device.js";
 import Renderer from "./Renderer.js";
 import { TextShader } from "../Shader.js";
 import Texture from "../Texture.js";
 import { Vec4 } from "../Vector.js";
 export default class TextRenderer extends Renderer {
-    constructor() {
-        const camera = new OrthoCamera();
+    constructor(camera) {
         const windowInfo = device.getWindowInfo();
         camera.projection.translate(new Vec4(-windowInfo.windowWidth / 2, -windowInfo.windowHeight / 2, 0, 1));
         super(new TextShader(), device.gl.TRIANGLES, camera);
