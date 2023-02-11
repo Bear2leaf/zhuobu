@@ -3,26 +3,40 @@ import { flatten, Vec4 } from "./Vector.js";
 
 export default class Shader {
     private readonly program: WebGLProgram;
+    private readonly locMap: Map<string, WebGLUniformLocation | null>;
     setMatrix4fv(name: string, data: Float32Array) {
-        device.gl.useProgram(this.program);
-        const viewLoc = device.gl.getUniformLocation(this.program, name);
-        device.gl.uniformMatrix4fv(viewLoc, false, data)
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = device.gl.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
+        }
+        device.gl.uniformMatrix4fv(loc, false, data)
     }
     setVector4f(name: string, data: Vec4) {
-        device.gl.useProgram(this.program);
-        const viewLoc = device.gl.getUniformLocation(this.program, name);
-        device.gl.uniform4fv(viewLoc, flatten([data]))
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = device.gl.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
+        }
+        device.gl.uniform4fv(loc, flatten([data]))
     }
     setInteger(name: string, data: number) {
-        device.gl.useProgram(this.program);
-        const viewLoc = device.gl.getUniformLocation(this.program, name);
-        device.gl.uniform1i(viewLoc, data)
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = device.gl.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
+        }
+        device.gl.uniform1i(loc, data)
     }
     use() {
         device.gl.useProgram(this.program);
         return this.program;
     }
     constructor(vs: string, fs: string) {
+        this.locMap = new Map();
         const vertexShader = device.gl.createShader(device.gl.VERTEX_SHADER);
         const fragmentShader = device.gl.createShader(device.gl.FRAGMENT_SHADER);
         if (!vertexShader || !fragmentShader) {

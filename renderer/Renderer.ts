@@ -30,6 +30,7 @@ export default class Renderer {
         this.drawObjects.push(drawObject);
     }
     setTextureUnit() {
+        this.shader.use();
         this.shader.setInteger("u_texture", 0);
     }
     render() {

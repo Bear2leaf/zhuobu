@@ -28,7 +28,7 @@ export default class Gasket extends DrawObject {
                 })
             }
         }
-        const recursiveLevel = 1;
+        const recursiveLevel = 5;
         divideRecursiveTetrahedron(new Tetrahedron(
             new Point(0, 0, 1)
             , new Point(0, 1, -1)

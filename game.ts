@@ -19,7 +19,7 @@ ready(() => {
   const near = 1;
   const far = 500;
   const fov = Math.PI / 180 * 60;
-  const uiCamera = new OrthoCamera(-windowInfo.windowWidth / 2, windowInfo.windowWidth / 2, windowInfo.windowHeight / 2, -windowInfo.windowHeight / 2, near, far);
+  const uiCamera = new OrthoCamera(-windowInfo.windowWidth / 2, windowInfo.windowWidth / 2, windowInfo.windowHeight / 2, -windowInfo.windowHeight / 2, 1, -1);
   const textRenderer = new TextRenderer(uiCamera);
   textRenderer.add(new Text(0, 0, 5, [1, 1, 1, 1], 0, ..."Hello"))
   const mainCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, near, 10);
@@ -28,13 +28,13 @@ ready(() => {
   const topRightRenderer = new TriangleRenderer(topRightCamera);
   const frustumRenderer = new LineRenderer(topRightCamera);
   const frustumCube = new CameraCube();
-  const len = new CameraCube();
+  const cameraCube = new CameraCube();
   const gasket = new Gasket();
   gasket.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -5)));
   mainRenderer.add(gasket)
   topRightRenderer.add(gasket);
   frustumRenderer.add(frustumCube);
-  frustumRenderer.add(len);
+  frustumRenderer.add(cameraCube);
   Matrix.lookAt(new Vec3(10, -20, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(topRightCamera.view)
   function tick(frame: number) {
     mainCamera.view.rotateY((Math.PI / 180))
@@ -42,7 +42,7 @@ ready(() => {
       mainCamera.view.inverse()
         .multiply(mainCamera.projection.inverse())
     )
-    len.setWorldMatrix(
+    cameraCube.setWorldMatrix(
       mainCamera.view.inverse()
         
     )
