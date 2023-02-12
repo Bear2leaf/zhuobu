@@ -1,7 +1,7 @@
 import { Vec4 } from "../Vector.js";
 import DrawObject from "./DrawObject.js";
 
-export default class CameraCube extends DrawObject {
+export default class LineCube extends DrawObject {
     constructor() {
         super();
         const positions = [

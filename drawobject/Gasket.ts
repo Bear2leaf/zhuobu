@@ -1,6 +1,4 @@
 import { PointCollection, Tetrahedron, Point } from "../Geometry.js";
-import Matrix from "../Matrix.js";
-import { Vec3 } from "../Vector.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Gasket extends DrawObject {
