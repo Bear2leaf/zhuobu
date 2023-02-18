@@ -13,6 +13,8 @@ import Pointer from "./drawobject/Pointer.js";
 import Lines from "./drawobject/Lines.js";
 import Cone from "./geometry/Cone.js";
 import Triangles from "./drawobject/Triangles.js";
+import LineSegment from "./geometry/LineSegment.js";
+import Point from "./geometry/Point.js";
 
 
 ready(() => {
@@ -36,6 +38,9 @@ ready(() => {
   const upCube = new Lines(new Cube());
   const gasket = new Gasket();
   const cube = new Triangles(new Cube());
+  const xAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1)));
+  const yAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1)));
+  const zAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1)));
   gasket.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -5)));
   Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   function tick(frame: number) {
@@ -63,7 +68,19 @@ ready(() => {
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
     debugRenderer.render(debugCamera, gasket)
+    xAxis.setWorldMatrix(gasket.getWorldMatrix());
+    yAxis.setWorldMatrix(gasket.getWorldMatrix());
+    zAxis.setWorldMatrix(gasket.getWorldMatrix());
+    lineRenderer.render(debugCamera, xAxis);
+    lineRenderer.render(debugCamera, yAxis);
+    lineRenderer.render(debugCamera, zAxis);
     debugRenderer.render(debugCamera, cube);
+    xAxis.setWorldMatrix(cube.getWorldMatrix());
+    yAxis.setWorldMatrix(cube.getWorldMatrix());
+    zAxis.setWorldMatrix(cube.getWorldMatrix());
+    lineRenderer.render(debugCamera, xAxis);
+    lineRenderer.render(debugCamera, yAxis);
+    lineRenderer.render(debugCamera, zAxis);
     lineRenderer.render(debugCamera, frustumCube)
     lineRenderer.render(debugCamera, cameraCube)
     lineRenderer.render(debugCamera, lenCone)
