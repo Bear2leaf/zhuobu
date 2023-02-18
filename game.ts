@@ -39,8 +39,11 @@ ready(() => {
   const gasket = new Gasket();
   const cube = new Triangles(new Cube());
   const xAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1)));
+  xAxis.setColors([new Vec4(1, 0, 0, 1), new Vec4(1, 0, 0, 1)])
   const yAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1)));
+  yAxis.setColors([new Vec4(0, 1, 0, 1), new Vec4(0, 1, 0, 1)])
   const zAxis = new Lines(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1)));
+  zAxis.setColors([new Vec4(0, 0, 1, 1), new Vec4(0, 0, 1, 1)])
   gasket.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -5)));
   Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   function tick(frame: number) {

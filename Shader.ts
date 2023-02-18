@@ -153,18 +153,22 @@ export class LineShader extends Shader {
         super(
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
+            layout (location = 1) in vec4 a_color; 
             uniform mat4 u_projection; 
             uniform mat4 u_view;
             uniform mat4 u_world;
+            out vec4 v_color; 
             
             void main() { 
+              v_color = a_color;
               gl_Position = u_projection * u_view * u_world * a_position;
             }`,
             `#version 300 es 
             precision highp float; 
+            in vec4 v_color; 
             out vec4 color; 
             void main() { 
-              color = vec4(0, 0, 0, 1); 
+              color = v_color; 
             }`
         )
     }
