@@ -7,6 +7,28 @@ export default interface Camera {
     readonly projection: Matrix;
 }
 
+export class BaseCamera implements Camera {
+    readonly view: Matrix;
+    readonly projection: Matrix;
+    private followPoint: Vec3;
+
+    constructor(left: number, right: number, bottom: number, top: number, near: number, far: number) {
+        this.followPoint = new Vec3(0, 0, 0);
+        this.view = Matrix.lookAt(new Vec3(0, 0, 0), new Vec3(0, 0, -1), new Vec3(0, 1, 0)).inverse();
+        this.projection = Matrix.ortho(left, right, bottom, top, near, far);
+
+    }
+    follow(point: Vec3) {
+        this.followPoint = point;
+    }
+    update() {
+        // damp the camera movement
+        this.followPoint = this.followPoint.clone().lerp(this.followPoint, 0.5);
+        this.view.set(Matrix.lookAt(this.followPoint, new Vec3(0, 0, -1), new Vec3(0, 1, 0)).inverse());
+
+    }
+}
+
 const windowInfo = device.getWindowInfo();
 export class OrthoCamera implements Camera {
     readonly view: Matrix;

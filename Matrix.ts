@@ -136,7 +136,7 @@ export default class Matrix {
 
     }
     static rotationZ(angleInRadians: number, dst?: Matrix) {
-        
+
         dst = dst || new Matrix();
 
         const c = Math.cos(angleInRadians);
@@ -161,6 +161,42 @@ export default class Matrix {
 
         return dst;
 
+    }
+    static transpose(m: Matrix, dst?: Matrix) {
+        dst = dst || new Matrix();
+        const m00 = m.columns[0].x;
+        const m01 = m.columns[0].y;
+        const m02 = m.columns[0].z;
+        const m03 = m.columns[0].w;
+        const m10 = m.columns[1].x;
+        const m11 = m.columns[1].y;
+        const m12 = m.columns[1].z;
+        const m13 = m.columns[1].w;
+        const m20 = m.columns[2].x;
+        const m21 = m.columns[2].y;
+        const m22 = m.columns[2].z;
+        const m23 = m.columns[2].w;
+        const m30 = m.columns[3].x;
+        const m31 = m.columns[3].y;
+        const m32 = m.columns[3].z;
+        const m33 = m.columns[3].w;
+        dst.columns[0].x = m00;
+        dst.columns[0].y = m10;
+        dst.columns[0].z = m20;
+        dst.columns[0].w = m30;
+        dst.columns[1].x = m01;
+        dst.columns[1].y = m11;
+        dst.columns[1].z = m21;
+        dst.columns[1].w = m31;
+        dst.columns[2].x = m02;
+        dst.columns[2].y = m12;
+        dst.columns[2].z = m22;
+        dst.columns[2].w = m32;
+        dst.columns[3].x = m03;
+        dst.columns[3].y = m13;
+        dst.columns[3].z = m23;
+        dst.columns[3].w = m33;
+        return dst;
     }
     static translation(v: Vec4, dst?: Matrix) {
 
