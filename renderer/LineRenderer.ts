@@ -4,7 +4,7 @@ import Renderer from "./Renderer.js";
 import { LineShader } from "../Shader.js";
 
 export class LineRenderer extends Renderer {
-    constructor(camera: Camera) {
-        super(new LineShader(), device.gl.LINES, camera)
+    constructor() {
+        super(new LineShader(), device.gl.LINES)
     }
 }

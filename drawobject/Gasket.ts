@@ -1,23 +1,25 @@
-import { PointCollection, Tetrahedron, Point } from "../Geometry.js";
+import Point from "../geometry/Point.js";
+import Tetrahedron from "../geometry/Tetrahedron.js";
+import { Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Gasket extends DrawObject {
     constructor() {
-        super();
+        super()
 
-        const points = new PointCollection()
-        const colors = new PointCollection();
+        const points: Vec4[] = []
+        const colors: Vec4[] = [];
         function divideRecursiveTetrahedron(tetrahedron: Tetrahedron, level: number) {
             if (!level) {
                 tetrahedron.triangles.forEach(triangle => {
-                    points.add(triangle.points[0])
-                    points.add(triangle.points[1])
-                    points.add(triangle.points[2])
+                    points.push(...triangle.points[0].vertices)
+                    points.push(...triangle.points[1].vertices)
+                    points.push(...triangle.points[2].vertices)
                 })
                 tetrahedron.colorTriangles.forEach(triangle => {
-                    colors.add(triangle.points[0])
-                    colors.add(triangle.points[1])
-                    colors.add(triangle.points[2])
+                    colors.push(...triangle.points[0].vertices)
+                    colors.push(...triangle.points[1].vertices)
+                    colors.push(...triangle.points[2].vertices)
                 })
             } else {
                 level--;
@@ -33,12 +35,9 @@ export default class Gasket extends DrawObject {
             , new Point(1, -1, -1)
             , new Point(-1, -1, -1)
         ), recursiveLevel);
-        this.setVertices(points.vertices);
-        this.setColors(colors.vertices);
-        this.setIndices(new Array(points.vertices.length).fill(0).map((_, index) => index))
-
-    }
-    update(): void {
+        this.setVertices(points);
+        this.setColors(colors);
+        this.setIndices(new Array(points.length).fill(0).map((_, index) => index))
 
     }
 }

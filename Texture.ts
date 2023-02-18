@@ -1,5 +1,5 @@
 import { device } from "./Device.js";
-import { Vec2 } from "./Vector.js";
+import { Vec2 } from "./math/Vector.js";
 
 export default class Texture {
     private readonly tex: WebGLTexture;

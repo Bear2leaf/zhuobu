@@ -1,48 +1,43 @@
 import ready, { device, ViewPortType } from "./Device.js";
-import PointerRenderer from "./renderer/PointerRenderer.js";
 import TextRenderer from "./renderer/TextRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
-import LineCube from "./drawobject/LineCube.js";
+import Cube from "./geometry/Cube.js";
 import Gasket from "./drawobject/Gasket.js";
 import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
-import Matrix from "./Matrix.js";
-import { Vec2, Vec3, Vec4 } from "./Vector.js";
-import TriangleCube from "./drawobject/TriangleCube.js";
-import LineCone from "./drawobject/LineCone.js";
+import Matrix from "./math/Matrix.js";
+import { Vec3, Vec4 } from "./math/Vector.js";
+import { PointRenderer } from "./renderer/PointRenderer.js";
+import Pointer from "./drawobject/Pointer.js";
+import Lines from "./drawobject/Lines.js";
+import Cone from "./geometry/Cone.js";
+import Triangles from "./drawobject/Triangles.js";
 
 
 ready(() => {
   const windowInfo = device.getWindowInfo();
 
-  const pointerRenderer = new PointerRenderer();
+  const pointRenderer = new PointRenderer();
 
   const fov = Math.PI / 180 * 60;
-  const uiCamera = new OrthoCamera(-windowInfo.windowWidth / 2, windowInfo.windowWidth / 2, windowInfo.windowHeight / 2, -windowInfo.windowHeight / 2, 1, -1);
-  const textRenderer = new TextRenderer(uiCamera);
-  textRenderer.add(new Text(0, 0, 5, [1, 1, 1, 1], 0, ..."Hello"))
-  const mainCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 0.01, 10);
-  const mainRenderer = new TriangleRenderer(mainCamera);
-  const topRightCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
-  const topRightRenderer = new TriangleRenderer(topRightCamera);
-  const frustumRenderer = new LineRenderer(topRightCamera);
-  const frustumCube = new LineCube();
-  const cameraCube = new LineCube();
-  const lenCone = new LineCone();
-  const upCube = new LineCube();
+  const uiCamera = new OrthoCamera(0, windowInfo.windowWidth, windowInfo.windowHeight, 0, 1, -1);
+  const pointer = new Pointer();
+  const textRenderer = new TextRenderer();
+  const str = new Text(0, 0, 5, [1, 1, 1, 1], 0, ..."Hello")
+  const mainCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 0.01, 20);
+  const mainRenderer = new TriangleRenderer();
+  const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
+  const debugRenderer = new TriangleRenderer();
+  const lineRenderer = new LineRenderer();
+  const frustumCube = new Lines(new Cube());
+  const cameraCube = new Lines(new Cube());
+  const lenCone = new Lines(new Cone());
+  const upCube = new Lines(new Cube());
   const gasket = new Gasket();
-  const cube = new TriangleCube();
+  const cube = new Triangles(new Cube());
   gasket.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -5)));
-  mainRenderer.add(gasket)
-  topRightRenderer.add(gasket);
-  mainRenderer.add(cube)
-  topRightRenderer.add(cube);
-  frustumRenderer.add(upCube);
-  frustumRenderer.add(lenCone);
-  frustumRenderer.add(frustumCube);
-  frustumRenderer.add(cameraCube);
-  Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(topRightCamera.view)
+  Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   function tick(frame: number) {
     mainCamera.view.rotateY((Math.PI / 180))
     cube.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -10)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
@@ -61,13 +56,18 @@ ready(() => {
     )
     device.viewportTo(ViewPortType.Full)
     device.clearRenderer();
-    pointerRenderer.render()
-    mainRenderer.render()
-    textRenderer.render();
+    textRenderer.render(uiCamera, str);
+    pointRenderer.render(uiCamera, pointer);
+    mainRenderer.render(mainCamera, gasket);
+    mainRenderer.render(mainCamera, cube);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
-    topRightRenderer.render()
-    frustumRenderer.render()
+    debugRenderer.render(debugCamera, gasket)
+    debugRenderer.render(debugCamera, cube);
+    lineRenderer.render(debugCamera, frustumCube)
+    lineRenderer.render(debugCamera, cameraCube)
+    lineRenderer.render(debugCamera, lenCone)
+    lineRenderer.render(debugCamera, upCube)
     requestAnimationFrame(() => tick(++frame));
   }
   tick(0);

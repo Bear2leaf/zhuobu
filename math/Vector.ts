@@ -73,6 +73,13 @@ export class Vec4 {
         this.w += vec4.w;
         return this;
     }
+    subtract(vec4: Vec4) {
+        this.x -= vec4.x;
+        this.y -= vec4.y;
+        this.z -= vec4.z;
+        this.w -= vec4.w;
+        return this;
+    }
     lerp(vec4: Vec4, t: number) {
         return this.add(vec4).multiply(t);
     }

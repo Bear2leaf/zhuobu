@@ -1,8 +1,9 @@
-import Matrix from "../Matrix.js";
-import { Vec4 } from "../Vector.js";
+import Matrix from "../math/Matrix.js";
+import Renderer from "../renderer/Renderer.js";
+import { Vec4 } from "../math/Vector.js";
 
 export default class DrawObject {
-    
+
     private readonly indices: number[];
     private readonly vertices: Vec4[];
     private readonly colors: Vec4[];
@@ -37,5 +38,4 @@ export default class DrawObject {
     setColors(colors: Vec4[]) {
         this.colors.splice(0, this.colors.length, ...colors)
     }
-    update() {}
 }

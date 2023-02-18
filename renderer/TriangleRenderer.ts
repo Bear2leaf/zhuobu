@@ -4,7 +4,7 @@ import Renderer from "./Renderer.js";
 import { TriangleShader } from "../Shader.js";
 
 export class TriangleRenderer extends Renderer {
-    constructor(camera: Camera) {
-        super(new TriangleShader(), device.gl.TRIANGLES, camera)
+    constructor() {
+        super(new TriangleShader(), device.gl.TRIANGLES)
     }
 }

@@ -1,5 +1,5 @@
 import { device } from "./Device.js"
-import { flatten, Vec4 } from "./Vector.js";
+import { flatten, Vec4 } from "./math/Vector.js";
 
 export default class Shader {
     private readonly program: WebGLProgram;

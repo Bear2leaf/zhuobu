@@ -1,9 +1,9 @@
-import { Vec4 } from "../Vector.js";
+import { Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 
 export default class TriangleCube extends DrawObject {
     constructor() {
-        super();
+        super()
         const positions = [
             new Vec4(-1, -1, -1, 1),  // cube vertices
             new Vec4( 1, -1, -1, 1),
@@ -35,8 +35,5 @@ export default class TriangleCube extends DrawObject {
         this.setVertices(positions)
         this.setIndices(indices)
         this.setColors(colors)
-    }
-    update(): void {
-
     }
 }

@@ -13,8 +13,10 @@ simple webgl 3d engine for escape room type game written in typescript and compi
 * [ ] camera
     * [ ] perspective
     * [ ] visualizer
-    * [ ] follow 
+    * [ ] follow
     * [ ] orbit control
+* [ ] drawobject
+    * [ ] with coordinate axis
 * [ ] light
 * [ ] material
 * [ ] mesh

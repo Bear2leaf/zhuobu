@@ -1,18 +1,18 @@
 import { device } from "../Device.js";
 import { FontInfo } from "../renderer/TextRenderer.js";
 import Texture from "../Texture.js";
-import { Vec4 } from "../Vector.js";
+import { Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Text extends DrawObject {
-    x: number;
-    y: number;
-    scale: number;
-    readonly color: [number, number, number, number];
-    readonly spacing: number;
-    readonly chars: string[]
-    readonly originX: number;
-    readonly originY: number;
+    private readonly x: number;
+    private readonly y: number;
+    private readonly scale: number;
+    private readonly color: [number, number, number, number];
+    private readonly spacing: number;
+    private readonly chars: string[]
+    private readonly originX: number;
+    private readonly originY: number;
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
         super();
         this.x = x;
