@@ -21,12 +21,12 @@ ready(() => {
   const windowInfo = device.getWindowInfo();
 
   const pointRenderer = new PointRenderer();
-
   const fov = Math.PI / 180 * 60;
   const uiCamera = new OrthoCamera(0, windowInfo.windowWidth, windowInfo.windowHeight, 0, 1, -1);
   const pointer = new Pointer();
   const textRenderer = new TextRenderer();
-  const str = new Text(0, 0, 5, [1, 1, 1, 1], 0, ..."Hello")
+  const framesText = new Text(0, 100, 2, [1, 1, 1, 1], 0)
+  const fpsText = new Text(0, 100, 2, [1, 1, 1, 1], 0)
   const mainCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 0.01, 20);
   const mainRenderer = new TriangleRenderer();
   const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
@@ -46,7 +46,10 @@ ready(() => {
   zAxis.setColors([new Vec4(0, 0, 1, 1), new Vec4(0, 0, 1, 1)])
   gasket.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -5)));
   Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse(debugCamera.view)
+  let lastTime = 0;
   function tick(frame: number) {
+    const fps = Math.round(1000 / (device.now() - lastTime));
+    lastTime = device.now();
     mainCamera.view.rotateY((Math.PI / 180))
     cube.setWorldMatrix(Matrix.translation(new Vec3(0, 0, -10)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
     frustumCube.setWorldMatrix(
@@ -62,9 +65,14 @@ ready(() => {
     upCube.setWorldMatrix(
       mainCamera.view.inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
     )
+    framesText.updateChars(`frames: ${frame}`);
+    if (frame % 100 === 0) {
+      fpsText.updateChars(`\nfps: ${fps}`);
+    }
     device.viewportTo(ViewPortType.Full)
     device.clearRenderer();
-    textRenderer.render(uiCamera, str);
+    textRenderer.render(uiCamera, framesText);
+    textRenderer.render(uiCamera, fpsText);
     pointRenderer.render(uiCamera, pointer);
     mainRenderer.render(mainCamera, gasket);
     mainRenderer.render(mainCamera, cube);

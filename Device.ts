@@ -41,6 +41,7 @@ interface Device {
     readonly txtCache : Map<string, string>;
     readonly fontCache : Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo
+    now(): number;
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
     createImage(): HTMLImageElement;
@@ -62,7 +63,9 @@ class WxDevice implements Device {
     readonly txtCache : Map<string, string>;
     readonly fontCache: Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo;
+    private readonly performance: Performance;
     constructor() {
+        this.performance = wx.getPerformance();
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
@@ -72,6 +75,7 @@ class WxDevice implements Device {
         }
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
+    now = () => this.performance.now() / (typeof document !== 'undefined' ? 1: 1000);
     getWindowInfo = getWindowInfo
     clearRenderer = clearRenderer
     viewportTo = viewportTo
@@ -156,7 +160,7 @@ class WxDevice implements Device {
 }
 
 class BrowserDevice implements Device {
-    gl: WebGL2RenderingContext;
+    readonly gl: WebGL2RenderingContext;
     private isMouseDown: boolean;
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache : Map<string, string>;
@@ -174,6 +178,7 @@ class BrowserDevice implements Device {
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
+    now = () => performance.now();
     getWindowInfo = getWindowInfo
     clearRenderer = clearRenderer
     viewportTo = viewportTo
