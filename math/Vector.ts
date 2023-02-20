@@ -59,12 +59,40 @@ export class Vec4 {
         this.z = z;
         this.w = w;
     }
+    cross(ac: Vec4) {
+        const t1 = this.z * ac.x - this.x * ac.z;
+        const t2 = this.x * ac.y - this.y * ac.x;
+        this.x = this.y * ac.z - this.z * ac.y;
+        this.y = t1;
+        this.z = t2;
+        return this;
+    }
+    normalize() {
+        const lenSq = this.x * this.x + this.y * this.y + this.z * this.z;
+        const len = Math.sqrt(lenSq);
+        if (len > 0.00001) {
+            this.x /= len;
+            this.y /= len;
+            this.z /= len;
+        } else {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+        }
+        return this;
+    }
     multiply(scalar: number) {
         this.x *= scalar;
         this.y *= scalar;
         this.z *= scalar;
         this.w *= scalar;
         return this;
+    }
+    set(x: number, y: number, z: number, w: number): void {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
     add(vec4: Vec4) {
         this.x += vec4.x;

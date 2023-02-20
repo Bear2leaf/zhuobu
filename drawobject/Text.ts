@@ -3,6 +3,7 @@ import { FontInfo } from "../renderer/TextRenderer.js";
 import Texture from "../Texture.js";
 import { Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
+import Mesh from "../geometry/Mesh.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -63,8 +64,8 @@ export default class Text extends DrawObject {
             ];
             batch.push(...vertices);
         }
-        this.setVertices(batch)
-        this.setIndices(new Array(batch.length).fill(0).map((_, index) => index))
+        const mesh = new Mesh([], new Array(batch.length).fill(0).map((_, index) => index), batch);
+        this.mesh = mesh;
     }
 
 }

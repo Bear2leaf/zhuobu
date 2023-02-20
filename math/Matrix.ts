@@ -50,6 +50,18 @@ export default class Matrix {
     getVertics() {
         return flatten(this.columns);
     }
+    multiplyVector(vert: Vec4) {
+        const x = vert.x;
+        const y = vert.y;
+        const z = vert.z;
+        const w = vert.w;
+        const c = this.columns;
+        vert.x = c[0].x * x + c[1].x * y + c[2].x * z + c[3].x * w;
+        vert.y = c[0].y * x + c[1].y * y + c[2].y * z + c[3].y * w;
+        vert.z = c[0].z * x + c[1].z * y + c[2].z * z + c[3].z * w;
+        vert.w = c[0].w * x + c[1].w * y + c[2].w * z + c[3].w * w;
+        return vert;
+    }
     multiply(b: Matrix) {
         return Matrix.multiply(this, b, this);
     }

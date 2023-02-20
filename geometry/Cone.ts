@@ -37,7 +37,7 @@ export default class Cone implements Mesh {
     get blToTlIndices(): [number, number] { return [this.vertices.indexOf(this.bl), this.vertices.indexOf(this.tl)]; }
     get tlToTrIndices(): [number, number] { return [this.vertices.indexOf(this.tl), this.vertices.indexOf(this.tr)]; }
 
-    get lineIndices(): number[] {
+    get indices(): number[] {
         return [
             ...this.tipToBlIndices,
             ...this.tipToBrIndices,

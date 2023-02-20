@@ -3,24 +3,27 @@ import Mesh from "./Mesh.js";
 import Point from "./Point.js";
 
 export default class LineSegment implements Mesh {
-    private readonly a: Point;
-    private readonly b: Point;
-    get points(): [Point, Point] { return [this.a, this.b] }
-    get vertices(): [Vec4, Vec4] { return [this.a.vertices[0], this.b.vertices[0]] }
-    get lineIndices(): [number, number] { return [0, 1] }
-    get midPoint(): Point {
-        const vec = this.a.vertices[0].clone().lerp(this.b.vertices[0], 0.5);
-        return new Point(vec.x, vec.y, vec.z, vec.w);
-    }
+    readonly a: Point;
+    readonly b: Point;
+    readonly indices: [number, number];
+    readonly midPoint: Point;
+    readonly colors: [Vec4, Vec4];
+    readonly points: [Point, Point];
+    readonly vertices: [Vec4, Vec4];
 
     constructor(a: Point, b: Point) {
         this.a = a;
         this.b = b;
-    }
-    get colors(): Vec4[] {
-        throw new Error("Method not implemented.");
-    }
-    get triangleIndices(): number[] {
-        throw new Error("Method not implemented.");
+        this.indices = [
+            0, 1
+        ];
+        const vec = this.a.vertices[0].clone().lerp(this.b.vertices[0], 0.5);
+        this.midPoint = new Point(vec.x, vec.y, vec.z, vec.w);
+        this.colors = [
+            ...this.a.colors
+            , ...this.b.colors
+        ];
+        this.points = [this.a, this.b] 
+        this.vertices = [...this.a.vertices, ...this.b.vertices] 
     }
 }

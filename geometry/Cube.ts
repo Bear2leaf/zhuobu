@@ -10,6 +10,7 @@ export default class Cube implements Mesh {
     private readonly p5: Vec4;
     private readonly p6: Vec4;
     private readonly p7: Vec4;
+    readonly indices: number[];
 
     constructor() {
         this.p0 = new Vec4(-1, -1, -1, 1);  // cube vertices
@@ -20,6 +21,11 @@ export default class Cube implements Mesh {
         this.p5 = new Vec4(1, -1, 1, 1);
         this.p6 = new Vec4(-1, 1, 1, 1);
         this.p7 = new Vec4(1, 1, 1, 1);
+        this.indices = [
+            0, 1, 1, 3, 3, 2, 2, 0, // front
+            4, 5, 5, 7, 7, 6, 6, 4, // back
+            0, 4, 1, 5, 2, 6, 3, 7, // sides
+        ];
     }
     get colors(): Vec4[] {
         return [
