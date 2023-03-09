@@ -74,12 +74,14 @@ ready(() => {
     }
     device.viewportTo(ViewPortType.Full)
     device.clearRenderer();
-    textRenderer.render(uiCamera, framesText);
-    textRenderer.render(uiCamera, fpsText);
     pointRenderer.render(uiCamera, pointer);
     mainRenderer.render(mainCamera, gasket);
     mainRenderer.render(mainCamera, cube);
+    device.gl.depthMask(false);
     mainRenderer.render(uiCamera, histogram);
+    textRenderer.render(uiCamera, framesText);
+    textRenderer.render(uiCamera, fpsText);
+    device.gl.depthMask(true);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
     debugRenderer.render(debugCamera, gasket)

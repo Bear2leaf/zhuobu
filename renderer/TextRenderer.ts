@@ -27,6 +27,7 @@ export default class TextRenderer extends Renderer {
         this.setTextureUnit();
         device.gl.enable(device.gl.BLEND);
         device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
+        device.gl.pixelStorei(device.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     }
     render(camera: Camera, drawObject: Text) {
         drawObject.create(this.texture, this.fontInfo);
