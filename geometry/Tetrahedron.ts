@@ -1,36 +1,35 @@
 import { Vec4 } from "../math/Vector.js";
-import Mesh from "./Mesh.js";
 import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 import Triangle from "./Triangle.js";
 
-    /*
-    *
-    *                  b (0, 1, -1)
-    *                 /|\
-    *                / | \
-    *               /  |  \
-    *              /   |   \
-    *             /    |    \
-    *            /     |     \
-    * (0, 0, 1) a------|------d (-1, -1, -1)
-    *            \     |     /
-    *             \    |    /
-    *              \   |   /
-    *               \  |  /
-    *                \ | /
-    *                 \|/
-    *                  c (1, -1, -1)
-    *           
-    **/
-export default class Tetrahedron implements Mesh {
+/*
+*
+*                  b (0, 1, -1)
+*                 /|\
+*                / | \
+*               /  |  \
+*              /   |   \
+*             /    |    \
+*            /     |     \
+* (0, 0, 1) a------|------d (-1, -1, -1)
+*            \     |     /
+*             \    |    /
+*              \   |   /
+*               \  |  /
+*                \ | /
+*                 \|/
+*                  c (1, -1, -1)
+*           
+**/
+export default class Tetrahedron {
     readonly acb: Triangle;
     readonly abd: Triangle;
     readonly adc: Triangle;
     readonly bcd: Triangle;
-    readonly indices: readonly [ number, number, number, number, number, number, number, number, number, number, number, number];
-    readonly colors: readonly[Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
-    readonly vertices: readonly [Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
+    readonly indices: [number, number, number, number, number, number, number, number, number, number, number, number];
+    readonly colors: [Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
+    readonly vertices: [Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
     get a(): Point { return this.acb.a }
     get b(): Point { return this.acb.c }
     get c(): Point { return this.acb.b }

@@ -1,27 +1,27 @@
 import { Vec4 } from "../math/Vector.js";
-import Mesh from "./Mesh.js";
 
-export enum CubeType {
+export enum PrimitiveType {
     LINES,
     TRIANGLES
 }
 
-export default class Cube implements Mesh {
+export default class Cube {
     readonly indices: number[];
     readonly vertices: Vec4[];
     readonly colors: Vec4[];
 
-    constructor(type: CubeType = CubeType.LINES) {
-        if (type === CubeType.LINES) {
-            this.vertices = [];
-            this.vertices.push(new Vec4(-1, -1, -1, 1));
-            this.vertices.push(new Vec4(1, -1, -1, 1));
-            this.vertices.push(new Vec4(-1, 1, -1, 1));
-            this.vertices.push(new Vec4(1, 1, -1, 1));
-            this.vertices.push(new Vec4(-1, -1, 1, 1));
-            this.vertices.push(new Vec4(1, -1, 1, 1));
-            this.vertices.push(new Vec4(-1, 1, 1, 1));
-            this.vertices.push(new Vec4(1, 1, 1, 1));
+    constructor(type: PrimitiveType = PrimitiveType.LINES) {
+        this.vertices = [
+              new Vec4(-1, -1, -1, 1)  // cube vertices
+            , new Vec4( 1, -1, -1, 1)
+            , new Vec4(-1,  1, -1, 1)
+            , new Vec4( 1,  1, -1, 1)
+            , new Vec4(-1, -1,  1, 1)
+            , new Vec4( 1, -1,  1, 1)
+            , new Vec4(-1,  1,  1, 1)
+            , new Vec4( 1,  1,  1, 1)
+        ]
+        if (type === PrimitiveType.LINES) {
             this.indices = [
                 0, 1, 1, 3, 3, 2, 2, 0, // front
                 4, 5, 5, 7, 7, 6, 6, 4, // back
@@ -38,16 +38,6 @@ export default class Cube implements Mesh {
                 new Vec4(0, 0, 0, 1), // black
             ]
         } else {
-            this.vertices = [
-                  new Vec4(-1, -1, -1, 1)  // cube vertices
-                , new Vec4( 1, -1, -1, 1)
-                , new Vec4(-1,  1, -1, 1)
-                , new Vec4( 1,  1, -1, 1)
-                , new Vec4(-1, -1,  1, 1)
-                , new Vec4( 1, -1,  1, 1)
-                , new Vec4(-1,  1,  1, 1)
-                , new Vec4( 1,  1,  1, 1)
-            ]
             this.indices = [
                 1, 0, 2, 2, 3, 1, // back
                 5, 7, 6, 6, 4, 5, // front

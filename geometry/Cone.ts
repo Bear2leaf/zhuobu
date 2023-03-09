@@ -1,15 +1,14 @@
 import { Vec4 } from "../math/Vector.js";
-import Mesh from "./Mesh.js";
 
-export default class Cone implements Mesh {
+export default class Cone {
     private readonly tip: Vec4;
     private readonly tr: Vec4;
     private readonly br: Vec4;
     private readonly bl: Vec4;
     private readonly tl: Vec4;
-    readonly colors: readonly Vec4[];
-    readonly indices: readonly number[];
-    readonly vertices: readonly Vec4[];
+    readonly colors: Vec4[];
+    readonly indices: number[];
+    readonly vertices: Vec4[];
     constructor() {
         this.tip = new Vec4(0, 0, 1, 1);
         this.tr = new Vec4(1, 1, -1, 1);

@@ -1,5 +1,4 @@
 import LineSegment from "../geometry/LineSegment.js";
-import Mesh from "../geometry/Mesh.js";
 import Point from "../geometry/Point.js";
 import Tetrahedron from "../geometry/Tetrahedron.js";
 import Triangle from "../geometry/Triangle.js";
@@ -17,7 +16,6 @@ export default class Gasket extends DrawObject {
             , new Triangle(new LineSegment(pA, pB), new LineSegment(pB, pD))
             , new Triangle(new LineSegment(pA, pD), new LineSegment(pD, pC))
         );
-        super();
         const points: Vec4[] = [];
         const colors: Vec4[] = [];
 
@@ -32,10 +30,9 @@ export default class Gasket extends DrawObject {
                 })
             }
         }
-        const recursiveLevel = 3;
+        const recursiveLevel = 6;
         divideRecursiveTetrahedron(tetrahedron, recursiveLevel);
-        this.mesh = new Mesh(colors, points.map((_, i) => i), points);
-        console.log(this.mesh)
+        super(colors, points.map((_, i) => i), points);
     }
 }
 

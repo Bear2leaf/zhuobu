@@ -1,16 +1,15 @@
 import { Vec4 } from "../math/Vector.js";
-import Mesh from "./Mesh.js";
 import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 
-export default class Triangle implements Mesh {
+export default class Triangle {
     readonly ab: LineSegment;
     readonly bc: LineSegment;
     readonly ca: LineSegment;
-    readonly indices: readonly [number, number, number];
-    readonly colors: readonly [Vec4, Vec4, Vec4];
+    readonly indices: [number, number, number];
+    readonly colors: [Vec4, Vec4, Vec4];
     readonly points: readonly [Point, Point, Point];
-    readonly vertices: readonly [Vec4, Vec4, Vec4];
+    readonly vertices: [Vec4, Vec4, Vec4];
 
     get a(): Point { return this.ab.points[0] };
     get b(): Point { return this.bc.points[0] };

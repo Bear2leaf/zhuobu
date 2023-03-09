@@ -3,17 +3,22 @@ import TextRenderer from "./renderer/TextRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
-import Cube, { CubeType } from "./geometry/Cube.js";
+import Cube, { PrimitiveType } from "./geometry/Cube.js";
 import Gasket from "./drawobject/Gasket.js";
 import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
 import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 import { PointRenderer } from "./renderer/PointRenderer.js";
 import Pointer from "./drawobject/Pointer.js";
-import Cone from "./geometry/Cone.js";
 import DrawObject from "./drawobject/DrawObject.js";
 import LineSegment from "./geometry/LineSegment.js";
 import Point from "./geometry/Point.js";
+import FrustumCube from "./drawobject/BlackWireCube.js";
+import BlackWireCone from "./drawobject/BlackWireCone.js";
+import BlackWireCube from "./drawobject/BlackWireCube.js";
+import ColorfulCube from "./drawobject/ColorfulCube.js";
+import ColorArrowLine from "./drawobject/ColorArrowLine.js";
+import Histogram from "./drawobject/Histogram.js";
 
 
 ready(() => {
@@ -31,21 +36,16 @@ ready(() => {
   const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
   const debugRenderer = new TriangleRenderer();
   const lineRenderer = new LineRenderer();
-  const frustumCube = new DrawObject(new Cube());
-  const cameraCube = new DrawObject(new Cube());
-  const lenCone = new DrawObject(new Cone());
-  const upCube = new DrawObject(new Cube());
+  const frustumCube = new FrustumCube();
+  const cameraCube = new BlackWireCube();
+  const lenCone = new BlackWireCone();
+  const upCube = new BlackWireCube();
   const gasket = new Gasket();
-  const cube = new DrawObject(new Cube(CubeType.TRIANGLES));
-  const xAxis = new DrawObject(new LineSegment(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1)));
-  const yAxis = new DrawObject(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1)));
-  const zAxis = new DrawObject(new LineSegment(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1)));
-  xAxis.mesh?.colors[0].set(1, 0, 0, 1);
-  xAxis.mesh?.colors[1].set(1, 0, 0, 1);
-  yAxis.mesh?.colors[0].set(0, 1, 0, 1);
-  yAxis.mesh?.colors[1].set(0, 1, 0, 1);
-  zAxis.mesh?.colors[0].set(0, 0, 1, 1);
-  zAxis.mesh?.colors[1].set(0, 0, 1, 1);
+  const cube = new ColorfulCube();
+  const xAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1), new Vec4(1, 0, 0, 1));
+  const yAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1), new Vec4(0, 1, 0, 1));
+  const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));
+  const histogram = new Histogram();
   gasket.worldMatrix.translate(new Vec3(-1, 2, -8))
   Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   let lastTime = 0;
@@ -79,6 +79,7 @@ ready(() => {
     pointRenderer.render(uiCamera, pointer);
     mainRenderer.render(mainCamera, gasket);
     mainRenderer.render(mainCamera, cube);
+    mainRenderer.render(uiCamera, histogram);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
     debugRenderer.render(debugCamera, gasket)

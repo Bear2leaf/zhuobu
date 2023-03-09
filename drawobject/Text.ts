@@ -1,9 +1,8 @@
 import { device } from "../Device.js";
 import { FontInfo } from "../renderer/TextRenderer.js";
 import Texture from "../Texture.js";
-import { Vec4 } from "../math/Vector.js";
+import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import Mesh from "../geometry/Mesh.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -15,7 +14,7 @@ export default class Text extends DrawObject {
     private readonly originX: number;
     private readonly originY: number;
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        super();
+        super([], new Array(0).fill(0).map((_, index) => index), []);
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -38,7 +37,8 @@ export default class Text extends DrawObject {
         device.gl.activeTexture(device.gl.TEXTURE0);
         const ox = x;
         const oy = y;
-        const batch: Vec4[] = [];
+        this.vertices.splice(0, this.vertices.length);
+        const batch = this.vertices;
         for (const c of chars) {
             const ch = fontInfo[c];
             const xpos = x;
@@ -64,8 +64,16 @@ export default class Text extends DrawObject {
             ];
             batch.push(...vertices);
         }
-        const mesh = new Mesh([], new Array(batch.length).fill(0).map((_, index) => index), batch);
-        this.mesh = mesh;
+        this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
+    }
+    draw(mode: number): void {
+
+        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
+        device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
+        device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), device.gl.STATIC_DRAW);
+        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), device.gl.STATIC_DRAW)
+        
+        super.draw(mode);
     }
 
 }

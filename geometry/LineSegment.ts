@@ -1,8 +1,7 @@
 import { Vec4 } from "../math/Vector.js";
-import Mesh from "./Mesh.js";
 import Point from "./Point.js";
 
-export default class LineSegment implements Mesh {
+export default class LineSegment {
     readonly a: Point;
     readonly b: Point;
     readonly indices: [number, number];
