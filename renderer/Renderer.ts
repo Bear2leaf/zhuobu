@@ -5,13 +5,9 @@ import Shader from "../Shader.js";
 
 
 export default class Renderer {
-    private readonly mode: number;
     private readonly shader: Shader;
-    buffered: boolean;
-    constructor(shader: Shader, mode: number) {
-        this.mode = mode;
+    constructor(shader: Shader) {
         this.shader = shader;
-        this.buffered = false;
     }
     setTextureUnit() {
         this.shader.use();
@@ -23,6 +19,5 @@ export default class Renderer {
         this.shader.setMatrix4fv("u_view", camera.view.getVertics())
         this.shader.setMatrix4fv("u_projection", camera.projection.getVertics())
         device.gl.bindVertexArray(drawObject.vao);
-        drawObject.draw(this.mode);
     }
 }

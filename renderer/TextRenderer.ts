@@ -12,7 +12,7 @@ export default class TextRenderer extends Renderer {
     private readonly fontInfo: FontInfo;
     constructor() {
         
-        super(new TextShader(), device.gl.TRIANGLES)
+        super(new TextShader())
         this.texture = new Texture();
         const fontInfo = device.fontCache.get("static/font/font_info.json");
         if (!fontInfo) {
@@ -33,5 +33,6 @@ export default class TextRenderer extends Renderer {
         drawObject.create(this.texture, this.fontInfo);
         this.texture.bind(); 
         super.render(camera, drawObject);
+        drawObject.draw(device.gl.TRIANGLES)
     }
 }

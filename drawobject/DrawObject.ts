@@ -3,10 +3,10 @@ import { device } from "../Device.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 
 export default abstract class DrawObject {
+    private buffered: boolean = false;
     readonly colors: Vec4[];
     readonly indices: number[];
     readonly vertices: Vec4[];
-    buffered: boolean = false;
     readonly vao: WebGLVertexArrayObject | null;
     readonly vbo: WebGLBuffer | null;
     readonly ebo: WebGLBuffer | null;
