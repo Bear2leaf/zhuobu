@@ -9,14 +9,14 @@ export default class Point {
     readonly vertices: [Vec4];
     readonly colors: [Vec4];
     readonly indices: [number];
-    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
+    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1, color: Vec4 = new Vec4(1, 1, 1, 1), indice: number = 0) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
         this.vertices = [new Vec4(this.x, this.y, this.z, this.w)];
-        this.colors = [new Vec4(1, 1, 1, 1)];
-        this.indices = [0];
+        this.colors = [color];
+        this.indices = [indice];
     }
     equels(a: Point): boolean {
         return this.x === a.x && this.y === a.y && this.z === a.z && this.w === a.w;

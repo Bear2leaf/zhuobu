@@ -20,7 +20,9 @@ export default class Triangle {
         this.ca = new LineSegment(bc.points[1], ab.points[0]);
         this.points = [this.a, this.b, this.c]
         this.indices = [
-            0, 1, 2
+            ...this.a.indices,
+            ...this.b.indices,
+            ...this.c.indices
         ];
         this.colors = [
             ...this.a.colors
@@ -37,4 +39,8 @@ export default class Triangle {
         ];
 
     }
+    static fromPoints(a: Point, b: Point, c: Point): Triangle {
+        return new Triangle(new LineSegment(a, b), new LineSegment(b, c));
+    }
+
 }

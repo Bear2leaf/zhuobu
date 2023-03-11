@@ -48,10 +48,10 @@ export default class Tetrahedron {
             , ...this.bcd.vertices
         ]
         this.indices = [
-            0, 1, 2
-            , 3, 4, 5
-            , 6, 7, 8
-            , 9, 10, 11
+            ...this.acb.indices
+            , ...this.abd.indices
+            , ...this.adc.indices
+            , ...this.bcd.indices
         ]
         this.colors = [
             new Vec4(1, 0, 0, 1), new Vec4(1, 0, 0, 1), new Vec4(1, 0, 0, 1)

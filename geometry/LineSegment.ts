@@ -14,7 +14,8 @@ export default class LineSegment {
         this.a = a;
         this.b = b;
         this.indices = [
-            0, 1
+            ...a.indices,
+            ...b.indices
         ];
         const vec = this.a.vertices[0].clone().lerp(this.b.vertices[0], 0.5);
         this.midPoint = new Point(vec.x, vec.y, vec.z, vec.w);
