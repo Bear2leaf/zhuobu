@@ -4,10 +4,6 @@ import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 import Triangle from "./Triangle.js";
 
-export enum PrimitiveType {
-    LINES,
-    TRIANGLES
-}
 
 export default class Cube implements Geometry {
     private readonly points: readonly [Point, Point, Point, Point, Point, Point, Point, Point];

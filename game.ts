@@ -3,15 +3,12 @@ import TextRenderer from "./renderer/TextRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
-import Cube, { PrimitiveType } from "./geometry/Cube.js";
 import Gasket from "./drawobject/Gasket.js";
 import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
 import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 import { PointRenderer } from "./renderer/PointRenderer.js";
 import Pointer from "./drawobject/Pointer.js";
-import DrawObject from "./drawobject/DrawObject.js";
-import LineSegment from "./geometry/LineSegment.js";
 import Point from "./geometry/Point.js";
 import FrustumCube from "./drawobject/BlackWireCube.js";
 import BlackWireCone from "./drawobject/BlackWireCone.js";
@@ -71,6 +68,7 @@ ready(() => {
     framesText.updateChars(`frames: ${frame}`);
     if (frame % 100 === 0) {
       fpsText.updateChars(`\nfps: ${fps}`);
+      histogram.updateHistogram(fps);
     }
     device.viewportTo(ViewPortType.Full)
     device.clearRenderer();

@@ -1,4 +1,4 @@
-import Cube, { PrimitiveType } from "../geometry/Cube.js";
+import Cube from "../geometry/Cube.js";
 import { Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 

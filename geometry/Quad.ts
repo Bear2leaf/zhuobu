@@ -35,4 +35,8 @@ export default class Quad {
         ];
         
     }
+    setHeight(height: number) {
+        this.b.vertices[0].y = this.a.vertices[0].y + height;
+        this.c.vertices[0].y = this.b.vertices[0].y;
+    }
 }
