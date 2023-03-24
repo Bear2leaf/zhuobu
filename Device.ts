@@ -91,6 +91,31 @@ class WxDevice implements Device {
         return canvas
     }
     async loadSubpackage(): Promise<null> {
+        //@ts-ignore
+        globalThis.XMLHttpRequest = class{
+            constructor() {
+                console.log("XMLHttpRequest")
+            }
+            onload?: Function;
+            status?: number;
+            open() {
+                console.log("XMLHttpRequest open")
+            }
+            send() {
+                if (!this.onload) {
+                    throw new Error("onload not exist")
+                }
+                this.status = 200;
+                this.onload();
+            }
+        }
+        //@ts-ignore
+        globalThis.WebAssembly = {...globalThis.WXWebAssembly, instantiate: function (path: string, info: any) {
+            //@ts-ignore
+            return globalThis.WXWebAssembly.instantiate("static/wasm/nethack.wasm", info)
+        }};
+        globalThis.WebAssembly.RuntimeError = Error;
+        
         await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "static",
@@ -243,6 +268,21 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
+    //@ts-ignore
+    (await import("./static/game.js")).libnh.default({
+        onRuntimeInitialized: function() {
+            // after the WASM is loaded, add the shim graphics callback function
+            //@ts-ignore
+            globalThis.nethackCallback = console.log
+            this.ccall(
+                "shim_graphics_set_callback", // C function name
+                null, // return type
+                ["string"], // arg types
+                ["nethackCallback"], // arg values
+                {async: true}, // options
+            );
+        }
+    });
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
