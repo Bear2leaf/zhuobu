@@ -1,7 +1,7 @@
 
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
-type DeviceInfo =  { windowWidth: number; windowHeight: number; pixelRatio: number; }
+type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 type FontInfo = import("./renderer/TextRenderer").FontInfo;
 export enum ViewPortType {
     Full,
@@ -21,7 +21,7 @@ function viewportTo(this: Device, type: ViewPortType): void {
             this.gl.scissor(leftWidth, leftHeight, rightWidth, rightHeight);
             device.gl.clearColor(0.4, 0.4, 0.4, 1)
             break;
-    
+
         default:
             this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
             this.gl.scissor(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
@@ -32,14 +32,14 @@ function viewportTo(this: Device, type: ViewPortType): void {
 function clearRenderer(this: Device): void {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
 }
-function getWindowInfo(this: Device): DeviceInfo{
+function getWindowInfo(this: Device): DeviceInfo {
     return this.deviceInfo;
 }
 interface Device {
     readonly gl: WebGL2RenderingContext;
-    readonly imageCache : Map<string, HTMLImageElement>;
-    readonly txtCache : Map<string, string>;
-    readonly fontCache : Map<string, FontInfo>;
+    readonly imageCache: Map<string, HTMLImageElement>;
+    readonly txtCache: Map<string, string>;
+    readonly fontCache: Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo
     now(): number;
     createCanvas(): HTMLCanvasElement;
@@ -56,11 +56,12 @@ interface Device {
     readBuffer(file: string): Promise<ArrayBuffer>;
     clearRenderer(): void;
     viewportTo(type: ViewPortType): void;
+    createWorker(path: string, opt: WorkerOptions): Worker;
 }
 class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
     readonly imageCache: Map<string, HTMLImageElement>;
-    readonly txtCache : Map<string, string>;
+    readonly txtCache: Map<string, string>;
     readonly fontCache: Map<string, FontInfo>;
     readonly deviceInfo: DeviceInfo;
     private readonly performance: Performance;
@@ -69,13 +70,13 @@ class WxDevice implements Device {
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
-        this.deviceInfo =  wx.getWindowInfo();
+        this.deviceInfo = wx.getWindowInfo();
         if (typeof document !== 'undefined') {
             this.deviceInfo.pixelRatio = 1;
         }
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
-    now = () => this.performance.now() / (typeof document !== 'undefined' ? 1: 1000);
+    now = () => this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
     getWindowInfo = getWindowInfo
     clearRenderer = clearRenderer
     viewportTo = viewportTo
@@ -91,31 +92,6 @@ class WxDevice implements Device {
         return canvas
     }
     async loadSubpackage(): Promise<null> {
-        //@ts-ignore
-        globalThis.XMLHttpRequest = class{
-            constructor() {
-                console.log("XMLHttpRequest")
-            }
-            onload?: Function;
-            status?: number;
-            open() {
-                console.log("XMLHttpRequest open")
-            }
-            send() {
-                if (!this.onload) {
-                    throw new Error("onload not exist")
-                }
-                this.status = 200;
-                this.onload();
-            }
-        }
-        //@ts-ignore
-        globalThis.WebAssembly = {...globalThis.WXWebAssembly, instantiate: function (path: string, info: any) {
-            //@ts-ignore
-            return globalThis.WXWebAssembly.instantiate("static/wasm/nethack.wasm", info)
-        }};
-        globalThis.WebAssembly.RuntimeError = Error;
-        
         await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "static",
@@ -144,6 +120,12 @@ class WxDevice implements Device {
     }
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
+    }
+    createWorker(path: string, opt: WorkerOptions): Worker {
+        const worker = wx.createWorker(path, opt);
+
+        worker.onMessage(console.log)
+        return worker;
     }
     onTouchStart(listener: TouchInfoFunction): void {
         wx.onTouchStart((e: any) => {
@@ -188,7 +170,7 @@ class BrowserDevice implements Device {
     readonly gl: WebGL2RenderingContext;
     private isMouseDown: boolean;
     readonly imageCache: Map<string, HTMLImageElement>;
-    readonly txtCache : Map<string, string>;
+    readonly txtCache: Map<string, string>;
     readonly fontCache: Map<string, import("./renderer/TextRenderer").FontInfo>;
     readonly deviceInfo: DeviceInfo;
     constructor() {
@@ -224,6 +206,11 @@ class BrowserDevice implements Device {
     }
     createWebAudioContext(): AudioContext {
         return new AudioContext();
+    }
+    createWorker(path: string, opt: WorkerOptions): Worker {
+        const worker = new Worker(path, opt);
+        worker.onmessage = console.log
+        return worker;
     }
     onTouchStart(listener: TouchInfoFunction): void {
         window.onpointerdown = (e: PointerEvent) => {
@@ -268,21 +255,7 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
-    //@ts-ignore
-    (await import("./static/game.js")).libnh.default({
-        onRuntimeInitialized: function() {
-            // after the WASM is loaded, add the shim graphics callback function
-            //@ts-ignore
-            globalThis.nethackCallback = console.log
-            this.ccall(
-                "shim_graphics_set_callback", // C function name
-                null, // return type
-                ["string"], // arg types
-                ["nethackCallback"], // arg values
-                {async: true}, // options
-            );
-        }
-    });
+    device.createWorker("static/worker/worker.js", { type: 'module' })
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)

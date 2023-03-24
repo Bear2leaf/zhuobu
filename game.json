@@ -5,4 +5,6 @@
             "root": "static/"
         }
     ]
+    
+    , "workers": "static/worker"
 }
