@@ -56,7 +56,7 @@ interface Device {
     readBuffer(file: string): Promise<ArrayBuffer>;
     clearRenderer(): void;
     viewportTo(type: ViewPortType): void;
-    createWorker(path: string, opt: WorkerOptions): Worker;
+    createWorker(path: string): Worker;
 }
 class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
@@ -121,8 +121,8 @@ class WxDevice implements Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    createWorker(path: string, opt: WorkerOptions): Worker {
-        const worker = wx.createWorker(path, opt);
+    createWorker(path: string): Worker {
+        const worker = wx.createWorker(path);
 
         worker.onMessage(console.log)
         return worker;
@@ -207,9 +207,10 @@ class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string, opt: WorkerOptions): Worker {
-        const worker = new Worker(path, opt);
+    createWorker(path: string): Worker {
+        const worker = new Worker(`${path}`);
         worker.onmessage = console.log
+        worker.onerror = console.error
         return worker;
     }
     onTouchStart(listener: TouchInfoFunction): void {
@@ -255,7 +256,7 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
-    device.createWorker("static/worker/worker.js", { type: 'module' })
+    device.createWorker("static/worker/nethack.js")
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
