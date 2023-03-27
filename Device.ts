@@ -1,3 +1,4 @@
+import MsgReceiver from "./handler/MsgReceiver.js";
 
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
@@ -45,6 +46,7 @@ interface Device {
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
     createImage(): HTMLImageElement;
+    createWorker(path: string): void;
     getWindowInfo(): { windowWidth: number, windowHeight: number, pixelRatio: number };
     createWebAudioContext(): AudioContext;
     onTouchStart(listener: TouchInfoFunction): void;
@@ -56,7 +58,6 @@ interface Device {
     readBuffer(file: string): Promise<ArrayBuffer>;
     clearRenderer(): void;
     viewportTo(type: ViewPortType): void;
-    createWorker(path: string): Worker;
 }
 class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
@@ -105,7 +106,7 @@ class WxDevice implements Device {
             })
 
             task.onProgressUpdate((res: any) => {
-                console.log(res.progress) // 可通过 onProgressUpdate 接口监听下载进度
+                console.log(res.progress)
                 console.log(res.totalBytesWritten)
                 console.log(res.totalBytesExpectedToWrite)
             })
@@ -121,11 +122,13 @@ class WxDevice implements Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    createWorker(path: string): Worker {
+    createWorker(path: string): void {
         const worker = wx.createWorker(path);
 
-        worker.onMessage(console.log)
-        return worker;
+        const handler = new MsgReceiver();
+        worker.onMessage((data: any) => {
+            handler.operation(worker, ...data);
+        })
     }
     onTouchStart(listener: TouchInfoFunction): void {
         wx.onTouchStart((e: any) => {
@@ -207,11 +210,13 @@ class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string): Worker {
-        const worker = new Worker(`${path}`);
-        worker.onmessage = console.log
-        worker.onerror = console.error
-        return worker;
+    createWorker(path: string): void {
+        const worker = new Worker(path);
+        const handler = new MsgReceiver();
+        worker.onmessage =
+            (e: MessageEvent) => {
+                handler.operation(worker, ...e.data)
+            }
     }
     onTouchStart(listener: TouchInfoFunction): void {
         window.onpointerdown = (e: PointerEvent) => {

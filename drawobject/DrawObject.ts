@@ -2,7 +2,7 @@ import Matrix from "../math/Matrix.js";
 import { device } from "../Device.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 
-export default abstract class DrawObject {
+export default class DrawObject {
     private buffered: boolean = false;
     readonly colors: Vec4[];
     readonly indices: number[];
