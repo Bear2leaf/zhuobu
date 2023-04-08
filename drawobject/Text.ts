@@ -14,8 +14,11 @@ export default class Text extends DrawObject {
     private readonly chars: string[]
     private readonly originX: number;
     private readonly originY: number;
+    readonly colors: Vec4[] = [];
+    readonly indices: number[] = [];
+    readonly vertices: Vec4[] = [];
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        super([], new Array(0).fill(0).map((_, index) => index), []);
+        super([], [], []);
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -68,10 +71,9 @@ export default class Text extends DrawObject {
         this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
     draw(mode: number): void {
-        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateArrayBuffer(flatten(this.vertices));
-        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateArrayBuffer(flatten(this.colors));
-        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateIndices(new Uint16Array(this.indices));
-        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateIndices(new Uint16Array(this.indices));
+        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices), new Uint16Array(this.indices));
+        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors), new Uint16Array(this.indices));
+        this.count = this.indices.length;
         super.draw(mode);
     }
 

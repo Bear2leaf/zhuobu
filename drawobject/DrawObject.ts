@@ -6,27 +6,24 @@ import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
 
 
 export default class DrawObject {
-    readonly colors: Vec4[];
-    readonly indices: number[];
-    readonly vertices: Vec4[];
     readonly vao: WebGLVertexArrayObject | null;
-    readonly arrayBufferObjects: ArrayBufferObject[] = [];
+    readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
     readonly worldMatrix: Matrix;
+    count: number;
     constructor(colors: Vec4[], indices: number[], vertices: Vec4[]) {
-        this.colors = colors;
-        this.indices = indices;
-        this.vertices = vertices;
+        this.count = indices.length;
+        this.aboMap = new Map();
         this.vao = device.gl.createVertexArray();
         device.gl.bindVertexArray(this.vao);
         this.worldMatrix = Matrix.identity();
-        this.arrayBufferObjects.push(new ArrayBufferObject(device.gl, ArrayBufferIndex.Vertices, flatten(this.vertices), new Uint16Array(this.indices)))
-        this.arrayBufferObjects.push(new ArrayBufferObject(device.gl, ArrayBufferIndex.Colors, flatten(this.colors), new Uint16Array(this.indices)))
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(device.gl, ArrayBufferIndex.Vertices, flatten(vertices), new Uint16Array(indices)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(device.gl, ArrayBufferIndex.Colors, flatten(colors), new Uint16Array(indices)))
     }
     draw(mode: number) {
-        this.arrayBufferObjects.forEach((arrayBufferObject) => {
+        this.aboMap.forEach((arrayBufferObject) => {
             arrayBufferObject.bind();
         })
-        device.gl.drawElements(mode, this.indices.length, device.gl.UNSIGNED_SHORT, 0)
+        device.gl.drawElements(mode, this.count, device.gl.UNSIGNED_SHORT, 0)
 
     }
 }

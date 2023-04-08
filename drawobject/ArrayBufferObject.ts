@@ -18,12 +18,9 @@ export default class ArrayBufferObject {
         device.gl.enableVertexAttribArray(index);
         device.gl.vertexAttribPointer(index, 4, device.gl.FLOAT, false, 0, 0);
     }
-    updateArrayBuffer(arrays: Float32Array) {
-        this.bind();
+    update(arrays: Float32Array, indices: Uint16Array) {
+        this.bind()
         device.gl.bufferData(device.gl.ARRAY_BUFFER, arrays, device.gl.STATIC_DRAW);
-    }
-    updateIndices(indices: Uint16Array) {
-        this.bind();
         device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, indices, device.gl.STATIC_DRAW);
     }
     bind() {
