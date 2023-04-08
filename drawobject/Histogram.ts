@@ -1,6 +1,7 @@
 import { device } from "../Device.js";
 import Quad from "../geometry/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
+import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Histogram extends DrawObject {
@@ -48,11 +49,10 @@ export default class Histogram extends DrawObject {
     }
     draw(mode: number): void {
 
-        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
-        device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), device.gl.STATIC_DRAW);
-        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), device.gl.STATIC_DRAW)
-
+        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateArrayBuffer(flatten(this.vertices));
+        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateArrayBuffer(flatten(this.colors));
+        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateIndices(new Uint16Array(this.indices));
+        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateIndices(new Uint16Array(this.indices));
         super.draw(mode);
     }
 }

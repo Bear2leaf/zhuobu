@@ -16,9 +16,14 @@ import BlackWireCube from "./drawobject/BlackWireCube.js";
 import ColorfulCube from "./drawobject/ColorfulCube.js";
 import ColorArrowLine from "./drawobject/ColorArrowLine.js";
 import Histogram from "./drawobject/Histogram.js";
+import MsgDispatcher from "./handler/MsgDispatcher.js";
 
 
 ready(() => {
+  const msgDispatcher = new MsgDispatcher();
+  device.createWorker("static/worker/nethack.js", msgDispatcher.operation.bind(msgDispatcher));
+
+
   const windowInfo = device.getWindowInfo();
 
   const pointRenderer = new PointRenderer();

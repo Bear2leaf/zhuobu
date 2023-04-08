@@ -1,5 +1,3 @@
-import MsgReceiver from "./handler/MsgReceiver.js";
-
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
@@ -46,7 +44,7 @@ interface Device {
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;
     createImage(): HTMLImageElement;
-    createWorker(path: string): void;
+    createWorker(path: string, handlerCallback: Function): void;
     getWindowInfo(): { windowWidth: number, windowHeight: number, pixelRatio: number };
     createWebAudioContext(): AudioContext;
     onTouchStart(listener: TouchInfoFunction): void;
@@ -122,12 +120,11 @@ class WxDevice implements Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    createWorker(path: string): void {
+    createWorker(path: string, handlerCallback: Function): void {
         const worker = wx.createWorker(path);
 
-        const handler = new MsgReceiver();
         worker.onMessage((data: any) => {
-            handler.operation(worker, ...data);
+            handlerCallback(worker, ...data);
         })
     }
     onTouchStart(listener: TouchInfoFunction): void {
@@ -210,12 +207,11 @@ class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string): void {
+    createWorker(path: string, handlerCallback: Function): void {
         const worker = new Worker(path);
-        const handler = new MsgReceiver();
         worker.onmessage =
             (e: MessageEvent) => {
-                handler.operation(worker, ...e.data)
+                handlerCallback(worker, ...e.data)
             }
     }
     onTouchStart(listener: TouchInfoFunction): void {
@@ -261,7 +257,6 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
-    device.createWorker("static/worker/nethack.js")
     await device.readTxt("static/txt/hello.txt").then(console.log)
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)

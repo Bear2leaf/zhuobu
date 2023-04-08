@@ -3,6 +3,7 @@ import { FontInfo } from "../renderer/TextRenderer.js";
 import Texture from "../Texture.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
+import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -67,12 +68,10 @@ export default class Text extends DrawObject {
         this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
     draw(mode: number): void {
-
-        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.vbo)
-        device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.ebo)
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, flatten([...this.vertices, ...this.colors]), device.gl.STATIC_DRAW);
-        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), device.gl.STATIC_DRAW)
-        
+        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateArrayBuffer(flatten(this.vertices));
+        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateArrayBuffer(flatten(this.colors));
+        this.arrayBufferObjects[ArrayBufferIndex.Vertices].updateIndices(new Uint16Array(this.indices));
+        this.arrayBufferObjects[ArrayBufferIndex.Colors].updateIndices(new Uint16Array(this.indices));
         super.draw(mode);
     }
 
