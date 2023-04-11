@@ -1,5 +1,6 @@
 import Cube from "../geometry/Cube.js";
-import { Vec4 } from "../math/Vector.js";
+import { Vec4, flatten } from "../math/Vector.js";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class ColorfulCube extends DrawObject {
@@ -17,7 +18,12 @@ export default class ColorfulCube extends DrawObject {
         triangles.forEach((triangle) => {
             indices.push(...triangle.indices);
         });
-        super(colors, indices, vertices);
+
+        
+        super(new Map<number, ArrayBufferObject>(), indices.length);
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices), new Uint16Array(indices)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors), new Uint16Array(indices)))
+        
     }
 }
 

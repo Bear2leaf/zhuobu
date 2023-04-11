@@ -1,6 +1,6 @@
 import { device } from "../Device.js";
 import { flatten, Vec4 } from "../math/Vector.js";
-import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Pointer extends DrawObject {
@@ -11,7 +11,10 @@ export default class Pointer extends DrawObject {
         device.onTouchMove((e) => this.setPosition(e))
         device.onTouchEnd(() => { })
         device.onTouchCancel(() => { })
-        super([new Vec4(1, 1, 1, 1)], [0], [new Vec4(0, 0, 0, 1)])
+        
+        super(new Map<number, ArrayBufferObject>(), 1);
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array([0,0,0,1]), new Uint16Array([0])))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array([1,1,1,1]), new Uint16Array([0])))
     }
     private setPosition(e: { x: number, y: number } | undefined) {
         if (!e) {

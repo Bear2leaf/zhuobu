@@ -29,10 +29,10 @@ export default class TextRenderer extends Renderer {
         device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
         device.gl.pixelStorei(device.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     }
-    render(camera: Camera, drawObject: Text) {
-        drawObject.create(this.texture, this.fontInfo);
+    render(camera: Camera, text: Text) {
+        text.create(this.fontInfo, this.texture.getSize());
         this.texture.bind(); 
-        super.render(camera, drawObject);
-        drawObject.draw(device.gl.TRIANGLES)
+        super.render(camera, text);
+        text.draw(device.gl.TRIANGLES)
     }
 }

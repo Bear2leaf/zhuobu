@@ -1,9 +1,7 @@
-import { device } from "../Device.js";
 import { FontInfo } from "../renderer/TextRenderer.js";
-import Texture from "../Texture.js";
-import { flatten, Vec4 } from "../math/Vector.js";
+import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -18,7 +16,11 @@ export default class Text extends DrawObject {
     readonly indices: number[] = [];
     readonly vertices: Vec4[] = [];
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        super([], [], []);
+        
+        
+        super(new Map<number, ArrayBufferObject>(), 0);
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0), new Uint16Array(0)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0), new Uint16Array(0)))
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -32,13 +34,11 @@ export default class Text extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(texture:Texture, fontInfo: FontInfo) {
+    create(fontInfo: FontInfo, texSize: Vec2) {
 
         let { x, y, scale, spacing, chars } = this;
-        const texSize = texture.getSize();
         const texHeight = texSize.y;
         const texWidth = texSize.x;
-        device.gl.activeTexture(device.gl.TEXTURE0);
         const ox = x;
         const oy = y;
         this.vertices.splice(0, this.vertices.length);

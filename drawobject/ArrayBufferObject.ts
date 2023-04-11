@@ -1,20 +1,21 @@
 import { device } from "../Device.js";
-
+export enum ArrayBufferIndex {
+    Vertices = 0,
+    Colors = 1,
+}
 export default class ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
     private readonly elementBufferObject: WebGLBuffer;
-    constructor(gl: WebGL2RenderingContext, index: number, arrays: Float32Array, indices: Uint16Array) {
-        const bufferObject = gl.createBuffer();
-        const elementBufferObject = gl.createBuffer();
+    constructor(index: number, arrays: Float32Array, indices: Uint16Array) {
+        const bufferObject = device.gl.createBuffer();
+        const elementBufferObject = device.gl.createBuffer();
         if (!bufferObject || !elementBufferObject) {
             throw new Error("bufferObject or elementBufferObject is undefined");
         }
-
         this.bufferObject = bufferObject;
         this.elementBufferObject = elementBufferObject;
         this.bind();
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, arrays, device.gl.STATIC_DRAW);
-        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, indices, device.gl.STATIC_DRAW)
+        this.update(arrays, indices);
         device.gl.enableVertexAttribArray(index);
         device.gl.vertexAttribPointer(index, 4, device.gl.FLOAT, false, 0, 0);
     }

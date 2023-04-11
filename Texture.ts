@@ -2,7 +2,8 @@ import { device } from "./Device.js";
 import { Vec2 } from "./math/Vector.js";
 
 export default class Texture {
-    private readonly tex: WebGLTexture;
+    private readonly tex: WebGLTexture | null;
+    private bindIndex: number;
     private readonly internalFormat: number;
     private readonly imageFormat: number;
     private readonly wrapS: number;
@@ -12,7 +13,8 @@ export default class Texture {
     private width: number;
     private height: number;
     constructor() {
-      this.tex = device.gl.createTexture()!;
+      this.tex = device.gl.createTexture();
+      this.bindIndex = device.gl.TEXTURE0;
       this.internalFormat = device.gl.RGBA;
       this.imageFormat = device.gl.RGBA;
       this.wrapS = device.gl.REPEAT;
@@ -23,7 +25,8 @@ export default class Texture {
       this.width = 0;
       this.height = 0;
     }
-    generate(data?: HTMLImageElement) {
+    generate(data?: HTMLImageElement, bindIndex: number = device.gl.TEXTURE0) {
+      this.bindIndex = bindIndex;
       device.gl.bindTexture(device.gl.TEXTURE_2D, this.tex);
       if (data) {
         device.gl.texImage2D(device.gl.TEXTURE_2D, 0, this.internalFormat, this.imageFormat, device.gl.UNSIGNED_BYTE, data);
@@ -44,6 +47,7 @@ export default class Texture {
       return new Vec2(this.width, this.height);
     }
     bind() {
+      device.gl.activeTexture(this.bindIndex)
       device.gl.bindTexture(device.gl.TEXTURE_2D, this.tex);
     }
   }

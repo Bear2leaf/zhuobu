@@ -1,4 +1,5 @@
-import { Vec4 } from "../math/Vector.js";
+import { Vec4, flatten } from "../math/Vector.js";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class WaveFrontObj extends DrawObject {
@@ -7,7 +8,9 @@ export default class WaveFrontObj extends DrawObject {
         const indices: number[] = [];
         const vertices: Vec4[] = [];
         
-        super(colors, indices, vertices);
+        super(new Map<number, ArrayBufferObject>(), indices.length);
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices), new Uint16Array(indices)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors), new Uint16Array(indices)))
     }
 }
 

@@ -1,8 +1,7 @@
 import Matrix from "../math/Matrix.js";
 import { device } from "../Device.js";
-import { flatten, Vec4 } from "../math/Vector.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
-import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
+import { ArrayBufferIndex } from "./ArrayBufferObject.js";
 
 
 export default class DrawObject {
@@ -10,14 +9,12 @@ export default class DrawObject {
     readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
     readonly worldMatrix: Matrix;
     count: number;
-    constructor(colors: Vec4[], indices: number[], vertices: Vec4[]) {
-        this.count = indices.length;
-        this.aboMap = new Map();
+    constructor(aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
+        this.count = count;
+        this.aboMap = aboMap;
         this.vao = device.gl.createVertexArray();
         device.gl.bindVertexArray(this.vao);
         this.worldMatrix = Matrix.identity();
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(device.gl, ArrayBufferIndex.Vertices, flatten(vertices), new Uint16Array(indices)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(device.gl, ArrayBufferIndex.Colors, flatten(colors), new Uint16Array(indices)))
     }
     draw(mode: number) {
         this.aboMap.forEach((arrayBufferObject) => {

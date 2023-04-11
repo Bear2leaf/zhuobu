@@ -1,7 +1,6 @@
-import { device } from "../Device.js";
 import Quad from "../geometry/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
-import { ArrayBufferIndex } from "./ArrayBufferIndex.js";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Histogram extends DrawObject {
@@ -14,8 +13,9 @@ export default class Histogram extends DrawObject {
         const height = 100;
         const hisY = 200;
         const lines = 100;
-
-        super([], [], []);
+        super(new Map<number, ArrayBufferObject>(), 0);
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0), new Uint16Array(0)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0), new Uint16Array(0)))
 
         this.quads = [];
         const background = new Quad(0, hisY, width, height);
@@ -39,7 +39,6 @@ export default class Histogram extends DrawObject {
                 this.vertices.push(vertex);
             });
         });
-        console.log(this)
     }
     updateHistogram(fps: number) {
         for (let index = 2; index < this.quads.length; index++) {
