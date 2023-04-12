@@ -262,14 +262,19 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
     device.txtCache.set("static/obj/cube.obj", await device.readTxt("static/obj/cube.obj"));
     device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as FontInfo);
-    const img = device.createImage() as HTMLImageElement;
-    img.src = "static/font/boxy_bold_font.png";
-    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; })
-    device.imageCache.set("static/font/boxy_bold_font.png", img);
+    await loadImage("static/font/boxy_bold_font.png");
+    await loadImage("static/sprite/happy.png");
 
 
     device.gl.enable(device.gl.CULL_FACE)
     device.gl.enable(device.gl.DEPTH_TEST)
     device.gl.enable(device.gl.SCISSOR_TEST)
 }).then(() => cb());
+
+async function loadImage(url: string) {
+    const img = device.createImage() as HTMLImageElement;
+    img.src = url;
+    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+    device.imageCache.set(url, img);
+}
 

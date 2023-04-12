@@ -12,15 +12,15 @@ export default class Texture {
     private readonly filterMax: number;
     private width: number;
     private height: number;
-    constructor() {
+    constructor(wrapS: number = device.gl.REPEAT, wrapT: number = device.gl.REPEAT, filterMin: number = device.gl.NEAREST, filterMax: number = device.gl.NEAREST) {
       this.tex = device.gl.createTexture();
       this.bindIndex = device.gl.TEXTURE0;
       this.internalFormat = device.gl.RGBA;
       this.imageFormat = device.gl.RGBA;
-      this.wrapS = device.gl.REPEAT;
-      this.wrapT = device.gl.REPEAT;
-      this.filterMin = device.gl.NEAREST;
-      this.filterMax = device.gl.NEAREST;
+      this.wrapS = wrapS;
+      this.wrapT = wrapT;
+      this.filterMin = filterMin;
+      this.filterMax = filterMax;
 
       this.width = 0;
       this.height = 0;

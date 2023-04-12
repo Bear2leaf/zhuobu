@@ -17,6 +17,8 @@ import ColorfulCube from "./drawobject/ColorfulCube.js";
 import ColorArrowLine from "./drawobject/ColorArrowLine.js";
 import Histogram from "./drawobject/Histogram.js";
 import MsgDispatcher from "./handler/MsgDispatcher.js";
+import Sprite from "./drawobject/Sprite.js";
+import SpriteRenderer from "./renderer/SpriteRenderer.js";
 
 
 ready(() => {
@@ -38,6 +40,7 @@ ready(() => {
   const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
   const debugRenderer = new TriangleRenderer();
   const lineRenderer = new LineRenderer();
+  const spriteRenderer = new SpriteRenderer();
   const frustumCube = new FrustumCube();
   const cameraCube = new BlackWireCube();
   const lenCone = new BlackWireCone();
@@ -48,6 +51,7 @@ ready(() => {
   const yAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1), new Vec4(0, 1, 0, 1));
   const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));
   const histogram = new Histogram();
+  const happySprite = new Sprite(200, 400, 10, [1,1,1,1], [0, 0], "happy");
   gasket.worldMatrix.translate(new Vec3(-1, 2, -8))
   Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   let lastTime = 0;
@@ -71,10 +75,8 @@ ready(() => {
       mainCamera.view.inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
     )
     framesText.updateChars(`frames: ${frame}`);
-    if (frame % 100 === 0) {
-      fpsText.updateChars(`\nfps: ${fps}`);
-      histogram.updateHistogram(fps);
-    }
+    fpsText.updateChars(`\nfps: ${fps}`);
+    histogram.updateHistogram(fps);
     device.viewportTo(ViewPortType.Full)
     device.clearRenderer();
     pointRenderer.render(uiCamera, pointer);
@@ -84,6 +86,7 @@ ready(() => {
     mainRenderer.render(uiCamera, histogram);
     textRenderer.render(uiCamera, framesText);
     textRenderer.render(uiCamera, fpsText);
+    spriteRenderer.render(uiCamera, happySprite);
     device.gl.depthMask(true);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();

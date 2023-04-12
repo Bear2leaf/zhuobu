@@ -1,7 +1,7 @@
 import Camera from "../Camera.js";
 import { device } from "../Device.js";
 import Renderer from "./Renderer.js";
-import { TextShader } from "../Shader.js";
+import { Sprite } from "../Shader.js";
 import Texture from "../Texture.js";
 import Text from "../drawobject/Text.js";
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
@@ -12,7 +12,7 @@ export default class TextRenderer extends Renderer {
     private readonly fontInfo: FontInfo;
     constructor() {
         
-        super(new TextShader())
+        super(new Sprite())
         this.texture = new Texture();
         const fontInfo = device.fontCache.get("static/font/font_info.json");
         if (!fontInfo) {

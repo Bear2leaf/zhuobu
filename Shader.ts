@@ -66,7 +66,7 @@ export default class Shader {
     }
 }
 
-export class TriangleShader extends Shader {
+export class VertexColorTriangle extends Shader {
     constructor() {
         super(
             `#version 300 es 
@@ -92,7 +92,7 @@ export class TriangleShader extends Shader {
         )
     }
 }
-export class TextShader extends Shader {
+export class Sprite extends Shader {
     constructor() {
         super(
             `#version 300 es 
@@ -122,7 +122,7 @@ export class TextShader extends Shader {
         )
     }
 }
-export class PointShader extends Shader {
+export class Point extends Shader {
     constructor() {
         super(
             `#version 300 es 
