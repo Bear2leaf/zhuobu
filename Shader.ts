@@ -72,22 +72,33 @@ export class VertexColorTriangle extends Shader {
             `#version 300 es 
             layout (location = 0) in vec4 a_position; 
             layout (location = 1) in vec4 a_color; 
+            layout (location = 2) in vec4 a_texcoord; 
             uniform mat4 u_projection; 
             uniform mat4 u_view;
             uniform mat4 u_world;
             out vec4 v_color; 
+            out vec4 v_texcoord; 
              
             void main() { 
               v_color = a_color;
+              v_texcoord = a_texcoord;
               gl_Position = u_projection * u_view * u_world * a_position; 
             }`,
             `#version 300 es 
             precision highp float; 
             in vec4 v_color; 
+            in vec4 v_texcoord; 
             out vec4 color; 
-             
+            
+            uniform sampler2D u_texture; 
+
+
             void main() { 
-              color = v_color; 
+                if (abs(v_texcoord.w - 1.0) < 0.00001) {
+                    color = v_color; 
+                } else {
+                    color = texture(u_texture, v_texcoord.xy) * v_color; 
+                }
             }`
         )
     }

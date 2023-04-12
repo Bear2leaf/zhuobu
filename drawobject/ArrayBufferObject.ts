@@ -2,6 +2,7 @@ import { device } from "../Device.js";
 export enum ArrayBufferIndex {
     Vertices = 0,
     Colors = 1,
+    TextureCoords = 2,
 }
 export default class ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;

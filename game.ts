@@ -13,7 +13,7 @@ import Point from "./geometry/Point.js";
 import FrustumCube from "./drawobject/BlackWireCube.js";
 import BlackWireCone from "./drawobject/BlackWireCone.js";
 import BlackWireCube from "./drawobject/BlackWireCube.js";
-import ColorfulCube from "./drawobject/ColorfulCube.js";
+import TexturedCube from "./drawobject/TexturedCube.js";
 import ColorArrowLine from "./drawobject/ColorArrowLine.js";
 import Histogram from "./drawobject/Histogram.js";
 import MsgDispatcher from "./handler/MsgDispatcher.js";
@@ -46,7 +46,7 @@ ready(() => {
   const lenCone = new BlackWireCone();
   const upCube = new BlackWireCube();
   const gasket = new Gasket();
-  const cube = new ColorfulCube();
+  const cube = new TexturedCube();
   const xAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1), new Vec4(1, 0, 0, 1));
   const yAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1), new Vec4(0, 1, 0, 1));
   const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));

@@ -264,6 +264,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as FontInfo);
     await loadImage("static/font/boxy_bold_font.png");
     await loadImage("static/sprite/happy.png");
+    await loadImage("static/texture/test.png");
 
 
     device.gl.enable(device.gl.CULL_FACE)

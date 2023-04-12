@@ -28,14 +28,14 @@ export default class Cube implements Geometry {
             4, 0, 1, 1, 5, 4, // bottom
         ]
         
-        this.points[0].colors[0] = new Vec4(1, 0, 0, 1); // red
-        this.points[1].colors[0] = new Vec4(0, 1, 0, 1); // green
-        this.points[2].colors[0] = new Vec4(0, 0, 1, 1); // blue
-        this.points[3].colors[0] = new Vec4(1, 1, 0, 1); // yellow
-        this.points[4].colors[0] = new Vec4(1, 0, 1, 1); // magenta
-        this.points[5].colors[0] = new Vec4(0, 1, 1, 1); // cyan
+        this.points[0].colors[0] = new Vec4(1, 1, 1, 1); // red
+        this.points[1].colors[0] = new Vec4(1, 1, 1, 1); // green
+        this.points[2].colors[0] = new Vec4(1, 1, 1, 1); // blue
+        this.points[3].colors[0] = new Vec4(1, 1, 1, 1); // yellow
+        this.points[4].colors[0] = new Vec4(1, 1, 1, 1); // magenta
+        this.points[5].colors[0] = new Vec4(1, 1, 1, 1); // cyan
         this.points[6].colors[0] = new Vec4(1, 1, 1, 1); // white
-        this.points[7].colors[0] = new Vec4(0, 0, 0, 1); // black
+        this.points[7].colors[0] = new Vec4(1, 1, 1, 1); // black
 
         return [
             Triangle.fromPoints(this.points[indices[0]], this.points[indices[1]], this.points[indices[2]]),
