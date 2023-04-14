@@ -16,14 +16,11 @@ import BlackWireCube from "./drawobject/BlackWireCube.js";
 import TexturedCube from "./drawobject/TexturedCube.js";
 import ColorArrowLine from "./drawobject/ColorArrowLine.js";
 import Histogram from "./drawobject/Histogram.js";
-import MsgDispatcher from "./handler/MsgDispatcher.js";
 import Sprite from "./drawobject/Sprite.js";
 import SpriteRenderer from "./renderer/SpriteRenderer.js";
 
 
 ready(() => {
-  const msgDispatcher = new MsgDispatcher();
-  device.createWorker("static/worker/nethack.js", msgDispatcher.operation.bind(msgDispatcher));
 
 
   const windowInfo = device.getWindowInfo();
@@ -60,6 +57,7 @@ ready(() => {
     lastTime = device.now();
     // mainCamera.view.rotateY((Math.PI / 180))
     gasket.worldMatrix.rotateY((Math.PI / 180))
+    // cube.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * 0).rotateX(Math.PI / 180 * 0).rotateZ(Math.PI / 180 * 0));
     cube.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
     frustumCube.worldMatrix.set(
       mainCamera.view.inverse()

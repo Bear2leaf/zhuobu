@@ -6,27 +6,19 @@ export enum ArrayBufferIndex {
 }
 export default class ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
-    private readonly elementBufferObject: WebGLBuffer;
-    constructor(index: number, arrays: Float32Array, indices: Uint16Array) {
+    constructor(index: ArrayBufferIndex, arrays: Float32Array) {
         const bufferObject = device.gl.createBuffer();
-        const elementBufferObject = device.gl.createBuffer();
-        if (!bufferObject || !elementBufferObject) {
-            throw new Error("bufferObject or elementBufferObject is undefined");
+        if (!bufferObject) {
+            throw new Error("bufferObject is undefined");
         }
         this.bufferObject = bufferObject;
-        this.elementBufferObject = elementBufferObject;
-        this.bind();
-        this.update(arrays, indices);
+        this.update(arrays);
         device.gl.enableVertexAttribArray(index);
-        device.gl.vertexAttribPointer(index, 4, device.gl.FLOAT, false, 0, 0);
+        const size = index === ArrayBufferIndex.TextureCoords ? 2 : 4
+        device.gl.vertexAttribPointer(index, size, device.gl.FLOAT, false, 0, 0);
     }
-    update(arrays: Float32Array, indices: Uint16Array) {
-        this.bind()
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, arrays, device.gl.STATIC_DRAW);
-        device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, indices, device.gl.STATIC_DRAW);
-    }
-    bind() {
+    update(arrays: Float32Array) {
         device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.bufferObject);
-        device.gl.bindBuffer(device.gl.ELEMENT_ARRAY_BUFFER, this.elementBufferObject);
+        device.gl.bufferData(device.gl.ARRAY_BUFFER, arrays, device.gl.STATIC_DRAW);
     }
 }

@@ -14,9 +14,9 @@ export default class Histogram extends DrawObject {
         const hisY = 200;
         const lines = 100;
         super(new Map<number, ArrayBufferObject>(), 0);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0), new Uint16Array(0)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0), new Uint16Array(0)))
-
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0)))
+        this.updateEBO(new Uint16Array(0));
         this.quads = [];
         const background = new Quad(0, hisY, width, height);
         this.quads.push(background);
@@ -50,8 +50,9 @@ export default class Histogram extends DrawObject {
     }
     draw(mode: number): void {
 
-        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices), new Uint16Array(this.indices));
-        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors), new Uint16Array(this.indices));
+        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices));
+        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors));
+        this.updateEBO(new Uint16Array(this.indices));
         this.count = this.indices.length;
         
         super.draw(mode);

@@ -9,10 +9,6 @@ export default class Renderer {
     constructor(shader: Shader) {
         this.shader = shader;
     }
-    setTextureUnit() {
-        this.shader.use();
-        this.shader.setInteger("u_texture", 0);
-    }
     render(camera: Camera, drawObject: DrawObject) {
         this.shader.use();
         this.shader.setMatrix4fv("u_world", drawObject.worldMatrix.getVertics())

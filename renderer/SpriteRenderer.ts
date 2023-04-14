@@ -8,7 +8,6 @@ export type FontInfo = { [key: string]: { width: number, height: number, x: numb
 export default class SpriteRenderer extends Renderer {
     constructor() {
         super(new SpriteShader())
-        this.setTextureUnit();
         device.gl.enable(device.gl.BLEND);
         device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
         device.gl.pixelStorei(device.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);

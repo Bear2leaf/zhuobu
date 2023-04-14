@@ -2,6 +2,8 @@ import { FontInfo } from "../renderer/TextRenderer.js";
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
+import { device } from "../Device.js";
+import Texture, { TextureIndex } from "../Texture.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -19,8 +21,8 @@ export default class Text extends DrawObject {
         
         
         super(new Map<number, ArrayBufferObject>(), 0);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0), new Uint16Array(0)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0), new Uint16Array(0)))
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0)))
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -29,13 +31,24 @@ export default class Text extends DrawObject {
         this.chars = chars;
         this.originX = 0;
         this.originY = 0;
+        const textTexture = new Texture();
+        const fontImage = device.imageCache.get("static/font/boxy_bold_font.png");
+        if (!fontImage) {
+            throw new Error("fontImage not exist")
+        }
+        textTexture.generate(fontImage);
+        this.textureMap.set(TextureIndex.Default, textTexture);
 
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(fontInfo: FontInfo, texSize: Vec2) {
-
+    create(fontInfo: FontInfo) {
+        const texture = this.textureMap.get(TextureIndex.Default);
+        if (!texture) {
+            throw new Error("texture not exist")
+        }
+        const texSize = texture.getSize();
         let { x, y, scale, spacing, chars } = this;
         const texHeight = texSize.y;
         const texWidth = texSize.x;
@@ -71,8 +84,9 @@ export default class Text extends DrawObject {
         this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
     draw(mode: number): void {
-        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices), new Uint16Array(this.indices));
-        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors), new Uint16Array(this.indices));
+        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices));
+        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors));
+        this.updateEBO(new Uint16Array(this.indices));
         this.count = this.indices.length;
         super.draw(mode);
     }

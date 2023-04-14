@@ -23,9 +23,9 @@ export default class BlackWireCone extends DrawObject {
         
         
         super(new Map<number, ArrayBufferObject>(), indices.length);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices), new Uint16Array(indices)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors), new Uint16Array(indices)))
-        
+        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices)))
+        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
+        this.updateEBO(new Uint16Array(indices));
     }
 }
 

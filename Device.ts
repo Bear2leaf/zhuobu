@@ -1,3 +1,5 @@
+import MsgDispatcher from "./handler/MsgDispatcher.js";
+
 declare const wx: any;
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
@@ -258,6 +260,15 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
+    device.txtCache.set("static/shader/GouraudTriangle.frag", await device.readTxt("static/shader/GouraudTriangle.frag"))
+    device.txtCache.set("static/shader/GouraudTriangle.vert", await device.readTxt("static/shader/GouraudTriangle.vert"))
+    device.txtCache.set("static/shader/Sprite.vert", await device.readTxt("static/shader/Sprite.vert"))
+    device.txtCache.set("static/shader/Sprite.frag", await device.readTxt("static/shader/Sprite.frag"))
+    device.txtCache.set("static/shader/Point.vert", await device.readTxt("static/shader/Point.vert"))
+    device.txtCache.set("static/shader/Point.frag", await device.readTxt("static/shader/Point.frag"))
+    device.txtCache.set("static/shader/Line.vert", await device.readTxt("static/shader/Line.vert"))
+    device.txtCache.set("static/shader/Line.frag", await device.readTxt("static/shader/Line.frag"))
+
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)
     device.txtCache.set("static/obj/cube.obj", await device.readTxt("static/obj/cube.obj"));
@@ -266,6 +277,8 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await loadImage("static/sprite/happy.png");
     await loadImage("static/texture/test.png");
 
+    // const msgDispatcher = new MsgDispatcher();
+    // device.createWorker("static/worker/nethack.js", msgDispatcher.operation.bind(msgDispatcher));
 
     device.gl.enable(device.gl.CULL_FACE)
     device.gl.enable(device.gl.DEPTH_TEST)

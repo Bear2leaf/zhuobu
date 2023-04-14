@@ -1,12 +1,11 @@
 
 export function flatten(vec4Array: Vec4[]): Float32Array {
-    return vec4Array.reduce(function (prev, current, index) {
-        prev[index * 4] = current.x;
-        prev[index * 4 + 1] = current.y;
-        prev[index * 4 + 2] = current.z;
-        prev[index * 4 + 3] = current.w;
+    return new Float32Array(vec4Array.reduce<number[]>(function (prev, current, index) {
+        for (let i = 0; i < current.size; i++) {
+            prev.push(current.getByIndex(i));
+        }
         return prev;
-    }, new Float32Array(vec4Array.length * 4));
+    }, []));
 }
 
 
@@ -37,27 +36,43 @@ export function subtract(a: Vec3, b: Vec3, dst?: Vec3) {
     return dst;
 }
 
-export function cross(a:Vec3, b:Vec3, dst?: Vec3) {
+export function cross(a: Vec3, b: Vec3, dst?: Vec3) {
     dst = dst || new Vec3();
-  
+
     const t1 = a.z * b.x - a.x * b.z;
     const t2 = a.x * b.y - a.y * b.x;
     dst.x = a.y * b.z - a.z * b.y;
     dst.y = t1;
     dst.z = t2;
-  
+
     return dst;
-  }
+}
 export class Vec4 {
     x: number;
     y: number;
     z: number;
     w: number;
-    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 0) {
+    readonly size;
+    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
+        this.size = 4;
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+    }
+    getByIndex(index: number) {
+        switch (index) {
+            case 0:
+                return this.x;
+            case 1:
+                return this.y;
+            case 2:
+                return this.z;
+            case 3:
+                return this.w;
+            default:
+                throw new Error("index out of range");
+        }
     }
     cross(ac: Vec4) {
         const t1 = this.z * ac.x - this.x * ac.z;
@@ -117,12 +132,20 @@ export class Vec4 {
 }
 
 export class Vec3 extends Vec4 {
+    readonly size;
+
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         super(x, y, z);
+
+        this.size = 3;
     }
 }
 export class Vec2 extends Vec4 {
+    readonly size;
+
     constructor(x: number = 0, y: number = 0) {
         super(x, y);
+
+        this.size = 2;
     }
 }

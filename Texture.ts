@@ -1,6 +1,9 @@
 import { device } from "./Device.js";
 import { Vec2 } from "./math/Vector.js";
 
+export enum TextureIndex {
+  Default = 0,
+}
 export default class Texture {
     private readonly tex: WebGLTexture | null;
     private bindIndex: number;
