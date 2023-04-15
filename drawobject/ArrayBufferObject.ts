@@ -1,4 +1,4 @@
-import { device } from "../Device.js";
+import { device } from "../device/Device.js";
 export enum ArrayBufferIndex {
     Vertices = 0,
     Colors = 1,

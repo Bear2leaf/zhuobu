@@ -2,7 +2,7 @@ import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../Texture.js";
-import { device } from "../Device.js";
+import { device } from "../device/Device.js";
 import Quad from "../geometry/Quad.js";
 
 export default class Sprite extends DrawObject {

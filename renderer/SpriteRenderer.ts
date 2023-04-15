@@ -1,9 +1,8 @@
 import Camera from "../Camera.js";
-import { device } from "../Device.js";
+import { device } from "../device/Device.js";
 import Sprite from "../drawobject/Sprite.js";
 import {Sprite  as SpriteShader} from "../Shader.js";
 import Renderer from "./Renderer.js";
-export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 
 export default class SpriteRenderer extends Renderer {
     constructor() {

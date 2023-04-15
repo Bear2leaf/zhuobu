@@ -1,4 +1,4 @@
-import { device } from "./Device.js";
+import { device } from "./device/Device.js";
 import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 
@@ -8,7 +8,6 @@ export default interface Camera {
 }
 
 
-const windowInfo = device.getWindowInfo();
 export class OrthoCamera implements Camera {
     readonly view: Matrix;
     readonly projection: Matrix;

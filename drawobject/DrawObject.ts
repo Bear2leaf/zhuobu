@@ -1,5 +1,5 @@
 import Matrix from "../math/Matrix.js";
-import { device } from "../Device.js";
+import { device } from "../device/Device.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
 import { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../Texture.js";

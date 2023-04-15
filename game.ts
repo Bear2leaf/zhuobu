@@ -1,4 +1,4 @@
-import ready, { device, ViewPortType } from "./Device.js";
+import ready, { device, ViewPortType } from "./device/Device.js";
 import TextRenderer from "./renderer/TextRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
 import { LineRenderer } from "./renderer/LineRenderer.js";

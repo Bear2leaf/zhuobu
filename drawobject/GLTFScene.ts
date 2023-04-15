@@ -1,8 +1,8 @@
-import { Vec4, flatten } from "../math/Vector.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import DrawObject from "./DrawObject.js";
+import { Vec4, flatten } from "../math/Vector";
+import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject";
+import DrawObject from "./DrawObject";
 
-export default class WaveFrontObj extends DrawObject {
+export default class GLTFScene extends DrawObject {
     constructor() {
         const colors: Vec4[] = [];
         const indices: number[] = [];
