@@ -260,8 +260,8 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
-    device.txtCache.set("static/shader/GouraudTriangle.frag", await device.readTxt("static/shader/GouraudTriangle.frag"))
-    device.txtCache.set("static/shader/GouraudTriangle.vert", await device.readTxt("static/shader/GouraudTriangle.vert"))
+    device.txtCache.set("static/shader/VertexColorTriangle.frag", await device.readTxt("static/shader/VertexColorTriangle.frag"))
+    device.txtCache.set("static/shader/VertexColorTriangle.vert", await device.readTxt("static/shader/VertexColorTriangle.vert"))
     device.txtCache.set("static/shader/Sprite.vert", await device.readTxt("static/shader/Sprite.vert"))
     device.txtCache.set("static/shader/Sprite.frag", await device.readTxt("static/shader/Sprite.frag"))
     device.txtCache.set("static/shader/Point.vert", await device.readTxt("static/shader/Point.vert"))

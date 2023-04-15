@@ -1,5 +1,3 @@
-import { device } from "../Device.js";
-import Texture from "../Texture.js";
 import Cube from "../geometry/Cube.js";
 import { Vec2, Vec4, flatten } from "../math/Vector.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
@@ -36,7 +34,6 @@ export default class TexturedCube extends DrawObject {
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
         this.aboMap.set(ArrayBufferIndex.TextureCoords, new ArrayBufferObject(ArrayBufferIndex.TextureCoords, flatten(textureCoords)))
         this.updateEBO(new Uint16Array(indices))
-        console.log(indices)
     }
     draw(mode: number): void {
         super.draw(mode);

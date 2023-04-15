@@ -69,8 +69,8 @@ export default class Shader {
 export class VertexColorTriangle extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/GouraudTriangle.vert")!,
-            device.txtCache.get("static/shader/GouraudTriangle.frag")!
+            device.txtCache.get("static/shader/VertexColorTriangle.vert")!,
+            device.txtCache.get("static/shader/VertexColorTriangle.frag")!
         )
     }
 }

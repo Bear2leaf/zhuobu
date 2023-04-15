@@ -16,7 +16,6 @@ export default class ColorArrowLine extends DrawObject {
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(line.colors)))
         
         this.updateEBO(new Uint16Array(line.indices));
-        console.log(line)
     }
 }
 
