@@ -69,32 +69,32 @@ export default class Shader {
 export class VertexColorTriangle extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/VertexColorTriangle.vert")!,
-            device.txtCache.get("static/shader/VertexColorTriangle.frag")!
+            device.txtCache.get("static/shader/VertexColorTriangle.vert.txt")!,
+            device.txtCache.get("static/shader/VertexColorTriangle.frag.txt")!
         )
     }
 }
 export class Sprite extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Sprite.vert")!,
-            device.txtCache.get("static/shader/Sprite.frag")!
+            device.txtCache.get("static/shader/Sprite.vert.txt")!,
+            device.txtCache.get("static/shader/Sprite.frag.txt")!
         )
     }
 }
 export class Point extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Point.vert")!,
-            device.txtCache.get("static/shader/Point.frag")!
+            device.txtCache.get("static/shader/Point.vert.txt")!,
+            device.txtCache.get("static/shader/Point.frag.txt")!
         )
     }
 }
 export class LineShader extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Line.vert")!,
-            device.txtCache.get("static/shader/Line.frag")!
+            device.txtCache.get("static/shader/Line.vert.txt")!,
+            device.txtCache.get("static/shader/Line.frag.txt")!
         )
     }
 }

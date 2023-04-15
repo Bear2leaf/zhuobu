@@ -260,14 +260,14 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
     await device.readTxt("static/txt/hello.txt").then(console.log)
-    device.txtCache.set("static/shader/VertexColorTriangle.frag", await device.readTxt("static/shader/VertexColorTriangle.frag"))
-    device.txtCache.set("static/shader/VertexColorTriangle.vert", await device.readTxt("static/shader/VertexColorTriangle.vert"))
-    device.txtCache.set("static/shader/Sprite.vert", await device.readTxt("static/shader/Sprite.vert"))
-    device.txtCache.set("static/shader/Sprite.frag", await device.readTxt("static/shader/Sprite.frag"))
-    device.txtCache.set("static/shader/Point.vert", await device.readTxt("static/shader/Point.vert"))
-    device.txtCache.set("static/shader/Point.frag", await device.readTxt("static/shader/Point.frag"))
-    device.txtCache.set("static/shader/Line.vert", await device.readTxt("static/shader/Line.vert"))
-    device.txtCache.set("static/shader/Line.frag", await device.readTxt("static/shader/Line.frag"))
+    device.txtCache.set("static/shader/VertexColorTriangle.frag.txt", await device.readTxt("static/shader/VertexColorTriangle.frag.txt"))
+    device.txtCache.set("static/shader/VertexColorTriangle.vert.txt", await device.readTxt("static/shader/VertexColorTriangle.vert.txt"))
+    device.txtCache.set("static/shader/Sprite.vert.txt", await device.readTxt("static/shader/Sprite.vert.txt"))
+    device.txtCache.set("static/shader/Sprite.frag.txt", await device.readTxt("static/shader/Sprite.frag.txt"))
+    device.txtCache.set("static/shader/Point.vert.txt", await device.readTxt("static/shader/Point.vert.txt"))
+    device.txtCache.set("static/shader/Point.frag.txt", await device.readTxt("static/shader/Point.frag.txt"))
+    device.txtCache.set("static/shader/Line.vert.txt", await device.readTxt("static/shader/Line.vert.txt"))
+    device.txtCache.set("static/shader/Line.frag.txt", await device.readTxt("static/shader/Line.frag.txt"))
 
     await device.readJson("static/gltf/hello.gltf").then(console.log)
     await device.readBuffer("static/gltf/hello.bin").then(console.log)

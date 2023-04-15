@@ -48,7 +48,7 @@ ready(() => {
   const yAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1), new Vec4(0, 1, 0, 1));
   const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));
   const histogram = new Histogram();
-  const happySprite = new Sprite(200, 400, 10, [1,1,1,1], [0, 0], "happy");
+  const happySprite = new Sprite(0, 150, 10, [1,1,1,1], [0, 0], "happy");
   gasket.worldMatrix.translate(new Vec3(-1, 2, -8))
   Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   let lastTime = 0;
