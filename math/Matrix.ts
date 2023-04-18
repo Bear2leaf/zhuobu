@@ -95,6 +95,71 @@ export default class Matrix {
 
         return dst;
     }
+    static compose(position: Vec3, rotation: Vec3, scale: Vec3, dst?: Matrix) {
+        dst = dst || new Matrix();
+        const { x, y, z } = position;
+        const { x: rx, y: ry, z: rz } = rotation;
+        const { x: sx, y: sy, z: sz } = scale;
+        const c = Math.cos;
+        const s = Math.sin;
+        const c1 = c(rx);
+        const s1 = s(rx);
+        const c2 = c(ry);
+        const s2 = s(ry);
+        const c3 = c(rz);
+        const s3 = s(rz);
+        const m11 = c2 * c3;
+        const m12 = -c2 * s3;
+        const m13 = s2;
+        const m21 = c1 * s3 + c3 * s1 * s2;
+        const m22 = c1 * c3 - s1 * s2 * s3;
+        const m23 = -c2 * s1;
+        const m31 = s1 * s3 - c1 * c3 * s2;
+        const m32 = c3 * s1 + c1 * s2 * s3;
+        const m33 = c1 * c2;
+        dst.columns[0].x = m11 * sx;
+        dst.columns[0].y = m12 * sx;
+        dst.columns[0].z = m13 * sx;
+        dst.columns[0].w = 0;
+        dst.columns[1].x = m21 * sy;
+        dst.columns[1].y = m22 * sy;
+        dst.columns[1].z = m23 * sy;
+        dst.columns[1].w = 0;
+        dst.columns[2].x = m31 * sz;
+        dst.columns[2].y = m32 * sz;
+        dst.columns[2].z = m33 * sz;
+        dst.columns[2].w = 0;
+        dst.columns[3].x = x;
+        dst.columns[3].y = y;
+        dst.columns[3].z = z;
+        dst.columns[3].w = 1;
+        return dst;
+    }
+    static copy(src: Matrix, dst?: Matrix) {
+        dst = dst || new Matrix();
+        dst.columns[0].x = src.columns[0].x;
+        dst.columns[0].y = src.columns[0].y;
+        dst.columns[0].z = src.columns[0].z;
+        dst.columns[0].w = src.columns[0].w;
+
+        dst.columns[1].x = src.columns[1].x;
+        dst.columns[1].y = src.columns[1].y;
+        dst.columns[1].z = src.columns[1].z;
+        dst.columns[1].w = src.columns[1].w;
+        
+        dst.columns[2].x = src.columns[2].x;
+        dst.columns[2].y = src.columns[2].y;
+        dst.columns[2].z = src.columns[2].z;
+        dst.columns[2].w = src.columns[2].w;
+
+        dst.columns[3].x = src.columns[3].x;
+        dst.columns[3].y = src.columns[3].y;
+        dst.columns[3].z = src.columns[3].z;
+        dst.columns[3].w = src.columns[3].w;
+        return dst;
+    }
+
+
     static rotationY(angleInRadians: number, dst?: Matrix) {
         dst = dst || new Matrix();
 

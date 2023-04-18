@@ -1,6 +1,6 @@
 import MsgDispatcher from "../handler/MsgDispatcher.js";
 import BrowserDevice from "./BrowserDevice.js";
-import WxDevice from "./WXDevice.js";
+import WxDevice from "./WxDevice.js";
 export const wx = (globalThis as any).wx;
 
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
@@ -97,3 +97,8 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     device.gl.enable(device.gl.DEPTH_TEST)
     device.gl.enable(device.gl.SCISSOR_TEST)
 }).then(() => cb());
+
+export async function loadShaderTxtCache(device: Device, name: string, baseURL: string = "") {
+    device.txtCache.set(`static/shader/${name}.vert.txt`, await device.readTxt(`${baseURL}static/shader/${name}.vert.txt`))
+    device.txtCache.set(`static/shader/${name}.frag.txt`, await device.readTxt(`${baseURL}static/shader/${name}.frag.txt`))
+}

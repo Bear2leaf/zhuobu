@@ -1,42 +1,19 @@
 # zhuobu
-simple webgl 3d engine for escape room type game written in typescript and compile with tsc
+simple webgl 3d render engine.
 
 
-## features
-
-* [ ] physics
-* [ ] audio
-* [ ] animation
-* [ ] particles
-* [ ] postprocessing
-* [ ] scene graph
-* [ ] camera
-    * [ ] perspective
-    * [ ] visualizer
-    * [ ] follow
-    * [ ] orbit control
-* [ ] drawobject
-    * [ ] with coordinate axis
-* [ ] light
-* [ ] material
-* [ ] mesh
-* [ ] texture
-* [ ] obj loader
-* [ ] gltf loader
+## test cases
+1. [ ] loadGLTF
 
 ## install
 
 ```bash
 npm install -g typescript
 tsc -w
-python -m SimpleHTTPServer
+python3 -m http.server
 ```
+
 open http://localhost:8000/ in browser
 
 
-## license
-
-MIT
-
-OP: I'm looking for some feedback for this project, any suggestions are welcome.
 

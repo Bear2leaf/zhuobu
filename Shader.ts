@@ -98,3 +98,19 @@ export class LineShader extends Shader {
         )
     }
 }
+export class GLTFMeshShader extends Shader {
+    constructor() {
+        super(
+            device.txtCache.get("static/shader/Mesh.vert.txt")!,
+            device.txtCache.get("static/shader/Mesh.frag.txt")!
+        )
+    }
+}
+export class GLTFSkinShader extends Shader {
+    constructor() {
+        super(
+            device.txtCache.get("static/shader/Skin.vert.txt")!,
+            device.txtCache.get("static/shader/Skin.frag.txt")!
+        )
+    }
+}
