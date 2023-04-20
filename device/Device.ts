@@ -1,4 +1,5 @@
 import MsgDispatcher from "../handler/MsgDispatcher.js";
+import GLTF from "../loader/gltf/GLTF.js";
 import BrowserDevice from "./BrowserDevice.js";
 import WxDevice from "./WxDevice.js";
 export const wx = (globalThis as any).wx;
@@ -38,11 +39,25 @@ export function clearRenderer(this: Device): void {
 export function getWindowInfo(this: Device): DeviceInfo {
     return this.deviceInfo;
 }
-export async function loadImage(url: string) {
+async function loadImage(url: string) {
     const img = device.createImage() as HTMLImageElement;
     img.src = url;
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
     device.imageCache.set(url, img);
+}
+
+async function loadGLTFCache(device: Device, name: string) {
+    device.gltfCache.set(`static/gltf/${name}.gltf`, await device.readJson(`static/gltf/${name}.gltf`) as GLTF)
+    device.glbCache.set(`static/gltf/${name}.bin`, await device.readBuffer(`static/gltf/${name}.bin`))
+}
+async function loadFontCache(device: Device, name: string) {
+    device.fontCache.set(`static/font/${name}.json`, await device.readJson(`static/font/${name}.json`) as FontInfo)
+    await loadImage(`static/font/${name}.png`)
+}
+
+async function loadShaderTxtCache(device: Device, name: string) {
+    device.txtCache.set(`static/shader/${name}.vert.txt`, await device.readTxt(`static/shader/${name}.vert.txt`))
+    device.txtCache.set(`static/shader/${name}.frag.txt`, await device.readTxt(`static/shader/${name}.frag.txt`))
 }
 
 
@@ -51,6 +66,8 @@ export interface Device {
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache: Map<string, string>;
     readonly fontCache: Map<string, FontInfo>;
+    readonly gltfCache: Map<string, GLTF>;
+    readonly glbCache: Map<string, ArrayBuffer>;
     readonly deviceInfo: DeviceInfo
     now(): number;
     createCanvas(): HTMLCanvasElement;
@@ -73,20 +90,15 @@ export const device: Device = typeof wx !== 'undefined' ? new WxDevice() : new B
 
 
 export default (cb: Function) => device.loadSubpackage().then(async () => {
-    await device.readTxt("static/txt/hello.txt").then(console.log)
-    device.txtCache.set("static/shader/VertexColorTriangle.frag.txt", await device.readTxt("static/shader/VertexColorTriangle.frag.txt"))
-    device.txtCache.set("static/shader/VertexColorTriangle.vert.txt", await device.readTxt("static/shader/VertexColorTriangle.vert.txt"))
-    device.txtCache.set("static/shader/Sprite.vert.txt", await device.readTxt("static/shader/Sprite.vert.txt"))
-    device.txtCache.set("static/shader/Sprite.frag.txt", await device.readTxt("static/shader/Sprite.frag.txt"))
-    device.txtCache.set("static/shader/Point.vert.txt", await device.readTxt("static/shader/Point.vert.txt"))
-    device.txtCache.set("static/shader/Point.frag.txt", await device.readTxt("static/shader/Point.frag.txt"))
-    device.txtCache.set("static/shader/Line.vert.txt", await device.readTxt("static/shader/Line.vert.txt"))
-    device.txtCache.set("static/shader/Line.frag.txt", await device.readTxt("static/shader/Line.frag.txt"))
+    await loadShaderTxtCache(device, "VertexColorTriangle")
+    await loadShaderTxtCache(device, "Sprite")
+    await loadShaderTxtCache(device, "Point")
+    await loadShaderTxtCache(device, "Line")
 
-    await device.readJson("static/gltf/hello.gltf").then(console.log)
-    await device.readBuffer("static/gltf/hello.bin").then(console.log)
-    device.fontCache.set("static/font/font_info.json", await device.readJson("static/font/font_info.json") as FontInfo);
-    await loadImage("static/font/boxy_bold_font.png");
+    await loadGLTFCache(device, "hello")
+
+    await loadFontCache(device, "boxy_bold_font")
+    
     await loadImage("static/sprite/happy.png");
     await loadImage("static/texture/test.png");
 
@@ -97,8 +109,3 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     device.gl.enable(device.gl.DEPTH_TEST)
     device.gl.enable(device.gl.SCISSOR_TEST)
 }).then(() => cb());
-
-export async function loadShaderTxtCache(device: Device, name: string, baseURL: string = "") {
-    device.txtCache.set(`static/shader/${name}.vert.txt`, await device.readTxt(`${baseURL}static/shader/${name}.vert.txt`))
-    device.txtCache.set(`static/shader/${name}.frag.txt`, await device.readTxt(`${baseURL}static/shader/${name}.frag.txt`))
-}

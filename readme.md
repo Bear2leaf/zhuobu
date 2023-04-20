@@ -2,8 +2,6 @@
 simple webgl 3d render engine.
 
 
-## test cases
-1. [ ] loadGLTF
 
 ## install
 
@@ -12,6 +10,10 @@ npm install -g typescript
 tsc -w
 python3 -m http.server
 ```
+
+## features
+- [ ] [load gltf](http://localhost:8000/examples/gltf.html)
+
 
 open http://localhost:8000/ in browser
 

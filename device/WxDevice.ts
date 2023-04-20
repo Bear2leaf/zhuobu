@@ -1,3 +1,4 @@
+import GLTF from "../loader/gltf/GLTF.js";
 import { Device, DeviceInfo, FontInfo, TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
@@ -5,6 +6,8 @@ export default class WxDevice implements Device {
     readonly imageCache: Map<string, HTMLImageElement>;
     readonly txtCache: Map<string, string>;
     readonly fontCache: Map<string, FontInfo>;
+    readonly gltfCache: Map<string, GLTF>;
+    readonly glbCache: Map<string, ArrayBuffer>;
     readonly deviceInfo: DeviceInfo;
     private readonly performance: Performance;
     constructor() {
@@ -12,6 +15,8 @@ export default class WxDevice implements Device {
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
+        this.gltfCache = new Map();
+        this.glbCache = new Map();
         this.deviceInfo = wx.getWindowInfo();
         if (typeof document !== 'undefined') {
             this.deviceInfo.pixelRatio = 1;
@@ -34,7 +39,7 @@ export default class WxDevice implements Device {
         return canvas
     }
     async loadSubpackage(): Promise<null> {
-        await new Promise<null>(resolve => {
+        return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "static",
                 success(res: any) {
@@ -51,8 +56,7 @@ export default class WxDevice implements Device {
                 console.log(res.totalBytesWritten)
                 console.log(res.totalBytesExpectedToWrite)
             })
-        })
-        return null;
+        });
     }
     createImage(): HTMLImageElement {
         return wx.createImage();

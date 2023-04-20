@@ -30,17 +30,11 @@ export default class Tetrahedron {
     readonly indices: [number, number, number, number, number, number, number, number, number, number, number, number];
     readonly colors: [Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
     readonly vertices: [Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4, Vec4];
-    get a(): Point { return this.acb.a }
-    get b(): Point { return this.acb.c }
-    get c(): Point { return this.acb.b }
-    get d(): Point { return this.abd.c }
-    get points(): [Point, Point, Point, Point] { return [this.a, this.b, this.c, this.d] }
-    get triangles(): [Triangle, Triangle, Triangle, Triangle] { return [this.acb, this.abd, this.adc, this.bcd] }
     constructor(acb: Triangle, abd: Triangle, adc: Triangle) {
         this.acb = acb;
         this.abd = abd;
         this.adc = adc;
-        this.bcd = new Triangle(new LineSegment(this.b, this.c), new LineSegment(this.c, this.d));
+        this.bcd = new Triangle(new LineSegment(this.acb.points[2], this.acb.points[1]), new LineSegment(this.acb.points[1], this.abd.points[2]));
         this.vertices = [
             ...this.acb.vertices
             , ...this.abd.vertices
@@ -71,34 +65,34 @@ export default class Tetrahedron {
             // colors are in lrb order
 
             // top
-            Tetrahedron.fromPoints(triangleBatchD[0].b, triangleBatchA[0].b, triangleBatchA[0].a, triangleBatchA[0].c,) // RBG
+            Tetrahedron.fromPoints(triangleBatchD[0].points[1], triangleBatchA[0].points[1], triangleBatchA[0].points[0], triangleBatchA[0].points[2],) // RBG
             // lb
-            // , Tetrahedron.fromPoints(triangleBatchA[2].c, triangleBatchC[0].b, triangleBatchA[2].a, triangleBatchA[2].b,) // RGY
-            // , Tetrahedron.fromPoints(triangleBatchA[2].a, triangleBatchA[2].c, triangleBatchC[0].b, triangleBatchA[2].b,) // RYB
-            , Tetrahedron.fromPoints(triangleBatchC[0].b, triangleBatchA[2].a, triangleBatchA[2].c, triangleBatchA[2].b,) // RBG
-            // , Tetrahedron.fromPoints(triangleBatchC[0].b, triangleBatchA[2].c, triangleBatchA[2].b, triangleBatchA[2].a,) // GRB
-            // , Tetrahedron.fromPoints(triangleBatchA[2].a, triangleBatchC[0].b, triangleBatchA[2].b, triangleBatchA[2].c,) // GYR
-            // , Tetrahedron.fromPoints(triangleBatchA[2].c, triangleBatchA[2].a, triangleBatchA[2].b, triangleBatchC[0].b,) // GBY
-            // , Tetrahedron.fromPoints(triangleBatchC[0].b, triangleBatchA[2].b, triangleBatchA[2].a, triangleBatchA[2].c,) // BGR
-            // , Tetrahedron.fromPoints(triangleBatchA[2].c, triangleBatchA[2].b, triangleBatchC[0].b, triangleBatchA[2].a,) // BRY
-            // , Tetrahedron.fromPoints(triangleBatchA[2].a, triangleBatchA[2].b, triangleBatchA[2].c, triangleBatchC[0].b,) // BYG
-            // , Tetrahedron.fromPoints(triangleBatchA[2].b, triangleBatchC[0].b, triangleBatchA[2].c, triangleBatchA[2].a,) // YRG
-            // , Tetrahedron.fromPoints(triangleBatchA[2].b, triangleBatchA[2].a, triangleBatchC[0].b, triangleBatchA[2].c,) // YBR
-            // , Tetrahedron.fromPoints(triangleBatchA[2].b, triangleBatchA[2].c, triangleBatchA[2].a, triangleBatchC[0].b,) // YGB
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[2], triangleBatchC[0].points[1], triangleBatchA[2].points[0], triangleBatchA[2].points[1],) // RGY
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[0], triangleBatchA[2].points[2], triangleBatchC[0].points[1], triangleBatchA[2].points[1],) // RYB
+            , Tetrahedron.fromPoints(triangleBatchC[0].points[1], triangleBatchA[2].points[0], triangleBatchA[2].points[2], triangleBatchA[2].points[1],) // RBG
+            // , Tetrahedron.fromPoints(triangleBatchC[0].points[1], triangleBatchA[2].points[2], triangleBatchA[2].points[1], triangleBatchA[2].points[0],) // GRB
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[0], triangleBatchC[0].points[1], triangleBatchA[2].points[1], triangleBatchA[2].points[2],) // GYR
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[2], triangleBatchA[2].points[0], triangleBatchA[2].points[1], triangleBatchC[0].points[1],) // GBY
+            // , Tetrahedron.fromPoints(triangleBatchC[0].points[1], triangleBatchA[2].points[1], triangleBatchA[2].points[0], triangleBatchA[2].points[2],) // BGR
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[2], triangleBatchA[2].points[1], triangleBatchC[0].points[1], triangleBatchA[2].points[0],) // BRY
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[0], triangleBatchA[2].points[1], triangleBatchA[2].points[2], triangleBatchC[0].points[1],) // BYG
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[1], triangleBatchC[0].points[1], triangleBatchA[2].points[2], triangleBatchA[2].points[0],) // YRG
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[1], triangleBatchA[2].points[0], triangleBatchC[0].points[1], triangleBatchA[2].points[2],) // YBR
+            // , Tetrahedron.fromPoints(triangleBatchA[2].points[1], triangleBatchA[2].points[2], triangleBatchA[2].points[0], triangleBatchC[0].points[1],) // YGB
             // rb
             // D1c === A0c
-            , Tetrahedron.fromPoints(triangleBatchB[2].c, triangleBatchB[2].b, triangleBatchD[1].c, triangleBatchB[2].a,) // RBG
-            // , Tetrahedron.fromPoints(triangleBatchB[2].b, ‰triangleBatchB[2].a, triangleBatchD[1].c, triangleBatchB[2].c,) // BYG
-            // , Tetrahedron.fromPoints(triangleBatchD[1].c, triangleBatchB[2].b, triangleBatchB[2].a, triangleBatchB[2].c,) // GBY
-            // , Tetrahedron.fromPoints(triangleBatchB[2].a, triangleBatchD[1].c, triangleBatchB[2].b, triangleBatchB[2].c,) // YGB
+            , Tetrahedron.fromPoints(triangleBatchB[2].points[2], triangleBatchB[2].points[1], triangleBatchD[1].points[2], triangleBatchB[2].points[0],) // RBG
+            // , Tetrahedron.fromPoints(triangleBatchB[2].points[1], ‰triangleBatchB[2].points[0], triangleBatchD[1].points[2], triangleBatchB[2].points[2],) // BYG
+            // , Tetrahedron.fromPoints(triangleBatchD[1].points[2], triangleBatchB[2].points[1], triangleBatchB[2].points[0], triangleBatchB[2].points[2],) // GBY
+            // , Tetrahedron.fromPoints(triangleBatchB[2].points[0], triangleBatchD[1].points[2], triangleBatchB[2].points[1], triangleBatchB[2].points[2],) // YGB
             // middle
-            , Tetrahedron.fromPoints(triangleBatchC[0].a, triangleBatchC[0].b, triangleBatchC[0].c, triangleBatchD[0].c,) // RBG
-            // , Tetrahedron.fromPoints(triangleBatchC[0].a, triangleBatchD[0].c, triangleBatchC[0].b, triangleBatchC[0].c,) // BGR
-            // , Tetrahedron.fromPoints(triangleBatchC[0].b, triangleBatchC[0].a, triangleBatchD[0].c, triangleBatchC[0].c,) // GYR
-            // , Tetrahedron.fromPoints(triangleBatchC[0].b, triangleBatchD[0].c, triangleBatchC[0].c, triangleBatchC[0].a,) // BYG
-            // , Tetrahedron.fromPoints(triangleBatchD[0].c, triangleBatchC[0].c, triangleBatchC[0].b, triangleBatchC[0].a,) // YGB
-            // , Tetrahedron.fromPoints(triangleBatchD[0].c, triangleBatchC[0].b, triangleBatchC[0].a, triangleBatchC[0].c,) // YBR
-            // , Tetrahedron.fromPoints(triangleBatchD[2].c, triangleBatchB[0].b, triangleBatchB[0].a, triangleBatchB[0].c, ) // BRY
+            , Tetrahedron.fromPoints(triangleBatchC[0].points[0], triangleBatchC[0].points[1], triangleBatchC[0].points[2], triangleBatchD[0].points[2],) // RBG
+            // , Tetrahedron.fromPoints(triangleBatchC[0].points[0], triangleBatchD[0].points[2], triangleBatchC[0].points[1], triangleBatchC[0].points[2],) // BGR
+            // , Tetrahedron.fromPoints(triangleBatchC[0].points[1], triangleBatchC[0].points[0], triangleBatchD[0].points[2], triangleBatchC[0].points[2],) // GYR
+            // , Tetrahedron.fromPoints(triangleBatchC[0].points[1], triangleBatchD[0].points[2], triangleBatchC[0].points[2], triangleBatchC[0].points[0],) // BYG
+            // , Tetrahedron.fromPoints(triangleBatchD[0].points[2], triangleBatchC[0].points[2], triangleBatchC[0].points[1], triangleBatchC[0].points[0],) // YGB
+            // , Tetrahedron.fromPoints(triangleBatchD[0].points[2], triangleBatchC[0].points[1], triangleBatchC[0].points[0], triangleBatchC[0].points[2],) // YBR
+            // , Tetrahedron.fromPoints(triangleBatchD[2].points[2], triangleBatchB[0].points[1], triangleBatchB[0].points[0], triangleBatchB[0].points[2], ) // BRY
         ]
     }
     static fromPoints(a: Point, b: Point, c: Point, d: Point): Tetrahedron {

@@ -1,5 +1,5 @@
+import DrawObject from "../drawobject/DrawObject.js";
 import Matrix from "../math/Matrix.js";
-import Renderer from "../renderer/Renderer.js";
 import TRS from "./TRS.js";
 
 export default class Node {
@@ -9,7 +9,7 @@ export default class Node {
     children: Node[];
     localMatrix: Matrix;
     worldMatrix: Matrix;
-    drawables: Renderer[];
+    drawables: DrawObject[];
     constructor(source: TRS, name: string) {
       this.name = name;
       this.source = source;

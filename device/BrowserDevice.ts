@@ -1,3 +1,4 @@
+import GLTF from "../loader/gltf/GLTF.js";
 import { Device, DeviceInfo, TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo } from "./Device.js";
 
 export default class BrowserDevice implements Device {
@@ -7,10 +8,14 @@ export default class BrowserDevice implements Device {
     readonly txtCache: Map<string, string>;
     readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
     readonly deviceInfo: DeviceInfo;
+    readonly gltfCache: Map<string, GLTF>;
+    readonly glbCache: Map<string, ArrayBuffer>;
     constructor() {
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
+        this.gltfCache = new Map();
+        this.glbCache = new Map();
         this.deviceInfo = {
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight,
