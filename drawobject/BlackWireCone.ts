@@ -1,5 +1,6 @@
 import Cone from "../geometry/Cone.js";
 import { Vec4, flatten } from "../math/Vector.js";
+import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
@@ -22,7 +23,7 @@ export default class BlackWireCone extends DrawObject {
         
         
         
-        super(new Map<number, ArrayBufferObject>(), indices.length);
+        super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
         this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices)))
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
         this.updateEBO(new Uint16Array(indices));

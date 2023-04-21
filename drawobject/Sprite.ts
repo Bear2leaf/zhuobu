@@ -4,6 +4,7 @@ import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../Texture.js";
 import { device } from "../device/Device.js";
 import Quad from "../geometry/Quad.js";
+import Node from "../structure/Node.js";
 
 export default class Sprite extends DrawObject {
     private readonly x: number;
@@ -12,7 +13,7 @@ export default class Sprite extends DrawObject {
     private readonly originX: number;
     private readonly originY: number;
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number], imageName: string) {
-        super(new Map<number, ArrayBufferObject>(), 6);
+        super(new Node(), new Map<number, ArrayBufferObject>(), 6);
         this.x = x;
         this.y = y;
         this.scale = scale;

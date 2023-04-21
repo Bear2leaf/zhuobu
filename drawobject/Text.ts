@@ -4,6 +4,7 @@ import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import { device } from "../device/Device.js";
 import Texture, { TextureIndex } from "../Texture.js";
+import Node from "../structure/Node.js";
 
 export default class Text extends DrawObject {
     private readonly x: number;
@@ -20,7 +21,7 @@ export default class Text extends DrawObject {
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
         
         
-        super(new Map<number, ArrayBufferObject>(), 0);
+        super(new Node(), new Map<number, ArrayBufferObject>(), 0);
         this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0)))
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0)))
         this.x = x;

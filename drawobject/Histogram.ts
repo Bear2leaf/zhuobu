@@ -1,5 +1,6 @@
 import Quad from "../geometry/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
+import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
@@ -13,7 +14,7 @@ export default class Histogram extends DrawObject {
         const height = 100;
         const hisY = 200;
         const lines = 100;
-        super(new Map<number, ArrayBufferObject>(), 0);
+        super(new Node(), new Map<number, ArrayBufferObject>(), 0);
         this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0)))
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0)))
         this.updateEBO(new Uint16Array(0));

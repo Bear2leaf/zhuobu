@@ -1,23 +1,20 @@
-import DrawObject from "../drawobject/DrawObject.js";
 import Matrix from "../math/Matrix.js";
 import TRS from "./TRS.js";
 
 export default class Node {
-    name: string;
-    source: TRS;
-    parent: Node | null;
-    children: Node[];
-    localMatrix: Matrix;
-    worldMatrix: Matrix;
-    drawables: DrawObject[];
-    constructor(source: TRS, name: string) {
-      this.name = name;
-      this.source = source;
+    private readonly name: string;
+    private readonly source: TRS;
+    private parent: Node | null;
+    private readonly children: Node[];
+    private readonly localMatrix: Matrix;
+    readonly worldMatrix: Matrix;
+    constructor(source?: TRS, name?: string) {
+      this.name = name ?? "untitled";
+      this.source = source ?? new TRS();
       this.parent = null;
       this.children = [];
       this.localMatrix = Matrix.identity();
       this.worldMatrix = Matrix.identity();
-      this.drawables = [];
     }
     setParent(parent: Node) {
       if (this.parent) {

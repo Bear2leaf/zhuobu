@@ -3,6 +3,7 @@ import Point from "../geometry/Point.js";
 import Tetrahedron from "../geometry/Tetrahedron.js";
 import Triangle from "../geometry/Triangle.js";
 import { Vec4, flatten } from "../math/Vector.js";
+import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
@@ -35,7 +36,7 @@ export default class Gasket extends DrawObject {
         divideRecursiveTetrahedron(tetrahedron, recursiveLevel);
 
         
-        super(new Map<number, ArrayBufferObject>(), points.length);
+        super(new Node(), new Map<number, ArrayBufferObject>(), points.length);
         this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(points)))
         this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))

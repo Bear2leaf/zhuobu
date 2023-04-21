@@ -2,9 +2,9 @@ import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
 
 export default class TRS {
-    position: Vec3;
-    rotation: Vec3;
-    scale: Vec3;
+    private readonly position: Vec3;
+    private readonly rotation: Vec3;
+    private readonly scale: Vec3;
     constructor(position?: Vec3 | number[], rotation?: Vec3 | number[], scale?: Vec3 | number[]) {
         if (position instanceof Array) {
             position = new Vec3(...position);
