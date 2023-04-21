@@ -50,27 +50,27 @@ ready(() => {
   const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));
   const histogram = new Histogram();
   const happySprite = new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
-  gasket.worldMatrix.translate(new Vec3(-1, 2, -8))
+  gasket.node.worldMatrix.translate(new Vec3(-1, 2, -8))
   Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.view)
   let lastTime = 0;
   function tick(frame: number) {
     const fps = Math.round(1000 / (device.now() - lastTime));
     lastTime = device.now();
     // mainCamera.view.rotateY((Math.PI / 180))
-    gasket.worldMatrix.rotateY((Math.PI / 180))
+    gasket.node.worldMatrix.rotateY((Math.PI / 180))
     // cube.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * 0).rotateX(Math.PI / 180 * 0).rotateZ(Math.PI / 180 * 0));
-    cube.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
-    frustumCube.worldMatrix.set(
+    cube.node.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
+    frustumCube.node.worldMatrix.set(
       mainCamera.view.inverse()
         .multiply(mainCamera.projection.inverse())
     )
-    cameraCube.worldMatrix.set(
+    cameraCube.node.worldMatrix.set(
       mainCamera.view.inverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
     )
-    lenCone.worldMatrix.set(
+    lenCone.node.worldMatrix.set(
       mainCamera.view.inverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
     )
-    upCube.worldMatrix.set(
+    upCube.node.worldMatrix.set(
       mainCamera.view.inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
     )
     framesText.updateChars(`frames: ${frame}`);
@@ -91,16 +91,16 @@ ready(() => {
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
     debugRenderer.render(debugCamera, gasket)
-    xAxis.worldMatrix.set(gasket.worldMatrix);
-    yAxis.worldMatrix.set(gasket.worldMatrix);
-    zAxis.worldMatrix.set(gasket.worldMatrix);
+    xAxis.node.worldMatrix.set(gasket.node.worldMatrix);
+    yAxis.node.worldMatrix.set(gasket.node.worldMatrix);
+    zAxis.node.worldMatrix.set(gasket.node.worldMatrix);
     lineRenderer.render(debugCamera, xAxis);
     lineRenderer.render(debugCamera, yAxis);
     lineRenderer.render(debugCamera, zAxis);
     debugRenderer.render(debugCamera, cube);
-    xAxis.worldMatrix.set(cube.worldMatrix);
-    yAxis.worldMatrix.set(cube.worldMatrix);
-    zAxis.worldMatrix.set(cube.worldMatrix);
+    xAxis.node.worldMatrix.set(cube.node.worldMatrix);
+    yAxis.node.worldMatrix.set(cube.node.worldMatrix);
+    zAxis.node.worldMatrix.set(cube.node.worldMatrix);
     lineRenderer.render(debugCamera, xAxis);
     lineRenderer.render(debugCamera, yAxis);
     lineRenderer.render(debugCamera, zAxis);

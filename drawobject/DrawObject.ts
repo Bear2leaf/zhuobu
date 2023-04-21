@@ -3,13 +3,15 @@ import { device } from "../device/Device.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
 import { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../Texture.js";
+import Node from "../structure/Node.js";
+import TRS from "../structure/TRS.js";
 
 
 export default class DrawObject {
     readonly vao: WebGLVertexArrayObject | null;
     readonly ebo: WebGLBuffer | null;
     readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
-    readonly worldMatrix: Matrix;
+    readonly node: Node;
     readonly textureMap: Map<TextureIndex, Texture>;
     count: number;
     constructor(aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
@@ -19,7 +21,7 @@ export default class DrawObject {
         this.vao = device.gl.createVertexArray();
         this.ebo = device.gl.createBuffer();
         device.gl.bindVertexArray(this.vao);
-        this.worldMatrix = Matrix.identity();
+        this.node = new Node(new TRS(), "");
         const defaultTexture = new Texture(device.gl.CLAMP_TO_EDGE, device.gl.CLAMP_TO_EDGE)
         this.textureMap.set(TextureIndex.Default, defaultTexture);
         const textureImage = device.imageCache.get(`static/texture/test.png`);

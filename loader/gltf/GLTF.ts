@@ -40,18 +40,18 @@ export default class GLTF {
     private readonly buffers: readonly GLTFBuffer[];
     private readonly bufferViews: readonly GLTFBufferView[];
     private readonly accessors: readonly GLTFAccessor[];
-    private readonly images: readonly GLTFImage[];
-    private readonly samplers: readonly GLTFSampler[];
-    private readonly textures: readonly GLTFTexture[];
+    private readonly images?: readonly GLTFImage[];
+    private readonly samplers?: readonly GLTFSampler[];
+    private readonly textures?: readonly GLTFTexture[];
     private readonly materials: readonly GLTFMaterial[];
     private readonly meshes: readonly GLTFMesh[];
-    private readonly cameras: readonly GLTFCamera[];
-    private readonly animations: readonly GLTFAnimation[];
-    private readonly skins: readonly GLTFSkin[];
-    private readonly extensionsUsed: readonly string[];
-    private readonly extensionsRequired: readonly string[];
-    private readonly extensions: readonly string[];
-    private readonly extras: readonly string[];
+    private readonly cameras?: readonly GLTFCamera[];
+    private readonly animations?: readonly GLTFAnimation[];
+    private readonly skins?: readonly GLTFSkin[];
+    private readonly extensionsUsed?: readonly string[];
+    private readonly extensionsRequired?: readonly string[];
+    private readonly extensions?: readonly string[];
+    private readonly extras?: readonly string[];
 
     constructor(data?: GLTF) {
         if (!data) {
