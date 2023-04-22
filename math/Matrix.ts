@@ -1,9 +1,8 @@
 import { cross, flatten, normalize, subtract, Vec3, Vec4 } from "./Vector.js";
 
-type Mat4 = [Vec4, Vec4, Vec4, Vec4];
 
 export default class Matrix {
-    private readonly columns: Mat4
+    private readonly columns: [Vec4, Vec4, Vec4, Vec4]
     constructor(
         a00: number = 0,
         a10: number = 0,

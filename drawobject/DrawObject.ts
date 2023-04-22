@@ -1,10 +1,8 @@
-import Matrix from "../math/Matrix.js";
 import { device } from "../device/Device.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
 import { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../Texture.js";
 import Node from "../structure/Node.js";
-import TRS from "../structure/TRS.js";
 
 
 export default class DrawObject {

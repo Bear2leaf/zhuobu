@@ -9,16 +9,15 @@ import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 import { PointRenderer } from "./renderer/PointRenderer.js";
 import Pointer from "./drawobject/Pointer.js";
-import Point from "./geometry/Point.js";
 import FrustumCube from "./drawobject/BlackWireCube.js";
 import BlackWireCone from "./drawobject/BlackWireCone.js";
 import BlackWireCube from "./drawobject/BlackWireCube.js";
 import TexturedCube from "./drawobject/TexturedCube.js";
-import ColorArrowLine from "./drawobject/ColorArrowLine.js";
 import Histogram from "./drawobject/Histogram.js";
 import Sprite from "./drawobject/Sprite.js";
 import SpriteRenderer from "./renderer/SpriteRenderer.js";
 import GLTF from "./loader/gltf/GLTF.js";
+import { GizmoRenderer } from "./renderer/GizmoRenderer.js";
 
 
 ready(() => {
@@ -36,8 +35,8 @@ ready(() => {
   const mainCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 10);
   const mainRenderer = new TriangleRenderer();
   const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
-  const debugRenderer = new TriangleRenderer();
   const lineRenderer = new LineRenderer();
+  const gizmoRenderer = new GizmoRenderer(lineRenderer);
   const spriteRenderer = new SpriteRenderer();
   const frustumCube = new FrustumCube();
   const cameraCube = new BlackWireCube();
@@ -45,9 +44,6 @@ ready(() => {
   const upCube = new BlackWireCube();
   const gasket = new Gasket();
   const cube = new TexturedCube();
-  const xAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(2, 0, 0, 1), new Vec4(1, 0, 0, 1));
-  const yAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 2, 0, 1), new Vec4(0, 1, 0, 1));
-  const zAxis = new ColorArrowLine(new Point(0, 0, 0, 1), new Point(0, 0, 2, 1), new Vec4(0, 0, 1, 1));
   const histogram = new Histogram();
   const happySprite = new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
   gasket.node.worldMatrix.translate(new Vec3(-1, 2, -8))
@@ -90,20 +86,8 @@ ready(() => {
     device.gl.depthMask(true);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
-    debugRenderer.render(debugCamera, gasket)
-    xAxis.node.worldMatrix.set(gasket.node.worldMatrix);
-    yAxis.node.worldMatrix.set(gasket.node.worldMatrix);
-    zAxis.node.worldMatrix.set(gasket.node.worldMatrix);
-    lineRenderer.render(debugCamera, xAxis);
-    lineRenderer.render(debugCamera, yAxis);
-    lineRenderer.render(debugCamera, zAxis);
-    debugRenderer.render(debugCamera, cube);
-    xAxis.node.worldMatrix.set(cube.node.worldMatrix);
-    yAxis.node.worldMatrix.set(cube.node.worldMatrix);
-    zAxis.node.worldMatrix.set(cube.node.worldMatrix);
-    lineRenderer.render(debugCamera, xAxis);
-    lineRenderer.render(debugCamera, yAxis);
-    lineRenderer.render(debugCamera, zAxis);
+    gizmoRenderer.render(debugCamera, gasket)
+    gizmoRenderer.render(debugCamera, cube);
     lineRenderer.render(debugCamera, frustumCube)
     lineRenderer.render(debugCamera, cameraCube)
     lineRenderer.render(debugCamera, lenCone)

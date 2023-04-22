@@ -1,12 +1,12 @@
 import MsgDispatcher from "../handler/MsgDispatcher.js";
 import GLTF from "../loader/gltf/GLTF.js";
+import { FontInfo } from "../renderer/TextRenderer.js";
 import BrowserDevice from "./BrowserDevice.js";
 import WxDevice from "./WxDevice.js";
 export const wx = (globalThis as any).wx;
 
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
-export type FontInfo = import("../renderer/TextRenderer").FontInfo;
 export enum ViewPortType {
     Full,
     TopRight

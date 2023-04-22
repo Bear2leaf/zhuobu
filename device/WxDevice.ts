@@ -1,5 +1,6 @@
 import GLTF from "../loader/gltf/GLTF.js";
-import { Device, DeviceInfo, FontInfo, TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
+import { FontInfo } from "../renderer/TextRenderer.js";
+import { Device, DeviceInfo,  TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
