@@ -2,15 +2,16 @@ import GLTF from "../loader/gltf/GLTF.js";
 import { Device, DeviceInfo, TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo } from "./Device.js";
 
 export default class BrowserDevice implements Device {
-    readonly gl: WebGL2RenderingContext;
     private isMouseDown: boolean;
-    readonly imageCache: Map<string, HTMLImageElement>;
-    readonly txtCache: Map<string, string>;
-    readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
-    readonly deviceInfo: DeviceInfo;
-    readonly gltfCache: Map<string, GLTF>;
-    readonly glbCache: Map<string, ArrayBuffer>;
+    readonly gl: WebGL2RenderingContext;
+    private readonly imageCache: Map<string, HTMLImageElement>;
+    private readonly txtCache: Map<string, string>;
+    private readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
+    private readonly gltfCache: Map<string, GLTF>;
+    private readonly glbCache: Map<string, ArrayBuffer>;
+    private readonly deviceInfo: DeviceInfo;
     constructor() {
+
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
@@ -24,6 +25,24 @@ export default class BrowserDevice implements Device {
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
+    getImageCache(): Map<string, HTMLImageElement>{
+        return this.imageCache;
+    }
+    getTxtCache(): Map<string, string>{
+        return this.txtCache;
+    }
+    getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo>{
+        return this.fontCache;
+    }
+    getDeviceInfo(): DeviceInfo{
+        return this.deviceInfo;
+    }
+    getGltfCache(): Map<string, GLTF>{
+        return this.gltfCache;
+    }
+    getGlbCache(): Map<string, ArrayBuffer>{
+        return this.glbCache;
+    }
     now = () => performance.now();
     getWindowInfo = getWindowInfo
     clearRenderer = clearRenderer
@@ -33,8 +52,8 @@ export default class BrowserDevice implements Device {
         if (!canvas) {
             throw new Error("canvas not exist");
         }
-        canvas.width = this.deviceInfo.windowWidth * this.deviceInfo.pixelRatio;
-        canvas.height = this.deviceInfo.windowHeight * this.deviceInfo.pixelRatio;
+        canvas.width = this.getDeviceInfo().windowWidth * this.getDeviceInfo().pixelRatio;
+        canvas.height = this.getDeviceInfo().windowHeight * this.getDeviceInfo().pixelRatio;
         return canvas;
     }
     async loadSubpackage(): Promise<null> {

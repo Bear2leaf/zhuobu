@@ -18,7 +18,7 @@ export default class Sprite extends DrawObject {
         this.y = y;
         this.scale = scale;
         const spriteTexture = new Texture(device.gl.CLAMP_TO_EDGE, device.gl.CLAMP_TO_EDGE);
-        const spriteImage = device.imageCache.get(`static/sprite/${imageName}.png`);
+        const spriteImage = device.getImageCache().get(`static/sprite/${imageName}.png`);
         if (!spriteImage) {
             throw new Error("spriteImage not exist")
         }

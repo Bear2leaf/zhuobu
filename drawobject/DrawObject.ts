@@ -22,7 +22,7 @@ export default class DrawObject {
         this.node = node;
         const defaultTexture = new Texture(device.gl.CLAMP_TO_EDGE, device.gl.CLAMP_TO_EDGE)
         this.textureMap.set(TextureIndex.Default, defaultTexture);
-        const textureImage = device.imageCache.get(`static/texture/test.png`);
+        const textureImage = device.getImageCache().get(`static/texture/test.png`);
         if (!textureImage) {
             throw new Error("textureImage not exist")
         }

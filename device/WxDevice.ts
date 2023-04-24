@@ -1,16 +1,15 @@
 import GLTF from "../loader/gltf/GLTF.js";
-import { FontInfo } from "../renderer/TextRenderer.js";
 import { Device, DeviceInfo,  TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
     readonly gl: WebGL2RenderingContext;
-    readonly imageCache: Map<string, HTMLImageElement>;
-    readonly txtCache: Map<string, string>;
-    readonly fontCache: Map<string, FontInfo>;
-    readonly gltfCache: Map<string, GLTF>;
-    readonly glbCache: Map<string, ArrayBuffer>;
-    readonly deviceInfo: DeviceInfo;
     private readonly performance: Performance;
+    private readonly imageCache: Map<string, HTMLImageElement>;
+    private readonly txtCache: Map<string, string>;
+    private readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
+    private readonly gltfCache: Map<string, GLTF>;
+    private readonly glbCache: Map<string, ArrayBuffer>;
+    private readonly deviceInfo: DeviceInfo;
     constructor() {
         this.performance = wx.getPerformance();
         this.imageCache = new Map();
@@ -25,13 +24,32 @@ export default class WxDevice implements Device {
         this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
     now = () => this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
+
+    getImageCache(): Map<string, HTMLImageElement>{
+        return this.imageCache;
+    }
+    getTxtCache(): Map<string, string>{
+        return this.txtCache;
+    }
+    getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo>{
+        return this.fontCache;
+    }
+    getDeviceInfo(): DeviceInfo{
+        return this.deviceInfo;
+    }
+    getGltfCache(): Map<string, GLTF>{
+        return this.gltfCache;
+    }
+    getGlbCache(): Map<string, ArrayBuffer>{
+        return this.glbCache;
+    }
     getWindowInfo = getWindowInfo
     clearRenderer = clearRenderer
     viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
+            const { windowWidth, windowHeight, pixelRatio } = this.getDeviceInfo();
             (canvas.clientWidth) = windowWidth * pixelRatio;
             (canvas.clientHeight) = windowHeight * pixelRatio;
             (canvas.width) = windowWidth * pixelRatio;

@@ -69,48 +69,48 @@ export default class Shader {
 export class VertexColorTriangle extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/VertexColorTriangle.vert.txt")!,
-            device.txtCache.get("static/shader/VertexColorTriangle.frag.txt")!
+            device.getTxtCache().get("static/shader/VertexColorTriangle.vert.txt")!,
+            device.getTxtCache().get("static/shader/VertexColorTriangle.frag.txt")!
         )
     }
 }
 export class Sprite extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Sprite.vert.txt")!,
-            device.txtCache.get("static/shader/Sprite.frag.txt")!
+            device.getTxtCache().get("static/shader/Sprite.vert.txt")!,
+            device.getTxtCache().get("static/shader/Sprite.frag.txt")!
         )
     }
 }
 export class Point extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Point.vert.txt")!,
-            device.txtCache.get("static/shader/Point.frag.txt")!
+            device.getTxtCache().get("static/shader/Point.vert.txt")!,
+            device.getTxtCache().get("static/shader/Point.frag.txt")!
         )
     }
 }
 export class LineShader extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Line.vert.txt")!,
-            device.txtCache.get("static/shader/Line.frag.txt")!
+            device.getTxtCache().get("static/shader/Line.vert.txt")!,
+            device.getTxtCache().get("static/shader/Line.frag.txt")!
         )
     }
 }
 export class GLTFMeshShader extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Mesh.vert.txt")!,
-            device.txtCache.get("static/shader/Mesh.frag.txt")!
+            device.getTxtCache().get("static/shader/Mesh.vert.txt")!,
+            device.getTxtCache().get("static/shader/Mesh.frag.txt")!
         )
     }
 }
 export class GLTFSkinShader extends Shader {
     constructor() {
         super(
-            device.txtCache.get("static/shader/Skin.vert.txt")!,
-            device.txtCache.get("static/shader/Skin.frag.txt")!
+            device.getTxtCache().get("static/shader/Skin.vert.txt")!,
+            device.getTxtCache().get("static/shader/Skin.frag.txt")!
         )
     }
 }

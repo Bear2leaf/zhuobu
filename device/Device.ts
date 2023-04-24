@@ -37,38 +37,38 @@ export function clearRenderer(this: Device): void {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
 }
 export function getWindowInfo(this: Device): DeviceInfo {
-    return this.deviceInfo;
+    return this.getDeviceInfo();
 }
 async function loadImage(url: string) {
     const img = device.createImage() as HTMLImageElement;
     img.src = url;
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-    device.imageCache.set(url, img);
+    device.getImageCache().set(url, img);
 }
 
 async function loadGLTFCache(device: Device, name: string) {
-    device.gltfCache.set(`static/gltf/${name}.gltf`, await device.readJson(`static/gltf/${name}.gltf`) as GLTF)
-    device.glbCache.set(`static/gltf/${name}.bin`, await device.readBuffer(`static/gltf/${name}.bin`))
+    device.getGltfCache().set(`static/gltf/${name}.gltf`, await device.readJson(`static/gltf/${name}.gltf`) as GLTF)
+    device.getGlbCache().set(`static/gltf/${name}.bin`, await device.readBuffer(`static/gltf/${name}.bin`))
 }
 async function loadFontCache(device: Device, name: string) {
-    device.fontCache.set(`static/font/${name}.json`, await device.readJson(`static/font/${name}.json`) as FontInfo)
+    device.getFontCache().set(`static/font/${name}.json`, await device.readJson(`static/font/${name}.json`) as FontInfo)
     await loadImage(`static/font/${name}.png`)
 }
 
 async function loadShaderTxtCache(device: Device, name: string) {
-    device.txtCache.set(`static/shader/${name}.vert.txt`, await device.readTxt(`static/shader/${name}.vert.txt`))
-    device.txtCache.set(`static/shader/${name}.frag.txt`, await device.readTxt(`static/shader/${name}.frag.txt`))
+    device.getTxtCache().set(`static/shader/${name}.vert.txt`, await device.readTxt(`static/shader/${name}.vert.txt`))
+    device.getTxtCache().set(`static/shader/${name}.frag.txt`, await device.readTxt(`static/shader/${name}.frag.txt`))
 }
 
 
 export interface Device {
     readonly gl: WebGL2RenderingContext;
-    readonly imageCache: Map<string, HTMLImageElement>;
-    readonly txtCache: Map<string, string>;
-    readonly fontCache: Map<string, FontInfo>;
-    readonly gltfCache: Map<string, GLTF>;
-    readonly glbCache: Map<string, ArrayBuffer>;
-    readonly deviceInfo: DeviceInfo
+    getImageCache(): Map<string, HTMLImageElement>;
+    getTxtCache(): Map<string, string>;
+    getFontCache(): Map<string, FontInfo>;
+    getGltfCache(): Map<string, GLTF>;
+    getGlbCache(): Map<string, ArrayBuffer>;
+    getDeviceInfo(): DeviceInfo
     now(): number;
     createCanvas(): HTMLCanvasElement;
     loadSubpackage(): Promise<null>;

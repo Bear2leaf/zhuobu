@@ -55,7 +55,7 @@ export default class GLTF {
 
     constructor(data?: GLTF) {
         if (!data) {
-            data = device.gltfCache.get("static/gltf/hello.gltf");
+            data = device.getGltfCache().get("static/gltf/hello.gltf");
             if (!data) {
                 throw new Error("gltf not found");
             }
