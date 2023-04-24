@@ -8,35 +8,52 @@ export default class Quad {
     private readonly c: Point;
     private readonly d: Point;
 
-    readonly indices: [number, number, number, number, number, number];
-    readonly colors: [Vec4, Vec4, Vec4, Vec4];
-    readonly vertices: [Vec4, Vec4, Vec4, Vec4];
+    private readonly indices: number[];
+    private readonly colors: Vec4[];
+    private readonly vertices: Vec4[];
 
-    constructor(left: number, top: number, width: number, height: number) {
-        this.a = new Point(left, top);
-        this.b = new Point(left, top + height);
-        this.c = new Point(left + width, top + height);
-        this.d = new Point(left + width, top);
+    constructor(left: number, top: number, width: number, height: number, color: Vec4 = new Vec4(1, 1, 1, 1), initIndex: number = 0) {
+        this.a = new Point(left, top, undefined, undefined, color);
+        this.b = new Point(left, top + height, undefined, undefined, color);
+        this.c = new Point(left + width, top + height, undefined, undefined, color);
+        this.d = new Point(left + width, top, undefined, undefined, color);
         this.indices = [
-            0, 1, 2,
-            2, 3, 0
+            initIndex, initIndex + 1, initIndex + 2,
+            initIndex + 2, initIndex + 3, initIndex
         ];
-        this.colors = [
-            ...this.a.colors,
-            ...this.b.colors,
-            ...this.c.colors,
-            ...this.d.colors
-        ];
-        this.vertices = [
-            ...this.a.vertices,
-            ...this.b.vertices,
-            ...this.c.vertices,
-            ...this.d.vertices
-        ];
+        this.colors = [];
+        this.vertices = [];
+        this.a.appendTo(this.vertices, this.colors);
+        this.b.appendTo(this.vertices, this.colors);
+        this.c.appendTo(this.vertices, this.colors);
+        this.d.appendTo(this.vertices, this.colors);
+        
+    }
+    setZWToTexCoord() {
+        this.vertices[1].z = 0;
+        this.vertices[1].w = 1;
+
+        this.vertices[0].z = 0;
+        this.vertices[0].w = 0;
+
+        this.vertices[3].z = 1;
+        this.vertices[3].w = 0;
+
+        this.vertices[2].z = 1;
+        this.vertices[2].w = 1;
         
     }
     setHeight(height: number) {
-        this.b.vertices[0].y = this.a.vertices[0].y + height;
-        this.c.vertices[0].y = this.b.vertices[0].y;
+        this.vertices[1].y = this.vertices[0].y + height;
+        this.vertices[2].y = this.vertices[1].y;
+    }
+    copyHeight(other: Quad) {
+        this.vertices[1].y = other.vertices[1].y;
+        this.vertices[2].y = other.vertices[1].y;
+    }
+    appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[]) {
+        this.vertices.forEach(v => vertices?.push(v));
+        this.colors.forEach(c => colors?.push(c));
+        this.indices.forEach(i => indices?.push(i));
     }
 }

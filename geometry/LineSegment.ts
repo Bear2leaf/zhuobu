@@ -2,28 +2,34 @@ import { Vec4 } from "../math/Vector.js";
 import Point from "./Point.js";
 
 export default class LineSegment {
-    readonly a: Point;
-    readonly b: Point;
-    readonly indices: [number, number];
-    readonly midPoint: Point;
-    readonly colors: [Vec4, Vec4];
-    readonly points: [Point, Point];
-    readonly vertices: [Vec4, Vec4];
+    private readonly a: Point;
+    private readonly b: Point;
+    private readonly indices: number[];
+    private readonly midPoint: Point;
+    private readonly colors: Vec4[];
+    private readonly points: [Point, Point];
+    private readonly vertices: Vec4[];
 
     constructor(a: Point, b: Point) {
         this.a = a;
         this.b = b;
-        this.indices = [
-            ...a.indices,
-            ...b.indices
-        ];
-        const vec = this.a.vertices[0].clone().lerp(this.b.vertices[0], 0.5);
-        this.midPoint = new Point(vec.x, vec.y, vec.z, vec.w);
-        this.colors = [
-            ...this.a.colors
-            , ...this.b.colors
-        ];
+        this.indices = [];
+        this.colors = [];
+        this.vertices = [];
+        this.midPoint = Point.midPoint(a, b);
         this.points = [this.a, this.b] 
-        this.vertices = [...this.a.vertices, ...this.b.vertices] 
+        this.points.forEach(p => p.appendTo(this.vertices, this.colors, this.indices));
+    }
+    getMidPoint(): Point {
+        return this.midPoint;
+    }
+    getStartPoint(): Point {
+        return this.a;
+    }
+    getEndPoint(): Point {
+        return this.b;
+    }
+    appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[]) {
+        this.points.forEach(p => p.appendTo(vertices, colors, indices));
     }
 }

@@ -16,11 +16,10 @@ export default class TexturedCube extends DrawObject {
         const textureCoords: Vec4[] = [];
 
         points.forEach((point) => {
-            vertices.push(...point.vertices);
-            colors.push(...point.colors);
+            point.appendTo(vertices, colors)
         });
         triangles.forEach((triangle) => {
-            indices.push(...triangle.indices);
+            triangle.appendTo(undefined, undefined, indices);
         });
         for (let i = 0; i < 2; i++) {
             textureCoords.push(new Vec2(0, 1));
@@ -31,9 +30,9 @@ export default class TexturedCube extends DrawObject {
 
 
         super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
-        this.aboMap.set(ArrayBufferIndex.TextureCoords, new ArrayBufferObject(ArrayBufferIndex.TextureCoords, flatten(textureCoords)))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices));
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors));
+        this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords));
         this.updateEBO(new Uint16Array(indices))
     }
     draw(mode: number): void {

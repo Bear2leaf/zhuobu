@@ -24,37 +24,19 @@ export default class Sprite extends DrawObject {
         }
         spriteTexture.generate(spriteImage);
         const texSize = spriteTexture.getSize();
-        this.textureMap.set(TextureIndex.Default, spriteTexture);
+        this.createTexture(TextureIndex.Default, spriteTexture);
         const quad = new Quad(x, y, texSize.x * scale, texSize.y * scale);
-        quad.vertices[1].z = 0;
-        quad.vertices[1].w = 1;
+        quad.setZWToTexCoord();
+        const vertices:Vec4[] = []
+        const colors:Vec4[] = []
+        const indices: number[] = []
+        quad.appendTo(vertices, colors, indices);
 
-        quad.vertices[0].z = 0;
-        quad.vertices[0].w = 0;
-
-        quad.vertices[3].z = 1;
-        quad.vertices[3].w = 0;
-
-        quad.vertices[2].z = 1;
-        quad.vertices[2].w = 1;
-
-        quad.colors.forEach(c => {
-            c.x = color[0];
-            c.y = color[1];
-            c.z = color[2];
-            c.w = color[3];
-        });
-
-
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(quad.vertices)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(quad.colors)))
-        this.updateEBO(new Uint16Array(quad.indices))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices));
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors));
+        this.updateEBO(new Uint16Array(indices));
         this.originX = origin[0];
         this.originY = origin[1];
 
     }
-    draw(mode: number): void {
-        super.draw(mode);
-    }
-
 }

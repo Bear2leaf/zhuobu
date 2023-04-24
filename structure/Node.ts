@@ -7,7 +7,7 @@ export default class Node {
     private parent: Node | null;
     private readonly children: Node[];
     private readonly localMatrix: Matrix;
-    readonly worldMatrix: Matrix;
+    private readonly worldMatrix: Matrix;
     constructor(source?: TRS, name?: string) {
       this.name = name ?? "untitled";
       this.source = source ?? new TRS();
@@ -51,6 +51,9 @@ export default class Node {
       for (const child of this.children) {
         child.traverse(fn);
       }
+    }
+    getWorldMatrix() {
+      return this.worldMatrix;
     }
     private addChild(child: this) {
       this.children.push(child);

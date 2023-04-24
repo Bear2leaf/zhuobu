@@ -23,8 +23,7 @@ export default class Gasket extends DrawObject {
 
         function divideRecursiveTetrahedron(tetrahedron: Tetrahedron, level: number) {
             if (!level) {
-                points.push(...tetrahedron.vertices)
-                colors.push(...tetrahedron.colors)
+                tetrahedron.appendTo(points, colors)
             } else {
                 level--;
                 tetrahedron.divide().forEach(function (o) {
@@ -37,8 +36,8 @@ export default class Gasket extends DrawObject {
 
         
         super(new Node(), new Map<number, ArrayBufferObject>(), points.length);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(points)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(points))
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors))
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
     }
 }

@@ -16,7 +16,6 @@ export class GizmoRenderer extends TriangleRenderer {
     render(camera: Camera, drawObject: DrawObject): void {
         super.render(camera, drawObject);
         drawObject.draw(device.gl.TRIANGLES);
-        this.xyzAxis.node.updateWorldMatrix(drawObject.node.worldMatrix);
-        this.lineRenderer.render(camera, this.xyzAxis)
+        this.xyzAxis.render(camera, this.lineRenderer, drawObject.getNode().getWorldMatrix());
     }
 }

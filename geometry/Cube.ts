@@ -1,21 +1,17 @@
 import { Vec4 } from "../math/Vector.js";
-import Geometry from "./Geometry.js";
 import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 import Triangle from "./Triangle.js";
 
 
-export default class Cube implements Geometry {
+export default class Cube {
     private readonly points: readonly [Point, Point, Point, Point, Point, Point, Point, Point];
 
-    constructor(min: Vec4 = new Vec4(-1, -1, -1, 1), max: Vec4 = new Vec4(1, 1, 1, 1)) {
+    constructor(min: Vec4 = new Vec4(-1, -1, -1, 1), max: Vec4 = new Vec4(1, 1, 1, 1), color: Vec4 = new Vec4(1, 1, 1, 1)) {
         this.points = [
-            new Point(min.x, min.y, min.z, 1), new Point(max.x, min.y, min.z, 1), new Point(min.x, max.y, min.z, 1), new Point(max.x, max.y, min.z, 1),
-            new Point(min.x, min.y, max.z, 1), new Point(max.x, min.y, max.z, 1), new Point(min.x, max.y, max.z, 1), new Point(max.x, max.y, max.z, 1)
+            new Point(min.x, min.y, min.z, 1, color, 0), new Point(max.x, min.y, min.z, 1, color, 1), new Point(min.x, max.y, min.z, 1, color, 2), new Point(max.x, max.y, min.z, 1, color, 3),
+            new Point(min.x, min.y, max.z, 1, color, 4), new Point(max.x, min.y, max.z, 1, color, 5), new Point(min.x, max.y, max.z, 1, color, 6), new Point(max.x, max.y, max.z, 1, color, 7)
         ];
-        this.points.forEach((point, index) => {
-            point.indices[0] = index;
-        })
 
     }
     getTriangles(): [Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle, Triangle] {

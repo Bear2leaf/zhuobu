@@ -15,15 +15,15 @@ export default class Text extends DrawObject {
     private readonly chars: string[]
     private readonly originX: number;
     private readonly originY: number;
-    readonly colors: Vec4[] = [];
-    readonly indices: number[] = [];
-    readonly vertices: Vec4[] = [];
+    private readonly colors: Vec4[] = [];
+    private readonly indices: number[] = [];
+    private readonly vertices: Vec4[] = [];
     constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
         
         
         super(new Node(), new Map<number, ArrayBufferObject>(), 0);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, new Float32Array(0)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, new Float32Array(0)))
+        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0))
+        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0))
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -38,17 +38,14 @@ export default class Text extends DrawObject {
             throw new Error("fontImage not exist")
         }
         textTexture.generate(fontImage);
-        this.textureMap.set(TextureIndex.Default, textTexture);
+        this.createTexture(TextureIndex.Default, textTexture);
 
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
     create(fontInfo: FontInfo) {
-        const texture = this.textureMap.get(TextureIndex.Default);
-        if (!texture) {
-            throw new Error("texture not exist")
-        }
+        const texture = this.getTexture(TextureIndex.Default);
         const texSize = texture.getSize();
         let { x, y, scale, spacing, chars } = this;
         const texHeight = texSize.y;
@@ -85,10 +82,10 @@ export default class Text extends DrawObject {
         this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
     draw(mode: number): void {
-        this.aboMap.get(ArrayBufferIndex.Vertices)!.update(flatten(this.vertices));
-        this.aboMap.get(ArrayBufferIndex.Colors)!.update(flatten(this.colors));
+        this.updateABO(ArrayBufferIndex.Vertices, flatten(this.vertices));
+        this.updateABO(ArrayBufferIndex.Colors, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
-        this.count = this.indices.length;
+        this.setCount(this.indices.length);
         super.draw(mode);
     }
 

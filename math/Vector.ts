@@ -1,7 +1,7 @@
 
 export function flatten(vec4Array: Vec4[]): Float32Array {
     return new Float32Array(vec4Array.reduce<number[]>(function (prev, current, index) {
-        for (let i = 0; i < current.size; i++) {
+        for (let i = 0; i < current.getSize(); i++) {
             prev.push(current.getByIndex(i));
         }
         return prev;
@@ -52,13 +52,14 @@ export class Vec4 {
     y: number;
     z: number;
     w: number;
-    readonly size;
     constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
-        this.size = 4;
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+    }
+    getSize() {
+        return 4;
     }
     getByIndex(index: number) {
         switch (index) {
@@ -132,20 +133,22 @@ export class Vec4 {
 }
 
 export class Vec3 extends Vec4 {
-    readonly size;
 
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         super(x, y, z);
 
-        this.size = 3;
+    }
+    getSize() {
+        return 3;
     }
 }
 export class Vec2 extends Vec4 {
-    readonly size;
 
     constructor(x: number = 0, y: number = 0) {
         super(x, y);
 
-        this.size = 2;
+    }
+    getSize() {
+        return 2;
     }
 }

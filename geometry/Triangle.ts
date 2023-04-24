@@ -3,38 +3,43 @@ import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 
 export default class Triangle {
-    readonly ab: LineSegment;
-    readonly bc: LineSegment;
-    readonly ca: LineSegment;
-    readonly indices: [number, number, number];
-    readonly colors: [Vec4, Vec4, Vec4];
-    readonly points: readonly [Point, Point, Point];
-    readonly vertices: [Vec4, Vec4, Vec4];
+    private readonly ab: LineSegment;
+    private readonly bc: LineSegment;
+    private readonly ca: LineSegment;
+    private readonly points: readonly [Point, Point, Point];
+    private readonly indices: number[];
+    private readonly colors: Vec4[];
+    private readonly vertices: Vec4[];
 
     constructor(ab: LineSegment, bc: LineSegment) {
         this.ab = ab;
         this.bc = bc;
-        this.ca = new LineSegment(bc.points[1], ab.points[0]);
-        this.points = [this.ab.points[0], this.bc.points[0], this.ca.points[0]]
-        this.indices = [
-            ...this.points[0].indices,
-            ...this.points[1].indices,
-            ...this.points[2].indices
-        ];
-        this.colors = [
-            ...this.points[0].colors
-            , ...this.points[1].colors
-            , ...this.points[2].colors
-        ];
-        this.vertices = [...this.points[0].vertices, ...this.points[1].vertices, ...this.points[2].vertices]
+        this.ca = new LineSegment(bc.getEndPoint(), ab.getStartPoint());
+        this.points = [this.ab.getStartPoint(), this.bc.getStartPoint(), this.ca.getStartPoint()]
+        this.vertices = [];
+        this.colors = [];
+        this.indices = [];
+        this.points.forEach(p => p.appendTo(this.vertices, this.colors, this.indices));
+    }
+    getFirstPoint(): Point {
+        return this.ab.getStartPoint();
+    }
+    getSecondPoint(): Point {
+        return this.bc.getStartPoint();
+    }
+    getThirdPoint(): Point {
+        return this.ca.getStartPoint();
     }
     divide(): [Triangle, Triangle, Triangle] {
         return [
-            new Triangle(new LineSegment(this.points[0], this.ca.midPoint), new LineSegment(this.ca.midPoint, this.ab.midPoint))
-            , new Triangle(new LineSegment(this.points[1], this.ab.midPoint), new LineSegment(this.ab.midPoint, this.bc.midPoint))
-            , new Triangle(new LineSegment(this.points[2], this.bc.midPoint), new LineSegment(this.bc.midPoint, this.ca.midPoint))
+            new Triangle(new LineSegment(this.points[0], this.ca.getMidPoint()), new LineSegment(this.ca.getMidPoint(), this.ab.getMidPoint()))
+            , new Triangle(new LineSegment(this.points[1], this.ab.getMidPoint()), new LineSegment(this.ab.getMidPoint(), this.bc.getMidPoint()))
+            , new Triangle(new LineSegment(this.points[2], this.bc.getMidPoint()), new LineSegment(this.bc.getMidPoint(), this.ca.getMidPoint()))
         ];
 
+    }
+    appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[]) {
+        this.points.forEach(p => p.appendTo(vertices, colors, indices));
     }
     static fromPoints(a: Point, b: Point, c: Point): Triangle {
         return new Triangle(new LineSegment(a, b), new LineSegment(b, c));

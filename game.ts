@@ -46,28 +46,28 @@ ready(() => {
   const cube = new TexturedCube();
   const histogram = new Histogram();
   const happySprite = new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
-  gasket.node.worldMatrix.translate(new Vec3(-1, 2, -8))
-  Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.view)
+  gasket.getNode().getWorldMatrix().translate(new Vec3(-1, 2, -8))
+  Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.getView())
   let lastTime = 0;
   function tick(frame: number) {
     const fps = Math.round(1000 / (device.now() - lastTime));
     lastTime = device.now();
-    // mainCamera.view.rotateY((Math.PI / 180))
-    gasket.node.worldMatrix.rotateY((Math.PI / 180))
-    // cube.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * 0).rotateX(Math.PI / 180 * 0).rotateZ(Math.PI / 180 * 0));
-    cube.node.worldMatrix.set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
-    frustumCube.node.worldMatrix.set(
-      mainCamera.view.inverse()
-        .multiply(mainCamera.projection.inverse())
+    // mainCamera.getView().rotateY((Math.PI / 180))
+    gasket.getNode().getWorldMatrix().rotateY((Math.PI / 180))
+    // cube.getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * 0).rotateX(Math.PI / 180 * 0).rotateZ(Math.PI / 180 * 0));
+    cube.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
+    frustumCube.getNode().getWorldMatrix().set(
+      mainCamera.getView().inverse()
+        .multiply(mainCamera.getProjection().inverse())
     )
-    cameraCube.node.worldMatrix.set(
-      mainCamera.view.inverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
+    cameraCube.getNode().getWorldMatrix().set(
+      mainCamera.getView().inverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
     )
-    lenCone.node.worldMatrix.set(
-      mainCamera.view.inverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
+    lenCone.getNode().getWorldMatrix().set(
+      mainCamera.getView().inverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
     )
-    upCube.node.worldMatrix.set(
-      mainCamera.view.inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
+    upCube.getNode().getWorldMatrix().set(
+      mainCamera.getView().inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
     )
     framesText.updateChars(`frames: ${frame}`);
     fpsText.updateChars(`\nfps: ${fps}`);

@@ -12,20 +12,16 @@ export default class BlackWireCone extends DrawObject {
         const colors: Vec4[] = [];
         const indices: number[] = [];
         const vertices: Vec4[] = [];
-        lines.forEach((line) => {
-            indices.push(...line.indices);
-        });
+        lines.forEach((line) => line.appendTo(undefined, undefined, indices));
         points.forEach((point) => {
-            vertices.push(...point.vertices);
-            point.colors[0].set(0, 0, 0, 1);
-            colors.push(...point.colors);
+            point.appendTo(vertices, colors);
         });
         
         
         
         super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.aboMap.set(ArrayBufferIndex.Vertices, new ArrayBufferObject(ArrayBufferIndex.Vertices, flatten(vertices)))
-        this.aboMap.set(ArrayBufferIndex.Colors, new ArrayBufferObject(ArrayBufferIndex.Colors, flatten(colors)))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices))
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors))
         this.updateEBO(new Uint16Array(indices));
     }
 }
