@@ -1,11 +1,11 @@
 import Cube from "../geometry/Cube.js";
-import { Vec2, Vec4, flatten } from "../math/Vector.js";
+import Matrix from "../math/Matrix.js";
+import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class TexturedCube extends DrawObject {
-
     constructor() {
         const cube = new Cube();
         const triangles = cube.getTriangles();
@@ -38,5 +38,13 @@ export default class TexturedCube extends DrawObject {
     draw(mode: number): void {
         super.draw(mode);
     }
+    setInitPosition() {
+        this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
+    }
+    rotatePerFrame(frame: number) {
+        this.setInitPosition();
+        this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame);
+    }
+
 }
 

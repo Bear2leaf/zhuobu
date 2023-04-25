@@ -2,7 +2,8 @@ import LineSegment from "../geometry/LineSegment.js";
 import Point from "../geometry/Point.js";
 import Tetrahedron from "../geometry/Tetrahedron.js";
 import Triangle from "../geometry/Triangle.js";
-import { Vec4, flatten } from "../math/Vector.js";
+import Matrix from "../math/Matrix.js";
+import { Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
@@ -39,6 +40,13 @@ export default class Gasket extends DrawObject {
         this.createABO(ArrayBufferIndex.Vertices, flatten(points))
         this.createABO(ArrayBufferIndex.Colors, flatten(colors))
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
+    }
+    setInitPosition() {
+        this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, 2, -8)))
+    }
+    rotatePerFrame(frame: number) {
+        this.setInitPosition();
+        this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame);
     }
 }
 

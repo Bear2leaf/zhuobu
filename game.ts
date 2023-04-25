@@ -9,7 +9,6 @@ import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 import { PointRenderer } from "./renderer/PointRenderer.js";
 import Pointer from "./drawobject/Pointer.js";
-import FrustumCube from "./drawobject/BlackWireCube.js";
 import BlackWireCone from "./drawobject/BlackWireCone.js";
 import BlackWireCube from "./drawobject/BlackWireCube.js";
 import TexturedCube from "./drawobject/TexturedCube.js";
@@ -38,7 +37,7 @@ ready(() => {
   const lineRenderer = new LineRenderer();
   const gizmoRenderer = new GizmoRenderer(lineRenderer);
   const spriteRenderer = new SpriteRenderer();
-  const frustumCube = new FrustumCube();
+  const frustumCube = new BlackWireCube();
   const cameraCube = new BlackWireCube();
   const lenCone = new BlackWireCone();
   const upCube = new BlackWireCube();
@@ -46,29 +45,18 @@ ready(() => {
   const cube = new TexturedCube();
   const histogram = new Histogram();
   const happySprite = new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
-  gasket.getNode().getWorldMatrix().translate(new Vec3(-1, 2, -8))
-  Matrix.lookAt(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0)).inverse(debugCamera.getView())
+  debugCamera.lookAtInverse(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0));
   let lastTime = 0;
   function tick(frame: number) {
     const fps = Math.round(1000 / (device.now() - lastTime));
     lastTime = device.now();
-    // mainCamera.getView().rotateY((Math.PI / 180))
-    gasket.getNode().getWorldMatrix().rotateY((Math.PI / 180))
-    // cube.getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * 0).rotateX(Math.PI / 180 * 0).rotateZ(Math.PI / 180 * 0));
-    cube.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)).rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame));
-    frustumCube.getNode().getWorldMatrix().set(
-      mainCamera.getView().inverse()
-        .multiply(mainCamera.getProjection().inverse())
-    )
-    cameraCube.getNode().getWorldMatrix().set(
-      mainCamera.getView().inverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
-    )
-    lenCone.getNode().getWorldMatrix().set(
-      mainCamera.getView().inverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))
-    )
-    upCube.getNode().getWorldMatrix().set(
-      mainCamera.getView().inverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))
-    )
+    // mainCamera.rotateViewPerFrame(frame);
+    gasket.rotatePerFrame(frame);
+    cube.rotatePerFrame(frame);
+    frustumCube.setWorldMatrix(mainCamera.getFrustumTransformMatrix())
+    cameraCube.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))
+    lenCone.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))
+    upCube.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1)))
     framesText.updateChars(`frames: ${frame}`);
     fpsText.updateChars(`\nfps: ${fps}`);
     histogram.updateHistogram(fps);

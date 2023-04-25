@@ -1,4 +1,6 @@
+import { PerspectiveCamera } from "../Camera.js";
 import Cube from "../geometry/Cube.js";
+import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
@@ -22,6 +24,9 @@ export default class BlackWireCube extends DrawObject {
         this.createABO(ArrayBufferIndex.Vertices, flatten(vertices))
         this.createABO(ArrayBufferIndex.Colors, flatten(colors))
         this.updateEBO(new Uint16Array(indices));
+    }
+    setWorldMatrix(matrix: Matrix) {
+        this.getNode().updateWorldMatrix(matrix);
     }
 }
 

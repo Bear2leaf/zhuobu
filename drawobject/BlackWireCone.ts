@@ -1,4 +1,6 @@
+import { PerspectiveCamera } from "../Camera.js";
 import Cone from "../geometry/Cone.js";
+import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
@@ -23,6 +25,9 @@ export default class BlackWireCone extends DrawObject {
         this.createABO(ArrayBufferIndex.Vertices, flatten(vertices))
         this.createABO(ArrayBufferIndex.Colors, flatten(colors))
         this.updateEBO(new Uint16Array(indices));
+    }
+    setWorldMatrix(matrix: Matrix) {
+        this.getNode().updateWorldMatrix(matrix);
     }
 }
 
