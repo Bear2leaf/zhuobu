@@ -1,7 +1,7 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import Texture, { TextureIndex } from "../Texture.js";
+import Texture, { TextureIndex } from "../texture/Texture.js";
 import { device } from "../device/Device.js";
 import Quad from "../geometry/Quad.js";
 import Node from "../structure/Node.js";

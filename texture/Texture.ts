@@ -1,5 +1,5 @@
-import { device } from "./device/Device.js";
-import { Vec2 } from "./math/Vector.js";
+import { device } from "../device/Device.js";
+import { Vec2 } from "../math/Vector.js";
 
 export enum TextureIndex {
   Default = 0,

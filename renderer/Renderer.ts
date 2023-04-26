@@ -1,7 +1,7 @@
-import Camera from "../Camera.js";
+import Camera from "../camera/Camera.js";
 import { device } from "../device/Device.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import Shader from "../Shader.js";
+import Shader from "../shader/Shader.js";
 
 
 export default class Renderer {

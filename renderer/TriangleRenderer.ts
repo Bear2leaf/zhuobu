@@ -1,7 +1,7 @@
-import Camera from "../Camera.js";
+import Camera from "../camera/Camera.js";
 import { device } from "../device/Device.js";
 import Renderer from "./Renderer.js";
-import { VertexColorTriangle } from "../Shader.js";
+import { VertexColorTriangle } from "../shader/VertexColorTriangle.js";
 import DrawObject from "../drawobject/DrawObject.js";
 
 export class TriangleRenderer extends Renderer {

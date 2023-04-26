@@ -1,7 +1,7 @@
-import Camera from "../Camera.js";
+import Camera from "../camera/Camera.js";
 import { device } from "../device/Device.js";
 import Sprite from "../drawobject/Sprite.js";
-import {Sprite  as SpriteShader} from "../Shader.js";
+import { Sprite as SpriteShader } from "../shader/Sprite.js";
 import Renderer from "./Renderer.js";
 
 export default class SpriteRenderer extends Renderer {

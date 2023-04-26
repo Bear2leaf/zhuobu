@@ -1,7 +1,7 @@
 import { device } from "../device/Device.js";
 import Renderer from "./Renderer.js"
-import { Point } from "../Shader.js"
-import Camera from "../Camera.js";
+import { Point } from "../shader/Point.js";
+import Camera from "../camera/Camera.js";
 import DrawObject from "../drawobject/DrawObject.js";
 
 export class PointRenderer extends Renderer {

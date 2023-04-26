@@ -1,4 +1,4 @@
-import Camera from "../../Camera.js";
+import Camera from "../../camera/Camera.js";
 import { device } from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import Renderer from "../../renderer/Renderer.js";

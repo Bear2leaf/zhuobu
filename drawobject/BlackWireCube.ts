@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from "../Camera.js";
+import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import Cube from "../geometry/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
