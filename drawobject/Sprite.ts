@@ -32,8 +32,8 @@ export default class Sprite extends DrawObject {
         const indices: number[] = []
         quad.appendTo(vertices, colors, indices);
 
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices));
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors));
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4);
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4);
         this.updateEBO(new Uint16Array(indices));
         this.originX = origin[0];
         this.originY = origin[1];

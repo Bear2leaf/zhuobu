@@ -22,8 +22,8 @@ export default class Text extends DrawObject {
         
         
         super(new Node(), new Map<number, ArrayBufferObject>(), 0);
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0))
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0))
+        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)
         this.x = x;
         this.y = y;
         this.scale = scale;

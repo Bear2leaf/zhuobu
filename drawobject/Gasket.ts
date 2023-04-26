@@ -37,8 +37,8 @@ export default class Gasket extends DrawObject {
 
         
         super(new Node(), new Map<number, ArrayBufferObject>(), points.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(points))
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(points), 4)
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
     }
     setInitPosition() {

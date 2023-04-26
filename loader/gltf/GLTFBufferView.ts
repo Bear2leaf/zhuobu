@@ -3,11 +3,24 @@ export default class GLTFBufferView {
     private readonly byteOffset: number;
     private readonly byteLength: number;
     private readonly target: number;
-    constructor(buffer: number, byteOffset: number, byteLength: number, target: number) {
-        this.buffer = buffer;
-        this.byteOffset = byteOffset;
-        this.byteLength = byteLength;
-        this.target = target;
+    constructor(bufferView: GLTFBufferView) {
+        this.buffer = bufferView.buffer;
+        this.byteOffset = bufferView.byteOffset;
+        this.byteLength = bufferView.byteLength;
+        this.target = bufferView.target;
     }
+    getBuffer(): number {
+        return this.buffer;
+    }
+    getByteOffset(): number {
+        return this.byteOffset;
+    }
+    getByteLength(): number {
+        return this.byteLength;
+    }
+    getTarget(): number {
+        return this.target;
+    }
+
 
 }

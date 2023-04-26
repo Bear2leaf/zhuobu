@@ -14,8 +14,8 @@ export default class Pointer extends DrawObject {
         device.onTouchCancel(() => { })
         
         super(new Node(), new Map<number, ArrayBufferObject>(), 1);
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array([0,0,0,1]))
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array([1,1,1,1]))
+        this.createABO(ArrayBufferIndex.Vertices, new Float32Array([0,0,0,1]), 4)
+        this.createABO(ArrayBufferIndex.Colors, new Float32Array([1,1,1,1]), 4)
         this.updateEBO(new Uint16Array([0]))
     }
     private setPosition(e: { x: number, y: number } | undefined) {

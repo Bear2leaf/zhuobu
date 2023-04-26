@@ -1,5 +1,5 @@
 import { device } from "../device/Device.js";
-import { flatten, Vec4 } from "../math/Vector.js";
+import { flatten, Vec3, Vec4 } from "../math/Vector.js";
 
 export default class Shader {
     private readonly program: WebGLProgram;
@@ -21,6 +21,15 @@ export default class Shader {
             this.locMap.set(name, loc);
         }
         device.gl.uniform4fv(loc, flatten([data]))
+    }
+    setVector3f(name: string, data: Vec3) {
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = device.gl.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
+        }
+        device.gl.uniform3fv(loc, flatten([data]))
     }
     setInteger(name: string, data: number) {
         let loc = this.locMap.get(name);

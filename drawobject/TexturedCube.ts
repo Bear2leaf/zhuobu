@@ -30,9 +30,9 @@ export default class TexturedCube extends DrawObject {
 
 
         super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices));
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors));
-        this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords));
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4);
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4);
+        this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
     }
     setInitPosition() {

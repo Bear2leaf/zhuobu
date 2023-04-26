@@ -7,11 +7,11 @@ import DrawObject from "../drawobject/DrawObject.js";
 import Point from "../geometry/Point.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
+import Renderer from "../renderer/Renderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 
 export class DebugSystem {
     private readonly lineRenderer: LineRenderer;
-    private readonly mainRenderer: TriangleRenderer;
     private readonly xyzAxis: ColorArrowLine;
     private readonly frustumCube: BlackWireCube;
     private readonly cameraCube: BlackWireCube;
@@ -19,8 +19,7 @@ export class DebugSystem {
     private readonly upCube: BlackWireCube;
     private readonly mainCamera: PerspectiveCamera;
     private readonly debugCamera: PerspectiveCamera;
-    constructor(mainRenderer: TriangleRenderer, mainCamera: PerspectiveCamera, debugCamera: PerspectiveCamera) {
-        this.mainRenderer = mainRenderer;
+    constructor( mainCamera: PerspectiveCamera, debugCamera: PerspectiveCamera) {
         this.lineRenderer = new LineRenderer();
         this.mainCamera = mainCamera;
         this.debugCamera = debugCamera;
@@ -43,8 +42,8 @@ export class DebugSystem {
         this.lineRenderer.render(this.debugCamera, this.lenCone)
         this.lineRenderer.render(this.debugCamera, this.upCube)
     }
-    render(drawObject: DrawObject): void {
-        this.mainRenderer.render(this.debugCamera, drawObject);
+    render(drawObject: DrawObject, renderer :Renderer ): void {
+        renderer.render(this.debugCamera, drawObject);
         this.xyzAxis.getNode().updateWorldMatrix(drawObject.getNode().getWorldMatrix())
         this.lineRenderer.render(this.debugCamera, this.xyzAxis)
     }

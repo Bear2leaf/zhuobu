@@ -94,6 +94,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await loadShaderTxtCache(device, "Sprite")
     await loadShaderTxtCache(device, "Point")
     await loadShaderTxtCache(device, "Line")
+    await loadShaderTxtCache(device, "Mesh")
 
     await loadGLTFCache(device, "hello")
 

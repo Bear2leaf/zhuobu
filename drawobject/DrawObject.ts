@@ -46,8 +46,8 @@ export default class DrawObject {
         device.gl.bufferData(device.gl.ELEMENT_ARRAY_BUFFER, buffer, device.gl.STATIC_DRAW);
         this.count = buffer.length;
     }
-    protected createABO(index: ArrayBufferIndex, data: Float32Array) {
-        this.aboMap.set(index, new ArrayBufferObject(index, data));
+    protected createABO(index: ArrayBufferIndex, data: Float32Array, szie: number) {
+        this.aboMap.set(index, new ArrayBufferObject(index, data, szie));
     }
     protected createTexture(index: TextureIndex, texture: Texture) {
         this.textureMap.set(index, texture);

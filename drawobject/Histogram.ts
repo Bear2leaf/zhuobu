@@ -16,8 +16,8 @@ export default class Histogram extends DrawObject {
         const lines = 100;
         super(new Node(), new Map<number, ArrayBufferObject>(), 0);
 
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0))
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0))
+        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)
         this.updateEBO(new Uint16Array(0));
         this.quads = [];
         const background = new Quad(0, hisY, width, height);

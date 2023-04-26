@@ -1,3 +1,4 @@
+import { GLType } from "./GLTF.js";
 
 const accessorTypeToNumComponentsMap = {
     'SCALAR': 1,
@@ -21,17 +22,38 @@ function accessorTypeToNumComponents(type: GLTFAccessorType) {
 
 export default class GLTFAccessor {
     private readonly bufferView: number;
-    private readonly componentType: number;
+    private readonly componentType: GLType;
     private readonly count: number;
     private readonly max: readonly number[];
     private readonly min: readonly number[];
     private readonly type: GLTFAccessorType;
-    constructor(bufferView: number, componentType: number, count: number, max: number[], min: number[], type: GLTFAccessorType) {
-        this.bufferView = bufferView;
-        this.componentType = componentType;
-        this.count = count;
-        this.max = max;
-        this.min = min;
-        this.type = type;
+    constructor(accessor: GLTFAccessor) {
+        this.bufferView = accessor.bufferView;
+        this.componentType = accessor.componentType;
+        this.count = accessor.count;
+        this.max = accessor.max;
+        this.min = accessor.min;
+        this.type = accessor.type;
+    }
+    getBufferView() {
+        return this.bufferView;
+    }
+    getComponentType() {
+        return this.componentType;
+    }
+    getCount() {
+        return this.count;
+    }
+    getMax() {
+        return this.max;
+    }
+    getMin() {
+        return this.min;
+    }
+    getType() {
+        return this.type;
+    }
+    getNumComponents() {
+        return accessorTypeToNumComponents(this.type);
     }
 }

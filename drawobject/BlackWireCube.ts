@@ -21,8 +21,8 @@ export default class BlackWireCube extends DrawObject {
 
         
         super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices))
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors))
+        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4)
+        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));
     }
     setWorldMatrix(matrix: Matrix) {
