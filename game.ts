@@ -5,18 +5,15 @@ import { LineRenderer } from "./renderer/LineRenderer.js";
 import Text from "./drawobject/Text.js";
 import Gasket from "./drawobject/Gasket.js";
 import { OrthoCamera, PerspectiveCamera } from "./Camera.js";
-import Matrix from "./math/Matrix.js";
 import { Vec3, Vec4 } from "./math/Vector.js";
 import { PointRenderer } from "./renderer/PointRenderer.js";
 import Pointer from "./drawobject/Pointer.js";
-import BlackWireCone from "./drawobject/BlackWireCone.js";
-import BlackWireCube from "./drawobject/BlackWireCube.js";
 import TexturedCube from "./drawobject/TexturedCube.js";
 import Histogram from "./drawobject/Histogram.js";
 import Sprite from "./drawobject/Sprite.js";
 import SpriteRenderer from "./renderer/SpriteRenderer.js";
 import GLTF from "./loader/gltf/GLTF.js";
-import { GizmoRenderer } from "./renderer/GizmoRenderer.js";
+import { DebugRenderer as DebugRenderer } from "./renderer/GizmoRenderer.js";
 
 
 ready(() => {
@@ -35,12 +32,8 @@ ready(() => {
   const mainRenderer = new TriangleRenderer();
   const debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);
   const lineRenderer = new LineRenderer();
-  const gizmoRenderer = new GizmoRenderer(lineRenderer);
+  const debugRenderer = new DebugRenderer(lineRenderer, mainCamera);
   const spriteRenderer = new SpriteRenderer();
-  const frustumCube = new BlackWireCube();
-  const cameraCube = new BlackWireCube();
-  const lenCone = new BlackWireCone();
-  const upCube = new BlackWireCube();
   const gasket = new Gasket();
   const cube = new TexturedCube();
   const histogram = new Histogram();
@@ -50,36 +43,28 @@ ready(() => {
   function tick(frame: number) {
     const fps = Math.round(1000 / (device.now() - lastTime));
     lastTime = device.now();
-    // mainCamera.rotateViewPerFrame(frame);
+    device.viewportTo(ViewPortType.Full)
+    device.clearRenderer();
     gasket.rotatePerFrame(frame);
     cube.rotatePerFrame(frame);
-    frustumCube.setWorldMatrix(mainCamera.getFrustumTransformMatrix())
-    cameraCube.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))
-    lenCone.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))
-    upCube.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1)))
+    // mainCamera.rotateViewPerFrame(frame);
+    mainRenderer.render(mainCamera, gasket);
+    mainRenderer.render(mainCamera, cube);
+    device.gl.depthMask(false);
     framesText.updateChars(`frames: ${frame}`);
     fpsText.updateChars(`\nfps: ${fps}`);
     histogram.updateHistogram(fps);
-    device.viewportTo(ViewPortType.Full)
-    device.clearRenderer();
-    pointRenderer.render(uiCamera, pointer);
-    mainRenderer.render(mainCamera, gasket);
-    mainRenderer.render(mainCamera, cube);
-    gltf.render(mainRenderer, mainCamera);
-    device.gl.depthMask(false);
     mainRenderer.render(uiCamera, histogram);
     textRenderer.render(uiCamera, framesText);
     textRenderer.render(uiCamera, fpsText);
+    pointRenderer.render(uiCamera, pointer);
     spriteRenderer.render(uiCamera, happySprite);
     device.gl.depthMask(true);
     device.viewportTo(ViewPortType.TopRight)
     device.clearRenderer();
-    gizmoRenderer.render(debugCamera, gasket)
-    gizmoRenderer.render(debugCamera, cube);
-    lineRenderer.render(debugCamera, frustumCube)
-    lineRenderer.render(debugCamera, cameraCube)
-    lineRenderer.render(debugCamera, lenCone)
-    lineRenderer.render(debugCamera, upCube)
+    debugRenderer.renderCamera(debugCamera);
+    debugRenderer.render(debugCamera, gasket)
+    debugRenderer.render(debugCamera, cube);
     requestAnimationFrame(() => tick(++frame));
   }
   tick(0);

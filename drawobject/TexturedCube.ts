@@ -35,9 +35,6 @@ export default class TexturedCube extends DrawObject {
         this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords));
         this.updateEBO(new Uint16Array(indices))
     }
-    draw(mode: number): void {
-        super.draw(mode);
-    }
     setInitPosition() {
         this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
     }

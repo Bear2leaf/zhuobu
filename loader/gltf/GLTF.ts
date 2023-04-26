@@ -79,7 +79,5 @@ export default class GLTF {
         this.extras = data.extras;
         console.log(this)
     }
-    render(renderer: Renderer, camera: Camera) {
-    }
 }
 
