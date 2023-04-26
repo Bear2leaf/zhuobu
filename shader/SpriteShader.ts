@@ -2,7 +2,7 @@ import { device } from "../device/Device.js";
 import Shader from "./Shader.js";
 
 
-export class Sprite extends Shader {
+export class SpriteShader extends Shader {
     constructor() {
         super(
             device.getTxtCache().get("static/shader/Sprite.vert.txt")!,
