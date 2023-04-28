@@ -97,6 +97,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
     await loadShaderTxtCache(device, "Mesh")
 
     await loadGLTFCache(device, "hello")
+    await loadGLTFCache(device, "hello-multi")
 
     await loadFontCache(device, "boxy_bold_font")
     

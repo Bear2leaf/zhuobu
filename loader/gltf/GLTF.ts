@@ -1,6 +1,8 @@
 import { device } from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import Mesh from "../../drawobject/Mesh.js";
+import Node from "../../structure/Node.js";
+import TRS from "../../structure/TRS.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -11,6 +13,7 @@ import GLTFMaterial from "./GLTFMaterial.js";
 import GLTFMesh from "./GLTFMesh.js";
 import GLTFNode from "./GLTFNode.js";
 import GLTFSampler from "./GLTFSampler.js";
+import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
 
@@ -35,6 +38,7 @@ function glTypeToTypedArray(type: GLType) {
 }
 export default class GLTF {
     private readonly scene: number;
+    private readonly scenes: readonly GLTFScene[];
     private readonly nodes: readonly GLTFNode[];
     private readonly buffers: readonly GLTFBuffer[];
     private readonly bufferViews: readonly GLTFBufferView[];
@@ -54,13 +58,14 @@ export default class GLTF {
 
     constructor(data?: GLTF) {
         if (!data) {
-            data = device.getGltfCache().get("static/gltf/hello.gltf");
+            data = device.getGltfCache().get("static/gltf/hello-multi.gltf");
             if (!data) {
                 throw new Error("gltf not found");
             }
         }
         this.scene = data.scene;
-        this.nodes = data.nodes;
+        this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
+        this.nodes = data.nodes.map((node) => new GLTFNode(node));
         this.buffers = data.buffers.map((buffer) => new GLTFBuffer(buffer));
         this.bufferViews = data.bufferViews.map((bufferView) => new GLTFBufferView(bufferView));
         this.accessors =  data.accessors.map((accessor) => new GLTFAccessor(accessor));
@@ -68,7 +73,7 @@ export default class GLTF {
         this.samplers = data.samplers;
         this.textures = data.textures;
         this.materials = data.materials;
-        this.meshes = data.meshes;
+        this.meshes = data.meshes.map((mesh) => new GLTFMesh(mesh));
         this.cameras = data.cameras;
         this.animations = data.animations;
         this.skins = data.skins;
@@ -86,9 +91,26 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createDrawObject(): DrawObject {
-        const mesh = new Mesh(this.getDataByAccessorIndex(0) as Float32Array, this.getDataByAccessorIndex(1) as Float32Array, this.getDataByAccessorIndex(3) as Uint16Array);
-        return mesh;
+    createDefaultDrawObject(): DrawObject {
+        const scene = this.scenes[this.scene];
+        if (!scene) {
+            throw new Error("scene not found");
+        }
+        const node = this.nodes[scene.getNodeByIndex(1)];
+        const name = node.getName();
+        const meshIndex = node.getMesh();
+        const mesh = this.meshes[meshIndex];
+        const translation = node.getTranslation();
+        const rotation = node.getRotation();
+        const scale = node.getScale();
+        const n = new Node(new TRS(translation, rotation, scale), name);
+        const positionIndex = mesh.getDefaultPrimitive().getAttributes().getPosition();
+        const texcoordIndex = mesh.getDefaultPrimitive().getAttributes().getTexCoord();
+        const normalIndex = mesh.getDefaultPrimitive().getAttributes().getNormal();
+        const indicesIndex = mesh.getDefaultPrimitive().getIndices();
+
+        const drawObject = new Mesh(this.getDataByAccessorIndex(positionIndex) as Float32Array, this.getDataByAccessorIndex(normalIndex) as Float32Array, this.getDataByAccessorIndex(indicesIndex) as Uint16Array, n);
+        return drawObject;
     }
 }
 

@@ -26,7 +26,7 @@ export default class Node {
         this.parent = parent;
       }
     }
-    updateWorldMatrix(parentWorldMatrix: Matrix) {
+    updateWorldMatrix(parentWorldMatrix?: Matrix) {
       const source = this.source;
       if (source) {
         source.getMatrix(this.localMatrix);

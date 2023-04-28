@@ -24,12 +24,11 @@ ready(() => {
   const debugSystem = new DebugSystem(mainCamera, debugCamera);
   const uiSystem = new UISystem(mainRenderer);
 
-//gltf - start
+  //gltf - start
   const gltf = new GLTF();
-  const gltfObj = gltf.createDrawObject();
-  gltfObj.getNode().getWorldMatrix().translate(new Vec3(0, -4, -8)).rotateY(Math.PI / 180 * 60).rotateX(Math.PI / 180 * 30);
+  const gltfObj = gltf.createDefaultDrawObject();
   const gltfRenderer = new GLTFMeshRenderer();
-//gltf - end
+  //gltf - end
 
   function tick(frame: number) {
     device.viewportTo(ViewPortType.Full)
