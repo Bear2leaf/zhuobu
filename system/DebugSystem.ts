@@ -19,10 +19,14 @@ export class DebugSystem {
     private readonly upCube: BlackWireCube;
     private readonly mainCamera: PerspectiveCamera;
     private readonly debugCamera: PerspectiveCamera;
-    constructor( mainCamera: PerspectiveCamera, debugCamera: PerspectiveCamera) {
+    constructor(mainCamera: PerspectiveCamera) {
+
         this.lineRenderer = new LineRenderer();
         this.mainCamera = mainCamera;
-        this.debugCamera = debugCamera;
+
+        const windowInfo = device.getWindowInfo();
+        const fov = Math.PI / 180 * 90;
+        this.debugCamera = new PerspectiveCamera(fov, windowInfo.windowWidth / windowInfo.windowHeight, 1, 500);;
         this.xyzAxis = new ColorArrowLine(new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5));
         this.frustumCube = new BlackWireCube();
         this.cameraCube = new BlackWireCube();
@@ -42,7 +46,7 @@ export class DebugSystem {
         this.lineRenderer.render(this.debugCamera, this.lenCone)
         this.lineRenderer.render(this.debugCamera, this.upCube)
     }
-    render(drawObject: DrawObject, renderer :Renderer ): void {
+    render(drawObject: DrawObject, renderer: Renderer): void {
         renderer.render(this.debugCamera, drawObject);
         this.xyzAxis.getNode().updateWorldMatrix(drawObject.getNode().getWorldMatrix())
         this.lineRenderer.render(this.debugCamera, this.xyzAxis)
