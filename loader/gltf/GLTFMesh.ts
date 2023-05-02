@@ -17,8 +17,8 @@ export default class GLTFMesh {
     getName() {
         return this.name;
     }
-    getDefaultPrimitive() {
-        return this.primitives[0];
+    getPrimitives() {
+        return this.primitives;
     }
 
 }

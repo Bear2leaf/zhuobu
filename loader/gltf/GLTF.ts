@@ -58,17 +58,14 @@ export default class GLTF {
 
     constructor(data?: GLTF) {
         if (!data) {
-            data = device.getGltfCache().get("static/gltf/hello-multi.gltf");
-            if (!data) {
-                throw new Error("gltf not found");
-            }
+            throw new Error("gltf not found");
         }
         this.scene = data.scene;
         this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes.map((node) => new GLTFNode(node));
         this.buffers = data.buffers.map((buffer) => new GLTFBuffer(buffer));
         this.bufferViews = data.bufferViews.map((bufferView) => new GLTFBufferView(bufferView));
-        this.accessors =  data.accessors.map((accessor) => new GLTFAccessor(accessor));
+        this.accessors = data.accessors.map((accessor) => new GLTFAccessor(accessor));
         this.images = data.images;
         this.samplers = data.samplers;
         this.textures = data.textures;
@@ -82,7 +79,7 @@ export default class GLTF {
         this.extensions = data.extensions;
         this.extras = data.extras;
     }
-    
+
     getDataByAccessorIndex(index: number) {
         const accessor = this.accessors[index];
         const bufferView = this.bufferViews[accessor.getBufferView()];
@@ -91,26 +88,26 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createDefaultDrawObject(): DrawObject {
+    createDrawObjects(): DrawObject[] {
         const scene = this.scenes[this.scene];
         if (!scene) {
             throw new Error("scene not found");
         }
-        const node = this.nodes[scene.getNodeByIndex(1)];
-        const name = node.getName();
-        const meshIndex = node.getMesh();
-        const mesh = this.meshes[meshIndex];
-        const translation = node.getTranslation();
-        const rotation = node.getRotation();
-        const scale = node.getScale();
-        const n = new Node(new TRS(translation, rotation, scale), name);
-        const positionIndex = mesh.getDefaultPrimitive().getAttributes().getPosition();
-        const texcoordIndex = mesh.getDefaultPrimitive().getAttributes().getTexCoord();
-        const normalIndex = mesh.getDefaultPrimitive().getAttributes().getNormal();
-        const indicesIndex = mesh.getDefaultPrimitive().getIndices();
-
-        const drawObject = new Mesh(this.getDataByAccessorIndex(positionIndex) as Float32Array, this.getDataByAccessorIndex(normalIndex) as Float32Array, this.getDataByAccessorIndex(indicesIndex) as Uint16Array, n);
-        return drawObject;
+        return this.nodes.reduce<DrawObject[]>((prev, node) => prev.concat(node.createAllDrawObjects(this)), []);
+    }
+    getMeshByIndex(index: number) {
+        const mesh = this.meshes[index];
+        if (!mesh) {
+            throw new Error(`mesh not found: ${index}`);
+        }
+        return mesh;
+    }
+    getNodeByIndex(index: number) {
+        const node = this.nodes[index];
+        if (!node) {
+            throw new Error(`node not found: ${index}`);
+        }
+        return node;
     }
 }
 

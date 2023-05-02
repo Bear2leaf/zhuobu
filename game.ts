@@ -23,8 +23,8 @@ ready(() => {
   const uiSystem = new UISystem(mainRenderer);
 
   //gltf - start
-  const gltf = new GLTF();
-  const gltfObj = gltf.createDefaultDrawObject();
+  const gltf = new GLTF(device.getGltfCache().get("static/gltf/whale.CYCLES.gltf"));
+  const gltfObjs = gltf.createDrawObjects();
   const gltfRenderer = new GLTFMeshRenderer();
   //gltf - end
 
@@ -33,15 +33,15 @@ ready(() => {
     device.clearRenderer();
     gasket.rotatePerFrame(frame);
     cube.rotatePerFrame(frame);
-    mainCamera.rotateViewPerFrame(frame);
+    // mainCamera.rotateViewPerFrame(frame);
     mainRenderer.render(mainCamera, gasket);
     mainRenderer.render(mainCamera, cube);
-    gltfRenderer.render(mainCamera, gltfObj);
+    gltfObjs.forEach(gltfObj => gltfRenderer.render(mainCamera, gltfObj));
     uiSystem.render(frame);
     debugSystem.renderCamera();
     debugSystem.render(gasket, mainRenderer)
     debugSystem.render(cube, mainRenderer);
-    debugSystem.render(gltfObj, gltfRenderer);
+    gltfObjs.forEach(gltfObj => debugSystem.render(gltfObj, gltfRenderer));
     requestAnimationFrame(() => tick(++frame));
   }
   tick(0);

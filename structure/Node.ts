@@ -16,7 +16,7 @@ export default class Node {
       this.localMatrix = Matrix.identity();
       this.worldMatrix = Matrix.identity();
     }
-    setParent(parent: Node) {
+    setParent(parent?: Node) {
       if (this.parent) {
         this.parent.removeChild(this);
         this.parent = null;

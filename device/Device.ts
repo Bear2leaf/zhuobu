@@ -98,6 +98,7 @@ export default (cb: Function) => device.loadSubpackage().then(async () => {
 
     await loadGLTFCache(device, "hello")
     await loadGLTFCache(device, "hello-multi")
+    await loadGLTFCache(device, "whale.CYCLES")
 
     await loadFontCache(device, "boxy_bold_font")
     
