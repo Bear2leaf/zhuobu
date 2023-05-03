@@ -3,7 +3,7 @@ import { Device, DeviceInfo, TouchInfoFunction, clearRenderer, getWindowInfo, vi
 
 export default class BrowserDevice implements Device {
     private isMouseDown: boolean;
-    readonly gl: WebGL2RenderingContext;
+    private readonly webgl2RenderingContext: WebGL2RenderingContext;
     private readonly imageCache: Map<string, HTMLImageElement>;
     private readonly txtCache: Map<string, string>;
     private readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
@@ -11,7 +11,6 @@ export default class BrowserDevice implements Device {
     private readonly glbCache: Map<string, ArrayBuffer>;
     private readonly deviceInfo: DeviceInfo;
     constructor() {
-
         this.imageCache = new Map();
         this.txtCache = new Map();
         this.fontCache = new Map();
@@ -22,8 +21,11 @@ export default class BrowserDevice implements Device {
             windowHeight: window.innerHeight,
             pixelRatio: devicePixelRatio,
         };
-        this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+        this.webgl2RenderingContext = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
+    }
+    get gl(): WebGL2RenderingContext {
+        return this.webgl2RenderingContext;
     }
     getImageCache(): Map<string, HTMLImageElement>{
         return this.imageCache;

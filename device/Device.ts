@@ -23,13 +23,13 @@ export function viewportTo(this: Device, type: ViewPortType): void {
         case ViewPortType.TopRight:
             this.gl.viewport(leftWidth, leftHeight, rightWidth, rightHeight);
             this.gl.scissor(leftWidth, leftHeight, rightWidth, rightHeight);
-            device.gl.clearColor(0.4, 0.4, 0.4, 1)
+            this.gl.clearColor(0.4, 0.4, 0.4, 1)
             break;
 
         default:
             this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
             this.gl.scissor(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
-            device.gl.clearColor(0.3, 0.3, 0.3, 1)
+            this.gl.clearColor(0.3, 0.3, 0.3, 1)
             break;
     }
 }
@@ -62,7 +62,7 @@ async function loadShaderTxtCache(device: Device, name: string) {
 
 
 export interface Device {
-    readonly gl: WebGL2RenderingContext;
+    get gl(): WebGL2RenderingContext;
     getImageCache(): Map<string, HTMLImageElement>;
     getTxtCache(): Map<string, string>;
     getFontCache(): Map<string, FontInfo>;

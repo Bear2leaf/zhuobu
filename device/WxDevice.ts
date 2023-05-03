@@ -2,7 +2,7 @@ import GLTF from "../loader/gltf/GLTF.js";
 import { Device, DeviceInfo,  TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
-    readonly gl: WebGL2RenderingContext;
+    private readonly glContext: WebGL2RenderingContext;
     private readonly performance: Performance;
     private readonly imageCache: Map<string, HTMLImageElement>;
     private readonly txtCache: Map<string, string>;
@@ -21,7 +21,10 @@ export default class WxDevice implements Device {
         if (typeof document !== 'undefined') {
             this.deviceInfo.pixelRatio = 1;
         }
-        this.gl = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+        this.glContext = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+    }
+    get gl(): WebGL2RenderingContext {
+        return this.glContext;
     }
     now = () => this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
 
