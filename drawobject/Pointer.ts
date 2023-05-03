@@ -1,4 +1,4 @@
-import { device } from "../device/Device.js";
+import device from "../device/Device.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import Node from "../structure/Node.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";

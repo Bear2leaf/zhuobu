@@ -1,5 +1,5 @@
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
-import { ViewPortType, device } from "../device/Device.js";
+import device, { ViewPortType } from "../device/Device.js";
 import BlackWireCone from "../drawobject/BlackWireCone.js";
 import BlackWireCube from "../drawobject/BlackWireCube.js";
 import ColorArrowLine from "../drawobject/ColorArrowLine.js";

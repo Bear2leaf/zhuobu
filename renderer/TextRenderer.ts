@@ -1,5 +1,5 @@
 import Camera from "../camera/Camera.js";
-import { device } from "../device/Device.js";
+import device from "../device/Device.js";
 import Renderer from "./Renderer.js";
 import { SpriteShader } from "../shader/SpriteShader.js";
 import Text from "../drawobject/Text.js";

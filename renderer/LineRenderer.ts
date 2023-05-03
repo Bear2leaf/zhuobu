@@ -1,4 +1,4 @@
-import { device } from "../device/Device.js";
+import device from "../device/Device.js";
 import Renderer from "./Renderer.js";
 import { LineShader } from "../shader/LineShader.js";
 import Camera from "../camera/Camera.js";

@@ -1,5 +1,5 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
-import { device } from "../device/Device.js";
+import device, { ViewPortType } from "../device/Device.js";
 import Histogram from "../drawobject/Histogram.js";
 import Pointer from "../drawobject/Pointer.js";
 import Sprite from "../drawobject/Sprite.js";
@@ -39,15 +39,18 @@ export default class UISystem {
         const now = device.now();
         const fps = Math.round(1000 / (now - this.lastTime));
         this.lastTime = now;
+        device.viewportTo(ViewPortType.Full)
         device.gl.depthMask(false);
+        device.gl.disable(device.gl.DEPTH_TEST)
         this.framesText.updateChars(`frames: ${frame}`);
         this.fpsText.updateChars(`\nfps: ${fps}`);
         this.histogram.updateHistogram(fps);
         this.mainRenderer.render(this.uiCamera, this.histogram);
         this.textRenderer.render(this.uiCamera, this.framesText);
         this.textRenderer.render(this.uiCamera, this.fpsText);
-        this.pointRenderer.render(this.uiCamera, this.pointer);
         this.spriteRenderer.render(this.uiCamera, this.happySprite);
+        this.pointRenderer.render(this.uiCamera, this.pointer);
+        device.gl.enable(device.gl.DEPTH_TEST)
         device.gl.depthMask(true);
     }
 }

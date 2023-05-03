@@ -1,4 +1,4 @@
-import { device } from "../device/Device.js";
+import device from "../device/Device.js";
 import { flatten, Vec3, Vec4 } from "../math/Vector.js";
 
 export default class Shader {

@@ -1,5 +1,5 @@
 import GLTF from "../loader/gltf/GLTF.js";
-import { Device, DeviceInfo,  TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo, wx } from "./Device.js";
+import { Device, DeviceInfo,  TouchInfoFunction, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
     private readonly glContext: WebGL2RenderingContext;
@@ -37,22 +37,19 @@ export default class WxDevice implements Device {
     getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo>{
         return this.fontCache;
     }
-    getDeviceInfo(): DeviceInfo{
-        return this.deviceInfo;
-    }
     getGltfCache(): Map<string, GLTF>{
         return this.gltfCache;
     }
     getGlbCache(): Map<string, ArrayBuffer>{
         return this.glbCache;
     }
-    getWindowInfo = getWindowInfo
-    clearRenderer = clearRenderer
+    getWindowInfo = () => this.deviceInfo;
+    clearRenderer = () => this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.getDeviceInfo();
+            const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
             (canvas.clientWidth) = windowWidth * pixelRatio;
             (canvas.clientHeight) = windowHeight * pixelRatio;
             (canvas.width) = windowWidth * pixelRatio;

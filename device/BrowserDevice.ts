@@ -1,5 +1,5 @@
 import GLTF from "../loader/gltf/GLTF.js";
-import { Device, DeviceInfo, TouchInfoFunction, clearRenderer, getWindowInfo, viewportTo } from "./Device.js";
+import { Device, DeviceInfo, TouchInfoFunction, viewportTo } from "./Device.js";
 
 export default class BrowserDevice implements Device {
     private isMouseDown: boolean;
@@ -36,9 +36,6 @@ export default class BrowserDevice implements Device {
     getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo>{
         return this.fontCache;
     }
-    getDeviceInfo(): DeviceInfo{
-        return this.deviceInfo;
-    }
     getGltfCache(): Map<string, GLTF>{
         return this.gltfCache;
     }
@@ -46,16 +43,16 @@ export default class BrowserDevice implements Device {
         return this.glbCache;
     }
     now = () => performance.now();
-    getWindowInfo = getWindowInfo
-    clearRenderer = clearRenderer
+    getWindowInfo = () => this.deviceInfo;
+    clearRenderer = () => this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
         if (!canvas) {
             throw new Error("canvas not exist");
         }
-        canvas.width = this.getDeviceInfo().windowWidth * this.getDeviceInfo().pixelRatio;
-        canvas.height = this.getDeviceInfo().windowHeight * this.getDeviceInfo().pixelRatio;
+        canvas.width = this.getWindowInfo().windowWidth * this.getWindowInfo().pixelRatio;
+        canvas.height = this.getWindowInfo().windowHeight * this.getWindowInfo().pixelRatio;
         return canvas;
     }
     async loadSubpackage(): Promise<null> {

@@ -1,4 +1,4 @@
-import { device } from "../../device/Device.js";
+import device from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import Mesh from "../../drawobject/Mesh.js";
 import Node from "../../structure/Node.js";
