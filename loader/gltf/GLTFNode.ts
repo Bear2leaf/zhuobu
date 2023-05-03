@@ -28,11 +28,11 @@ export default class GLTFNode {
             return this.children.map((index) => gltf.getNodeByIndex(index));
         }
     }
-    createDrawObject(gltf: GLTF, root?: Node): DrawObject[] {
+    createDrawObjects(gltf: GLTF, root?: Node): DrawObject[] {
         const node = new Node(new TRS(this.translation, this.rotation, this.scale), this.name);
         node.setParent(root);
         if (this.mesh === undefined) {
-            return[];
+            return [];
         }
         const mesh = gltf.getMeshByIndex(this.mesh);
         return mesh.getPrimitives().reduce<DrawObject[]>((prev, primitive) => {
@@ -48,9 +48,9 @@ export default class GLTFNode {
     createAllDrawObjects(gltf: GLTF): DrawObject[] {
         const root = new Node(new TRS(this.translation, this.rotation, this.scale), this.name);
         const drawObjects: DrawObject[] = [];
-        drawObjects.push(...this.createDrawObject(gltf));
+        drawObjects.push(...this.createDrawObjects(gltf));
         this.getChildrenNodes(gltf).forEach((node) => {
-            drawObjects.push(...node.createDrawObject(gltf));
+            drawObjects.push(...node.createDrawObjects(gltf, root));
         });
         return drawObjects;
     }

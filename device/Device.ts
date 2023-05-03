@@ -56,8 +56,8 @@ async function loadFontCache(device: Device, name: string) {
 }
 
 async function loadShaderTxtCache(device: Device, name: string) {
-    device.getTxtCache().set(`static/shader/${name}.vert.txt`, await device.readTxt(`static/shader/${name}.vert.txt`))
-    device.getTxtCache().set(`static/shader/${name}.frag.txt`, await device.readTxt(`static/shader/${name}.frag.txt`))
+    device.getTxtCache().set(`static/shader/${name}.vert.sk`, await device.readTxt(`static/shader/${name}.vert.sk`))
+    device.getTxtCache().set(`static/shader/${name}.frag.sk`, await device.readTxt(`static/shader/${name}.frag.sk`))
 }
 
 

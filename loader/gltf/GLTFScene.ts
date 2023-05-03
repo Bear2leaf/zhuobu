@@ -5,4 +5,7 @@ export default class GLTFScene {
         this.name = scene.name;
         this.nodes = scene.nodes;
     }
+    getNodes() {
+        return this.nodes;
+    }
 }

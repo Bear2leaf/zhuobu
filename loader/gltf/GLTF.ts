@@ -93,7 +93,8 @@ export default class GLTF {
         if (!scene) {
             throw new Error("scene not found");
         }
-        return this.nodes.reduce<DrawObject[]>((prev, node) => prev.concat(node.createAllDrawObjects(this)), []);
+        
+        return scene.getNodes().reduce<DrawObject[]>((prev, node) => prev.concat(this.nodes[node].createAllDrawObjects(this)), []);
     }
     getMeshByIndex(index: number) {
         const mesh = this.meshes[index];
