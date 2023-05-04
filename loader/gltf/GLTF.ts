@@ -1,6 +1,7 @@
 import device from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import Mesh from "../../drawobject/Mesh.js";
+import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
 import Node from "../../structure/Node.js";
 import TRS from "../../structure/TRS.js";
 import GLTFAccessor from "./GLTFAccessor.js";
@@ -55,11 +56,13 @@ export default class GLTF {
     private readonly extensionsRequired?: readonly string[];
     private readonly extensions?: readonly string[];
     private readonly extras?: readonly string[];
+    private readonly drawObjectFactory: DrawObjectFactory;
 
-    constructor(data?: GLTF) {
+    constructor(drawObjectFactory: DrawObjectFactory, data?: GLTF) {
         if (!data) {
             throw new Error("gltf not found");
         }
+        this.drawObjectFactory  = drawObjectFactory;
         this.scene = data.scene;
         this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes.map((node) => new GLTFNode(node));
@@ -80,6 +83,9 @@ export default class GLTF {
         this.extras = data.extras;
     }
 
+    getDrawObjectFactory() {
+        return this.drawObjectFactory;
+    }
     getDataByAccessorIndex(index: number) {
         const accessor = this.accessors[index];
         const bufferView = this.bufferViews[accessor.getBufferView()];

@@ -4,6 +4,9 @@ import Histogram from "../drawobject/Histogram.js";
 import Pointer from "../drawobject/Pointer.js";
 import Sprite from "../drawobject/Sprite.js";
 import Text from "../drawobject/Text.js";
+import CameraFactory from "../factory/CameraFactory.js";
+import DrawObjectFactory from "../factory/DrawObjectFactory.js";
+import RendererFactory from "../factory/RendererFactory.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
@@ -21,19 +24,18 @@ export default class UISystem {
     private readonly happySprite: Sprite;
     private readonly mainRenderer: Renderer;
     private lastTime: number;
-    constructor(mainRenderer: Renderer) {
+    constructor(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
         this.lastTime = 0;
-        this.mainRenderer = mainRenderer;
-        const windowInfo = device.getWindowInfo();
-        this.pointRenderer = new PointRenderer();
-        this.spriteRenderer = new SpriteRenderer();
-        this.textRenderer = new TextRenderer();
-        this.pointer = new Pointer();
-        this.framesText = new Text(0, 40, 2, [1, 1, 1, 1], 0)
-        this.fpsText = new Text(0, 40, 2, [1, 1, 1, 1], 0)
-        this.uiCamera = new OrthoCamera(0, windowInfo.windowWidth, windowInfo.windowHeight, 0, 1, -1);
-        this.histogram = new Histogram();
-        this.happySprite = new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
+        this.mainRenderer = rendererFactory.createMainRendererSingleton();
+        this.pointRenderer = rendererFactory.createPointRenderer();
+        this.spriteRenderer = rendererFactory.createSpriteRenderer();
+        this.textRenderer = rendererFactory.createTextRenderer();
+        this.pointer = drawObjectFactory.createPointer();
+        this.framesText = drawObjectFactory.createFramesText();
+        this.fpsText = drawObjectFactory.createFpsText();
+        this.uiCamera = cameraFactory.createOrthoCamera();
+        this.histogram = drawObjectFactory.createHistogram();
+        this.happySprite = drawObjectFactory.createHappySprite();
     }
     render(frame: number) {
         const now = device.now();

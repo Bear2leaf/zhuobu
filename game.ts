@@ -9,6 +9,9 @@ import GLTF from "./loader/gltf/GLTF.js";
 import GLTFMeshRenderer from "./renderer/MeshRenderer.js";
 import { FontInfo } from "./renderer/TextRenderer.js";
 import MsgDispatcher from "./handler/MsgDispatcher.js";
+import CameraFactory from "./factory/CameraFactory.js";
+import DrawObjectFactory from "./factory/DrawObjectFactory.js";
+import RendererFactory from "./factory/RendererFactory.js";
 
 
 device.loadSubpackage().then(async () => {
@@ -35,32 +38,31 @@ device.loadSubpackage().then(async () => {
     device.gl.enable(device.gl.SCISSOR_TEST)
 }).then(() => {
 
+  const cameraFactory = new CameraFactory();
+  const drawObjectFactory = new DrawObjectFactory();
+  const rendererFactory = new RendererFactory();
 
-  const windowInfo = device.getWindowInfo();
-  const fov = Math.PI / 180 * 60;
-  const aspect = windowInfo.windowWidth / windowInfo.windowHeight;
-  const mainCamera = new PerspectiveCamera(fov, aspect, 1, 10);
-  const mainRenderer = new TriangleRenderer();
-  const gasket = new Gasket();
-  const cube = new TexturedCube();
-  const debugSystem = new DebugSystem(mainCamera);
-  const uiSystem = new UISystem(mainRenderer);
+  const mainCamera = cameraFactory.createMainCamera()
+  const mainRenderer = rendererFactory.createMainRendererSingleton();
+  const gasket = drawObjectFactory.createGasket();
+  const cube = drawObjectFactory.createTexturedCube();
 
-  //gltf - start
-  const gltf = new GLTF(device.getGltfCache().get("static/gltf/whale.CYCLES.gltf"));
+  const debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
+  const uiSystem = new UISystem(cameraFactory, rendererFactory, drawObjectFactory);
+
+  const gltf = new GLTF(drawObjectFactory, device.getGltfCache().get("static/gltf/whale.CYCLES.gltf"));
   const gltfObjs = gltf.createDrawObjects();
-  const gltfRenderer = new GLTFMeshRenderer();
-  //gltf - end
+  const gltfRenderer = rendererFactory.createGLTFMeshRenderer();
 
   function tick(frame: number) {
     device.clearRenderer();
     gasket.rotatePerFrame(frame);
     cube.rotatePerFrame(frame);
-    // mainCamera.rotateViewPerFrame(frame);
+    mainCamera.rotateViewPerFrame(frame);
     mainRenderer.render(mainCamera, gasket);
     mainRenderer.render(mainCamera, cube);
     gltfObjs.forEach(gltfObj => gltfRenderer.render(mainCamera, gltfObj));
-    debugSystem.renderCamera();
+    debugSystem.renderCamera(mainCamera);
     debugSystem.render(gasket, mainRenderer)
     debugSystem.render(cube, mainRenderer);
     gltfObjs.forEach(gltfObj => debugSystem.render(gltfObj, gltfRenderer));

@@ -40,7 +40,7 @@ export default class GLTFNode {
             const texcoordIndex = primitive.getAttributes().getTexCoord();
             const normalIndex = primitive.getAttributes().getNormal();
             const indicesIndex = primitive.getIndices();
-            const drawObject = new Mesh(gltf.getDataByAccessorIndex(positionIndex) as Float32Array, gltf.getDataByAccessorIndex(normalIndex) as Float32Array, gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array, node);
+            const drawObject = gltf.getDrawObjectFactory().createMesh(gltf.getDataByAccessorIndex(positionIndex) as Float32Array, gltf.getDataByAccessorIndex(normalIndex) as Float32Array, gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array, node);
             prev.push(drawObject);
             return prev;
         }, []);
