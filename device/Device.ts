@@ -46,13 +46,13 @@ export async function loadGLTFCache(name: string) {
   device.getGlbCache().set(`static/gltf/${name}.bin`, await device.readBuffer(`static/gltf/${name}.bin`))
 }
 export async function loadFontCache(name: string) {
-  device.getFontCache().set(`static/font/${name}.json`, await device.readJson(`static/font/${name}.json`) as FontInfo)
-  await loadImage(`static/font/${name}.png`)
+  device.getFontCache().set(`resource/font/${name}.json`, await device.readJson(`resource/font/${name}.json`) as FontInfo)
+  await loadImage(`resource/font/${name}.png`)
 }
 
 export async function loadShaderTxtCache(name: string) {
-  device.getTxtCache().set(`static/shader/${name}.vert.sk`, await device.readTxt(`static/shader/${name}.vert.sk`))
-  device.getTxtCache().set(`static/shader/${name}.frag.sk`, await device.readTxt(`static/shader/${name}.frag.sk`))
+  device.getTxtCache().set(`resource/shader/${name}.vert.sk`, await device.readTxt(`resource/shader/${name}.vert.sk`))
+  device.getTxtCache().set(`resource/shader/${name}.frag.sk`, await device.readTxt(`resource/shader/${name}.frag.sk`))
 }
 
 export interface Device {

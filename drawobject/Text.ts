@@ -33,7 +33,7 @@ export default class Text extends DrawObject {
         this.originX = 0;
         this.originY = 0;
         const textTexture = new Texture();
-        const fontImage = device.getImageCache().get("static/font/boxy_bold_font.png");
+        const fontImage = device.getImageCache().get("resource/font/boxy_bold_font.png");
         if (!fontImage) {
             throw new Error("fontImage not exist")
         }

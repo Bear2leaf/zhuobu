@@ -16,20 +16,20 @@ export default class DrawObjectFactory {
   createMesh(positions: Float32Array, normals: Float32Array, indices: Uint16Array, node: Node) {
     return new Mesh(positions, normals, indices, node);
   }
-  createPointer(): import("../drawobject/Pointer.js").default {
+  createPointer() {
     return new Pointer();
   }
-  createFramesText(): import("../drawobject/Text.js").default {
+  createFramesText() {
       return  new Text(0, 40, 2, [1, 1, 1, 1], 0)
   }
-  createFpsText(): import("../drawobject/Text.js").default {
+  createFpsText() {
       return  new Text(0, 40, 2, [1, 1, 1, 1], 0)
   }
-  createHistogram(): import("../drawobject/Histogram.js").default {
+  createHistogram() {
       return  new Histogram();
   }
-  createHappySprite(): import("../drawobject/Sprite.js").default {
-      return  new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], "happy");
+  createHappySprite() {
+      return  new Sprite(0, 150, 10, [1, 1, 1, 1], [0, 0], `resource/sprite/happy.png`);
   }
   createColorArrowLine() {
     return  new ColorArrowLine(new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5));;

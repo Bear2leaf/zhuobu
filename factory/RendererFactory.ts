@@ -6,13 +6,13 @@ import TextRenderer from "../renderer/TextRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 
 export default class RendererFactory {
-    createPointRenderer(): import("../renderer/PointRenderer.js").PointRenderer {
+    createPointRenderer() {
         return new PointRenderer();
     }
-    createSpriteRenderer(): import("../renderer/SpriteRenderer.js").default {
+    createSpriteRenderer() {
         return new SpriteRenderer()
     }
-    createTextRenderer(): import("../renderer/TextRenderer.js").default {
+    createTextRenderer() {
         return new TextRenderer()
     }
     private mainRenderer?: TriangleRenderer;

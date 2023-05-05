@@ -3,9 +3,6 @@ import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import device from "../device/Device.js";
 
 export default class CameraFactory {
-    createOrthoCamera() {
-        return  new OrthoCamera(0, this.width, this.height, 0, 1, -1);;
-    }
     private readonly width: number;
     private readonly height: number;
     private mainCamera?: PerspectiveCamera;
@@ -30,6 +27,10 @@ export default class CameraFactory {
         const aspect = this.width / this.height;
         return new PerspectiveCamera(fov, aspect, 1, 500);
     }
+    createOrthoCamera() {
+        return  new OrthoCamera(0, this.width, this.height, 0, 1, -1);;
+    }
     createUICamera() {
+        return this.createOrthoCamera();
     }
 }

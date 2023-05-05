@@ -5,8 +5,8 @@ import Shader from "./Shader.js";
 export class LineShader extends Shader {
     constructor() {
         super(
-            device.getTxtCache().get("static/shader/Line.vert.sk")!,
-            device.getTxtCache().get("static/shader/Line.frag.sk")!
+            device.getTxtCache().get("resource/shader/Line.vert.sk")!,
+            device.getTxtCache().get("resource/shader/Line.frag.sk")!
         );
     }
 }

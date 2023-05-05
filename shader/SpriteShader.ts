@@ -5,8 +5,8 @@ import Shader from "./Shader.js";
 export class SpriteShader extends Shader {
     constructor() {
         super(
-            device.getTxtCache().get("static/shader/Sprite.vert.sk")!,
-            device.getTxtCache().get("static/shader/Sprite.frag.sk")!
+            device.getTxtCache().get("resource/shader/Sprite.vert.sk")!,
+            device.getTxtCache().get("resource/shader/Sprite.frag.sk")!
         );
     }
 }

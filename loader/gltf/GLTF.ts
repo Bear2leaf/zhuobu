@@ -58,9 +58,10 @@ export default class GLTF {
     private readonly extras?: readonly string[];
     private readonly drawObjectFactory: DrawObjectFactory;
 
-    constructor(drawObjectFactory: DrawObjectFactory, data?: GLTF) {
+    constructor(drawObjectFactory: DrawObjectFactory) {
+        const data = device.getGltfCache().get("static/gltf/whale.CYCLES.gltf");
         if (!data) {
-            throw new Error("gltf not found");
+            throw new Error("data not found");
         }
         this.drawObjectFactory  = drawObjectFactory;
         this.scene = data.scene;

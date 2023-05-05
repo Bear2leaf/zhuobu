@@ -11,7 +11,7 @@ export default class TextRenderer extends Renderer {
     constructor() {
         
         super(new SpriteShader())
-        const fontInfo = device.getFontCache().get("static/font/boxy_bold_font.json");
+        const fontInfo = device.getFontCache().get("resource/font/boxy_bold_font.json");
         if (!fontInfo) {
             throw new Error("fontInfo not exist")
         }
