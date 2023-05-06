@@ -2,6 +2,8 @@ import device from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import Mesh from "../../drawobject/Mesh.js";
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
+import Matrix from "../../math/Matrix.js";
+import { Vec3, Vec4 } from "../../math/Vector.js";
 import Node from "../../structure/Node.js";
 import TRS from "../../structure/TRS.js";
 import GLTFAccessor from "./GLTFAccessor.js";
