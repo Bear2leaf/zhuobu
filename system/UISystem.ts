@@ -23,9 +23,13 @@ export default class UISystem {
     private readonly histogram: Histogram;
     private readonly happySprite: Sprite;
     private readonly mainRenderer: Renderer;
-    private lastTime: number;
+    private lastframe: number;
+    private lasttime: number;
+    private fps: number;
     constructor(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
-        this.lastTime = 0;
+        this.lastframe = 0;
+        this.lasttime = 0;
+        this.fps = 0;
         this.mainRenderer = rendererFactory.createMainRendererSingleton();
         this.pointRenderer = rendererFactory.createPointRenderer();
         this.spriteRenderer = rendererFactory.createSpriteRenderer();
@@ -39,14 +43,17 @@ export default class UISystem {
     }
     render(frame: number) {
         const now = device.now();
-        const fps = Math.round(1000 / (now - this.lastTime));
-        this.lastTime = now;
+        if (now - this.lasttime >= 1000) {
+            this.lasttime = now;
+            this.fps =  frame - this.lastframe;
+            this.lastframe = frame;
+        }
         device.viewportTo(ViewPortType.Full)
         device.gl.depthMask(false);
         device.gl.disable(device.gl.DEPTH_TEST)
         this.framesText.updateChars(`frames: ${frame}`);
-        this.fpsText.updateChars(`\nfps: ${fps}`);
-        this.histogram.updateHistogram(fps);
+        this.fpsText.updateChars(`\nfps: ${this.fps}`);
+        this.histogram.updateHistogram(this.fps);
         this.mainRenderer.render(this.uiCamera, this.histogram);
         this.textRenderer.render(this.uiCamera, this.framesText);
         this.textRenderer.render(this.uiCamera, this.fpsText);
