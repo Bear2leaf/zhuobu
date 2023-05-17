@@ -57,6 +57,7 @@ export async function loadShaderTxtCache(name: string) {
 
 export interface Device {
     get gl(): WebGL2RenderingContext;
+    isWx(): boolean;
     getImageCache(): Map<string, HTMLImageElement>;
     getTxtCache(): Map<string, string>;
     getFontCache(): Map<string, FontInfo>;

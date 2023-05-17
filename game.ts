@@ -1,5 +1,5 @@
 import device, { loadFontCache, loadGLTFCache, loadImage, loadShaderTxtCache } from "./device/Device.js";
-import { DebugSystem as DebugSystem } from "./system/DebugSystem.js";
+import DebugSystem from "./system/DebugSystem.js";
 import UISystem from "./system/UISystem.js";
 import GLTF from "./loader/gltf/GLTF.js";
 import MsgDispatcher from "./handler/MsgDispatcher.js";
@@ -61,7 +61,7 @@ class Game {
     await loadGLTFCache("hello-multi")
     await loadGLTFCache("whale.CYCLES");
     this.gltf = new GLTF(this.drawObjectFactory);
-    this.msgDispatcher && device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
+    // this.msgDispatcher && device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
     device.gl.enable(device.gl.CULL_FACE)
     device.gl.enable(device.gl.DEPTH_TEST)
     device.gl.enable(device.gl.SCISSOR_TEST)
@@ -85,10 +85,10 @@ class Game {
       throw new Error("gasket is not initialized");
     }
     if (!this.cube) {
-      throw new Error("cube is not initialized");
+      throw new Error("cube3 is not initialized");
     }
     if (!this.debugSystem) {
-      throw new Error("debugSystem is not initialized");
+      throw new Error("debugSystem5 is not initialized");
     }
     if (!this.uiSystem) {
       throw new Error("uiSystem is not initialized");
@@ -116,5 +116,7 @@ class Game {
   }
 }
 
-const game = new Game();
-game.preload().then(() => game.load()).then(() => game.tick(0));
+if (device.isWx()) {
+  const game = new Game();
+  game.preload().then(() => game.load()).then(() => game.tick(0));
+}

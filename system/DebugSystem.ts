@@ -7,13 +7,11 @@ import DrawObject from "../drawobject/DrawObject.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
-import Point from "../geometry/Point.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Renderer from "../renderer/Renderer.js";
-import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 
-export class DebugSystem {
+export default class DebugSystem {
     private readonly lineRenderer: LineRenderer;
     private readonly xyzAxis: ColorArrowLine;
     private readonly frustumCube: BlackWireCube;

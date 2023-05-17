@@ -24,6 +24,9 @@ export default class BrowserDevice implements Device {
         this.webgl2RenderingContext = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
         this.isMouseDown = false;
     }
+    isWx(): boolean {
+        return false;
+    }
     get gl(): WebGL2RenderingContext {
         return this.webgl2RenderingContext;
     }

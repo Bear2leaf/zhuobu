@@ -1,5 +1,5 @@
 import GLTF from "../loader/gltf/GLTF.js";
-import { Device, DeviceInfo,  TouchInfoFunction, viewportTo, wx } from "./Device.js";
+import { Device, DeviceInfo, TouchInfoFunction, viewportTo, wx } from "./Device.js";
 
 export default class WxDevice implements Device {
     private readonly glContext: WebGL2RenderingContext;
@@ -23,24 +23,27 @@ export default class WxDevice implements Device {
         }
         this.glContext = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
     }
+    isWx(): boolean {
+        return true;
+    }
     get gl(): WebGL2RenderingContext {
         return this.glContext;
     }
     now = () => this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
 
-    getImageCache(): Map<string, HTMLImageElement>{
+    getImageCache(): Map<string, HTMLImageElement> {
         return this.imageCache;
     }
-    getTxtCache(): Map<string, string>{
+    getTxtCache(): Map<string, string> {
         return this.txtCache;
     }
-    getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo>{
+    getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo> {
         return this.fontCache;
     }
-    getGltfCache(): Map<string, GLTF>{
+    getGltfCache(): Map<string, GLTF> {
         return this.gltfCache;
     }
-    getGlbCache(): Map<string, ArrayBuffer>{
+    getGlbCache(): Map<string, ArrayBuffer> {
         return this.glbCache;
     }
     getWindowInfo = () => this.deviceInfo;
