@@ -1,8 +1,9 @@
 *.js
 *.js.map
-!static/worker/*.js
 project.private.config.json
 .DS_Store
 node_modules
-dist
+dist/*
+!static/worker/*.js
+!dist/index.html
 .env

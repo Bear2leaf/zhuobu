@@ -77,26 +77,30 @@ export default class BrowserDevice implements Device {
     onTouchStart(listener: TouchInfoFunction): void {
         window.onpointerdown = (e: PointerEvent) => {
             this.isMouseDown = true;
-            listener({ x: e.clientX, y: e.clientY });
+            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            listener({ x:  e.clientX - rect.left, y: e.clientY - rect.top });
         };
     }
     onTouchMove(listener: TouchInfoFunction): void {
         window.onpointermove = (e: PointerEvent) => {
             if (this.isMouseDown) {
-                listener({ x: e.clientX, y: e.clientY })
+                const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+                listener({ x:  e.clientX - rect.left, y: e.clientY - rect.top });
             }
         };
     }
     onTouchEnd(listener: TouchInfoFunction): void {
         window.onpointerup = (e: PointerEvent) => {
             this.isMouseDown = false;
-            listener({ x: e.clientX, y: e.clientY });
+            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            listener({ x:  e.clientX - rect.left, y: e.clientY - rect.top });
         }
     }
     onTouchCancel(listener: TouchInfoFunction): void {
         window.onpointercancel = (e: PointerEvent) => {
             this.isMouseDown = false;
-            listener({ x: e.clientX, y: e.clientY });
+            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            listener({ x:  e.clientX - rect.left, y: e.clientY - rect.top });
         }
     }
     async readJson(file: string): Promise<Object> {

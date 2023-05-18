@@ -10,7 +10,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export default async function (req: Request, res: Response) {
+export async function generate(req: Request, res: Response) {
     if (!configuration.apiKey) {
         throw "OpenAI API key not configured, please follow instructions in README.md";
     }
@@ -26,6 +26,27 @@ export default async function (req: Request, res: Response) {
         temperature: 0.6,
     });
     res.send({ result: completion.data });
+}
+export async function talk(req: Request, res: Response) {
+    if (!configuration.apiKey) {
+        throw "OpenAI API key not configured, please follow instructions in README.md";
+    }
+
+    const content = (req.body?.content ) || '';
+    const temperature = (parseFloat(req.body?.temperature || "0.6"));
+    if (content.trim().length === 0) {
+        throw "Please enter a valid content";
+    }
+
+    const completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{
+            role: ChatCompletionRequestMessageRoleEnum.User,
+            content
+        }],
+        temperature,
+    });
+    res.send(completion.data.choices[0].message?.content);
 }
 
 function generatePrompt(animal: string) {

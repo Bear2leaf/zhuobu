@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "npx tsc -w & npx tsc -w -p ..",
-    "reload": "browser-sync start --proxy localhost:3100 --files '../dist'",
+    "reload": "browser-sync start --proxy localhost:3100 --no-open --files '../dist'",
     "nodemon": "nodemon --watch dist/**/*.js --exec node dist/app.js",
     "start": "npm run nodemon & npm run reload & npm run compile"
   },

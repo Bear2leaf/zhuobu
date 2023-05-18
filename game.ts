@@ -119,4 +119,5 @@ class Game {
 // if (device.isWx()) {
   const game = new Game();
   game.preload().then(() => game.load()).then(() => game.tick(0));
+// } else {
 // }
