@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
+        "outDir": "dist",
         "strict": true,
         "target": "ES2015",
         "moduleResolution": "node",
         "sourceMap": true,
-    }
+    },
+    "exclude": [
+        "server"
+    ]
 }
