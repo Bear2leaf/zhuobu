@@ -1,4 +1,4 @@
-import { cross, flatten, normalize, subtract, Vec3, Vec4 } from "./Vector.js";
+import { Vec3, Vec4, cross, flatten, normalize, subtract } from "./Vector.js";
 
 
 export default class Matrix {

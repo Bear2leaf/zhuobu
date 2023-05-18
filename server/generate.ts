@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { Request, Response } from 'express';
 import { IncomingMessage, ServerResponse } from 'http';
 
 import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from "openai";
@@ -9,7 +10,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export default async function (req: any, res: any) {
+export default async function (req: Request, res: Response) {
     if (!configuration.apiKey) {
         throw "OpenAI API key not configured, please follow instructions in README.md";
     }

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import generate from './generate.js';
 
 const app = express()
@@ -11,7 +11,7 @@ app.use('/resource', express.static('../resource'));
 app.use('/static', express.static('../static'));
 
 
-app.post('/generate', async (req: any, res: any) => {
+app.post('/generate', async (req: Request, res: Response) => {
     try {
         await generate(req, res);
     } catch (error) {
