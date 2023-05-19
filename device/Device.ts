@@ -36,7 +36,7 @@ export default abstract class Device {
     return this.glContext;
   }
   abstract getDeviceInfo(): DeviceInfo;
-  abstract getPerformance(): Performance;
+  protected abstract getPerformance(): Performance;
   getCanvas() {
     return this.canvas;
   }

@@ -16,7 +16,6 @@ export default class BrowserDevice extends Device {
     getPerformance(): Performance {
         return performance;
     }
-    now = () => performance.now();
     createCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement {
         canvas.width = this.getDeviceInfo().windowWidth * this.getDeviceInfo().pixelRatio;
         canvas.height = this.getDeviceInfo().windowHeight * this.getDeviceInfo().pixelRatio;

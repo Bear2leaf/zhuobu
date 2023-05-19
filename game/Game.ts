@@ -177,7 +177,7 @@ export default abstract class Game {
     this.gltfObjs.forEach(gltfObj => this.debugSystem && this.gltfRenderer && this.debugSystem.render(gltfObj, this.gltfRenderer));
 
     this.device.viewportTo(ViewPortType.Full)
-    this.uiSystem.render(this.device.gl, this.device.getPerformance().now(), frame);
+    this.uiSystem.render(this.device.gl, this.device.now(), frame);
     requestAnimationFrame(() => this.tick(++frame))
   }
 }

@@ -13,7 +13,7 @@ export default class Histogram extends DrawObject {
     constructor( gl: WebGL2RenderingContext, texture: Texture) {
         const width = 100;
         const height = 100;
-        const hisY = 200;
+        const hisY = 30;
         const lines = 100;
         super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 0);
 

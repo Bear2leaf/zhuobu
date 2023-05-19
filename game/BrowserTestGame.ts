@@ -57,7 +57,7 @@ export default class BrowserTestGame extends BrowserGame {
         const device = this.getDevice();
         device.clearRenderer();
         device.viewportTo(ViewPortType.Full)
-        this.getUISystem().render(device.gl, device.getPerformance().now(), frame);
+        this.getUISystem().render(device.gl, device.now(), frame);
         requestAnimationFrame(() => this.tick(++frame))
     }
 
