@@ -16,7 +16,8 @@
     },
     "ignoreUploadUnusedFiles": true,
     "es6": true,
-    "enhance": true
+    "enhance": true,
+    "condition": false
   },
   "editorSetting": {
     "tabIndent": "insertSpaces",

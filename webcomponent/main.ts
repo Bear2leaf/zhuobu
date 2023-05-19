@@ -1,5 +1,5 @@
-import DrawObjectFactory from "./DrawObjectFactory.js";
-import GameCanvas from "./GameCanvas.js";
+import TestFactoryWebComponent from "./factory/TestFactoryWebComponent.js";
+import GameZhuobuWebComponent from "./GameZhuobuWebComponent.js";
 import Hello from "./Hello.js";
 
 
@@ -7,5 +7,5 @@ import Hello from "./Hello.js";
 
 
 customElements.define('hello-world', Hello);
-customElements.define('draw-object-factory', DrawObjectFactory);
-customElements.define('game-canvas', GameCanvas, { extends: 'canvas' });
+customElements.define('test-factory', TestFactoryWebComponent);
+customElements.define('game-zhuobu', GameZhuobuWebComponent);

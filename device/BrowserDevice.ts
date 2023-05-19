@@ -2,7 +2,7 @@ import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
-    constructor(canvas?: string | HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement) {
         super(canvas);
         this.isMouseDown = false;
     }
@@ -17,14 +17,7 @@ export default class BrowserDevice extends Device {
         return performance;
     }
     now = () => performance.now();
-    createCanvas(canvas?: string | HTMLCanvasElement): HTMLCanvasElement {
-        if (typeof canvas === 'string') {
-            const c = document.getElementById(canvas) as HTMLCanvasElement | null;
-            canvas = c as HTMLCanvasElement | undefined;
-        }
-        if (!canvas) {
-            throw new Error("canvas not exist");
-        }
+    createCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement {
         canvas.width = this.getDeviceInfo().windowWidth * this.getDeviceInfo().pixelRatio;
         canvas.height = this.getDeviceInfo().windowHeight * this.getDeviceInfo().pixelRatio;
         return canvas;
@@ -46,14 +39,14 @@ export default class BrowserDevice extends Device {
             }
     }
     onTouchStart(listener: TouchInfoFunction): void {
-        window.onpointerdown = (e: PointerEvent) => {
+        this.getCanvas().onpointerdown = (e: PointerEvent) => {
             this.isMouseDown = true;
             const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         };
     }
     onTouchMove(listener: TouchInfoFunction): void {
-        window.onpointermove = (e: PointerEvent) => {
+        this.getCanvas().onpointermove = (e: PointerEvent) => {
             if (this.isMouseDown) {
                 const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
                 listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -61,14 +54,14 @@ export default class BrowserDevice extends Device {
         };
     }
     onTouchEnd(listener: TouchInfoFunction): void {
-        window.onpointerup = (e: PointerEvent) => {
+        this.getCanvas().onpointerup = (e: PointerEvent) => {
             this.isMouseDown = false;
             const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         }
     }
     onTouchCancel(listener: TouchInfoFunction): void {
-        window.onpointercancel = (e: PointerEvent) => {
+        this.getCanvas().onpointercancel = (e: PointerEvent) => {
             this.isMouseDown = false;
             const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });

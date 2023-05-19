@@ -9,6 +9,7 @@ export enum ViewPortType {
     TopRight
 }
 export default abstract class Device {
+  private readonly canvas: HTMLCanvasElement
   private readonly glContext: WebGL2RenderingContext;
   private readonly imageCache: Map<string, HTMLImageElement>;
   private readonly txtCache: Map<string, string>;
@@ -17,9 +18,9 @@ export default abstract class Device {
   private readonly glbCache: Map<string, ArrayBuffer>;
   private readonly performance: Performance;
   private readonly deviceInfo: DeviceInfo;
-  constructor(canvas?: string | HTMLCanvasElement) {
-
-    this.glContext = this.createCanvas(canvas).getContext('webgl2') as WebGL2RenderingContext;
+  constructor(canvas?: HTMLCanvasElement) {
+    this.canvas = canvas || this.createCanvas(canvas);
+    this.glContext = this.canvas.getContext('webgl2') as WebGL2RenderingContext;
     this.imageCache = new Map();
     this.txtCache = new Map();
     this.fontCache = new Map();
@@ -36,6 +37,9 @@ export default abstract class Device {
   }
   abstract getDeviceInfo(): DeviceInfo;
   abstract getPerformance(): Performance;
+  getCanvas() {
+    return this.canvas;
+  }
   getImageCache(): Map<string, HTMLImageElement> {
     return this.imageCache;
   }
@@ -95,7 +99,7 @@ export default abstract class Device {
     this.getTxtCache().set(`resource/shader/${name}.vert.sk`, await this.readTxt(`resource/shader/${name}.vert.sk`))
     this.getTxtCache().set(`resource/shader/${name}.frag.sk`, await this.readTxt(`resource/shader/${name}.frag.sk`))
   }
-  abstract createCanvas(canvas?: string | HTMLCanvasElement): HTMLCanvasElement;
+  abstract createCanvas(canvas?: HTMLCanvasElement): HTMLCanvasElement;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;
   abstract createWorker(path: string, handlerCallback: Function): void;
