@@ -3,10 +3,11 @@ import Shader from "./Shader.js";
 
 
 export class LineShader extends Shader {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
         super(
-            device.getTxtCache().get("resource/shader/Line.vert.sk")!,
-            device.getTxtCache().get("resource/shader/Line.frag.sk")!
+            gl,
+            textCache.get("resource/shader/Line.vert.sk")!,
+            textCache.get("resource/shader/Line.frag.sk")!
         );
     }
 }

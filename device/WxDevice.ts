@@ -1,58 +1,22 @@
-import GLTF from "../loader/gltf/GLTF.js";
-import { Device, DeviceInfo, TouchInfoFunction, viewportTo, wx } from "./Device.js";
+import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
-export default class WxDevice implements Device {
-    private readonly glContext: WebGL2RenderingContext;
-    private readonly performance: Performance;
-    private readonly imageCache: Map<string, HTMLImageElement>;
-    private readonly txtCache: Map<string, string>;
-    private readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
-    private readonly gltfCache: Map<string, GLTF>;
-    private readonly glbCache: Map<string, ArrayBuffer>;
-    private readonly deviceInfo: DeviceInfo;
+const wx = (globalThis as any).wx;
+
+export default class WxDevice extends Device {
     constructor() {
-        this.performance = wx.getPerformance();
-        this.imageCache = new Map();
-        this.txtCache = new Map();
-        this.fontCache = new Map();
-        this.gltfCache = new Map();
-        this.glbCache = new Map();
-        this.deviceInfo = wx.getWindowInfo();
-        if (typeof document !== 'undefined') {
-            this.deviceInfo.pixelRatio = 1;
-        }
-        this.glContext = this.createCanvas().getContext('webgl2') as WebGL2RenderingContext;
+        super();
     }
-    isWx(): boolean {
-        return true;
-    }
-    get gl(): WebGL2RenderingContext {
-        return this.glContext;
-    }
-    now = () => this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
 
-    getImageCache(): Map<string, HTMLImageElement> {
-        return this.imageCache;
+    getDeviceInfo(): DeviceInfo {
+        return wx.getWindowInfo();
     }
-    getTxtCache(): Map<string, string> {
-        return this.txtCache;
+    getPerformance(): Performance {
+        return wx.getPerformance();
     }
-    getFontCache(): Map<string, import("../renderer/TextRenderer").FontInfo> {
-        return this.fontCache;
-    }
-    getGltfCache(): Map<string, GLTF> {
-        return this.gltfCache;
-    }
-    getGlbCache(): Map<string, ArrayBuffer> {
-        return this.glbCache;
-    }
-    getWindowInfo = () => this.deviceInfo;
-    clearRenderer = () => this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    viewportTo = viewportTo
     createCanvas(): HTMLCanvasElement {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
+            const { windowWidth, windowHeight, pixelRatio } = this.getDeviceInfo();
             (canvas.clientWidth) = windowWidth * pixelRatio;
             (canvas.clientHeight) = windowHeight * pixelRatio;
             (canvas.width) = windowWidth * pixelRatio;

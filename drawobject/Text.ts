@@ -2,7 +2,6 @@ import { FontInfo } from "../renderer/TextRenderer.js";
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import device from "../device/Device.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
 import Node from "../structure/Node.js";
 
@@ -18,10 +17,10 @@ export default class Text extends DrawObject {
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    constructor(x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        
-        
-        super(new Node(), new Map<number, ArrayBufferObject>(), 0);
+    constructor(gl: WebGL2RenderingContext, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
+
+
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 0);
         this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)
         this.x = x;
@@ -32,13 +31,6 @@ export default class Text extends DrawObject {
         this.chars = chars;
         this.originX = 0;
         this.originY = 0;
-        const textTexture = new Texture();
-        const fontImage = device.getImageCache().get("resource/font/boxy_bold_font.png");
-        if (!fontImage) {
-            throw new Error("fontImage not exist")
-        }
-        textTexture.generate(fontImage);
-        this.createTexture(TextureIndex.Default, textTexture);
 
     }
     updateChars(chars: string) {
@@ -79,7 +71,7 @@ export default class Text extends DrawObject {
             ];
             batch.push(...vertices);
         }
-        this.indices.splice(0 , this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
+        this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
     draw(mode: number): void {
         this.updateABO(ArrayBufferIndex.Vertices, flatten(this.vertices));

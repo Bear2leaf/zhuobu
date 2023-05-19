@@ -11,6 +11,7 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import TextRenderer from "../renderer/TextRenderer.js";
+import Texture from "../texture/Texture.js";
 
 export default class UISystem {
     private readonly pointRenderer: PointRenderer;
@@ -26,7 +27,7 @@ export default class UISystem {
     private lastframe: number;
     private lasttime: number;
     private fps: number;
-    constructor(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
+    constructor(happySpriteTexture: Texture, fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
         this.lastframe = 0;
         this.lasttime = 0;
         this.fps = 0;
@@ -34,23 +35,22 @@ export default class UISystem {
         this.pointRenderer = rendererFactory.createPointRenderer();
         this.spriteRenderer = rendererFactory.createSpriteRenderer();
         this.textRenderer = rendererFactory.createTextRenderer();
-        this.pointer = drawObjectFactory.createPointer();
-        this.framesText = drawObjectFactory.createFramesText();
-        this.fpsText = drawObjectFactory.createFpsText();
+        this.pointer = drawObjectFactory.createPointer(onTouchStart, onTouchMove, onTouchEnd, onTouchCancel);
+
+        this.framesText = drawObjectFactory.createFramesText(fontTexture);
+        this.fpsText = drawObjectFactory.createFpsText(fontTexture);
         this.uiCamera = cameraFactory.createOrthoCamera();
         this.histogram = drawObjectFactory.createHistogram();
-        this.happySprite = drawObjectFactory.createHappySprite();
+        this.happySprite = drawObjectFactory.createHappySprite(happySpriteTexture);
     }
-    render(frame: number) {
-        const now = device.now();
+    render(gl: WebGL2RenderingContext, now: number, frame: number) {
         if (now - this.lasttime >= 1000) {
             this.lasttime = now;
-            this.fps =  frame - this.lastframe;
+            this.fps = frame - this.lastframe;
             this.lastframe = frame;
         }
-        device.viewportTo(ViewPortType.Full)
-        device.gl.depthMask(false);
-        device.gl.disable(device.gl.DEPTH_TEST)
+        gl.depthMask(false);
+        gl.disable(gl.DEPTH_TEST)
         this.framesText.updateChars(`frames: ${frame}`);
         this.fpsText.updateChars(`\nfps: ${this.fps}`);
         this.histogram.updateHistogram(this.fps);
@@ -59,7 +59,7 @@ export default class UISystem {
         this.textRenderer.render(this.uiCamera, this.fpsText);
         this.spriteRenderer.render(this.uiCamera, this.happySprite);
         this.pointRenderer.render(this.uiCamera, this.pointer);
-        device.gl.enable(device.gl.DEPTH_TEST)
-        device.gl.depthMask(true);
+        gl.enable(gl.DEPTH_TEST)
+        gl.depthMask(true);
     }
 }

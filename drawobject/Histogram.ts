@@ -1,6 +1,7 @@
 import Quad from "../geometry/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import Node from "../structure/Node.js";
+import Texture from "../texture/Texture.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
@@ -9,12 +10,12 @@ export default class Histogram extends DrawObject {
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    constructor() {
+    constructor( gl: WebGL2RenderingContext, texture: Texture) {
         const width = 100;
         const height = 100;
         const hisY = 200;
         const lines = 100;
-        super(new Node(), new Map<number, ArrayBufferObject>(), 0);
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 0);
 
         this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)

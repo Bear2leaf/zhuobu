@@ -3,10 +3,11 @@ import Shader from "./Shader.js";
 
 
 export class VertexColorTriangle extends Shader {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
         super(
-            device.getTxtCache().get("resource/shader/VertexColorTriangle.vert.sk")!,
-            device.getTxtCache().get("resource/shader/VertexColorTriangle.frag.sk")!
+            gl,
+            textCache.get("resource/shader/VertexColorTriangle.vert.sk")!,
+            textCache.get("resource/shader/VertexColorTriangle.frag.sk")!
         );
     }
 }

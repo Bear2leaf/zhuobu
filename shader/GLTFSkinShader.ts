@@ -3,10 +3,11 @@ import Shader from "./Shader.js";
 
 
 export class GLTFSkinShader extends Shader {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
         super(
-            device.getTxtCache().get("resource/shader/Skin.vert.sk")!,
-            device.getTxtCache().get("resource/shader/Skin.frag.sk")!
+            gl,
+            textCache.get("resource/shader/Skin.vert.sk")!,
+            textCache.get("resource/shader/Skin.frag.sk")!
         );
     }
 }

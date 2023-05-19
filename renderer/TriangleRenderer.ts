@@ -5,12 +5,14 @@ import { VertexColorTriangle } from "../shader/VertexColorTriangle.js";
 import DrawObject from "../drawobject/DrawObject.js";
 
 export class TriangleRenderer extends Renderer {
-    constructor() {
-        super(new VertexColorTriangle())
+    private readonly primitiveType: number;
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
+        super(new VertexColorTriangle(gl, textCache))
+        this.primitiveType = gl.TRIANGLES;
     }
     render(camera: Camera, drawObject: DrawObject): void {
         super.render(camera, drawObject);
 
-        drawObject.draw(device.gl.TRIANGLES);
+        drawObject.draw(this.primitiveType);
     }
 }

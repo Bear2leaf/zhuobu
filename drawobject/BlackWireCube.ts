@@ -3,11 +3,12 @@ import Cube from "../geometry/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
+import Texture from "../texture/Texture.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class BlackWireCube extends DrawObject {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, texture: Texture) {
         const cube = new Cube(undefined, undefined, new Vec4(0, 0, 0, 1));
         const lines = cube.getLines();
         const points = cube.getPoints();
@@ -20,7 +21,7 @@ export default class BlackWireCube extends DrawObject {
         });
 
         
-        super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));

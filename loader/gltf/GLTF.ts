@@ -1,11 +1,6 @@
 import device from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
-import Mesh from "../../drawobject/Mesh.js";
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
-import Matrix from "../../math/Matrix.js";
-import { Vec3, Vec4 } from "../../math/Vector.js";
-import Node from "../../structure/Node.js";
-import TRS from "../../structure/TRS.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -59,9 +54,11 @@ export default class GLTF {
     private readonly extensions?: readonly string[];
     private readonly extras?: readonly string[];
     private readonly drawObjectFactory: DrawObjectFactory;
+    private readonly bufferCache: Map<string, ArrayBuffer>;
 
-    constructor(drawObjectFactory: DrawObjectFactory) {
-        const data = device.getGltfCache().get("static/gltf/whale.CYCLES.gltf");
+    constructor(drawObjectFactory: DrawObjectFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
+        this.bufferCache = bufferCache;
+        const data = gltfCache.get("static/gltf/whale.CYCLES.gltf");
         if (!data) {
             throw new Error("data not found");
         }
@@ -94,7 +91,7 @@ export default class GLTF {
         const bufferView = this.bufferViews[accessor.getBufferView()];
         const buffer = this.buffers[bufferView.getBuffer()];
         const typedArray = glTypeToTypedArray(accessor.getComponentType());
-        const data = new typedArray(buffer.getBufferData(), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
+        const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
     createDrawObjects(): DrawObject[] {

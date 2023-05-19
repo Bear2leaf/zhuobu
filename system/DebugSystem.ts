@@ -32,8 +32,6 @@ export default class DebugSystem {
         this.debugCamera.lookAtInverse(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0));
     }
     renderCamera(mainCamera: PerspectiveCamera): void {
-        device.viewportTo(ViewPortType.TopRight)
-        device.clearRenderer();
         this.frustumCube.setWorldMatrix(mainCamera.getFrustumTransformMatrix())
         this.cameraCube.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))
         this.lenCone.setWorldMatrix(mainCamera.getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1)))

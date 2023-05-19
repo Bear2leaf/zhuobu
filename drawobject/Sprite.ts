@@ -12,19 +12,12 @@ export default class Sprite extends DrawObject {
     private readonly scale: number;
     private readonly originX: number;
     private readonly originY: number;
-    constructor(x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number], imageName: string) {
-        super(new Node(), new Map<number, ArrayBufferObject>(), 6);
+    constructor(gl: WebGL2RenderingContext, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number]) {
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 6);
         this.x = x;
         this.y = y;
         this.scale = scale;
-        const spriteTexture = new Texture(device.gl.CLAMP_TO_EDGE, device.gl.CLAMP_TO_EDGE);
-        const spriteImage = device.getImageCache().get(imageName);
-        if (!spriteImage) {
-            throw new Error("spriteImage not exist")
-        }
-        spriteTexture.generate(spriteImage);
-        const texSize = spriteTexture.getSize();
-        this.createTexture(TextureIndex.Default, spriteTexture);
+        const texSize = texture.getSize();
         const quad = new Quad(x, y, texSize.x * scale, texSize.y * scale);
         quad.setZWToTexCoord();
         const vertices:Vec4[] = []

@@ -6,10 +6,9 @@ export default class CameraFactory {
     private readonly width: number;
     private readonly height: number;
     private mainCamera?: PerspectiveCamera;
-    constructor() {
-        const windowInfo = device.getWindowInfo();
-        this.width = windowInfo.windowWidth;
-        this.height = windowInfo.windowHeight;
+    constructor(width: number, height: number) {
+        this.width = width;
+        this.height = height;
     }
     createMainCameraSingleton() {
         if (!this.mainCamera) {

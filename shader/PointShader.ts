@@ -1,12 +1,12 @@
-import device from "../device/Device.js";
 import Shader from "./Shader.js";
 
 
 export class PointShader extends Shader {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
         super(
-            device.getTxtCache().get("resource/shader/Point.vert.sk")!,
-            device.getTxtCache().get("resource/shader/Point.frag.sk")!
+            gl,
+            textCache.get("resource/shader/Point.vert.sk")!,
+            textCache.get("resource/shader/Point.frag.sk")!
         );
     }
 }

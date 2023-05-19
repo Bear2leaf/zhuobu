@@ -1,4 +1,3 @@
-import device, { loadFontCache, loadGLTFCache, loadImage, loadShaderTxtCache } from "./device/Device.js";
 import DebugSystem from "./system/DebugSystem.js";
 import UISystem from "./system/UISystem.js";
 import GLTF from "./loader/gltf/GLTF.js";
@@ -12,8 +11,11 @@ import Gasket from "./drawobject/Gasket.js";
 import TexturedCube from "./drawobject/TexturedCube.js";
 import MeshRenderer from "./renderer/MeshRenderer.js";
 import { TriangleRenderer } from "./renderer/TriangleRenderer.js";
+import Device, { ViewPortType } from "./device/Device.js";
+import WxDevice from "./device/WxDevice.js";
+import Texture from "./texture/Texture.js";
 
-class Game {
+export default class Game {
   private debugSystem?: DebugSystem;
   private uiSystem?: UISystem;
   private msgDispatcher?: MsgDispatcher;
@@ -27,23 +29,48 @@ class Game {
   private cube?: TexturedCube;
   private gltfObjs?: DrawObject[];
   private gltfRenderer?: MeshRenderer;
+  private readonly device: Device;
+  constructor(device: Device) {
+    this.device = device;
+  }
   async preload() {
+    await this.device.loadShaderTxtCache("Sprite")
+    await this.device.loadShaderTxtCache("Point")
+    await this.device.loadShaderTxtCache("VertexColorTriangle")
+    await this.device.loadShaderTxtCache("Line")
+    await this.device.loadShaderTxtCache("Mesh")
+    await this.device.loadFontCache("boxy_bold_font")
+    await this.device.loadImage("resource/sprite/happy.png");
+    await this.device.loadImage("resource/texture/test.png");
+    const deviceInfo = this.device.getDeviceInfo();
+    this.cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
+    const defaultTexture = new Texture(this.device.gl);
+    const textureImage = this.device.getImageCache().get("resource/texture/test.png");
+    if (!textureImage) {
+      throw new Error("textureImage not exist")
+    }
+    defaultTexture.generate(deviceInfo, textureImage);
+    this.drawObjectFactory = new DrawObjectFactory(this.device.gl, defaultTexture);
+    this.rendererFactory = new RendererFactory(this.device.gl, this.device.getTxtCache(), this.device.getFontCache());
+    const textTexture = new Texture(this.device.gl);
+    const fontImage = this.device.getImageCache().get("resource/font/boxy_bold_font.png");
+    if (!fontImage) {
+      throw new Error("fontImage not exist")
+    }
+    textTexture.generate(deviceInfo, fontImage);
 
-    await loadShaderTxtCache("Sprite")
-    await loadShaderTxtCache("Point")
-    await loadShaderTxtCache("VertexColorTriangle")
-    await loadShaderTxtCache("Line")
-    await loadShaderTxtCache("Mesh")
-    await loadFontCache("boxy_bold_font")
-    await loadImage("resource/sprite/happy.png");
-    await loadImage("resource/texture/test.png");
-    this.cameraFactory = new CameraFactory();
-    this.drawObjectFactory = new DrawObjectFactory();
-    this.rendererFactory = new RendererFactory();
-    this.uiSystem = new UISystem(this.cameraFactory, this.rendererFactory, this.drawObjectFactory)
+    const happySpriteTexture = new Texture(this.device.gl);
+    const happyImage = this.device.getImageCache().get("resource/sprite/happy.png");
+    if (!happyImage) {
+      throw new Error("fontImage not exist")
+    }
+
+    happySpriteTexture.generate(deviceInfo, happyImage);
+    
+    this.uiSystem = new UISystem(happySpriteTexture, textTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory)
     this.debugSystem = new DebugSystem(this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
     this.msgDispatcher = new MsgDispatcher();
-    this.uiSystem.render(0)
+    this.uiSystem.render(this.device.gl, 0, 0)
   }
   async load() {
     if (!this.drawObjectFactory) {
@@ -55,17 +82,26 @@ class Game {
     if (!this.cameraFactory) {
       throw new Error("cameraFactory is not initialized");
     }
-    await device.loadSubpackage()
+    await this.device.loadSubpackage()
 
-    await loadGLTFCache("hello")
-    await loadGLTFCache("hello-multi")
-    await loadGLTFCache("whale.CYCLES");
-    this.gltf = new GLTF(this.drawObjectFactory);
-    // this.msgDispatcher && device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
-    device.gl.enable(device.gl.CULL_FACE)
-    device.gl.enable(device.gl.DEPTH_TEST)
-    device.gl.enable(device.gl.SCISSOR_TEST)
+    await this.device.loadGLTFCache("hello")
+    await this.device.loadGLTFCache("hello-multi")
+    await this.device.loadGLTFCache("whale.CYCLES");
 
+    const gltfCache = this.device.getGltfCache();
+    const bufferCache = this.device.getGlbCache();
+    this.gltf = new GLTF(this.drawObjectFactory, gltfCache, bufferCache);
+    // this.msgDispatcher && this.device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
+    this.device.gl.enable(this.device.gl.CULL_FACE)
+    this.device.gl.enable(this.device.gl.DEPTH_TEST)
+    this.device.gl.enable(this.device.gl.SCISSOR_TEST)
+
+    const defaultTexture = new Texture(this.device.gl, this.device.gl.CLAMP_TO_EDGE, this.device.gl.CLAMP_TO_EDGE)
+    const textureImage = this.device.getImageCache().get(`resource/texture/test.png`);
+    if (!textureImage) {
+      throw new Error("textureImage not exist")
+    }
+    defaultTexture.generate(this.device.getDeviceInfo(), textureImage);
     this.mainCamera = this.cameraFactory.createMainCameraSingleton()
     this.mainRenderer = this.rendererFactory.createMainRendererSingleton();
     this.gasket = this.drawObjectFactory.createGasket();
@@ -100,24 +136,28 @@ class Game {
       throw new Error("gltfRenderer is not initialized");
     }
 
-    device.clearRenderer();
+    this.device.clearRenderer();
     this.gasket.rotatePerFrame(frame);
     this.cube.rotatePerFrame(frame);
     this.mainCamera.rotateViewPerFrame(frame);
     this.mainRenderer.render(this.mainCamera, this.gasket);
     this.mainRenderer.render(this.mainCamera, this.cube);
     this.gltfObjs.forEach(gltfObj => this.mainCamera && this.gltfRenderer && this.gltfRenderer.render(this.mainCamera, gltfObj));
+
+    this.device.viewportTo(ViewPortType.TopRight)
+    this.device.clearRenderer();
     this.debugSystem.renderCamera(this.mainCamera);
     this.debugSystem.render(this.gasket, this.mainRenderer)
     this.debugSystem.render(this.cube, this.mainRenderer);
     this.gltfObjs.forEach(gltfObj => this.debugSystem && this.gltfRenderer && this.debugSystem.render(gltfObj, this.gltfRenderer));
-    this.uiSystem.render(frame);
+
+    this.device.viewportTo(ViewPortType.Full)
+    this.uiSystem.render(this.device.gl, this.device.getPerformance().now(), frame);
     requestAnimationFrame(() => this.tick(++frame))
   }
 }
-
-// if (device.isWx()) {
-  const game = new Game();
+if ((globalThis as any).wx === undefined) {
+} else {
+  const game = new Game(new WxDevice());
   game.preload().then(() => game.load()).then(() => game.tick(0));
-// } else {
-// }
+}

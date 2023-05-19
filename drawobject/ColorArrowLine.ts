@@ -2,11 +2,12 @@ import LineSegment from "../geometry/LineSegment.js";
 import Point from "../geometry/Point.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
+import Texture from "../texture/Texture.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class ColorArrowLine extends DrawObject {
-    constructor(from: Point, to: Point, ...others: Point[]) {
+    constructor(gl: WebGL2RenderingContext, texture: Texture, from: Point, to: Point, ...others: Point[]) {
         const line = new LineSegment(from, to);
         const colors: Vec4[] = [];
         const indices: number[] = [];
@@ -23,7 +24,7 @@ export default class ColorArrowLine extends DrawObject {
                 otherLineVertCount += 2;
             }
         }
-        super(new Node(), new Map<number, ArrayBufferObject>(), 2 + otherLineVertCount);
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 2 + otherLineVertCount);
         this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
         

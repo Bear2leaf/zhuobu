@@ -7,18 +7,20 @@ export enum ArrayBufferIndex {
 }
 export default class ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
-    constructor(index: ArrayBufferIndex, arrays: Float32Array, size: number) {
-        const bufferObject = device.gl.createBuffer();
+    private readonly gl: WebGL2RenderingContext;
+    constructor(gl:WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array, size: number) {
+        this.gl = gl;
+        const bufferObject = this.gl.createBuffer();
         if (!bufferObject) {
             throw new Error("bufferObject is undefined");
         }
         this.bufferObject = bufferObject;
         this.update(arrays);
-        device.gl.enableVertexAttribArray(index);
-        device.gl.vertexAttribPointer(index, size, device.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(index);
+        this.gl.vertexAttribPointer(index, size, this.gl.FLOAT, false, 0, 0);
     }
     update(arrays: Float32Array) {
-        device.gl.bindBuffer(device.gl.ARRAY_BUFFER, this.bufferObject);
-        device.gl.bufferData(device.gl.ARRAY_BUFFER, arrays, device.gl.STATIC_DRAW);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferObject);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, arrays, this.gl.STATIC_DRAW);
     }
 }

@@ -1,4 +1,3 @@
-import device from "../../device/Device.js";
 
 export default class GLTFBuffer {
     private readonly byteLength: number;
@@ -7,8 +6,8 @@ export default class GLTFBuffer {
         this.byteLength = buffer.byteLength;
         this.uri = buffer.uri;
     }
-    getBufferData(): ArrayBuffer {
-        const buffer = device.getGlbCache().get(`static/gltf/${this.uri}`);
+    getBufferData(cache: Map<string, ArrayBuffer>): ArrayBuffer {
+        const buffer = cache.get(`static/gltf/${this.uri}`);
         if (!buffer) {
             throw new Error(`Buffer not found: ${this.uri}`);
         }

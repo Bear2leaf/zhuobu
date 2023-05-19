@@ -7,22 +7,20 @@ export type FontInfo = { [key: string]: { width: number, height: number, x: numb
 
 export default class TextRenderer extends Renderer {
 
+    private readonly primitiveType: number;
     private readonly fontInfo: FontInfo;
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>, fontInfo: FontInfo) {
         
-        super(new SpriteShader())
-        const fontInfo = device.getFontCache().get("resource/font/boxy_bold_font.json");
-        if (!fontInfo) {
-            throw new Error("fontInfo not exist")
-        }
+        super(new SpriteShader(gl, textCache))
+        this.primitiveType = gl.TRIANGLES;
         this.fontInfo = fontInfo;
-        device.gl.enable(device.gl.BLEND);
-        device.gl.blendFunc(device.gl.ONE, device.gl.ONE_MINUS_SRC_ALPHA);
-        device.gl.pixelStorei(device.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     }
     render(camera: Camera, text: Text) {
         text.create(this.fontInfo);
         super.render(camera, text);
-        text.draw(device.gl.TRIANGLES)
+        text.draw(this.primitiveType)
     }
 }

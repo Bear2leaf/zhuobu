@@ -2,11 +2,12 @@ import Cube from "../geometry/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
+import Texture from "../texture/Texture.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class TexturedCube extends DrawObject {
-    constructor() {
+    constructor(gl: WebGL2RenderingContext, texture: Texture) {
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();
@@ -29,7 +30,7 @@ export default class TexturedCube extends DrawObject {
         }
 
 
-        super(new Node(), new Map<number, ArrayBufferObject>(), indices.length);
+        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4);
         this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords), 2);
