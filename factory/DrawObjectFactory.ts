@@ -35,8 +35,8 @@ export default class DrawObjectFactory {
   createHistogram() {
     return new Histogram(this.gl, this.texture);
   }
-  createHappySprite(texture: Texture) {
-    return new Sprite(this.gl, texture,  0, 150, 10, [1, 1, 1, 1], [0, 0]);
+  createSprite(x: number = 0, y: number = 0, scale: number = 1, texture: Texture = this.texture) {
+    return new Sprite(this.gl, texture,  x, y, scale, [1, 1, 1, 1], [0, 0]);
   }
   createColorArrowLine() {
     return new ColorArrowLine(this.gl, this.texture, new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5));;

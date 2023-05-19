@@ -37,7 +37,6 @@ export default abstract class Game {
     });
   }
 
-
   getDevice() {
     return this.device;
   }
@@ -48,7 +47,7 @@ export default abstract class Game {
     return this.uiSystem;
   }
 
-  setUISystem(happySpriteTexture: Texture, fontTexture: Texture) {
+  setUISystem(fontTexture: Texture) {
     if (!this.cameraFactory) {
       throw new Error("cameraFactory is not set");
     }
@@ -59,7 +58,7 @@ export default abstract class Game {
       throw new Error("rendererFactory is not set");
     }
 
-    this.uiSystem = new UISystem(happySpriteTexture, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
+    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
   }
 
 
@@ -114,7 +113,7 @@ export default abstract class Game {
 
     happySpriteTexture.generate(deviceInfo, happyImage);
 
-    this.uiSystem = new UISystem(happySpriteTexture, textTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory)
+    this.uiSystem = new UISystem(textTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory)
     this.debugSystem = new DebugSystem(this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
     this.msgDispatcher = new MsgDispatcher();
     this.uiSystem.render(this.device.gl, 0, 0)

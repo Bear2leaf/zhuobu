@@ -1,11 +1,11 @@
-import BrowserTestGame from "../../game/BrowserTestGame.js";
+import BrowserSpriteGame from "../game/BrowserSpriteGame.js";
 
 // component without shadow dom, test drawobject factory
-export default class TestFactoryWebComponent extends HTMLElement {
+export default class TestSpriteSystemWebComponent extends HTMLElement {
     constructor() {
         super();
         const canvas = this.appendChild(document.createElement("canvas"))
-        new BrowserTestGame(canvas);
+        new BrowserSpriteGame(canvas);
 
     }
 }
