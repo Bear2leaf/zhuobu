@@ -2,6 +2,7 @@ import { ViewPortType } from "../device/Device.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
+import TextureFactory from "../factory/TextureFactory.js";
 import Texture from "../texture/Texture.js";
 import BrowserGame from "./BrowserGame.js";
 
@@ -14,7 +15,8 @@ export default class BrowserTestGame extends BrowserGame {
         await device.loadShaderTxtCache("Line")
         await device.loadShaderTxtCache("Mesh")
         await device.loadFontCache("boxy_bold_font")
-        await device.loadImage("resource/texture/test.png");
+        await device.loadImageCache("boxy_bold_font")
+        await device.loadImageCache("test");
 
     }
     init() {
@@ -22,28 +24,14 @@ export default class BrowserTestGame extends BrowserGame {
         const device = this.getDevice();
         const deviceInfo = device.getDeviceInfo();
 
-        const defaultTexture = new Texture(device.gl);
-        const textureImage = device.getImageCache().get("resource/texture/test.png");
-        if (!textureImage) {
-            throw new Error("textureImage not exist")
-        }
-        defaultTexture.generate(deviceInfo, textureImage);
-
-        const fontTexture = new Texture(device.gl);
-        const fontImage = device.getImageCache().get("resource/font/boxy_bold_font.png");
-        if (!fontImage) {
-            throw new Error("fontImage not exist")
-        }
-        fontTexture.generate(deviceInfo, fontImage);
-
-
-        this.setDrawObjectFactory(new DrawObjectFactory(device.gl, defaultTexture));
-
-        this.setCameraFactory(new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight));
-        this.setRendererFactory(new RendererFactory(device.gl, device.getTxtCache(), device.getFontCache()));
-
-
-        this.setUISystem(fontTexture);
+    
+        const textureFactory = new TextureFactory(device.gl, device.getImageCache());
+        const fontTexture = textureFactory.createTexture("boxy_bold_font");
+        const drawObjectFactory =  new DrawObjectFactory(device.gl, textureFactory.createTexture("test"))
+        const cameraFactory= new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
+        const rendererFactory = new RendererFactory(device.gl, device.getTxtCache(), device.getFontCache())
+        this.createUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
+        this.getUISystem().setMainRenderer(rendererFactory.createMainRenderer())
     }
     tick(frame: number) {
         const device = this.getDevice();

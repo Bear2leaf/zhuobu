@@ -1,7 +1,7 @@
 import WxDevice from "../device/WxDevice.js";
-import Game from "./Game.js";
+import BaseGame from "./BaseGame.js";
 
-export default class WxGame extends Game {
+export default class WxGame extends BaseGame {
     constructor() {
         super(new WxDevice())
     }

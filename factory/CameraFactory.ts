@@ -1,6 +1,5 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
-import device from "../device/Device.js";
 
 export default class CameraFactory {
     private readonly width: number;

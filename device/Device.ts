@@ -79,7 +79,8 @@ export default abstract class Device {
   now(): number {
     return this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
   }
-  async loadImage(url: string) {
+  async loadImageCache(url: string) {
+    url = `resource/texture/${url}.png`
     const img = this.createImage() as HTMLImageElement;
     img.src = url;
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
@@ -92,7 +93,6 @@ export default abstract class Device {
   }
   async loadFontCache(name: string) {
     this.getFontCache().set(`resource/font/${name}.json`, await this.readJson(`resource/font/${name}.json`) as FontInfo)
-    await this.loadImage(`resource/font/${name}.png`)
   }
   
   async loadShaderTxtCache(name: string) {

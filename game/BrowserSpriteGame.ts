@@ -3,6 +3,7 @@ import Sprite from "../drawobject/Sprite.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
+import TextureFactory from "../factory/TextureFactory.js";
 import Texture from "../texture/Texture.js";
 import BrowserGame from "./BrowserGame.js";
 
@@ -15,8 +16,9 @@ export default class BrowserSpriteGame extends BrowserGame {
         await device.loadShaderTxtCache("Line")
         await device.loadShaderTxtCache("Mesh")
         await device.loadFontCache("boxy_bold_font")
-        await device.loadImage("resource/texture/test.png");
-        await device.loadImage("resource/sprite/happy.png");
+        await device.loadImageCache("boxy_bold_font")
+        await device.loadImageCache("test");
+        await device.loadImageCache("happy");
 
     }
     init() {
@@ -24,34 +26,16 @@ export default class BrowserSpriteGame extends BrowserGame {
         const device = this.getDevice();
         const deviceInfo = device.getDeviceInfo();
 
-        const defaultTexture = new Texture(device.gl);
-        const defaultTextureImage = device.getImageCache().get("resource/texture/test.png");
-        if (!defaultTextureImage) {
-            throw new Error("defaultTextureImage not exist")
-        }
-        defaultTexture.generate(deviceInfo, defaultTextureImage);
-        const drawObjectFactory = new DrawObjectFactory(device.gl, defaultTexture);
+        const textureFactory = new TextureFactory(device.gl, device.getImageCache());
+        const happyTexture = textureFactory.createTexture("happy");
+        const fontTexture = textureFactory.createTexture("boxy_bold_font");
+        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"));
         const defaultSprite = drawObjectFactory.createSprite(190, 30, 10);
-        const happyTexture = new Texture(device.gl);
-        const happyTextureImage = device.getImageCache().get("resource/sprite/happy.png");
-        if (!happyTextureImage) {
-            throw new Error("happyTextureImage not exist")
-        }
-        happyTexture.generate(deviceInfo, happyTextureImage);
         const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
-        const fontTexture = new Texture(device.gl);
-        const fontImage = device.getImageCache().get("resource/font/boxy_bold_font.png");
-        if (!fontImage) {
-            throw new Error("fontImage not exist")
-        }
-        fontTexture.generate(deviceInfo, fontImage);
-
-        this.setDrawObjectFactory(drawObjectFactory);
-        this.setCameraFactory(new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight));
-        this.setRendererFactory(new RendererFactory(device.gl, device.getTxtCache(), device.getFontCache()));
-
-
-        this.setUISystem(fontTexture);
+        const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
+        const rendererFactory = new RendererFactory(device.gl, device.getTxtCache(), device.getFontCache())
+        this.createUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
+        this.getUISystem().setMainRenderer(rendererFactory.createMainRenderer())
         this.getUISystem().addSprite(defaultSprite);
         this.getUISystem().addSprite(happySprite);
     }

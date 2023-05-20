@@ -30,7 +30,7 @@ export default class Texture {
     this.width = 0;
     this.height = 0;
   }
-  generate(deviceInfo: DeviceInfo, data?: HTMLImageElement, bindIndex: number = this.gl.TEXTURE0) {
+  generate(width: number, height: number, data?: HTMLImageElement, bindIndex: number = this.gl.TEXTURE0) {
     this.bindIndex = bindIndex;
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tex);
     if (data) {
@@ -38,9 +38,9 @@ export default class Texture {
       this.width = data.width;
       this.height = data.height;
     } else {
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.internalFormat, deviceInfo.windowWidth, deviceInfo.windowHeight, 0, this.imageFormat, this.gl.UNSIGNED_BYTE, null)
-      this.width = deviceInfo.windowWidth;
-      this.height = deviceInfo.windowHeight;
+      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.internalFormat, width, height, 0, this.imageFormat, this.gl.UNSIGNED_BYTE, null)
+      this.width = width;
+      this.height = height;
     }
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.wrapS);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.wrapT);

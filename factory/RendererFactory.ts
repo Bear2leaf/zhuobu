@@ -6,7 +6,6 @@ import TextRenderer from "../renderer/TextRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 
 export default class RendererFactory {
-    private mainRenderer?: TriangleRenderer;
     private readonly fontCache: Map<string, any>;
     private readonly gl: WebGL2RenderingContext;
     private readonly textCache: Map<string, string>;
@@ -33,12 +32,6 @@ export default class RendererFactory {
     }
     createGLTFMeshRenderer() {
         return new GLTFMeshRenderer(this.gl, this.textCache)
-    }
-    createMainRendererSingleton() {
-        if (!this.mainRenderer) {
-            this.mainRenderer = this.createMainRenderer();
-        }
-        return this.mainRenderer;
     }
     createMainRenderer() {
         return new TriangleRenderer(this.gl, this.textCache)

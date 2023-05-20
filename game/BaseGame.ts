@@ -13,14 +13,12 @@ import MeshRenderer from "../renderer/MeshRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import Device, { ViewPortType } from "../device/Device.js";
 import Texture from "../texture/Texture.js";
+import TextureFactory from "../factory/TextureFactory.js";
 
-export default abstract class Game {
+export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
   private uiSystem?: UISystem;
   private msgDispatcher?: MsgDispatcher;
-  private cameraFactory?: CameraFactory;
-  private drawObjectFactory?: DrawObjectFactory;
-  private rendererFactory?: RendererFactory;
   private gltf?: GLTF;
   private mainCamera?: PerspectiveCamera;
   private mainRenderer?: TriangleRenderer;
@@ -47,30 +45,12 @@ export default abstract class Game {
     return this.uiSystem;
   }
 
-  setUISystem(fontTexture: Texture) {
-    if (!this.cameraFactory) {
-      throw new Error("cameraFactory is not set");
-    }
-    if (!this.drawObjectFactory) {
-      throw new Error("drawObjectFactory is not set");
-    }
-    if (!this.rendererFactory) {
-      throw new Error("rendererFactory is not set");
-    }
+  createUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: Texture) {
 
-    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
+    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory);
   }
 
 
-  setCameraFactory(cameraFactory: CameraFactory) {
-    this.cameraFactory = cameraFactory;
-  }
-  setDrawObjectFactory(drawObjectFactory: DrawObjectFactory) {
-    this.drawObjectFactory = drawObjectFactory;
-  }
-  setRendererFactory(rendererFactory: RendererFactory) {
-    this.rendererFactory = rendererFactory;
-  }
 
   async load() {
     await this.device.loadShaderTxtCache("Sprite")
@@ -79,8 +59,9 @@ export default abstract class Game {
     await this.device.loadShaderTxtCache("Line")
     await this.device.loadShaderTxtCache("Mesh")
     await this.device.loadFontCache("boxy_bold_font")
-    await this.device.loadImage("resource/sprite/happy.png");
-    await this.device.loadImage("resource/texture/test.png");
+    await this.device.loadImageCache("boxy_bold_font")
+    await this.device.loadImageCache("happy");
+    await this.device.loadImageCache("test");
     await this.device.loadSubpackage()
 
     await this.device.loadGLTFCache("hello")
@@ -89,49 +70,33 @@ export default abstract class Game {
   }
   init() {
     const deviceInfo = this.device.getDeviceInfo();
-    this.cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
-    const defaultTexture = new Texture(this.device.gl);
-    const textureImage = this.device.getImageCache().get("resource/texture/test.png");
-    if (!textureImage) {
-      throw new Error("textureImage not exist")
-    }
-    defaultTexture.generate(deviceInfo, textureImage);
-    this.drawObjectFactory = new DrawObjectFactory(this.device.gl, defaultTexture);
-    this.rendererFactory = new RendererFactory(this.device.gl, this.device.getTxtCache(), this.device.getFontCache());
-    const textTexture = new Texture(this.device.gl);
-    const fontImage = this.device.getImageCache().get("resource/font/boxy_bold_font.png");
-    if (!fontImage) {
-      throw new Error("fontImage not exist")
-    }
-    textTexture.generate(deviceInfo, fontImage);
+    const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
 
-    const happySpriteTexture = new Texture(this.device.gl);
-    const happyImage = this.device.getImageCache().get("resource/sprite/happy.png");
-    if (!happyImage) {
-      throw new Error("happyImage not exist")
-    }
+    const textureFactory = new TextureFactory(this.device.gl, this.device.getImageCache());
+    const fontTexture = textureFactory.createTexture("boxy_bold_font");
 
-    happySpriteTexture.generate(deviceInfo, happyImage);
+    const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"));
 
-    this.uiSystem = new UISystem(textTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), this.cameraFactory, this.rendererFactory, this.drawObjectFactory)
-    this.debugSystem = new DebugSystem(this.cameraFactory, this.rendererFactory, this.drawObjectFactory);
+    const rendererFactory = new RendererFactory(this.device.gl, this.device.getTxtCache(), this.device.getFontCache());
+    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
+    this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
     this.msgDispatcher = new MsgDispatcher();
-    this.uiSystem.render(this.device.gl, 0, 0)
     const gltfCache = this.device.getGltfCache();
     const bufferCache = this.device.getGlbCache();
-    this.gltf = new GLTF(this.drawObjectFactory, gltfCache, bufferCache);
+    this.gltf = new GLTF(drawObjectFactory, gltfCache, bufferCache);
     // this.msgDispatcher && this.device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
     this.device.gl.enable(this.device.gl.CULL_FACE)
     this.device.gl.enable(this.device.gl.DEPTH_TEST)
     this.device.gl.enable(this.device.gl.SCISSOR_TEST)
 
-    defaultTexture.generate(this.device.getDeviceInfo(), textureImage);
-    this.mainCamera = this.cameraFactory.createMainCameraSingleton()
-    this.mainRenderer = this.rendererFactory.createMainRendererSingleton();
-    this.gasket = this.drawObjectFactory.createGasket();
-    this.cube = this.drawObjectFactory.createTexturedCube();
+    this.mainCamera = cameraFactory.createMainCameraSingleton()
+    this.mainRenderer = rendererFactory.createMainRenderer();
+    this.gasket = drawObjectFactory.createGasket();
+    this.cube = drawObjectFactory.createTexturedCube();
     this.gltfObjs = this.gltf.createDrawObjects();
-    this.gltfRenderer = this.rendererFactory.createGLTFMeshRenderer();
+    this.gltfRenderer = rendererFactory.createGLTFMeshRenderer();
+    this.uiSystem.setMainRenderer(this.mainRenderer);
+    this.uiSystem.render(this.device.gl, 0, 0)
 
   }
   tick(frame: number) {
@@ -145,10 +110,10 @@ export default abstract class Game {
       throw new Error("gasket is not initialized");
     }
     if (!this.cube) {
-      throw new Error("cube3 is not initialized");
+      throw new Error("cube is not initialized");
     }
     if (!this.debugSystem) {
-      throw new Error("debugSystem5 is not initialized");
+      throw new Error("debugSystem is not initialized");
     }
     if (!this.uiSystem) {
       throw new Error("uiSystem is not initialized");

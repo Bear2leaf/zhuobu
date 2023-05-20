@@ -21,7 +21,7 @@ export default class UISystem {
     private readonly fpsText: Text;
     private readonly uiCamera: OrthoCamera;
     private readonly histogram: Histogram;
-    private readonly mainRenderer: Renderer;
+    private mainRenderer?: Renderer;
     private lastframe: number;
     private lasttime: number;
     private fps: number;
@@ -31,7 +31,6 @@ export default class UISystem {
         this.lastframe = 0;
         this.lasttime = 0;
         this.fps = 0;
-        this.mainRenderer = rendererFactory.createMainRendererSingleton();
         this.pointRenderer = rendererFactory.createPointRenderer();
         this.spriteRenderer = rendererFactory.createSpriteRenderer();
         this.textRenderer = rendererFactory.createTextRenderer();
@@ -45,8 +44,14 @@ export default class UISystem {
     addSprite(sprite: DrawObject) {
         this.sprites.push(sprite);
     }
+    setMainRenderer(renderer: Renderer) {
+        this.mainRenderer = renderer;
+    }
 
     render(gl: WebGL2RenderingContext, now: number, frame: number) {
+        if (!this.mainRenderer) {
+            throw new Error("mainRenderer not exist")
+        }
         if (now - this.lasttime >= 1000) {
             this.lasttime = now;
             this.fps = frame - this.lastframe;
