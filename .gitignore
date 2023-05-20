@@ -6,4 +6,5 @@ node_modules
 dist/*
 !static/worker/*.js
 !dist/index.html
+!/game.js
 .env

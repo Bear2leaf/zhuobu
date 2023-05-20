@@ -1,4 +1,3 @@
-import device from "../device/Device.js";
 import Shader from "./Shader.js";
 
 

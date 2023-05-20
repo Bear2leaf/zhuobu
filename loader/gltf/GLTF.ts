@@ -1,4 +1,3 @@
-import device from "../../device/Device.js";
 import DrawObject from "../../drawobject/DrawObject.js";
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
 import GLTFAccessor from "./GLTFAccessor.js";

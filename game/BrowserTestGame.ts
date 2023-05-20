@@ -3,7 +3,6 @@ import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
 import TextureFactory from "../factory/TextureFactory.js";
-import Texture from "../texture/Texture.js";
 import BrowserGame from "./BrowserGame.js";
 
 export default class BrowserTestGame extends BrowserGame {

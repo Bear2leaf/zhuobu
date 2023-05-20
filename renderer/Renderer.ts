@@ -1,5 +1,4 @@
 import Camera from "../camera/Camera.js";
-import device from "../device/Device.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import Shader from "../shader/Shader.js";

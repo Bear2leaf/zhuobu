@@ -1,4 +1,3 @@
-import device from "../device/Device.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
 import { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
