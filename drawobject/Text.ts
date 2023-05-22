@@ -1,10 +1,10 @@
-import { FontInfo } from "../renderer/TextRenderer.js";
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
 import Node from "../structure/Node.js";
 
+export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
     private readonly x: number;
     private readonly y: number;
@@ -75,7 +75,6 @@ export default class Text extends DrawObject {
     }
     update(): void {
         this.bind();
-        this.updateChars("hello")
         this.create(this.fontInfo);
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));

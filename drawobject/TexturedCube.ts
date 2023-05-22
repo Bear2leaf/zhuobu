@@ -7,6 +7,7 @@ import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class TexturedCube extends DrawObject {
+    private frame = 0;
     constructor(gl: WebGL2RenderingContext, texture: Texture) {
         const cube = new Cube();
         const triangles = cube.getTriangles();
@@ -36,19 +37,19 @@ export default class TexturedCube extends DrawObject {
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
     }
-    update(): void {
-        
+    update(node: Node): void {
+        this.rotatePerFrame(node, this.frame++);
     }
     draw(mode: number): void {
         this.bind()
         super.draw(mode);
     }
-    setInitPosition() {
-        // this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
+    setInitPosition(node: Node) {
+        node.getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
     }
-    rotatePerFrame(frame: number) {
-        this.setInitPosition();
-        // this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame);
+    rotatePerFrame(node: Node, frame: number) {
+        this.setInitPosition(node);
+        node.getWorldMatrix().rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame);
     }
 
 }

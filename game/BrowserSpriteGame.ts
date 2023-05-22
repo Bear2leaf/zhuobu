@@ -41,8 +41,8 @@ export default class BrowserSpriteGame extends BrowserGame {
         const device = this.getDevice();
         device.clearRenderer();
         device.viewportTo(ViewPortType.Full)
-        this.getUISystem().update(frame);
-        this.getUISystem().render(device.gl, device.now(), frame);
+        this.getUISystem().update(device.now(), frame);
+        this.getUISystem().render(device.gl);
         requestAnimationFrame(() => this.tick(++frame))
     }
 

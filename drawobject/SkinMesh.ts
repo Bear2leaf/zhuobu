@@ -12,17 +12,16 @@ export default class SkinMesh extends Mesh {
     private readonly node: Node;
      constructor(gl: WebGL2RenderingContext
         , texture: Texture
-        , position: WebGLBuffer
-        , normal: WebGLBuffer
-        , weights: WebGLBuffer
-        , textureCoord: WebGLBuffer
-        , joints: WebGLBuffer
-        , indices: WebGLBuffer
-        , count: number
+        , position: Float32Array
+        , normal: Float32Array
+        , weights: Float32Array
+        , textureCoord: Float32Array
+        , joints: Uint16Array
+        , indices: Uint16Array
         , jointNodes: Node[]
         , inverseBindMatrixData: Float32Array
         , jointTexture: Texture, node: Node) {
-        super(gl, texture, position, normal, indices, count);
+        super(gl, texture, position, normal, indices);
         this.origMatrices = new Map();
         this.jointNodes = jointNodes;
         this.jointMatrices = [];
@@ -40,7 +39,7 @@ export default class SkinMesh extends Mesh {
                 16)));
         }
         // this.createABO(ArrayBufferIndex.Color, new Float32Array(position.length), 3);
-        this.createABO(ArrayBufferIndex.TextureCoord, textureCoord, 2);
+        // this.createABO(ArrayBufferIndex.TextureCoord, textureCoord, 2);
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
         this.addTexture(TextureIndex.Joint, jointTexture);
@@ -61,7 +60,7 @@ export default class SkinMesh extends Mesh {
     }
     private frames = 0;
     draw(mode: number): void {
-        this.animSkin(Math.sin(this.frames++ / 100));
+        this.animSkin(Math.sin(this.frames++ / 100) * 0.5);
         this.update();
         super.draw(mode);
     }

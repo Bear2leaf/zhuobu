@@ -3,7 +3,6 @@ import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import TextRenderer from "../renderer/TextRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 
 export default class RendererFactory {
@@ -18,9 +17,6 @@ export default class RendererFactory {
     }
     createSpriteRenderer() {
         return new SpriteRenderer(this.gl, this.textCache)
-    }
-    createTextRenderer() {
-        return new TextRenderer(this.gl, this.textCache)
     }
     createLineRenderer() {
         return new LineRenderer(this.gl, this.textCache)

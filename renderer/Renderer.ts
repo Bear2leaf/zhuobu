@@ -14,6 +14,7 @@ export default class Renderer {
         this.shader.setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
         this.shader.setMatrix4fv("u_view", camera.getView().getVertics())
         this.shader.setMatrix4fv("u_projection", camera.getProjection().getVertics())
+        this.shader.setInteger("u_texture", 0);
     }
     setMatrix4fv(name: string, data: Float32Array) {
         this.shader.setMatrix4fv(name, data)

@@ -11,20 +11,19 @@ export default abstract class DrawObject {
     private readonly textureMap: Map<TextureIndex, Texture>;
     private readonly gl: WebGL2RenderingContext;
     private count: number;
-    constructor(gl: WebGL2RenderingContext, defaultTexture: Texture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number, ebo?: WebGLBuffer) {
+    constructor(gl: WebGL2RenderingContext, defaultTexture: Texture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
         this.gl = gl;
         this.count = count;
         this.aboMap = aboMap;
         this.textureMap = new Map<TextureIndex, Texture>();
         this.vao = this.gl.createVertexArray();
-        this.ebo = ebo || this.gl.createBuffer();
+        this.ebo = this.gl.createBuffer();
         this.gl.bindVertexArray(this.vao);
         this.textureMap.set(TextureIndex.Default, defaultTexture);
     }
-    abstract update(): void;
+    abstract update(node: Node): void;
     bind() {
         this.gl.bindVertexArray(this.vao);
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.ebo);
         this.textureMap.forEach((texture) => {
             texture.bind();
         });
@@ -38,7 +37,7 @@ export default abstract class DrawObject {
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, buffer, this.gl.STATIC_DRAW);
         this.count = buffer.length;
     }
-    protected createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array | WebGLBuffer, szie: number) {
+    protected createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, szie: number) {
         this.aboMap.set(index, new ArrayBufferObject(this.gl, index, data, szie));
     }
     protected getTexture(index: TextureIndex) {
@@ -55,7 +54,7 @@ export default abstract class DrawObject {
         const abo = this.aboMap.get(index);
         if (!abo) {
             throw new Error("abo not exist");
-        }
+        }            
         abo.update(data);
     }
     protected setCount(count: number) {

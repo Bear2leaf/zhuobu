@@ -1,19 +1,20 @@
 import BlackWireCone from "../drawobject/BlackWireCone.js";
 import BlackWireCube from "../drawobject/BlackWireCube.js";
 import ColorArrowLine from "../drawobject/ColorArrowLine.js";
+import FpsText from "../drawobject/FpsText.js";
+import FramesText from "../drawobject/FramesText.js";
 import Gasket from "../drawobject/Gasket.js";
 import Histogram from "../drawobject/Histogram.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Sprite from "../drawobject/Sprite.js";
-import Text from "../drawobject/Text.js";
+import Text, { FontInfo } from "../drawobject/Text.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
 import Point from "../geometry/Point.js";
-import GLTFSkin from "../loader/gltf/GLTFSkin.js";
 import { Vec4 } from "../math/Vector.js";
-import { FontInfo } from "../renderer/TextRenderer.js";
 import Node from "../structure/Node.js";
+import UISystem from "../system/UISystem.js";
 import Texture from "../texture/Texture.js";
 
 export default class DrawObjectFactory {
@@ -31,16 +32,15 @@ export default class DrawObjectFactory {
     this.fontInfo = fontInfo;
   }
   createMesh(positions: Float32Array, normals: Float32Array, indices: Uint16Array, node: Node) {
-    node.addDrawObject(new Mesh(this.gl, this.texture, positions, normals, indices, indices.length));
+    node.addDrawObject(new Mesh(this.gl, this.texture, positions, normals, indices));
     return node;
   }
-  createSkinMesh(position: WebGLBuffer
-    , normal: WebGLBuffer
-    , weights: WebGLBuffer
-    , textureCoord: WebGLBuffer
-    , joints: WebGLBuffer
-    , indices: WebGLBuffer
-    , count: number
+  createSkinMesh(position: Float32Array
+    , normal: Float32Array
+    , weights: Float32Array
+    , textureCoord: Float32Array
+    , joints: Uint16Array
+    , indices: Uint16Array
     , jointNodes: Node[]
     , inverseBindMatrixData: Float32Array
     , jointTexture: Texture
@@ -53,7 +53,6 @@ export default class DrawObjectFactory {
       , textureCoord
       , joints
       , indices
-      , count
       , jointNodes
       , inverseBindMatrixData
       , jointTexture
@@ -64,19 +63,19 @@ export default class DrawObjectFactory {
     node.addDrawObject(new Pointer(this.gl, this.texture, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel))
     return node;
   }
-  createFramesText(fontTexture: Texture) {
+  createFramesText(uiSystem: UISystem, fontTexture: Texture) {
     const node = new Node();
-    node.addDrawObject(new Text(this.gl, this.fontInfo, fontTexture, 0, 40, 2, [1, 1, 1, 1], 0))
+    node.addDrawObject(new FramesText(uiSystem, this.gl,  this.fontInfo, fontTexture))
     return node
   }
-  createFpsText(fontTexture: Texture) {
+  createFpsText(uiSystem: UISystem, fontTexture: Texture) {
     const node = new Node();
-    node.addDrawObject(new Text(this.gl, this.fontInfo, fontTexture, 0, 20, 2, [1, 1, 1, 1], 0))
+    node.addDrawObject(new FpsText(uiSystem,this.gl,  this.fontInfo, fontTexture))
     return node
   }
-  createHistogram() {
+  createHistogram(uiSystem: UISystem) {
     const node = new Node();
-    node.addDrawObject(new Histogram(this.gl, this.texture))
+    node.addDrawObject(new Histogram(this.gl, uiSystem, this.texture))
     return node;
   }
   createSprite(x: number = 0, y: number = 0, scale: number = 1, texture: Texture = this.texture) {

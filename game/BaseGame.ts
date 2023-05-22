@@ -147,7 +147,7 @@ export default abstract class BaseGame {
     this.mainRenderer = rendererFactory.createMainRenderer();
     this.gasket = drawObjectFactory.createGasket();
     this.cube = drawObjectFactory.createTexturedCube();
-    this.setGLTFObj(gltf.createRootNode(this.device.gl));
+    this.setGLTFObj(gltf.createRootNode());
     this.uiSystem.setMainRenderer(this.mainRenderer);
 
   }
@@ -178,8 +178,12 @@ export default abstract class BaseGame {
     }
 
     this.device.clearRenderer();
-    // this.gasket.rotatePerFrame(frame);
-    // this.cube.rotatePerFrame(frame);
+    this.gasket.getDrawObjects().forEach((drawObject) => {
+      drawObject.update(this.gasket!);
+    });
+    this.cube.getDrawObjects().forEach((drawObject) => {
+      drawObject.update(this.cube!);
+    });
     this.mainCamera.rotateViewPerFrame(frame);
     this.mainRenderer.render(this.mainCamera, this.gasket);
     this.mainRenderer.render(this.mainCamera, this.cube);
@@ -191,8 +195,8 @@ export default abstract class BaseGame {
     this.debugSystem.render(this.cube, this.mainRenderer);
     this.debugSystem.render(this.gltfRootNode, this.gltfRenderer);
     this.device.viewportTo(ViewPortType.Full)
-    this.getUISystem().update(frame);
-    this.getUISystem().render(this.device.gl, this.device.now(), frame);
+    this.getUISystem().update(this.device.now(), frame);
+    this.getUISystem().render(this.device.gl);
     requestAnimationFrame(() => this.tick(++frame))
   }
 }

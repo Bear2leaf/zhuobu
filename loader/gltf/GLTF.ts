@@ -109,38 +109,10 @@ export default class GLTF {
         const bufferView = this.bufferViews[accessor.getBufferView()];
         const buffer = this.buffers[bufferView.getBuffer()];
         const typedArray = glTypeToTypedArray(accessor.getComponentType());
-        const data = new typedArray(buffer.getBufferData(this.bufferCache), accessor.getByteOffset() + bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
+        const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    getWebGLBufferByAccessorIndex(gl: WebGL2RenderingContext, index: number) {
-        const accessor = this.accessors[index];
-        const bufferView = this.bufferViews[accessor.getBufferView()];
-        const buffer = gl.createBuffer();
-        const target = bufferView.getTarget() || gl.ARRAY_BUFFER;
-        const arrayBuffer = this.buffers[bufferView.getBuffer()].getBufferData(this.bufferCache);
-        const data = new Uint8Array(arrayBuffer, bufferView.getByteOffset(), bufferView.getByteLength());
-        gl.bindBuffer(target, buffer);
-        gl.bufferData(target, data, gl.STATIC_DRAW);
-        if (!buffer) {
-            throw new Error("buffer not created");
-        }
-        return buffer;
-
-    }
-    getAccessorByIndex(index: number) {
-        if (!this.accessors[index]) {
-            throw new Error(`accessor not found: ${index}`);
-        }
-        return this.accessors[index];
-    }
-
-    getAccessorAndWebGLBuffer(index: number) {
-        const accessor = this.accessors[index];
-        const bufferView = this.bufferViews[accessor.getBufferView()];
-        const buffer = this.buffers[bufferView.getBuffer()];
-        return new Uint8Array(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), bufferView.getByteLength());
-    }
-    createRootNode(gl: WebGL2RenderingContext): Node {
+    createRootNode(): Node {
         const rootNode = new Node(new TRS(), "root");
         for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
             const gltfNode = this.nodes[sceneNodeIndex];
@@ -151,7 +123,7 @@ export default class GLTF {
             this.buildNodeTree(gltfNode);
         }
         this.nodes.forEach((node) => {
-            node.createFirstPrimitiveDrawObject(this, gl);
+            node.createFirstPrimitiveDrawObject(this);
         });
         console.log(rootNode)
         return rootNode;

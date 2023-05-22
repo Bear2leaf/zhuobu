@@ -9,30 +9,19 @@ export enum ArrayBufferIndex {
 export default class ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
     private readonly gl: WebGL2RenderingContext;
-    constructor(gl: WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array | Uint16Array | WebGLBuffer, size: number) {
+    constructor(gl: WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array | Uint16Array, size: number) {
         this.gl = gl;
-        if (arrays instanceof WebGLBuffer) {
-            this.bufferObject = arrays;
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferObject);
-            this.gl.enableVertexAttribArray(index);
-            if (index === ArrayBufferIndex.Joints) {
-                this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_SHORT, 0, 0);
-            } else {
-                this.gl.vertexAttribPointer(index, size, this.gl.FLOAT, false, 0, 0);
-            }
-        } else {
-            const bufferObject = this.gl.createBuffer();
-            if (!bufferObject) {
-                throw new Error("bufferObject is undefined");
-            }
-            this.bufferObject = bufferObject;
-            this.update(arrays);
-            this.gl.enableVertexAttribArray(index);
-            if (arrays instanceof Float32Array) {
-                this.gl.vertexAttribPointer(index, size, this.gl.FLOAT, false, 0, 0);
-            } else if (arrays instanceof Uint16Array) {
-                this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_SHORT, 0, 0);
-            }
+        const bufferObject = this.gl.createBuffer();
+        if (!bufferObject) {
+            throw new Error("bufferObject is undefined");
+        }
+        this.bufferObject = bufferObject;
+        this.update(arrays);
+        this.gl.enableVertexAttribArray(index);
+        if (arrays instanceof Float32Array) {
+            this.gl.vertexAttribPointer(index, size, this.gl.FLOAT, false, 0, 0);
+        } else if (arrays instanceof Uint16Array) {
+            this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_SHORT, 0, 0);
         }
     }
     update(arrays: Float32Array | Uint16Array) {

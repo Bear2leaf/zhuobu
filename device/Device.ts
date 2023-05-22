@@ -1,5 +1,5 @@
+import { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../loader/gltf/GLTF.js";
-import { FontInfo } from "../renderer/TextRenderer.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -14,7 +14,7 @@ export default abstract class Device {
   private readonly glContext: WebGL2RenderingContext;
   private readonly imageCache: Map<string, HTMLImageElement>;
   private readonly txtCache: Map<string, string>;
-  private readonly fontCache: Map<string, import("../renderer/TextRenderer").FontInfo>;
+  private readonly fontCache: Map<string, FontInfo>;
   private readonly gltfCache: Map<string, GLTF>;
   private readonly glbCache: Map<string, ArrayBuffer>;
   private readonly performance: Performance;
@@ -57,7 +57,7 @@ export default abstract class Device {
     return this.glbCache;
   }
   clearRenderer() { this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); }
-  viewportTo(this: Device, type: ViewPortType): void {
+  viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
     const leftWidth = windowWidth * (2 / 3) * pixelRatio
     const rightWidth = windowWidth * (1 / 3) * pixelRatio;

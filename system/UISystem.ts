@@ -9,14 +9,12 @@ import RendererFactory from "../factory/RendererFactory.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import TextRenderer from "../renderer/TextRenderer.js";
 import Node from "../structure/Node.js";
 import Texture from "../texture/Texture.js";
 
 export default class UISystem {
     private readonly pointRenderer: PointRenderer;
     private readonly spriteRenderer: SpriteRenderer;
-    private readonly textRenderer: TextRenderer;
     private readonly pointer: Node;
     private readonly framesText: Node;
     private readonly fpsText: Node;
@@ -25,6 +23,7 @@ export default class UISystem {
     private mainRenderer?: Renderer;
     private lastframe: number;
     private lasttime: number;
+    private currentframe: number;
     private fps: number;
     private readonly sprites: Node[];
     constructor(fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
@@ -32,15 +31,21 @@ export default class UISystem {
         this.lastframe = 0;
         this.lasttime = 0;
         this.fps = 0;
+        this.currentframe = 0;
         this.pointRenderer = rendererFactory.createPointRenderer();
         this.spriteRenderer = rendererFactory.createSpriteRenderer();
-        this.textRenderer = rendererFactory.createTextRenderer();
         this.pointer = drawObjectFactory.createPointer(onTouchStart, onTouchMove, onTouchEnd, onTouchCancel);
 
-        this.framesText = drawObjectFactory.createFramesText(fontTexture);
-        this.fpsText = drawObjectFactory.createFpsText(fontTexture);
+        this.framesText = drawObjectFactory.createFramesText(this, fontTexture);
+        this.fpsText = drawObjectFactory.createFpsText(this, fontTexture);
         this.uiCamera = cameraFactory.createOrthoCamera();
-        this.histogram = drawObjectFactory.createHistogram();
+        this.histogram = drawObjectFactory.createHistogram(this);
+    }
+    getFPS() {
+        return this.fps;
+    }
+    getFrames() {
+        return this.currentframe;
     }
     addSprite(sprite: Node) {
         this.sprites.push(sprite);
@@ -48,25 +53,8 @@ export default class UISystem {
     setMainRenderer(renderer: Renderer) {
         this.mainRenderer = renderer;
     }
-    update(now: number) {
+    update(now: number, frame: number) {
 
-        this.framesText.getDrawObjects().forEach(drawObject => {
-            drawObject.update();
-            // .updateChars(`frames: ${frame}`)
-        });
-        this.fpsText.getDrawObjects().forEach(drawObject => {
-            drawObject.update();
-            // .updateChars(`\nfps: ${this.fps}`)
-        });
-        this.histogram.getDrawObjects().forEach(drawObject => {
-            drawObject.update();
-            // this.histogram.updateHistogram(this.fps);
-        });
-        this.pointer.getDrawObjects().forEach(drawObject => {
-            drawObject.update();
-        });
-    }
-    render(gl: WebGL2RenderingContext, now: number, frame: number) {
         if (!this.mainRenderer) {
             throw new Error("mainRenderer not exist")
         }
@@ -75,14 +63,32 @@ export default class UISystem {
             this.fps = frame - this.lastframe;
             this.lastframe = frame;
         }
+        this.currentframe = frame;
+        this.framesText.getDrawObjects().forEach(drawObject => {
+            drawObject.update(this.framesText);
+        });
+        this.fpsText.getDrawObjects().forEach(drawObject => {
+            drawObject.update(this.fpsText);
+        });
+        this.histogram.getDrawObjects().forEach(drawObject => {
+            drawObject.update(this.histogram);
+        });
+        this.pointer.getDrawObjects().forEach(drawObject => {
+            drawObject.update(this.pointer);
+        });
+    }
+    render(gl: WebGL2RenderingContext) {
         gl.depthMask(false);
         gl.disable(gl.DEPTH_TEST)
         this.sprites.forEach(sprite => {
             this.spriteRenderer.render(this.uiCamera, sprite);
         });
+        if (!this.mainRenderer) {
+            throw new Error("mainRenderer not exist");
+        }
         this.mainRenderer.render(this.uiCamera, this.histogram);
-        this.textRenderer.render(this.uiCamera, this.framesText);
-        this.textRenderer.render(this.uiCamera, this.fpsText);
+        this.spriteRenderer.render(this.uiCamera, this.framesText);
+        this.spriteRenderer.render(this.uiCamera, this.fpsText);
         this.pointRenderer.render(this.uiCamera, this.pointer);
         gl.enable(gl.DEPTH_TEST)
         gl.depthMask(true);

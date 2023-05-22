@@ -10,6 +10,7 @@ import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class Gasket extends DrawObject {
+    private frame = 0;
     constructor(gl: WebGL2RenderingContext, texture: Texture) {
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
@@ -42,18 +43,19 @@ export default class Gasket extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
     }
-    update(): void {
+    update(node: Node): void {
+        this.rotatePerFrame(node, this.frame++);
     }
     draw(mode: number): void {
         this.bind()
         super.draw(mode);
     }
-    setInitPosition() {
-        // this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, 2, -8)))
+    setInitPosition(node: Node) {
+        node.getWorldMatrix().set(Matrix.translation(new Vec3(0, 2, -8)))
     }
-    rotatePerFrame(frame: number) {
-        this.setInitPosition();
-        // this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame);
+    rotatePerFrame(node: Node, frame: number) {
+        this.setInitPosition(node);
+        node.getWorldMatrix().rotateY(Math.PI / 180 * frame);
     }
 }
 

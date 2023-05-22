@@ -45,7 +45,7 @@ export default class GLTFNode {
         }
         return node;
     }
-    createFirstPrimitiveDrawObject(gltf: GLTF, gl: WebGL2RenderingContext) {
+    createFirstPrimitiveDrawObject(gltf: GLTF) {
         if (this.mesh === undefined) {
             return;
         }
@@ -66,15 +66,13 @@ export default class GLTFNode {
         const jointsIndex = primitive.getAttributes().getJoints();
         const indicesIndex = primitive.getIndices();
         const inverseBindMatrixIndex = gltf.getSkinByIndex(0).getInverseBindMatrices();
-        const count = gltf.getAccessorByIndex(positionIndex).getCount();
         gltf.getDrawObjectFactory().createSkinMesh(
-            gltf.getWebGLBufferByAccessorIndex(gl, positionIndex) as WebGLBuffer
-            , gltf.getWebGLBufferByAccessorIndex(gl, normalIndex) as WebGLBuffer
-            , gltf.getWebGLBufferByAccessorIndex(gl, weightslIndex) as WebGLBuffer
-            , gltf.getWebGLBufferByAccessorIndex(gl, texcoordIndex) as WebGLBuffer
-            , gltf.getWebGLBufferByAccessorIndex(gl, jointsIndex) as WebGLBuffer
-            , gltf.getWebGLBufferByAccessorIndex(gl, indicesIndex) as WebGLBuffer
-            , count
+            gltf.getDataByAccessorIndex(positionIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(weightslIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(texcoordIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(jointsIndex) as Uint16Array
+            , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
             , jointNodes
             , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             , gltf.getTextureFactory().createJointTexture()
