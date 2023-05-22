@@ -12,7 +12,7 @@ export default class Sprite extends DrawObject {
     private readonly originX: number;
     private readonly originY: number;
     constructor(gl: WebGL2RenderingContext, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number]) {
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 6);
+        super(gl, texture, new Map<number, ArrayBufferObject>(), 6);
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -24,11 +24,18 @@ export default class Sprite extends DrawObject {
         const indices: number[] = []
         quad.appendTo(vertices, colors, indices);
 
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4);
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4);
+        this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
+        this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.updateEBO(new Uint16Array(indices));
         this.originX = origin[0];
         this.originY = origin[1];
 
+    }
+    update(): void {
+        
+    }
+    draw(mode: number): void {
+        this.bind();
+        super.draw(mode);
     }
 }

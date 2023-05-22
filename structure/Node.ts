@@ -1,3 +1,4 @@
+import DrawObject from "../drawobject/DrawObject.js";
 import Matrix from "../math/Matrix.js";
 import TRS from "./TRS.js";
 
@@ -8,6 +9,7 @@ export default class Node {
     private readonly children: Node[];
     private readonly localMatrix: Matrix;
     private readonly worldMatrix: Matrix;
+    private readonly drawObjects: DrawObject[]
     constructor(source?: TRS, name?: string) {
       this.name = name ?? "untitled";
       this.source = source ?? new TRS();
@@ -15,6 +17,20 @@ export default class Node {
       this.children = [];
       this.localMatrix = Matrix.identity();
       this.worldMatrix = Matrix.identity();
+      this.drawObjects = [];
+    }
+    getChildByIndex(index: number) {
+      const childNode = this.children[index];
+      if (!childNode) {
+          throw new Error(`childNode not found: ${index}`);
+      }
+      return childNode;
+    }
+    addDrawObject(drawObject: DrawObject) {
+      this.drawObjects.push(drawObject);
+    }
+    getDrawObjects() {
+      return this.drawObjects;
     }
     setParent(parent?: Node) {
       if (this.parent) {
@@ -61,6 +77,9 @@ export default class Node {
     private removeChild(child: this) {
       const ndx = this.children.indexOf(child);
       this.children.splice(ndx, 1);
+    }
+    getSource() {
+      return this.source;
     }
 }
   

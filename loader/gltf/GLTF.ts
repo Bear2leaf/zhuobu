@@ -1,5 +1,9 @@
 import DrawObject from "../../drawobject/DrawObject.js";
+import SkinMesh from "../../drawobject/SkinMesh.js";
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
+import TextureFactory from "../../factory/TextureFactory.js";
+import Node from "../../structure/Node.js";
+import TRS from "../../structure/TRS.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -53,15 +57,17 @@ export default class GLTF {
     private readonly extensions?: readonly string[];
     private readonly extras?: readonly string[];
     private readonly drawObjectFactory: DrawObjectFactory;
+    private readonly textureFactory: TextureFactory;
     private readonly bufferCache: Map<string, ArrayBuffer>;
 
-    constructor(drawObjectFactory: DrawObjectFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
+    constructor(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
         this.bufferCache = bufferCache;
         const data = gltfCache.get("static/gltf/whale.CYCLES.gltf");
         if (!data) {
             throw new Error("data not found");
         }
-        this.drawObjectFactory  = drawObjectFactory;
+        this.drawObjectFactory = drawObjectFactory;
+        this.textureFactory = textureFactory;
         this.scene = data.scene;
         this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes.map((node) => new GLTFNode(node));
@@ -75,7 +81,7 @@ export default class GLTF {
         this.meshes = data.meshes.map((mesh) => new GLTFMesh(mesh));
         this.cameras = data.cameras;
         this.animations = data.animations;
-        this.skins = data.skins;
+        this.skins = data.skins?.map((skin) => new GLTFSkin(skin));
         this.extensionsUsed = data.extensionsUsed;
         this.extensionsRequired = data.extensionsRequired;
         this.extensions = data.extensions;
@@ -85,21 +91,80 @@ export default class GLTF {
     getDrawObjectFactory() {
         return this.drawObjectFactory;
     }
+    getTextureFactory() {
+        return this.textureFactory;
+    }
+    getSkinByIndex(index: number) {
+        if (!this.skins) {
+            throw new Error("skins not found");
+        }
+        const skin = this.skins[index];
+        if (!skin) {
+            throw new Error(`skin not found: ${index}`);
+        }
+        return skin;
+    }
     getDataByAccessorIndex(index: number) {
         const accessor = this.accessors[index];
         const bufferView = this.bufferViews[accessor.getBufferView()];
         const buffer = this.buffers[bufferView.getBuffer()];
         const typedArray = glTypeToTypedArray(accessor.getComponentType());
-        const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
+        const data = new typedArray(buffer.getBufferData(this.bufferCache), accessor.getByteOffset() + bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createDrawObjects(): DrawObject[] {
-        const scene = this.scenes[this.scene];
-        if (!scene) {
-            throw new Error("scene not found");
+    getWebGLBufferByAccessorIndex(gl: WebGL2RenderingContext, index: number) {
+        const accessor = this.accessors[index];
+        const bufferView = this.bufferViews[accessor.getBufferView()];
+        const buffer = gl.createBuffer();
+        const target = bufferView.getTarget() || gl.ARRAY_BUFFER;
+        const arrayBuffer = this.buffers[bufferView.getBuffer()].getBufferData(this.bufferCache);
+        const data = new Uint8Array(arrayBuffer, bufferView.getByteOffset(), bufferView.getByteLength());
+        gl.bindBuffer(target, buffer);
+        gl.bufferData(target, data, gl.STATIC_DRAW);
+        if (!buffer) {
+            throw new Error("buffer not created");
         }
-        
-        return scene.getNodes().reduce<DrawObject[]>((prev, node) => prev.concat(this.nodes[node].createAllDrawObjects(this)), []);
+        return buffer;
+
+    }
+    getAccessorByIndex(index: number) {
+        if (!this.accessors[index]) {
+            throw new Error(`accessor not found: ${index}`);
+        }
+        return this.accessors[index];
+    }
+
+    getAccessorAndWebGLBuffer(index: number) {
+        const accessor = this.accessors[index];
+        const bufferView = this.bufferViews[accessor.getBufferView()];
+        const buffer = this.buffers[bufferView.getBuffer()];
+        return new Uint8Array(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), bufferView.getByteLength());
+    }
+    createRootNode(gl: WebGL2RenderingContext): Node {
+        const rootNode = new Node(new TRS(), "root");
+        for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
+            const gltfNode = this.nodes[sceneNodeIndex];
+            if (!gltfNode) {
+                throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
+            }
+            gltfNode.getNode().setParent(rootNode);
+            this.buildNodeTree(gltfNode);
+        }
+        this.nodes.forEach((node) => {
+            node.createFirstPrimitiveDrawObject(this, gl);
+        });
+        console.log(rootNode)
+        return rootNode;
+    }
+    buildNodeTree(root: GLTFNode) {
+        const childrenIndices = root.getChildrenIndices();
+        if (childrenIndices && childrenIndices.length > 0) {
+            for (const childIndex of childrenIndices) {
+                const childGLTFNode = this.getNodeByIndex(childIndex);
+                childGLTFNode.getNode().setParent(root.getNode());
+                this.buildNodeTree(childGLTFNode)
+            }
+        }
     }
     getMeshByIndex(index: number) {
         const mesh = this.meshes[index];

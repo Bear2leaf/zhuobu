@@ -9,12 +9,6 @@ export default class CameraFactory {
         this.width = width;
         this.height = height;
     }
-    createMainCameraSingleton() {
-        if (!this.mainCamera) {
-            this.mainCamera = this.createMainCamera();
-        }
-        return this.mainCamera;
-    }
     createMainCamera() {
         const fov = Math.PI / 180 * 60;
         const aspect = this.width / this.height;

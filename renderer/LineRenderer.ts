@@ -2,6 +2,7 @@ import Renderer from "./Renderer.js";
 import { LineShader } from "../shader/LineShader.js";
 import Camera from "../camera/Camera.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import Node from "../structure/Node.js";
 
 export class LineRenderer extends Renderer {
     private readonly primitiveType: number
@@ -10,9 +11,10 @@ export class LineRenderer extends Renderer {
         this.primitiveType = gl.LINES;
 
     }
-    render(camera: Camera, drawObject: DrawObject): void {
-        super.render(camera, drawObject);
-
-        drawObject.draw(this.primitiveType);
+    render(camera: Camera, node: Node): void {
+        super.render(camera, node);
+        node.getDrawObjects().forEach(drawObject => {
+            drawObject.draw(this.primitiveType);
+        });
     }
 }

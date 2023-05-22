@@ -17,12 +17,11 @@ export default class Text extends DrawObject {
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    constructor(gl: WebGL2RenderingContext, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-
-
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 0);
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)
+    private readonly fontInfo: FontInfo;
+    constructor(gl: WebGL2RenderingContext, fontInfo: FontInfo, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
+        super(gl, texture, new Map<number, ArrayBufferObject>(), 0);
+        this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -31,6 +30,7 @@ export default class Text extends DrawObject {
         this.chars = chars;
         this.originX = 0;
         this.originY = 0;
+        this.fontInfo = fontInfo;
 
     }
     updateChars(chars: string) {
@@ -73,11 +73,17 @@ export default class Text extends DrawObject {
         }
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
     }
-    draw(mode: number): void {
-        this.updateABO(ArrayBufferIndex.Vertices, flatten(this.vertices));
-        this.updateABO(ArrayBufferIndex.Colors, flatten(this.colors));
+    update(): void {
+        this.bind();
+        this.updateChars("hello")
+        this.create(this.fontInfo);
+        this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
+        this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
         this.setCount(this.indices.length);
+    }
+    draw(mode: number): void {
+        this.bind();
         super.draw(mode);
     }
 

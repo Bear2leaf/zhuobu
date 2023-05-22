@@ -30,18 +30,25 @@ export default class TexturedCube extends DrawObject {
         }
 
 
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4);
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4);
-        this.createABO(ArrayBufferIndex.TextureCoords, flatten(textureCoords), 2);
+        super(gl, texture, new Map<number, ArrayBufferObject>(), indices.length);
+        this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
+        this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
+        this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
     }
+    update(): void {
+        
+    }
+    draw(mode: number): void {
+        this.bind()
+        super.draw(mode);
+    }
     setInitPosition() {
-        this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
+        // this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, -1, -8)))
     }
     rotatePerFrame(frame: number) {
         this.setInitPosition();
-        this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame);
+        // this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame).rotateX(Math.PI / 180 * frame).rotateZ(Math.PI / 180 * frame);
     }
 
 }

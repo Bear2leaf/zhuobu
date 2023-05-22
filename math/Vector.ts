@@ -1,4 +1,8 @@
-
+export function length(a: Vec4) {
+    const lenSq = a.x * a.x + a.y * a.y + a.z * a.z;
+    const len = Math.sqrt(lenSq);
+    return len;
+}
 export function flatten(vec4Array: Vec4[]): Float32Array {
     return new Float32Array(vec4Array.reduce<number[]>(function (prev, current, index) {
         for (let i = 0; i < current.getSize(); i++) {
@@ -12,8 +16,7 @@ export function flatten(vec4Array: Vec4[]): Float32Array {
 export function normalize(a: Vec3, dst?: Vec3) {
     dst = dst || new Vec3();
 
-    const lenSq = a.x * a.x + a.y * a.y + a.z * a.z;
-    const len = Math.sqrt(lenSq);
+    const len = length(a);
     if (len > 0.00001) {
         dst.x = a.x / len;
         dst.y = a.y / len;

@@ -1,4 +1,4 @@
-import { Vec3, Vec4, cross, flatten, normalize, subtract } from "./Vector.js";
+import { Vec3, Vec4, cross, flatten, length, normalize, subtract } from "./Vector.js";
 
 
 export default class Matrix {
@@ -27,6 +27,15 @@ export default class Matrix {
             , new Vec4(a02, a12, a22, a32)
             , new Vec4(a03, a13, a23, a33)
         ];
+    }
+    copyToFloat32Array(array: Float32Array) {
+        this.columns.forEach((column, index) => {
+            array[index * 4 + 0] = column.x;
+            array[index * 4 + 1] = column.y;
+            array[index * 4 + 2] = column.z;
+            array[index * 4 + 3] = column.w;
+        })
+
     }
     set(matrix: Matrix) {
         this.columns[0].x = matrix.columns[0].x;
@@ -94,46 +103,184 @@ export default class Matrix {
 
         return dst;
     }
-    static compose(position: Vec3, rotation: Vec3, scale: Vec3, dst?: Matrix) {
+    static compose(translation: Vec3, quaternion: Vec4, scale: Vec3, dst?: Matrix) {
         dst = dst || new Matrix();
-        const { x, y, z } = position;
-        const { x: rx, y: ry, z: rz } = rotation;
-        const { x: sx, y: sy, z: sz } = scale;
-        const c = Math.cos;
-        const s = Math.sin;
-        const c1 = c(rx);
-        const s1 = s(rx);
-        const c2 = c(ry);
-        const s2 = s(ry);
-        const c3 = c(rz);
-        const s3 = s(rz);
-        const m11 = c2 * c3;
-        const m12 = -c2 * s3;
-        const m13 = s2;
-        const m21 = c1 * s3 + c3 * s1 * s2;
-        const m22 = c1 * c3 - s1 * s2 * s3;
-        const m23 = -c2 * s1;
-        const m31 = s1 * s3 - c1 * c3 * s2;
-        const m32 = c3 * s1 + c1 * s2 * s3;
-        const m33 = c1 * c2;
-        dst.columns[0].x = m11 * sx;
-        dst.columns[0].y = m12 * sx;
-        dst.columns[0].z = m13 * sx;
+
+        const x = quaternion.x;
+        const y = quaternion.y;
+        const z = quaternion.z;
+        const w = quaternion.w;
+
+        const x2 = x + x;
+        const y2 = y + y;
+        const z2 = z + z;
+
+        const xx = x * x2;
+        const xy = x * y2;
+        const xz = x * z2;
+
+        const yy = y * y2;
+        const yz = y * z2;
+        const zz = z * z2;
+
+        const wx = w * x2;
+        const wy = w * y2;
+        const wz = w * z2;
+
+        const sx = scale.x;
+        const sy = scale.y;
+        const sz = scale.z;
+
+        dst.columns[0].x = (1 - (yy + zz)) * sx;
+        dst.columns[0].y = (xy + wz) * sx;
+        dst.columns[0].z = (xz - wy) * sx;
         dst.columns[0].w = 0;
-        dst.columns[1].x = m21 * sy;
-        dst.columns[1].y = m22 * sy;
-        dst.columns[1].z = m23 * sy;
+
+        dst.columns[1].x = (xy - wz) * sy;
+        dst.columns[1].y = (1 - (xx + zz)) * sy;
+        dst.columns[1].z = (yz + wx) * sy;
         dst.columns[1].w = 0;
-        dst.columns[2].x = m31 * sz;
-        dst.columns[2].y = m32 * sz;
-        dst.columns[2].z = m33 * sz;
+
+        dst.columns[2].x = (xz + wy) * sz;
+        dst.columns[2].y = (yz - wx) * sz;
+        dst.columns[2].z = (1 - (xx + yy)) * sz;
         dst.columns[2].w = 0;
-        dst.columns[3].x = x;
-        dst.columns[3].y = y;
-        dst.columns[3].z = z;
+
+        dst.columns[3].x = translation.x;
+        dst.columns[3].y = translation.y;
+        dst.columns[3].z = translation.z;
         dst.columns[3].w = 1;
+
         return dst;
     }
+    static determinate(mat: Matrix) {
+        const m = mat.getVertics()
+        var m00 = m[0 * 4 + 0];
+        var m01 = m[0 * 4 + 1];
+        var m02 = m[0 * 4 + 2];
+        var m03 = m[0 * 4 + 3];
+        var m10 = m[1 * 4 + 0];
+        var m11 = m[1 * 4 + 1];
+        var m12 = m[1 * 4 + 2];
+        var m13 = m[1 * 4 + 3];
+        var m20 = m[2 * 4 + 0];
+        var m21 = m[2 * 4 + 1];
+        var m22 = m[2 * 4 + 2];
+        var m23 = m[2 * 4 + 3];
+        var m30 = m[3 * 4 + 0];
+        var m31 = m[3 * 4 + 1];
+        var m32 = m[3 * 4 + 2];
+        var m33 = m[3 * 4 + 3];
+        var tmp_0  = m22 * m33;
+        var tmp_1  = m32 * m23;
+        var tmp_2  = m12 * m33;
+        var tmp_3  = m32 * m13;
+        var tmp_4  = m12 * m23;
+        var tmp_5  = m22 * m13;
+        var tmp_6  = m02 * m33;
+        var tmp_7  = m32 * m03;
+        var tmp_8  = m02 * m23;
+        var tmp_9  = m22 * m03;
+        var tmp_10 = m02 * m13;
+        var tmp_11 = m12 * m03;
+    
+        var t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
+            (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+        var t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
+            (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+        var t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
+            (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+        var t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
+            (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+    
+        return 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
+      }
+    static decompose(mat: Matrix, translation: Vec3, quaternion: Vec3, scale: Vec3) {
+
+        let sx = length(mat.columns[0]);
+    const sy = length(mat.columns[1]);
+    const sz = length(mat.columns[2]);
+
+    // if determinate is negative, we need to invert one scale
+    const det = Matrix.determinate(mat);
+    if (det < 0) {
+      sx = -sx;
+    }
+
+    translation.x = mat.columns[3].x;
+    translation.y = mat.columns[3].y;
+    translation.z = mat.columns[3].z;
+
+    // scale the rotation part
+    const matrix = Matrix.copy(mat);
+
+    const invSX = 1 / sx;
+    const invSY = 1 / sy;
+    const invSZ = 1 / sz;
+
+    matrix.columns[0].x *= invSX;
+    matrix.columns[0].y *= invSX;
+    matrix.columns[0].z *= invSX;
+
+    matrix.columns[1].x *= invSY;
+    matrix.columns[1].y *= invSY;
+    matrix.columns[1].z *= invSY;
+
+    matrix.columns[2].x *= invSZ;
+    matrix.columns[2].y *= invSZ;
+    matrix.columns[2].z *= invSZ;
+
+    Matrix.quatFromRotationMatrix(matrix, quaternion);
+
+    scale.x = sx;
+    scale.y = sy;
+    scale.z = sz;
+
+
+    }
+
+    static quatFromRotationMatrix(m: Matrix, dst: Vec4) {
+        // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+    
+        // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+        const m11 = m.columns[0].x;
+        const m12 = m.columns[1].x;
+        const m13 = m.columns[2].x;
+        const m21 = m.columns[0].y;
+        const m22 = m.columns[1].y;
+        const m23 = m.columns[2].y;
+        const m31 = m.columns[0].z;
+        const m32 = m.columns[1].z;
+        const m33 = m.columns[2].z;
+    
+        const trace = m11 + m22 + m33;
+    
+        if (trace > 0) {
+          const s = 0.5 / Math.sqrt(trace + 1);
+          dst.w = 0.25 / s;
+          dst.x = (m32 - m23) * s;
+          dst.y = (m13 - m31) * s;
+          dst.z = (m21 - m12) * s;
+        } else if (m11 > m22 && m11 > m33) {
+          const s = 2 * Math.sqrt(1 + m11 - m22 - m33);
+          dst.w = (m32 - m23) / s;
+          dst.x = 0.25 * s;
+          dst.y = (m12 + m21) / s;
+          dst.z = (m13 + m31) / s;
+        } else if (m22 > m33) {
+          const s = 2 * Math.sqrt(1 + m22 - m11 - m33);
+          dst.w = (m13 - m31) / s;
+          dst.x = (m12 + m21) / s;
+          dst.y = 0.25 * s;
+          dst.z = (m23 + m32) / s;
+        } else {
+          const s = 2 * Math.sqrt(1 + m33 - m11 - m22);
+          dst.w = (m21 - m12) / s;
+          dst.x = (m13 + m31) / s;
+          dst.y = (m23 + m32) / s;
+          dst.z = 0.25 * s;
+        }
+      }
     static copy(src: Matrix, dst?: Matrix) {
         dst = dst || new Matrix();
         dst.columns[0].x = src.columns[0].x;
@@ -145,7 +292,7 @@ export default class Matrix {
         dst.columns[1].y = src.columns[1].y;
         dst.columns[1].z = src.columns[1].z;
         dst.columns[1].w = src.columns[1].w;
-        
+
         dst.columns[2].x = src.columns[2].x;
         dst.columns[2].y = src.columns[2].y;
         dst.columns[2].z = src.columns[2].z;
@@ -498,5 +645,21 @@ export default class Matrix {
             0, 0, (zNear + zFar) * rangeInv, -1,
             0, 0, zNear * zFar * rangeInv * 2, 0
         )
+    }
+    static fromFloat32Array(src: Float32Array): Matrix {
+        return new Matrix(
+            src[0], src[1], src[2], src[3],
+            src[4], src[5], src[6], src[7],
+            src[8], src[9], src[10], src[11],
+            src[12], src[13], src[14], src[15]
+        );
+    }
+    static flatten(matrices: Matrix[]) {
+        const count = matrices.length;
+        const array = new Float32Array(count * 16);
+        for (let i = 0; i < count; ++i) {
+            array.set(matrices[i].getVertics(), i * 16);
+        }
+        return array;
     }
 }

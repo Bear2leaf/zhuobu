@@ -12,9 +12,9 @@ export default class Pointer extends DrawObject {
         onTouchEnd(() => { })
         onTouchCancel(() => { })
 
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 1);
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array([0, 0, 0, 1]), 4)
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array([1, 1, 1, 1]), 4)
+        super(gl, texture, new Map<number, ArrayBufferObject>(), 1);
+        this.createABO(ArrayBufferIndex.Position, new Float32Array([0, 0, 0, 1]), 4)
+        this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1, 1]), 4)
         this.updateEBO(new Uint16Array([0]))
     }
     private setPosition(e: { x: number, y: number } | undefined) {
@@ -25,9 +25,12 @@ export default class Pointer extends DrawObject {
         this.y = e.y;
 
     }
+    update(): void {
+        this.bind();
+        this.updateABO(ArrayBufferIndex.Position, new Float32Array([this.x, this.y, 0, 1]));
+    }
     draw(mode: number): void {
-
-        this.updateABO(ArrayBufferIndex.Vertices, new Float32Array([this.x, this.y, 0, 1]));
+        this.bind();
         super.draw(mode);
     }
 }

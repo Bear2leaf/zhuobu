@@ -21,13 +21,20 @@ export default class BlackWireCube extends DrawObject {
         });
 
         
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), indices.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4)
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
+        super(gl, texture, new Map<number, ArrayBufferObject>(), indices.length);
+        this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
+        this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));
     }
+    update(): void {
+        
+    }
+    draw(mode: number): void {
+        this.bind()
+        super.draw(mode);
+    }
     setWorldMatrix(matrix: Matrix) {
-        this.getNode().updateWorldMatrix(matrix);
+        // this.getNode().updateWorldMatrix(matrix);
     }
 }
 

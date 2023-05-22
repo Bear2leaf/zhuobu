@@ -15,10 +15,10 @@ export default class Histogram extends DrawObject {
         const height = 100;
         const hisY = 30;
         const lines = 100;
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 0);
+        super(gl, texture, new Map<number, ArrayBufferObject>(), 0);
 
-        this.createABO(ArrayBufferIndex.Vertices, new Float32Array(0), 4)
-        this.createABO(ArrayBufferIndex.Colors, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.updateEBO(new Uint16Array(0));
         this.quads = [];
         const background = new Quad(0, hisY, width, height);
@@ -37,13 +37,15 @@ export default class Histogram extends DrawObject {
             prevQuad.setHeight(fps);
         }
     }
-    draw(mode: number): void {
-
-        this.updateABO(ArrayBufferIndex.Vertices, flatten(this.vertices));
-        this.updateABO(ArrayBufferIndex.Colors, flatten(this.colors));
+    update(): void {
+        this.bind()
+        this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
+        this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
         this.setCount(this.indices.length);
-        
+    }
+    draw(mode: number): void {
+        this.bind()
         super.draw(mode);
     }
 }

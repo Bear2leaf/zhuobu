@@ -6,7 +6,8 @@ export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 export enum ViewPortType {
     Full,
-    TopRight
+    TopRight,
+    LeftTop
 }
 export default abstract class Device {
   private readonly canvas: HTMLCanvasElement
@@ -49,10 +50,10 @@ export default abstract class Device {
   getFontCache(): Map<string, FontInfo> {
     return this.fontCache;
   }
-  getGltfCache(): Map<string, GLTF> {
+  getGLTFCache(): Map<string, GLTF> {
     return this.gltfCache;
   }
-  getGlbCache(): Map<string, ArrayBuffer> {
+  getGLBCache(): Map<string, ArrayBuffer> {
     return this.glbCache;
   }
   clearRenderer() { this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); }
@@ -88,8 +89,8 @@ export default abstract class Device {
   }
   
   async loadGLTFCache(name: string) {
-    this.getGltfCache().set(`static/gltf/${name}.gltf`, await this.readJson(`static/gltf/${name}.gltf`) as GLTF)
-    this.getGlbCache().set(`static/gltf/${name}.bin`, await this.readBuffer(`static/gltf/${name}.bin`))
+    this.getGLTFCache().set(`static/gltf/${name}.gltf`, await this.readJson(`static/gltf/${name}.gltf`) as GLTF)
+    this.getGLBCache().set(`static/gltf/${name}.bin`, await this.readBuffer(`static/gltf/${name}.bin`))
   }
   async loadFontCache(name: string) {
     this.getFontCache().set(`resource/font/${name}.json`, await this.readJson(`resource/font/${name}.json`) as FontInfo)

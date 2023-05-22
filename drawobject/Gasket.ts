@@ -37,17 +37,23 @@ export default class Gasket extends DrawObject {
         divideRecursiveTetrahedron(tetrahedron, recursiveLevel);
 
         
-        super(gl, texture,new Node(), new Map<number, ArrayBufferObject>(), points.length);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(points), 4)
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
+        super(gl, texture, new Map<number, ArrayBufferObject>(), points.length);
+        this.createABO(ArrayBufferIndex.Position, flatten(points), 4)
+        this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
     }
+    update(): void {
+    }
+    draw(mode: number): void {
+        this.bind()
+        super.draw(mode);
+    }
     setInitPosition() {
-        this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, 2, -8)))
+        // this.getNode().getWorldMatrix().set(Matrix.translation(new Vec3(0, 2, -8)))
     }
     rotatePerFrame(frame: number) {
         this.setInitPosition();
-        this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame);
+        // this.getNode().getWorldMatrix().rotateY(Math.PI / 180 * frame);
     }
 }
 

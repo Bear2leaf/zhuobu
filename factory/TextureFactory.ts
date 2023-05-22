@@ -1,4 +1,4 @@
-import Texture from "../texture/Texture.js";
+import Texture, { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureFactory {
     private readonly gl: WebGL2RenderingContext;
@@ -16,5 +16,9 @@ export default class TextureFactory {
         }
         defaultTexture.generate(0, 0, defaultTextureImage);
         return defaultTexture;
+    }
+    createJointTexture() {
+        const jointTexture = new Texture(this.gl, this.gl.TEXTURE1, this.gl.CLAMP_TO_EDGE, this.gl.CLAMP_TO_EDGE);
+        return jointTexture;
     }
 }

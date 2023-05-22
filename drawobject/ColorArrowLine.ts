@@ -24,11 +24,18 @@ export default class ColorArrowLine extends DrawObject {
                 otherLineVertCount += 2;
             }
         }
-        super(gl, texture, new Node(), new Map<number, ArrayBufferObject>(), 2 + otherLineVertCount);
-        this.createABO(ArrayBufferIndex.Vertices, flatten(vertices), 4)
-        this.createABO(ArrayBufferIndex.Colors, flatten(colors), 4)
+        super(gl, texture, new Map<number, ArrayBufferObject>(), 2 + otherLineVertCount);
+        this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
+        this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         
         this.updateEBO(new Uint16Array(indices));
+    }
+    update(): void {
+        
+    }
+    draw(mode: number): void {
+        this.bind()
+        super.draw(mode);
     }
 }
 

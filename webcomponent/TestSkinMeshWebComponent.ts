@@ -1,11 +1,11 @@
-import BrowserTestGame from "../game/BrowserTestGame.js";
+import BrowserSkinMeshGame from "../game/BrowserSkinMeshGame.js";
 
 // component without shadow dom, test drawobject factory
-export default class TestFactoryWebComponent extends HTMLElement {
+export default class TestSkinMeshWebComponent extends HTMLElement {
     constructor() {
         super();
         const canvas = this.appendChild(document.createElement("canvas"))
-        new BrowserTestGame(canvas);
+        new BrowserSkinMeshGame(canvas);
 
     }
 }

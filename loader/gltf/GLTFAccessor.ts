@@ -26,6 +26,7 @@ export default class GLTFAccessor {
     private readonly count: number;
     private readonly max: readonly number[];
     private readonly min: readonly number[];
+    private readonly byteOffset?: number;
     private readonly type: GLTFAccessorType;
     constructor(accessor: GLTFAccessor) {
         this.bufferView = accessor.bufferView;
@@ -33,6 +34,7 @@ export default class GLTFAccessor {
         this.count = accessor.count;
         this.max = accessor.max;
         this.min = accessor.min;
+        this.byteOffset = accessor.byteOffset;
         this.type = accessor.type;
     }
     getBufferView() {
@@ -49,6 +51,9 @@ export default class GLTFAccessor {
     }
     getMin() {
         return this.min;
+    }
+    getByteOffset() {
+        return this.byteOffset || 0;
     }
     getType() {
         return this.type;
