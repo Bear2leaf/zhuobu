@@ -17,7 +17,7 @@ export default class Texture {
   private readonly filterMax: number;
   private width: number;
   private height: number;
-  constructor(gl: WebGL2RenderingContext, bindIndex: number = gl.TEXTURE0, wrapS: number = gl.REPEAT, wrapT: number = gl.REPEAT, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
+  constructor(gl: WebGL2RenderingContext, bindIndex: number = gl.TEXTURE0, wrapS: number = gl.CLAMP_TO_EDGE, wrapT: number = gl.CLAMP_TO_EDGE, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
     this.gl = gl;
     this.tex = this.gl.createTexture();
     this.bindIndex = bindIndex;

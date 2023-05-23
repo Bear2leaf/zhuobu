@@ -170,9 +170,6 @@ export default abstract class BaseGame {
     if (!this.mainRenderer) {
       throw new Error("mainRenderer is not initialized");
     }
-    if (!this.gasket) {
-      throw new Error("gasket is not initialized");
-    }
     if (!this.cube) {
       throw new Error("cube is not initialized");
     }
@@ -187,6 +184,9 @@ export default abstract class BaseGame {
     }
     if (!this.gltfRenderer) {
       throw new Error("gltfRenderer is not initialized");
+    }
+    if (!this.gasket) {
+      throw new Error("gasket is not initialized");
     }
     this.tickClock();
     this.device.clearRenderer();
