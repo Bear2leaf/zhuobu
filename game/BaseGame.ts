@@ -14,6 +14,7 @@ import Renderer from "../renderer/Renderer.js";
 import Node from "../structure/Node.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
+import Clock from "../device/Clock.js";
 
 export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
@@ -26,11 +27,13 @@ export default abstract class BaseGame {
   private gltfRootNode?: Node;
   private gltfRenderer?: Renderer;
   private readonly device: Device;
+  private readonly clock: Clock;
   constructor(device: Device) {
     this.device = device;
+    this.clock = new Clock(device);
     this.load().then(() => {
       this.init();
-      this.tick(0);
+      this.tick();
     });
   }
 
@@ -88,7 +91,7 @@ export default abstract class BaseGame {
 
   initUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: Texture) {
 
-    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory);
+    this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory);
   }
   initDebugSystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
 
@@ -98,6 +101,9 @@ export default abstract class BaseGame {
   createGLTF(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
 
     return new GLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache);
+  }
+  getFrames() {
+    return this.clock.getFrames();
   }
 
   setGLTFObj(obj: Node) {
@@ -134,7 +140,7 @@ export default abstract class BaseGame {
     const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"), this.device.getFontCache());
 
     const rendererFactory = new RendererFactory(this.device.gl, this.device.getTxtCache());
-    this.uiSystem = new UISystem(fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
+    this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
     this.msgDispatcher = new MsgDispatcher();
     const gltfCache = this.device.getGLTFCache();
@@ -154,7 +160,10 @@ export default abstract class BaseGame {
     this.uiSystem.setMainRenderer(this.mainRenderer);
 
   }
-  tick(frame: number) {
+  tickClock() {
+    this.clock.tick()
+  }
+  tick() {
     if (!this.mainCamera) {
       throw new Error("mainCamera is not initialized");
     }
@@ -179,7 +188,7 @@ export default abstract class BaseGame {
     if (!this.gltfRenderer) {
       throw new Error("gltfRenderer is not initialized");
     }
-
+    this.tickClock();
     this.device.clearRenderer();
     this.gasket.getDrawObjects().forEach((drawObject) => {
       drawObject.update(this.gasket!);
@@ -188,7 +197,7 @@ export default abstract class BaseGame {
       drawObject.update(this.cube!);
     });
     this.gltfRootNode.updateWorldMatrix(Matrix.translation(new Vec3(0, 0, 10)))
-    this.mainCamera.rotateViewPerFrame(frame);
+    this.mainCamera.rotateViewPerFrame(this.getFrames());
     this.mainRenderer.render(this.mainCamera, this.gasket);
     this.mainRenderer.render(this.mainCamera, this.cube);
     this.gltfRenderer.render(this.mainCamera, this.gltfRootNode);
@@ -199,8 +208,8 @@ export default abstract class BaseGame {
     this.debugSystem.render(this.cube, this.mainRenderer);
     this.debugSystem.render(this.gltfRootNode, this.gltfRenderer);
     this.device.viewportTo(ViewPortType.Full)
-    this.getUISystem().update(this.device.now(), frame);
+    this.getUISystem().update();
     this.getUISystem().render(this.device.gl);
-    requestAnimationFrame(() => this.tick(++frame))
+    requestAnimationFrame(() => this.tick())
   }
 }

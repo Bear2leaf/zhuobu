@@ -30,9 +30,9 @@ export default class BrowserSpriteGame extends BrowserGame {
         const fontTexture = textureFactory.createTexture("boxy_bold_font");
         const flowersTexture = textureFactory.createTexture("flowers");
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache());
-        const defaultSprite = drawObjectFactory.createSprite(190, 30, 10);
+        const defaultSprite = drawObjectFactory.createSprite(0, 0, 5);
         const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
-        const flowersSprite = drawObjectFactory.createSprite(0, 0, 1, flowersTexture);
+        const flowersSprite = drawObjectFactory.createSprite(0, 0, 0.7, flowersTexture);
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const rendererFactory = new RendererFactory(device.gl, device.getTxtCache())
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
@@ -41,13 +41,14 @@ export default class BrowserSpriteGame extends BrowserGame {
         this.getUISystem().addSprite(defaultSprite);
         this.getUISystem().addSprite(happySprite);
     }
-    tick(frame: number) {
+    tick() {
+        this.tickClock();
         const device = this.getDevice();
         device.clearRenderer();
         device.viewportTo(ViewPortType.Full)
-        this.getUISystem().update(device.now(), frame);
+        this.getUISystem().update();
         this.getUISystem().render(device.gl);
-        requestAnimationFrame(() => this.tick(++frame))
+        requestAnimationFrame(() => this.tick())
     }
 
 }

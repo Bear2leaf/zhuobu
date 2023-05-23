@@ -1,4 +1,5 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
+import Clock from "../device/Clock.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Histogram from "../drawobject/Histogram.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -21,17 +22,11 @@ export default class UISystem {
     private readonly uiCamera: OrthoCamera;
     private readonly histogram: Node;
     private mainRenderer?: Renderer;
-    private lastframe: number;
-    private lasttime: number;
-    private currentframe: number;
-    private fps: number;
     private readonly sprites: Node[];
-    constructor(fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
+    private readonly clock: Clock;
+    constructor(clock: Clock,fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
+        this.clock = clock;
         this.sprites = [];
-        this.lastframe = 0;
-        this.lasttime = 0;
-        this.fps = 0;
-        this.currentframe = 0;
         this.pointRenderer = rendererFactory.createPointRenderer();
         this.spriteRenderer = rendererFactory.createSpriteRenderer();
         this.pointer = drawObjectFactory.createPointer(onTouchStart, onTouchMove, onTouchEnd, onTouchCancel);
@@ -42,10 +37,10 @@ export default class UISystem {
         this.histogram = drawObjectFactory.createHistogram(this);
     }
     getFPS() {
-        return this.fps;
+        return this.clock.getFPS();
     }
     getFrames() {
-        return this.currentframe;
+        return this.clock.getFrames();
     }
     addSprite(sprite: Node) {
         this.sprites.push(sprite);
@@ -53,17 +48,11 @@ export default class UISystem {
     setMainRenderer(renderer: Renderer) {
         this.mainRenderer = renderer;
     }
-    update(now: number, frame: number) {
+    update() {
 
         if (!this.mainRenderer) {
             throw new Error("mainRenderer not exist")
         }
-        if (now - this.lasttime >= 1000) {
-            this.lasttime = now;
-            this.fps = frame - this.lastframe;
-            this.lastframe = frame;
-        }
-        this.currentframe = frame;
         this.framesText.getDrawObjects().forEach(drawObject => {
             drawObject.update(this.framesText);
         });

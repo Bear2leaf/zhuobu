@@ -48,10 +48,11 @@ export default class BrowserMeshGame extends BrowserGame {
         this.initGltfMeshRenderer(rendererFactory);
         this.getUISystem().setMainRenderer(mainRenderer)
     }
-    tick(frame: number) {
+    tick() {
+        this.tickClock();
         const device = this.getDevice();
         const mainCamera = this.getMainCamera();
-        mainCamera.rotateViewPerFrame(frame);
+        mainCamera.rotateViewPerFrame(this.getFrames());
         const gltfRoot = this.getGLTFObjRootNode();
         gltfRoot.updateWorldMatrix(Matrix.translation(new Vec3(0, 0, 10)))
         device.clearRenderer();
@@ -61,9 +62,9 @@ export default class BrowserMeshGame extends BrowserGame {
         this.getDebugSystem().renderCamera(mainCamera);
         this.getDebugSystem().render(gltfRoot, this.getGLTFRenderer());
         device.viewportTo(ViewPortType.Full);
-        this.getUISystem().update(device.now(), frame);
+        this.getUISystem().update();
         this.getUISystem().render(device.gl);
-        requestAnimationFrame(() => this.tick(++frame))
+        requestAnimationFrame(() => this.tick())
     }
 
 }
