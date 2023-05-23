@@ -12,6 +12,8 @@ import Texture from "../texture/Texture.js";
 import TextureFactory from "../factory/TextureFactory.js";
 import Renderer from "../renderer/Renderer.js";
 import Node from "../structure/Node.js";
+import Matrix from "../math/Matrix.js";
+import { Vec3 } from "../math/Vector.js";
 
 export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
@@ -111,6 +113,7 @@ export default abstract class BaseGame {
     await this.device.loadShaderTxtCache("VertexColorTriangle")
     await this.device.loadShaderTxtCache("Line")
     await this.device.loadShaderTxtCache("Mesh")
+    await this.device.loadShaderTxtCache("SkinMesh")
     await this.device.loadFontCache("boxy_bold_font")
     await this.device.loadImageCache("boxy_bold_font")
     await this.device.loadImageCache("happy");
@@ -143,7 +146,7 @@ export default abstract class BaseGame {
     this.device.gl.enable(this.device.gl.SCISSOR_TEST)
 
     this.setMainCamera(cameraFactory.createMainCamera());
-    this.initGltfMeshRenderer(rendererFactory);
+    this.initGLTFSkinMeshRenderer(rendererFactory);
     this.mainRenderer = rendererFactory.createMainRenderer();
     this.gasket = drawObjectFactory.createGasket();
     this.cube = drawObjectFactory.createTexturedCube();
@@ -184,6 +187,7 @@ export default abstract class BaseGame {
     this.cube.getDrawObjects().forEach((drawObject) => {
       drawObject.update(this.cube!);
     });
+    this.gltfRootNode.updateWorldMatrix(Matrix.translation(new Vec3(0, 0, 10)))
     this.mainCamera.rotateViewPerFrame(frame);
     this.mainRenderer.render(this.mainCamera, this.gasket);
     this.mainRenderer.render(this.mainCamera, this.cube);

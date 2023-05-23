@@ -125,7 +125,6 @@ export default class GLTF {
         this.nodes.forEach((node) => {
             node.createFirstPrimitiveDrawObject(this);
         });
-        console.log(rootNode)
         return rootNode;
     }
     buildNodeTree(root: GLTFNode) {

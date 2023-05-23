@@ -17,6 +17,7 @@ export default class BrowserSpriteGame extends BrowserGame {
         await device.loadImageCache("boxy_bold_font")
         await device.loadImageCache("test");
         await device.loadImageCache("happy");
+        await device.loadImageCache("flowers");
 
     }
     init() {
@@ -27,13 +28,16 @@ export default class BrowserSpriteGame extends BrowserGame {
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
         const happyTexture = textureFactory.createTexture("happy");
         const fontTexture = textureFactory.createTexture("boxy_bold_font");
+        const flowersTexture = textureFactory.createTexture("flowers");
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache());
         const defaultSprite = drawObjectFactory.createSprite(190, 30, 10);
         const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
+        const flowersSprite = drawObjectFactory.createSprite(0, 0, 1, flowersTexture);
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const rendererFactory = new RendererFactory(device.gl, device.getTxtCache())
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.getUISystem().setMainRenderer(rendererFactory.createMainRenderer())
+        this.getUISystem().addSprite(flowersSprite);
         this.getUISystem().addSprite(defaultSprite);
         this.getUISystem().addSprite(happySprite);
     }
