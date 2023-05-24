@@ -5,13 +5,14 @@ import Triangle from "../geometry/Triangle.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
-import Texture from "../texture/Texture.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
 
 export default class Gasket extends DrawObject {
     private frame = 0;
-    constructor(gl: WebGL2RenderingContext, texture: Texture) {
+    constructor(gl: RenderingCtx, texture: GLTexture) {
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
         const pC = new Point(1, -1, -1);
@@ -38,7 +39,7 @@ export default class Gasket extends DrawObject {
         divideRecursiveTetrahedron(tetrahedron, recursiveLevel);
 
         
-        super(gl, texture, new Map<number, ArrayBufferObject>(), points.length);
+        super(gl, texture, new Map<number, GLArrayBufferObject>(), points.length);
         this.createABO(ArrayBufferIndex.Position, flatten(points), 4)
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))

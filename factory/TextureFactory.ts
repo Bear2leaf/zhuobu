@@ -1,24 +1,25 @@
-import Texture, { TextureIndex } from "../texture/Texture.js";
+import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import GLTexture from "../texture/GLTexture.js";
+import { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureFactory {
-    private readonly gl: WebGL2RenderingContext;
+    private readonly gl: RenderingCtx;
     private readonly imageCache: Map<string, HTMLImageElement>;
-    constructor(gl: WebGL2RenderingContext, imageCache: Map<string, HTMLImageElement>) {
+    constructor(gl: RenderingCtx, imageCache: Map<string, HTMLImageElement>) {
         this.gl = gl;
         this.imageCache = imageCache
     }
     createTexture(imageName: string) {
 
-        const defaultTexture = new Texture(this.gl);
-        const defaultTextureImage = this.imageCache.get(`resource/texture/${imageName}.png`);
-        if (!defaultTextureImage) {
+        const textureImage = this.imageCache.get(`resource/texture/${imageName}.png`);
+        if (!textureImage) {
             throw new Error(`image ${imageName} not exist`)
         }
-        defaultTexture.generate(0, 0, defaultTextureImage);
-        return defaultTexture;
+        const texture = this.gl.makeTexture(TextureIndex.Default);
+        texture.generate(0, 0, textureImage);
+        return texture;
     }
     createJointTexture() {
-        const jointTexture = new Texture(this.gl, this.gl.TEXTURE1, this.gl.CLAMP_TO_EDGE, this.gl.CLAMP_TO_EDGE);
-        return jointTexture;
+        return this.gl.makeTexture(TextureIndex.Joint);
     }
 }

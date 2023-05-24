@@ -1,12 +1,6 @@
-export enum ArrayBufferIndex {
-    Position = 0,
-    Color = 1,
-    TextureCoord = 2,
-    Normal = 3,
-    Weights = 4,
-    Joints = 5,
-}
-export default class ArrayBufferObject {
+import  { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import ArrayBufferObject from "./ArrayBufferObject.js";
+export default class GLArrayBufferObject implements ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
     private readonly gl: WebGL2RenderingContext;
     constructor(gl: WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array | Uint16Array, size: number) {
@@ -16,7 +10,7 @@ export default class ArrayBufferObject {
             throw new Error("bufferObject is undefined");
         }
         this.bufferObject = bufferObject;
-        this.update(arrays);
+        this.updateBuffer(arrays);
         this.gl.enableVertexAttribArray(index);
         if (arrays instanceof Float32Array) {
             this.gl.vertexAttribPointer(index, size, this.gl.FLOAT, false, 0, 0);
@@ -24,7 +18,7 @@ export default class ArrayBufferObject {
             this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_SHORT, 0, 0);
         }
     }
-    update(arrays: Float32Array | Uint16Array) {
+    updateBuffer(arrays: Float32Array | Uint16Array) {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferObject);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, arrays, this.gl.STATIC_DRAW);
     }

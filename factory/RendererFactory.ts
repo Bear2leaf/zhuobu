@@ -4,11 +4,12 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
+import RenderingCtx from "../renderingcontext/RenderingCtx.js";
 
 export default class RendererFactory {
-    private readonly gl: WebGL2RenderingContext;
+    private readonly gl: RenderingCtx;
     private readonly textCache: Map<string, string>;
-    constructor(gl: WebGL2RenderingContext, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
         this.gl = gl;
         this.textCache = textCache;
     }

@@ -1,4 +1,5 @@
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
+export type Rectangle = {left: number, top: number, width: number, height: number, right: number, bottom: number}
 
 export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
@@ -40,14 +41,14 @@ export default class BrowserDevice extends Device {
     onTouchStart(listener: TouchInfoFunction): void {
         this.getCanvas().onpointerdown = (e: PointerEvent) => {
             this.isMouseDown = true;
-            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            const rect = this.getCanvas().getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         };
     }
     onTouchMove(listener: TouchInfoFunction): void {
         this.getCanvas().onpointermove = (e: PointerEvent) => {
             if (this.isMouseDown) {
-                const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+                const rect = this.getCanvas().getBoundingClientRect();
                 listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
             }
         };
@@ -55,14 +56,14 @@ export default class BrowserDevice extends Device {
     onTouchEnd(listener: TouchInfoFunction): void {
         this.getCanvas().onpointerup = (e: PointerEvent) => {
             this.isMouseDown = false;
-            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            const rect = this.getCanvas().getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         }
     }
     onTouchCancel(listener: TouchInfoFunction): void {
         this.getCanvas().onpointercancel = (e: PointerEvent) => {
             this.isMouseDown = false;
-            const rect = (this.gl.canvas as HTMLCanvasElement).getBoundingClientRect();
+            const rect = this.getCanvas().getBoundingClientRect();
             listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         }
     }

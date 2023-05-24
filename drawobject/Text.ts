@@ -1,8 +1,9 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
-import Node from "../structure/Node.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import { TextureIndex } from "../texture/Texture.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
@@ -18,8 +19,8 @@ export default class Text extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly fontInfo: FontInfo;
-    constructor(gl: WebGL2RenderingContext, fontInfo: FontInfo, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        super(gl, texture, new Map<number, ArrayBufferObject>(), 0);
+    constructor(gl: RenderingCtx, fontInfo: FontInfo, texture: GLTexture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
+        super(gl, texture, new Map<number, GLArrayBufferObject>(), 0);
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.x = x;
@@ -36,9 +37,7 @@ export default class Text extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(fontInfo: FontInfo) {
-        const texture = this.getTexture(TextureIndex.Default);
-        const texSize = texture.getSize();
+    create(fontInfo: FontInfo, texSize: Vec2) {
         let { x, y, scale, spacing, chars } = this;
         const texHeight = texSize.y;
         const texWidth = texSize.x;
@@ -72,14 +71,14 @@ export default class Text extends DrawObject {
             batch.push(...vertices);
         }
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
+        this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
     }
     update(): void {
         this.bind();
-        this.create(this.fontInfo);
+        this.create(this.fontInfo, this.getTexture(TextureIndex.Default).getSize());
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
-        this.setCount(this.indices.length);
     }
     draw(mode: number): void {
         this.bind();

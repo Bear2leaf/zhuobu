@@ -1,8 +1,9 @@
 import Node from "../structure/Node.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
-import { ArrayBufferIndex } from "./ArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import { TextureIndex } from "../texture/Texture.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[];
@@ -10,8 +11,8 @@ export default class SkinMesh extends Mesh {
     private readonly inverseBindMatrices: Matrix[];
     private readonly origMatrices: Map<Node, Matrix>;
     private readonly node: Node;
-     constructor(gl: WebGL2RenderingContext
-        , texture: Texture
+     constructor(gl: RenderingCtx
+        , texture: GLTexture
         , position: Float32Array
         , normal: Float32Array
         , weights: Float32Array
@@ -20,7 +21,7 @@ export default class SkinMesh extends Mesh {
         , indices: Uint16Array
         , jointNodes: Node[]
         , inverseBindMatrixData: Float32Array
-        , jointTexture: Texture, node: Node) {
+        , jointTexture: GLTexture, node: Node) {
         super(gl, texture, position, normal, indices);
         this.origMatrices = new Map();
         this.jointNodes = jointNodes;

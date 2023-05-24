@@ -1,17 +1,14 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
-import Clock from "../device/Clock.js";
-import DrawObject from "../drawobject/DrawObject.js";
-import Histogram from "../drawobject/Histogram.js";
-import Pointer from "../drawobject/Pointer.js";
-import Text from "../drawobject/Text.js";
+import Clock from "../clock/Clock.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
+import RenderingCtx from "../renderingcontext/RenderingCtx.js";
 import Node from "../structure/Node.js";
-import Texture from "../texture/Texture.js";
+import GLTexture from "../texture/GLTexture.js";
 
 export default class UISystem {
     private readonly pointRenderer: PointRenderer;
@@ -24,7 +21,7 @@ export default class UISystem {
     private mainRenderer?: Renderer;
     private readonly sprites: Node[];
     private readonly clock: Clock;
-    constructor(clock: Clock,fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
+    constructor(clock: Clock, fontTexture: GLTexture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
         this.clock = clock;
         this.sprites = [];
         this.pointRenderer = rendererFactory.createPointRenderer();
@@ -53,6 +50,11 @@ export default class UISystem {
         if (!this.mainRenderer) {
             throw new Error("mainRenderer not exist")
         }
+        this.sprites.forEach(sprite => {
+            sprite.getDrawObjects().forEach(drawObject => {
+                drawObject.update(sprite);
+            });
+        });
         this.framesText.getDrawObjects().forEach(drawObject => {
             drawObject.update(this.framesText);
         });
@@ -66,20 +68,20 @@ export default class UISystem {
             drawObject.update(this.pointer);
         });
     }
-    render(gl: WebGL2RenderingContext) {
-        gl.depthMask(false);
-        gl.disable(gl.DEPTH_TEST)
-        this.sprites.forEach(sprite => {
-            this.spriteRenderer.render(this.uiCamera, sprite);
-        });
+    render(gl: RenderingCtx) {
         if (!this.mainRenderer) {
             throw new Error("mainRenderer not exist");
         }
+        gl.switchDepthWrite(false);
+        gl.switchDepthTest(false);
+        this.sprites.forEach((sprite) => {
+            this.spriteRenderer.render(this.uiCamera, sprite);
+        });
         this.mainRenderer.render(this.uiCamera, this.histogram);
         this.spriteRenderer.render(this.uiCamera, this.framesText);
         this.spriteRenderer.render(this.uiCamera, this.fpsText);
         this.pointRenderer.render(this.uiCamera, this.pointer);
-        gl.enable(gl.DEPTH_TEST)
-        gl.depthMask(true);
+        gl.switchDepthTest(true);
+        gl.switchDepthWrite(true);
     }
 }

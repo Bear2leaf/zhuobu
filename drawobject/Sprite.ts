@@ -1,9 +1,9 @@
-import { flatten, Vec2, Vec4 } from "../math/Vector.js";
+import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
 import Quad from "../geometry/Quad.js";
-import Node from "../structure/Node.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
 
 export default class Sprite extends DrawObject {
     private readonly x: number;
@@ -11,8 +11,8 @@ export default class Sprite extends DrawObject {
     private readonly scale: number;
     private readonly originX: number;
     private readonly originY: number;
-    constructor(gl: WebGL2RenderingContext, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number]) {
-        super(gl, texture, new Map<number, ArrayBufferObject>(), 6);
+    constructor(gl: RenderingCtx, texture: GLTexture, x: number, y: number, scale: number, color: [number, number, number, number], origin: [number, number]) {
+        super(gl, texture, new Map<number, GLArrayBufferObject>(), 6);
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -32,7 +32,6 @@ export default class Sprite extends DrawObject {
 
     }
     update(): void {
-        
     }
     draw(mode: number): void {
         this.bind();

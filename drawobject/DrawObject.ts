@@ -1,44 +1,45 @@
-import ArrayBufferObject from "./ArrayBufferObject.js";
-import { ArrayBufferIndex } from "./ArrayBufferObject.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
+import GLTexture from "../texture/GLTexture.js";
 import Node from "../structure/Node.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
+import VertexArrayObject from "../contextobject/VertexArrayObject.js";
+import { TextureIndex } from "../texture/Texture.js";
 
 
 export default abstract class DrawObject {
-    private readonly vao: WebGLVertexArrayObject | null;
-    private readonly ebo: WebGLBuffer | null;
+    private readonly vao: VertexArrayObject;
+    private readonly ebo: ArrayBufferObject;
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
-    private readonly textureMap: Map<TextureIndex, Texture>;
-    private readonly gl: WebGL2RenderingContext;
+    private readonly textureMap: Map<TextureIndex, GLTexture>;
+    private readonly gl: RenderingCtx;
     private count: number;
-    constructor(gl: WebGL2RenderingContext, defaultTexture: Texture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
+    constructor(gl: RenderingCtx, defaultTexture: GLTexture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
         this.gl = gl;
         this.count = count;
         this.aboMap = aboMap;
-        this.textureMap = new Map<TextureIndex, Texture>();
-        this.vao = this.gl.createVertexArray();
-        this.ebo = this.gl.createBuffer();
-        this.gl.bindVertexArray(this.vao);
+        this.textureMap = new Map<TextureIndex, GLTexture>();
+        this.vao = this.gl.makeVertexArrayObject();
+        this.vao.bind();
+        this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
         this.textureMap.set(TextureIndex.Default, defaultTexture);
     }
     abstract update(node: Node): void;
     bind() {
-        this.gl.bindVertexArray(this.vao);
+        this.vao.bind();
         this.textureMap.forEach((texture) => {
             texture.bind();
         });
     }
     draw(mode: number) {
-        this.gl.drawElements(mode, this.count, this.gl.UNSIGNED_SHORT, 0)
+        this.gl.draw(mode, this.count);
     }
 
     protected updateEBO(buffer: Uint16Array) {
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.ebo);
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, buffer, this.gl.STATIC_DRAW);
+        this.ebo.updateBuffer(buffer);
         this.count = buffer.length;
     }
     protected createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, szie: number) {
-        this.aboMap.set(index, new ArrayBufferObject(this.gl, index, data, szie));
+        this.aboMap.set(index, this.gl.makeArrayBufferObject(index, data, szie));
     }
     protected getTexture(index: TextureIndex) {
         const texture = this.textureMap.get(index);
@@ -47,7 +48,7 @@ export default abstract class DrawObject {
         }
         return texture;
     }
-    protected addTexture(index: TextureIndex, texture: Texture) {
+    protected addTexture(index: TextureIndex, texture: GLTexture) {
         this.textureMap.set(index, texture);
     }
     protected updateABO(index: ArrayBufferIndex, data: Float32Array) {
@@ -55,9 +56,6 @@ export default abstract class DrawObject {
         if (!abo) {
             throw new Error("abo not exist");
         }            
-        abo.update(data);
-    }
-    protected setCount(count: number) {
-        this.count = count;
+        abo.updateBuffer(data);
     }
 }

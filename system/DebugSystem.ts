@@ -44,7 +44,6 @@ export default class DebugSystem {
     }
     render(node: Node, renderer: Renderer): void {
         renderer.render(this.debugCamera, node);
-
         this.xyzAxis.updateWorldMatrix(node.getWorldMatrix())
         this.lineRenderer.render(this.debugCamera, this.xyzAxis)
     }

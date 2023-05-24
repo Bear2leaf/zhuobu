@@ -8,13 +8,13 @@ import RendererFactory from "../factory/RendererFactory.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import Device, { ViewPortType } from "../device/Device.js";
-import Texture from "../texture/Texture.js";
+import GLTexture from "../texture/GLTexture.js";
 import TextureFactory from "../factory/TextureFactory.js";
 import Renderer from "../renderer/Renderer.js";
 import Node from "../structure/Node.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
-import Clock from "../device/Clock.js";
+import Clock from "../clock/Clock.js";
 
 export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
@@ -89,7 +89,7 @@ export default abstract class BaseGame {
     this.gltfRenderer = rendererFactory.createGLTFMeshRenderer();
   }
 
-  initUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: Texture) {
+  initUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: GLTexture) {
 
     this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory);
   }
@@ -132,6 +132,7 @@ export default abstract class BaseGame {
   }
   init() {
     const deviceInfo = this.device.getDeviceInfo();
+    this.device.gl.init();
     const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
 
     const textureFactory = new TextureFactory(this.device.gl, this.device.getImageCache());
@@ -147,9 +148,7 @@ export default abstract class BaseGame {
     const bufferCache = this.device.getGLBCache();
     const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache);
     // this.msgDispatcher && this.device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
-    this.device.gl.enable(this.device.gl.CULL_FACE)
-    this.device.gl.enable(this.device.gl.DEPTH_TEST)
-    this.device.gl.enable(this.device.gl.SCISSOR_TEST)
+
 
     this.setMainCamera(cameraFactory.createMainCamera());
     this.initGLTFSkinMeshRenderer(rendererFactory);
@@ -189,7 +188,6 @@ export default abstract class BaseGame {
       throw new Error("gasket is not initialized");
     }
     this.tickClock();
-    this.device.clearRenderer();
     this.gasket.getDrawObjects().forEach((drawObject) => {
       drawObject.update(this.gasket!);
     });
@@ -198,18 +196,17 @@ export default abstract class BaseGame {
     });
     this.gltfRootNode.updateWorldMatrix(Matrix.translation(new Vec3(0, 0, 10)))
     this.mainCamera.rotateViewPerFrame(this.getFrames());
+    this.device.viewportTo(ViewPortType.Full)
     this.mainRenderer.render(this.mainCamera, this.gasket);
     this.mainRenderer.render(this.mainCamera, this.cube);
     this.gltfRenderer.render(this.mainCamera, this.gltfRootNode);
+    this.getUISystem().update();
+    this.getUISystem().render(this.device.gl);
     this.device.viewportTo(ViewPortType.TopRight)
-    this.device.clearRenderer();
     this.debugSystem.renderCamera(this.mainCamera);
     this.debugSystem.render(this.gasket, this.mainRenderer)
     this.debugSystem.render(this.cube, this.mainRenderer);
     this.debugSystem.render(this.gltfRootNode, this.gltfRenderer);
-    this.device.viewportTo(ViewPortType.Full)
-    this.getUISystem().update();
-    this.getUISystem().render(this.device.gl);
     requestAnimationFrame(() => this.tick())
   }
 }

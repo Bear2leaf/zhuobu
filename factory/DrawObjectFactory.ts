@@ -13,15 +13,16 @@ import Text, { FontInfo } from "../drawobject/Text.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
 import Point from "../geometry/Point.js";
 import { Vec4 } from "../math/Vector.js";
+import RenderingCtx from "../renderingcontext/RenderingCtx.js";
 import Node from "../structure/Node.js";
 import UISystem from "../system/UISystem.js";
-import Texture from "../texture/Texture.js";
+import GLTexture from "../texture/GLTexture.js";
 
 export default class DrawObjectFactory {
-  private readonly gl: WebGL2RenderingContext;
-  private readonly texture: Texture;
+  private readonly gl: RenderingCtx;
+  private readonly texture: GLTexture;
   private readonly fontInfo: FontInfo;
-  constructor(gl: WebGL2RenderingContext, texture: Texture, fontCache: Map<string, FontInfo>) {
+  constructor(gl: RenderingCtx, texture: GLTexture, fontCache: Map<string, FontInfo>) {
     this.gl = gl;
     this.texture = texture;
 
@@ -43,7 +44,7 @@ export default class DrawObjectFactory {
     , indices: Uint16Array
     , jointNodes: Node[]
     , inverseBindMatrixData: Float32Array
-    , jointTexture: Texture
+    , jointTexture: GLTexture
     , node: Node) {
     node.addDrawObject(new SkinMesh(this.gl
       , this.texture
@@ -63,12 +64,12 @@ export default class DrawObjectFactory {
     node.addDrawObject(new Pointer(this.gl, this.texture, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel))
     return node;
   }
-  createFramesText(uiSystem: UISystem, fontTexture: Texture) {
+  createFramesText(uiSystem: UISystem, fontTexture: GLTexture) {
     const node = new Node();
     node.addDrawObject(new FramesText(uiSystem, this.gl,  this.fontInfo, fontTexture))
     return node
   }
-  createFpsText(uiSystem: UISystem, fontTexture: Texture) {
+  createFpsText(uiSystem: UISystem, fontTexture: GLTexture) {
     const node = new Node();
     node.addDrawObject(new FpsText(uiSystem,this.gl,  this.fontInfo, fontTexture))
     return node
@@ -78,7 +79,7 @@ export default class DrawObjectFactory {
     node.addDrawObject(new Histogram(this.gl, uiSystem, this.texture))
     return node;
   }
-  createSprite(x: number = 0, y: number = 0, scale: number = 1, texture: Texture = this.texture) {
+  createSprite(x: number = 0, y: number = 0, scale: number = 1, texture: GLTexture = this.texture) {
     const node = new Node();
     node.addDrawObject(new Sprite(this.gl, texture, x, y, scale, [1, 1, 1, 1], [0, 0]))
     return node;

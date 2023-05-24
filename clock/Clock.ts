@@ -1,4 +1,4 @@
-import Device from "./Device";
+import Device from "../device/Device";
 
 export default class Clock {
     private readonly device: Device;

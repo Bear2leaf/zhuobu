@@ -2,13 +2,14 @@ import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import Cone from "../geometry/Cone.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
 import Node from "../structure/Node.js";
-import Texture from "../texture/Texture.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class BlackWireCone extends DrawObject {
-    constructor(gl: WebGL2RenderingContext, texture: Texture) {
+    constructor(gl: RenderingCtx, texture: GLTexture) {
         const cone = new Cone();
         const lines = cone.getLines();
         const points = cone.getPoints();
@@ -20,7 +21,7 @@ export default class BlackWireCone extends DrawObject {
             point.appendTo(vertices, colors);
         });
 
-        super(gl, texture, new Map<number, ArrayBufferObject>(), indices.length);
+        super(gl, texture, new Map<number, GLArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));

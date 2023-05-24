@@ -1,5 +1,7 @@
 import { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../loader/gltf/GLTF.js";
+import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import GLRenderingContext from "../renderingcontext/GLRenderingCentext.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -11,7 +13,7 @@ export enum ViewPortType {
 }
 export default abstract class Device {
   private readonly canvas: HTMLCanvasElement
-  private readonly glContext: WebGL2RenderingContext;
+  private readonly renderingContext: GLRenderingContext;
   private readonly imageCache: Map<string, HTMLImageElement>;
   private readonly txtCache: Map<string, string>;
   private readonly fontCache: Map<string, FontInfo>;
@@ -21,9 +23,9 @@ export default abstract class Device {
   private readonly deviceInfo: DeviceInfo;
   constructor(canvas?: HTMLCanvasElement) {
     this.canvas = canvas || this.createCanvas(canvas);
-    this.glContext = this.canvas.getContext('webgl2') as WebGL2RenderingContext;
-    this.imageCache = new Map();
     this.txtCache = new Map();
+    this.renderingContext = new GLRenderingContext(this.canvas, this.txtCache);
+    this.imageCache = new Map();
     this.fontCache = new Map();
     this.gltfCache = new Map();
     this.glbCache = new Map();
@@ -33,8 +35,8 @@ export default abstract class Device {
       this.deviceInfo.pixelRatio = 1;
     }
   }
-  get gl(): WebGL2RenderingContext {
-    return this.glContext;
+  get gl(): RenderingCtx {
+    return this.renderingContext;
   }
   abstract getDeviceInfo(): DeviceInfo;
   protected abstract getPerformance(): Performance;
@@ -56,7 +58,6 @@ export default abstract class Device {
   getGLBCache(): Map<string, ArrayBuffer> {
     return this.glbCache;
   }
-  clearRenderer() { this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); }
   viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
     const leftWidth = windowWidth * (2 / 3) * pixelRatio
@@ -65,15 +66,13 @@ export default abstract class Device {
     const rightHeight = windowHeight * (1 / 3) * pixelRatio;
     switch (type) {
       case ViewPortType.TopRight:
-        this.gl.viewport(leftWidth, leftHeight, rightWidth, rightHeight);
-        this.gl.scissor(leftWidth, leftHeight, rightWidth, rightHeight);
-        this.gl.clearColor(0.4, 0.4, 0.4, 1)
+        this.gl.viewportTo(leftWidth, leftHeight, rightWidth, rightHeight);
+        this.gl.clear(0.3, 0.3, 0.3, 1)
         break;
 
       default:
-        this.gl.viewport(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
-        this.gl.scissor(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
-        this.gl.clearColor(0.3, 0.3, 0.3, 1)
+        this.gl.viewportTo(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+        this.gl.clear(0.4, 0.4, 0.4, 1)
         break;
     }
   }

@@ -2,13 +2,14 @@ import Cube from "../geometry/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
-import Texture from "../texture/Texture.js";
-import ArrayBufferObject, { ArrayBufferIndex } from "./ArrayBufferObject.js";
+import GLTexture from "../texture/GLTexture.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
+import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
-    constructor(gl: WebGL2RenderingContext, texture: Texture) {
+    constructor(gl: RenderingCtx, texture: GLTexture) {
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();
@@ -31,12 +32,11 @@ export default class TexturedCube extends DrawObject {
         }
 
 
-        super(gl, texture, new Map<number, ArrayBufferObject>(), indices.length);
+        super(gl, texture, new Map<number, GLArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
-        console.log(this)
     }
     update(node: Node): void {
         this.rotatePerFrame(node, this.frame++);
