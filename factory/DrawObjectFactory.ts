@@ -32,7 +32,10 @@ export default class DrawObjectFactory {
     }
     this.fontInfo = fontInfo;
   }
-  createMesh(positions: Float32Array, normals: Float32Array, indices: Uint16Array, node: Node) {
+  createMesh(positions: Float32Array
+    , normals: Float32Array
+    , indices: Uint16Array
+    , node: Node) {
     node.addDrawObject(new Mesh(this.gl, this.texture, positions, normals, indices));
     return node;
   }

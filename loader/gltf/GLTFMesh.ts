@@ -17,8 +17,12 @@ export default class GLTFMesh {
     getName() {
         return this.name;
     }
-    getPrimitives() {
-        return this.primitives;
+    getPrimitiveByIndex(index: number) {
+        const primitive = this.primitives[index];
+        if (!primitive) {
+            throw new Error("primitive is undefined")
+        }
+        return primitive;
     }
 
 }

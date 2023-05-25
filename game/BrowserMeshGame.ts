@@ -3,8 +3,6 @@ import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
 import TextureFactory from "../factory/TextureFactory.js";
-import Matrix from "../math/Matrix.js";
-import { Vec3 } from "../math/Vector.js";
 import BrowserGame from "./BrowserGame.js";
 
 export default class BrowserMeshGame extends BrowserGame {
@@ -19,7 +17,9 @@ export default class BrowserMeshGame extends BrowserGame {
         await device.loadFontCache("boxy_bold_font")
         await device.loadImageCache("boxy_bold_font")
         await device.loadImageCache("test");
+        await device.loadGLTFCache("hello")
         await device.loadGLTFCache("whale.CYCLES");
+        await device.loadGLTFCache("hello-multi");
 
     }
     init() {
@@ -35,8 +35,9 @@ export default class BrowserMeshGame extends BrowserGame {
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const rendererFactory = new RendererFactory(device.gl, device.getTxtCache())
-        const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache);
+        const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "hello-multi");
         this.setGLTFObj(gltf.createRootNode());
+        console.log(this.getGLTFObjRootNode())
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.initDebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
         const mainCamera = cameraFactory.createMainCamera();
@@ -52,7 +53,7 @@ export default class BrowserMeshGame extends BrowserGame {
         const mainCamera = this.getMainCamera();
         mainCamera.rotateViewPerFrame(this.getFrames());
         const gltfRoot = this.getGLTFObjRootNode();
-        gltfRoot.updateWorldMatrix(Matrix.translation(new Vec3(0, 0, 10)))
+        gltfRoot.updateWorldMatrix()
         device.viewportTo(ViewPortType.Full);
         this.getGLTFRenderer().render(this.getMainCamera(), gltfRoot)
         this.getUISystem().update();

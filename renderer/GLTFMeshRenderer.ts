@@ -13,7 +13,6 @@ export default class GLTFMeshRenderer extends Renderer {
 
     }
     render(camera: Camera, node: Node) {
-        node.updateWorldMatrix();
         super.render(camera, node);
         this.setVector4fv("u_diffuse", new Vec4(1, 1, 1, 1));
         this.setVector3fv("u_lightDirection", new Vec3(0, 0, 1));
@@ -21,6 +20,7 @@ export default class GLTFMeshRenderer extends Renderer {
             drawObject.draw(this.primitive.getMode());
         });
         node.traverse((child: Node) => {
+            super.render(camera, child);
             child.getDrawObjects().forEach(drawObject => {
                 drawObject.draw(this.primitive.getMode());
             });

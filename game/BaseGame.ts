@@ -98,9 +98,11 @@ export default abstract class BaseGame {
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
   }
 
-  createGLTF(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
-
-    return new GLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache);
+  createGLTF(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>, name?: string) {
+    if (!name) {
+      name = "hello";
+    }
+    return new GLTF(name, drawObjectFactory, textureFactory, gltfCache, bufferCache);
   }
   getFrames() {
     return this.clock.getFrames();
@@ -146,7 +148,7 @@ export default abstract class BaseGame {
     this.msgDispatcher = new MsgDispatcher();
     const gltfCache = this.device.getGLTFCache();
     const bufferCache = this.device.getGLBCache();
-    const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache);
+    const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "whale.CYCLES");
     // this.msgDispatcher && this.device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
 
 

@@ -49,34 +49,37 @@ export default class GLTFNode {
         if (this.mesh === undefined) {
             return;
         }
-        if (this.skin === undefined) {
-            return;
-        }
         const mesh = gltf.getMeshByIndex(this.mesh);
-        const skin = gltf.getSkinByIndex(this.skin);
-        const primitive = mesh.getPrimitives()[0];
-        if (!primitive) {
-            throw "primitive is undefined"
-        }
-        const jointNodes = skin.getJoints().map((joint) => gltf.getNodeByIndex(joint).getNode());
+        const primitive = mesh.getPrimitiveByIndex(0);
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
-        const weightslIndex = primitive.getAttributes().getWeights();
-        const jointsIndex = primitive.getAttributes().getJoints();
         const indicesIndex = primitive.getIndices();
-        const inverseBindMatrixIndex = gltf.getSkinByIndex(0).getInverseBindMatrices();
-        gltf.getDrawObjectFactory().createSkinMesh(
-            gltf.getDataByAccessorIndex(positionIndex) as Float32Array
-            , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
-            , gltf.getDataByAccessorIndex(weightslIndex) as Float32Array
-            , gltf.getDataByAccessorIndex(texcoordIndex) as Float32Array
-            , gltf.getDataByAccessorIndex(jointsIndex) as Uint16Array
-            , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
-            , jointNodes
-            , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
-            , gltf.getTextureFactory().createJointTexture()
-            , this.node);
+        if (this.skin !== undefined) {
+
+            const skin = gltf.getSkinByIndex(this.skin);
+            const jointNodes = skin.getJoints().map((joint) => gltf.getNodeByIndex(joint).getNode());
+            const weightslIndex = primitive.getAttributes().getWeights();
+            const jointsIndex = primitive.getAttributes().getJoints();
+            const inverseBindMatrixIndex = gltf.getSkinByIndex(0).getInverseBindMatrices();
+            gltf.getDrawObjectFactory().createSkinMesh(
+                gltf.getDataByAccessorIndex(positionIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(weightslIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(texcoordIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(jointsIndex) as Uint16Array
+                , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
+                , jointNodes
+                , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
+                , gltf.getTextureFactory().createJointTexture()
+                , this.node);
+        } else {
+            gltf.getDrawObjectFactory().createMesh(
+                gltf.getDataByAccessorIndex(positionIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
+                , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
+                , this.node);
+        }
     }
     buildRootChildren(gltf: GLTF, parent: Node) {
         const node = new Node(new TRS(this.translation, this.rotation, this.scale), this.name);

@@ -20,6 +20,7 @@ export default class GLTFSkinMeshRenderer extends Renderer {
             drawObject.draw(this.primitive.getMode());
         });
         node.traverse((child: Node) => {
+            super.render(camera, child);
             child.getDrawObjects().forEach(drawObject => {
                 drawObject.draw(this.primitive.getMode());
             });
