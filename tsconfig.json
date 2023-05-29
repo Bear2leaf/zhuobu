@@ -3,11 +3,5 @@
         "outDir": "dist",
         "strict": true,
         "target": "ES2015",
-        "moduleResolution": "node",
-        "inlineSources": true,
-        "inlineSourceMap": true
-    },
-    "exclude": [
-        "server"
-    ]
+    }
 }

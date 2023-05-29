@@ -1,1 +1,2 @@
-import "dist/game.js"
+import WxGame from "dist/game/WxGame.js"
+const game = new WxGame();

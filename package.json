@@ -1,0 +1,16 @@
+{
+  "name": "zhuobu",
+  "version": "0.0.1",
+  "description": "simple webgl 3d render engine.",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc -w"
+  },
+  "author": "Jake Chen",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
