@@ -1,12 +1,11 @@
 # zhuobu
 simple webgl 3d render engine.
 
-## install
+## getting started
 
 ```bash
-npm install -g typescript
-tsc -w
-python3 -m http.server
+npm i
+npm start
 ```
 
 open http://localhost:8000/ in browser
