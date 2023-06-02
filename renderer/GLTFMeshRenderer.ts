@@ -7,7 +7,7 @@ import Renderer from "./Renderer.js";
 
 export default class GLTFMeshRenderer extends Renderer {
     private readonly primitive: Primitive
-    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx) {
         super(gl.makeShader("Mesh"));
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
 

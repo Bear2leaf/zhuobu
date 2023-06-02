@@ -7,7 +7,7 @@ import Renderer from "./Renderer.js";
 export default class SpriteRenderer extends Renderer {
     private readonly primitive: Primitive
     private readonly gl: RenderingCtx
-    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx) {
         super(gl.makeShader("Sprite"));
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
         this.gl = gl;

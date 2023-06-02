@@ -20,7 +20,7 @@ export default class CameraFactory {
         return new PerspectiveCamera(fov, aspect, 1, 500);
     }
     createOrthoCamera() {
-        return  new OrthoCamera(0, this.width, this.height, 0, 1, -1);;
+        return  new OrthoCamera(0, this.width, this.height, 0, 1, -1);
     }
     createUICamera() {
         return this.createOrthoCamera();

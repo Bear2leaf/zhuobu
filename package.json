@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "tsc -w"
+    "start": "python3 -m http.server -d dist & tsc -w"
   },
   "author": "Jake Chen",
   "license": "MIT",

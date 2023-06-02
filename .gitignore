@@ -1,11 +1,7 @@
+.DS_Store
 *.js
 *.js.map
-project.private.config.json
-.DS_Store
 node_modules
-dist/*
 !static/worker/*.js
 !dist/index.html
-!/game.js
-types/*
-.env
+!dist/game.js

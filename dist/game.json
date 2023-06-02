@@ -1,0 +1,9 @@
+{
+    "subpackages": [
+        {
+            "name": "static",
+            "root": "static"
+        }
+    ]
+    
+}

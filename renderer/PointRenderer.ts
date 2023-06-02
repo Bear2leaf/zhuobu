@@ -6,7 +6,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 
 export class PointRenderer extends Renderer {
     private readonly primitive: Primitive
-    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx) {
         super(gl.makeShader("Point"))
         this.primitive = gl.makePrimitive(PrimitiveType.POINTS);
     }

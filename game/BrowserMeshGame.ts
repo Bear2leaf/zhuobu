@@ -15,7 +15,6 @@ export default class BrowserMeshGame extends BrowserGame {
         await device.loadShaderTxtCache("Line")
         await device.loadShaderTxtCache("SkinMesh")
         await device.loadFontCache("boxy_bold_font")
-        await device.loadImageCache("boxy_bold_font")
         await device.loadImageCache("test");
         await device.loadGLTFCache("hello")
         await device.loadGLTFCache("whale.CYCLES");
@@ -31,13 +30,12 @@ export default class BrowserMeshGame extends BrowserGame {
         const gltfCache = device.getGLTFCache();
         const bufferCache = device.getGLBCache();
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const fontTexture = textureFactory.createTexture("boxy_bold_font");
+        const fontTexture = textureFactory.createFontTexture();
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
-        const rendererFactory = new RendererFactory(device.gl, device.getTxtCache())
+        const rendererFactory = new RendererFactory(device.gl)
         const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "hello-multi");
         this.setGLTFObj(gltf.createRootNode());
-        console.log(this.getGLTFObjRootNode())
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.initDebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
         const mainCamera = cameraFactory.createMainCamera();

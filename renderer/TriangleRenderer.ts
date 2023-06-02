@@ -6,7 +6,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 
 export class TriangleRenderer extends Renderer {
     private readonly primitive: Primitive;
-    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx) {
         super(gl.makeShader("VertexColorTriangle"))
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
     }

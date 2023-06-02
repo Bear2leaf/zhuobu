@@ -8,27 +8,25 @@ import RenderingCtx from "../renderingcontext/RenderingCtx.js";
 
 export default class RendererFactory {
     private readonly gl: RenderingCtx;
-    private readonly textCache: Map<string, string>;
-    constructor(gl: RenderingCtx, textCache: Map<string, string>) {
+    constructor(gl: RenderingCtx) {
         this.gl = gl;
-        this.textCache = textCache;
     }
     createPointRenderer() {
-        return new PointRenderer(this.gl, this.textCache);
+        return new PointRenderer(this.gl);
     }
     createSpriteRenderer() {
-        return new SpriteRenderer(this.gl, this.textCache)
+        return new SpriteRenderer(this.gl)
     }
     createLineRenderer() {
-        return new LineRenderer(this.gl, this.textCache)
+        return new LineRenderer(this.gl)
     }
     createGLTFMeshRenderer() {
-        return new GLTFMeshRenderer(this.gl, this.textCache)
+        return new GLTFMeshRenderer(this.gl)
     }
     createGLTFSkinMeshRenderer() {
-        return new GLTFSkinMeshRenderer(this.gl, this.textCache)
+        return new GLTFSkinMeshRenderer(this.gl)
     }
     createMainRenderer() {
-        return new TriangleRenderer(this.gl, this.textCache)
+        return new TriangleRenderer(this.gl)
     }
 }

@@ -11,9 +11,19 @@ export default class TextureFactory {
     }
     createTexture(imageName: string) {
 
-        const textureImage = this.imageCache.get(`resource/texture/${imageName}.png`);
+        const textureImage = this.imageCache.get(`static/texture/${imageName}.png`);
         if (!textureImage) {
             throw new Error(`image ${imageName} not exist`)
+        }
+        const texture = this.gl.makeTexture(TextureIndex.Default);
+        texture.generate(0, 0, textureImage);
+        return texture;
+    }
+    createFontTexture() {
+
+        const textureImage = this.imageCache.get(`resource/font/boxy_bold_font.png`);
+        if (!textureImage) {
+            throw new Error(`image boxy_bold_font not exist`)
         }
         const texture = this.gl.makeTexture(TextureIndex.Default);
         texture.generate(0, 0, textureImage);

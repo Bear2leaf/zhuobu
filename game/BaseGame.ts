@@ -1,7 +1,6 @@
 import DebugSystem from "../system/DebugSystem.js";
 import UISystem from "../system/UISystem.js";
 import GLTF from "../loader/gltf/GLTF.js";
-import MsgDispatcher from "../handler/MsgDispatcher.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
@@ -19,7 +18,6 @@ import Clock from "../clock/Clock.js";
 export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
   private uiSystem?: UISystem;
-  private msgDispatcher?: MsgDispatcher;
   private mainCamera?: PerspectiveCamera;
   private mainRenderer?: TriangleRenderer;
   private gasket?: Node;
@@ -123,10 +121,9 @@ export default abstract class BaseGame {
     await this.device.loadShaderTxtCache("Mesh")
     await this.device.loadShaderTxtCache("SkinMesh")
     await this.device.loadFontCache("boxy_bold_font")
-    await this.device.loadImageCache("boxy_bold_font")
+    await this.device.loadSubpackage()
     await this.device.loadImageCache("happy");
     await this.device.loadImageCache("test");
-    await this.device.loadSubpackage()
 
     await this.device.loadGLTFCache("hello")
     await this.device.loadGLTFCache("hello-multi")
@@ -138,18 +135,16 @@ export default abstract class BaseGame {
     const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
 
     const textureFactory = new TextureFactory(this.device.gl, this.device.getImageCache());
-    const fontTexture = textureFactory.createTexture("boxy_bold_font");
+    const fontTexture = textureFactory.createFontTexture();
 
     const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"), this.device.getFontCache());
 
-    const rendererFactory = new RendererFactory(this.device.gl, this.device.getTxtCache());
+    const rendererFactory = new RendererFactory(this.device.gl);
     this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
-    this.msgDispatcher = new MsgDispatcher();
     const gltfCache = this.device.getGLTFCache();
     const bufferCache = this.device.getGLBCache();
     const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "whale.CYCLES");
-    // this.msgDispatcher && this.device.createWorker("static/worker/nethack.js", this.msgDispatcher.operation.bind(this.msgDispatcher));
 
 
     this.setMainCamera(cameraFactory.createMainCamera());
