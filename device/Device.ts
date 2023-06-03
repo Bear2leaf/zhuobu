@@ -80,7 +80,7 @@ export default abstract class Device {
     return this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
   }
   async loadImageCache(url: string) {
-    url = `static/texture/${url}.png`
+    url = `resource/texture/${url}.png`
     const img = this.createImage() as HTMLImageElement;
     img.src = url;
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
@@ -88,12 +88,12 @@ export default abstract class Device {
   }
   
   async loadGLTFCache(name: string) {
-    this.getGLTFCache().set(`static/gltf/${name}.gltf`, await this.readJson(`static/gltf/${name}.gltf`) as GLTF)
-    this.getGLBCache().set(`static/gltf/${name}.bin`, await this.readBuffer(`static/gltf/${name}.bin`))
+    this.getGLTFCache().set(`resource/gltf/${name}.gltf`, await this.readJson(`resource/gltf/${name}.gltf`) as GLTF)
+    this.getGLBCache().set(`resource/gltf/${name}.bin`, await this.readBuffer(`resource/gltf/${name}.bin`))
   }
   async loadFontCache(name: string) {
-    this.getFontCache().set(`resource/font/${name}.json`, await this.readJson(`resource/font/${name}.json`) as FontInfo)
-    const fontTextureUrl = `resource/font/${name}.png`
+    this.getFontCache().set(`static/font/${name}.json`, await this.readJson(`static/font/${name}.json`) as FontInfo)
+    const fontTextureUrl = `static/font/${name}.png`
     const img = this.createImage() as HTMLImageElement;
     img.src = fontTextureUrl;
     await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
@@ -101,8 +101,8 @@ export default abstract class Device {
   }
   
   async loadShaderTxtCache(name: string) {
-    this.getTxtCache().set(`resource/shader/${name}.vert.sk`, await this.readTxt(`resource/shader/${name}.vert.sk`))
-    this.getTxtCache().set(`resource/shader/${name}.frag.sk`, await this.readTxt(`resource/shader/${name}.frag.sk`))
+    this.getTxtCache().set(`static/shader/${name}.vert.sk`, await this.readTxt(`static/shader/${name}.vert.sk`))
+    this.getTxtCache().set(`static/shader/${name}.frag.sk`, await this.readTxt(`static/shader/${name}.frag.sk`))
   }
   abstract createCanvas(canvas?: HTMLCanvasElement): HTMLCanvasElement;
   abstract loadSubpackage(): Promise<null>;

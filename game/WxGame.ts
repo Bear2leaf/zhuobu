@@ -35,7 +35,7 @@ export default class WxGame extends BaseGame {
     
         const textureFactory = new TextureFactory(this.getDevice().gl, this.getDevice().getImageCache());
         const fontTexture = textureFactory.createFontTexture();
-        const fontInfo = this.getDevice().getFontCache().get("resource/font/boxy_bold_font.json");
+        const fontInfo = this.getDevice().getFontCache().get("static/font/boxy_bold_font.json");
         if (!fontInfo) {
             throw new Error("fontInfo is null");
         }

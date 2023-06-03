@@ -11,7 +11,7 @@ export default class TextureFactory {
     }
     createTexture(imageName: string) {
 
-        const textureImage = this.imageCache.get(`static/texture/${imageName}.png`);
+        const textureImage = this.imageCache.get(`resource/texture/${imageName}.png`);
         if (!textureImage) {
             throw new Error(`image ${imageName} not exist`)
         }
@@ -21,7 +21,7 @@ export default class TextureFactory {
     }
     createFontTexture() {
 
-        const textureImage = this.imageCache.get(`resource/font/boxy_bold_font.png`);
+        const textureImage = this.imageCache.get(`static/font/boxy_bold_font.png`);
         if (!textureImage) {
             throw new Error(`image boxy_bold_font not exist`)
         }

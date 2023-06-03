@@ -26,7 +26,7 @@ export default class DrawObjectFactory {
     this.gl = gl;
     this.texture = texture;
 
-    const fontInfo = fontCache.get("resource/font/boxy_bold_font.json");
+    const fontInfo = fontCache.get("static/font/boxy_bold_font.json");
     if (!fontInfo) {
       throw new Error("fontInfo not exist")
     }

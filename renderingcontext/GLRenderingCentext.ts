@@ -71,8 +71,8 @@ export default class GLRenderingContext implements RenderingCtx {
         return new GLPrimitive(this.gl, type);
     }
     makeShader(name: string): Shader {
-        const vert = this.txtCache.get(`resource/shader/${name}.vert.sk`);
-        const frag = this.txtCache.get(`resource/shader/${name}.frag.sk`);
+        const vert = this.txtCache.get(`static/shader/${name}.vert.sk`);
+        const frag = this.txtCache.get(`static/shader/${name}.frag.sk`);
         if (vert === undefined || frag === undefined) {
             throw new Error("Shader text not found");
         }

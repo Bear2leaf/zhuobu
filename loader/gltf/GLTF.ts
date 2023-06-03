@@ -62,9 +62,9 @@ export default class GLTF {
 
     constructor(name: string, drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
         this.bufferCache = bufferCache;
-        const data = gltfCache.get(`static/gltf/${name}.gltf`);
+        const data = gltfCache.get(`resource/gltf/${name}.gltf`);
         if (!data) {
-            throw new Error(`data ${`static/gltf/${name}.gltf`} not found`);
+            throw new Error(`data ${`resource/gltf/${name}.gltf`} not found`);
         }
         this.drawObjectFactory = drawObjectFactory;
         this.textureFactory = textureFactory;

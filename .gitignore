@@ -2,6 +2,5 @@
 *.js
 *.js.map
 node_modules
-!static/worker/*.js
 !dist/index.html
 !dist/game.js

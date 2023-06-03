@@ -27,13 +27,13 @@ export default class WxDevice extends Device {
     async loadSubpackage(): Promise<null> {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
-                name: "static",
+                name: "resource",
                 success(res: any) {
-                    console.log("load static success", res)
+                    console.log("load resource success", res)
                     resolve(null)
                 },
                 fail(res: any) {
-                    console.error("load static fail", res)
+                    console.error("load resource fail", res)
                 }
             })
 
