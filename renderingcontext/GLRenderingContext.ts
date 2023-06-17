@@ -1,13 +1,13 @@
-import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
-import GLElementBufferObject from "../contextobject/GLElementBufferObject.js";
-import GLPrimitive from "../contextobject/GLPrimitive.js";
-import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
-import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
-import GLShader from "../shader/GLShader.js";
-import Shader from "../shader/Shader.js";
-import GLTexture from "../texture/GLTexture.js";
-import RenderingCtx, { ArrayBufferIndex } from "./RenderingCtx.js";
+import ArrayBufferObject from "../contextobject/ArrayBufferObject";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject";
+import GLElementBufferObject from "../contextobject/GLElementBufferObject";
+import GLPrimitive from "../contextobject/GLPrimitive";
+import GLVertexArrayObject from "../contextobject/GLVertexArrayObject";
+import Primitive, { PrimitiveType } from "../contextobject/Primitive";
+import GLShader from "../shader/GLShader";
+import Shader from "../shader/Shader";
+import GLTexture from "../texture/GLTexture";
+import RenderingCtx, { ArrayBufferIndex } from "./RenderingCtx";
 
 export default class GLRenderingContext implements RenderingCtx {
     private readonly gl: WebGL2RenderingContext;
