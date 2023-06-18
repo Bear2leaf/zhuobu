@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "simple webgl 3d render engine.",
   "main": "main.js",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "tsc",
