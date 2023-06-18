@@ -5,8 +5,9 @@ import { NoParams } from "../usecase/Usecase.js";
 import { Controller } from "./Controller.js";
 
 export default abstract class HelloController implements Controller {
-    constructor(private readonly repository: HelloRepository, private readonly presenter: HelloPresenter) {}
+    constructor(private readonly repository: HelloRepository, private readonly presenter: HelloPresenter) { }
     hello() {
+        console.log("HelloController.hello");
         new HelloUsecase(this.presenter, this.repository).call(new NoParams());
     }
 }

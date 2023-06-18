@@ -1,14 +1,20 @@
-import Exception from "../../core/exception/Exception.js";
-import { HelloPresenter } from "../../core/index.js";
+import { HelloPresenter, Hello, HelloException } from "../../core/index.js";
 
 export default class MockHelloPresenter implements HelloPresenter {
-    onHelloData(data: string): void {
-        console.log("HelloPresenter.onHelloData", data);
+    private message: string = "Nothing";
+    onHello(data: Hello): void {
+        console.log("HelloPresenter.onHello");
+        this.message = data.message;
+        this.onData();
+        this.onComplete();
+    }
+    onData(): void {
+        console.log("HelloPresenter.onData:", this.message);
     }
     onComplete(): void {
         console.log("HelloPresenter.onComplete");
     }
-    onError(exception: Exception): void {
+    onError(exception: HelloException): void {
         console.log("HelloPresenter.onError", exception);
     }
 }
