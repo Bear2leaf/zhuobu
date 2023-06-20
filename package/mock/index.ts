@@ -1,4 +1,4 @@
-import MockHelloController from "./controller/MockHelloController.js";
+import MockDeviceController from "./controller/MockSplashController.js";
 
-const helloController = new  MockHelloController();
-helloController.hello();
+const deviceController = new  MockDeviceController();
+deviceController.boot();

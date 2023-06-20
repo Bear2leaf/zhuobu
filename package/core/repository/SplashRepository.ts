@@ -1,5 +1,5 @@
 import Repository from "./Repository.js";
 
-export default interface HelloRepository extends Repository<string> {
+export default interface SplashRepository extends Repository<string> {
     get(): Promise<string>;
 }
