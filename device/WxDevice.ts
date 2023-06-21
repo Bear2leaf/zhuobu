@@ -1,10 +1,19 @@
+import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 const wx = (globalThis as any).wx;
 
 export default class WxDevice extends Device {
     constructor() {
-        super(wx.createCanvas());
+        const canvas = wx.createCanvas()
+        if (typeof document === 'undefined') {
+            const { windowWidth, windowHeight, pixelRatio } = wx.getDeviceInfo();
+            (canvas.clientWidth) = windowWidth * pixelRatio;
+            (canvas.clientHeight) = windowHeight * pixelRatio;
+            (canvas.width) = windowWidth * pixelRatio;
+            (canvas.height) = windowHeight * pixelRatio;
+        }
+        super(new GLRenderingContext(canvas));
     }
 
     getDeviceInfo(): DeviceInfo {

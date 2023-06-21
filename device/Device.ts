@@ -98,7 +98,6 @@ export default abstract class Device {
     this.getTxtCache().set(`static/shader/${name}.vert.sk`, await this.readTxt(`static/shader/${name}.vert.sk`))
     this.getTxtCache().set(`static/shader/${name}.frag.sk`, await this.readTxt(`static/shader/${name}.frag.sk`))
   }
-  abstract createCanvas(canvas?: HTMLCanvasElement): HTMLCanvasElement;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;
   abstract createWorker(path: string, handlerCallback: Function): void;

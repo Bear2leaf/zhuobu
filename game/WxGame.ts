@@ -1,5 +1,3 @@
-import { OrthoCamera } from "../camera/OrthoCamera";
-import { PerspectiveCamera } from "../camera/PerspectiveCamera";
 import { ViewPortType } from "../device/Device";
 import WxDevice from "../device/WxDevice.js";
 import SplashText from "../drawobject/SplashText";
@@ -7,8 +5,6 @@ import CameraFactory from "../factory/CameraFactory";
 import RendererFactory from "../factory/RendererFactory";
 import ShaderFactory from "../factory/ShaderFactory";
 import TextureFactory from "../factory/TextureFactory";
-import SpriteRenderer from "../renderer/SpriteRenderer";
-import { TriangleRenderer } from "../renderer/TriangleRenderer";
 import Node from "../structure/Node";
 import BaseGame from "./BaseGame.js";
 
