@@ -1,9 +1,4 @@
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
-import device, { ViewPortType } from "../device/Device.js";
-import BlackWireCone from "../drawobject/BlackWireCone.js";
-import BlackWireCube from "../drawobject/BlackWireCube.js";
-import ColorArrowLine from "../drawobject/ColorArrowLine.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";

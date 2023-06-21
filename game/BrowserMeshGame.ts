@@ -2,6 +2,7 @@ import { ViewPortType } from "../device/Device.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
+import ShaderFactory from "../factory/ShaderFactory.js";
 import TextureFactory from "../factory/TextureFactory.js";
 import BrowserGame from "./BrowserGame.js";
 
@@ -33,7 +34,8 @@ export default class BrowserMeshGame extends BrowserGame {
         const fontTexture = textureFactory.createFontTexture();
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
-        const rendererFactory = new RendererFactory(device.gl)
+        const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
+        const rendererFactory = new RendererFactory(device.gl, shaderFactory);
         const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "hello-multi");
         this.setGLTFObj(gltf.createRootNode());
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);

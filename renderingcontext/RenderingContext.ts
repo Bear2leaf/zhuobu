@@ -1,5 +1,5 @@
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
-import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
+import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Shader from "../shader/Shader.js";
 import Texture from "../texture/Texture.js";
@@ -21,7 +21,7 @@ export default interface RenderingContext {
     viewportTo(left: number, top: number, width: number, height: number): void;
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
-    makeVertexArrayObject(): GLVertexArrayObject;
+    makeVertexArrayObject(): VertexArrayObject;
     makeTexture(unit: number): Texture;
     switchDepthTest(enable: boolean): void;
     switchDepthWrite(enable: boolean): void;
@@ -29,5 +29,5 @@ export default interface RenderingContext {
     switchUnpackPremultiplyAlpha(enable: boolean): void;
     useBlendFuncOneAndOneMinusSrcAlpha(): void;
     makePrimitive(type: PrimitiveType): Primitive;
-    makeShader(name: string): Shader; 
+    makeShader(name: string, vert: string, frag: string): Shader; 
 }

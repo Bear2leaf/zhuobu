@@ -1,14 +1,13 @@
 import LineSegment from "../geometry/LineSegment.js";
 import Point from "../geometry/Point.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import Node from "../structure/Node.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class ColorArrowLine extends DrawObject {
-    constructor(gl: RenderingContext, texture: GLTexture, from: Point, to: Point, ...others: Point[]) {
+    constructor(gl: RenderingContext, texture: Texture, from: Point, to: Point, ...others: Point[]) {
         const line = new LineSegment(from, to);
         const colors: Vec4[] = [];
         const indices: number[] = [];

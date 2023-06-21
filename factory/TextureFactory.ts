@@ -1,5 +1,4 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import GLTexture from "../texture/GLTexture.js";
 import { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureFactory {

@@ -1,20 +1,19 @@
-import ArrayBufferObject from "../contextobject/ArrayBufferObject";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject";
-import GLElementBufferObject from "../contextobject/GLElementBufferObject";
-import GLPrimitive from "../contextobject/GLPrimitive";
-import GLVertexArrayObject from "../contextobject/GLVertexArrayObject";
-import Primitive, { PrimitiveType } from "../contextobject/Primitive";
-import GLShader from "../shader/GLShader";
-import Shader from "../shader/Shader";
-import GLTexture from "../texture/GLTexture";
-import RenderingContext, { ArrayBufferIndex } from "./RenderingContext";
+import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
+import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
+import GLElementBufferObject from "../contextobject/GLElementBufferObject.js";
+import GLPrimitive from "../contextobject/GLPrimitive.js";
+import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
+import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import GLShader from "../shader/GLShader.js";
+import Shader from "../shader/Shader.js";
+import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
+import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
-    private readonly txtCache: Map<string, string>;
-    constructor(canvas: HTMLCanvasElement, txtCache: Map<string, string>) {
+    constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
-        this.txtCache = txtCache;
     }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {
         return new GLElementBufferObject(this.gl, data);
@@ -41,7 +40,7 @@ export default class GLRenderingContext implements RenderingContext {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
     }
-    makeTexture(unit: number): GLTexture {
+    makeTexture(unit: number): Texture {
         return new GLTexture(this.gl, unit);
     }
     switchDepthTest(enable: boolean): void {
@@ -70,12 +69,7 @@ export default class GLRenderingContext implements RenderingContext {
     makePrimitive(type: PrimitiveType): Primitive {
         return new GLPrimitive(this.gl, type);
     }
-    makeShader(name: string): Shader {
-        const vert = this.txtCache.get(`static/shader/${name}.vert.sk`);
-        const frag = this.txtCache.get(`static/shader/${name}.frag.sk`);
-        if (vert === undefined || frag === undefined) {
-            throw new Error("Shader text not found");
-        }
+    makeShader(name: string, vert: string, frag: string): Shader {
         return new GLShader(this.gl, vert, frag);
     }
 

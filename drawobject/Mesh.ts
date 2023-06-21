@@ -1,10 +1,10 @@
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Mesh extends DrawObject {
     constructor(gl: RenderingContext
-        , texture: GLTexture
+        , texture: Texture
         , position: Float32Array
         , normal: Float32Array
         , indices: Uint16Array) {

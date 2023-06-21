@@ -4,7 +4,7 @@ const wx = (globalThis as any).wx;
 
 export default class WxDevice extends Device {
     constructor() {
-        super();
+        super(wx.createCanvas());
     }
 
     getDeviceInfo(): DeviceInfo {

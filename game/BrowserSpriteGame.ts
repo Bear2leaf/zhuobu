@@ -2,6 +2,7 @@ import { ViewPortType } from "../device/Device.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
+import ShaderFactory from "../factory/ShaderFactory.js";
 import TextureFactory from "../factory/TextureFactory.js";
 import BrowserGame from "./BrowserGame.js";
 
@@ -33,7 +34,8 @@ export default class BrowserSpriteGame extends BrowserGame {
         const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
         const flowersSprite = drawObjectFactory.createSprite(0, 0, 0.7, flowersTexture);
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
-        const rendererFactory = new RendererFactory(device.gl)
+        const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
+        const rendererFactory = new RendererFactory(device.gl, shaderFactory);
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.getUISystem().setMainRenderer(rendererFactory.createMainRenderer())
         this.getUISystem().addSprite(flowersSprite);

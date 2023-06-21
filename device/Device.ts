@@ -1,7 +1,6 @@
 import { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../loader/gltf/GLTF.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import GLRenderingContext from "../renderingcontext/GLRenderingContext";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -12,8 +11,7 @@ export enum ViewPortType {
     LeftTop
 }
 export default abstract class Device {
-  private readonly canvas: HTMLCanvasElement
-  private readonly renderingContext: GLRenderingContext;
+  private readonly renderingContext: RenderingContext;
   private readonly imageCache: Map<string, HTMLImageElement>;
   private readonly txtCache: Map<string, string>;
   private readonly fontCache: Map<string, FontInfo>;
@@ -21,10 +19,9 @@ export default abstract class Device {
   private readonly glbCache: Map<string, ArrayBuffer>;
   private readonly performance: Performance;
   private readonly deviceInfo: DeviceInfo;
-  constructor(canvas?: HTMLCanvasElement) {
-    this.canvas = canvas || this.createCanvas(canvas);
+  constructor(renderingContext: RenderingContext) {
     this.txtCache = new Map();
-    this.renderingContext = new GLRenderingContext(this.canvas, this.txtCache);
+    this.renderingContext = renderingContext;
     this.imageCache = new Map();
     this.fontCache = new Map();
     this.gltfCache = new Map();
@@ -40,9 +37,6 @@ export default abstract class Device {
   }
   abstract getDeviceInfo(): DeviceInfo;
   protected abstract getPerformance(): Performance;
-  getCanvas() {
-    return this.canvas;
-  }
   getImageCache(): Map<string, HTMLImageElement> {
     return this.imageCache;
   }

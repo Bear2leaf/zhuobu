@@ -1,4 +1,4 @@
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import Node from "../structure/Node.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
@@ -10,14 +10,14 @@ export default abstract class DrawObject {
     private readonly vao: VertexArrayObject;
     private readonly ebo: ArrayBufferObject;
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
-    private readonly textureMap: Map<TextureIndex, GLTexture>;
+    private readonly textureMap: Map<TextureIndex, Texture>;
     private readonly gl: RenderingContext;
     private count: number;
-    constructor(gl: RenderingContext, defaultTexture: GLTexture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
+    constructor(gl: RenderingContext, defaultTexture: Texture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
         this.gl = gl;
         this.count = count;
         this.aboMap = aboMap;
-        this.textureMap = new Map<TextureIndex, GLTexture>();
+        this.textureMap = new Map<TextureIndex, Texture>();
         this.vao = this.gl.makeVertexArrayObject();
         this.vao.bind();
         this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
@@ -48,7 +48,7 @@ export default abstract class DrawObject {
         }
         return texture;
     }
-    protected addTexture(index: TextureIndex, texture: GLTexture) {
+    protected addTexture(index: TextureIndex, texture: Texture) {
         this.textureMap.set(index, texture);
     }
     protected updateABO(index: ArrayBufferIndex, data: Float32Array) {

@@ -8,7 +8,7 @@ import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 
 export default class UISystem {
     private readonly pointRenderer: PointRenderer;
@@ -21,7 +21,7 @@ export default class UISystem {
     private mainRenderer?: Renderer;
     private readonly sprites: Node[];
     private readonly clock: Clock;
-    constructor(clock: Clock, fontTexture: GLTexture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
+    constructor(clock: Clock, fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
         this.clock = clock;
         this.sprites = [];
         this.pointRenderer = rendererFactory.createPointRenderer();
@@ -74,9 +74,13 @@ export default class UISystem {
         }
         gl.switchDepthWrite(false);
         gl.switchDepthTest(false);
+        gl.switchBlend(true);
+        gl.switchUnpackPremultiplyAlpha(true);
         this.sprites.forEach((sprite) => {
             this.spriteRenderer.render(this.uiCamera, sprite);
         });
+        gl.switchUnpackPremultiplyAlpha(false);
+        gl.switchBlend(true);
         this.mainRenderer.render(this.uiCamera, this.histogram);
         this.spriteRenderer.render(this.uiCamera, this.framesText);
         this.spriteRenderer.render(this.uiCamera, this.fpsText);

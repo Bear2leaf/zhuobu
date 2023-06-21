@@ -1,8 +1,7 @@
 import Quad from "../geometry/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
-import Node from "../structure/Node.js";
 import UISystem from "../system/UISystem.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
@@ -13,7 +12,7 @@ export default class Histogram extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly uiSystem: UISystem;
-    constructor( gl: RenderingContext, uiSystem: UISystem, texture: GLTexture) {
+    constructor( gl: RenderingContext, uiSystem: UISystem, texture: Texture) {
         const width = 100;
         const height = 100;
         const hisY = 30;

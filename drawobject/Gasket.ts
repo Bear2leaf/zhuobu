@@ -5,14 +5,14 @@ import Triangle from "../geometry/Triangle.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../structure/Node.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Gasket extends DrawObject {
     private frame = 0;
-    constructor(gl: RenderingContext, texture: GLTexture) {
+    constructor(gl: RenderingContext, texture: Texture) {
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
         const pC = new Point(1, -1, -1);

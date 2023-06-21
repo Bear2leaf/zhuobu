@@ -1,5 +1,5 @@
 import Node from "../structure/Node.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
@@ -12,7 +12,7 @@ export default class SkinMesh extends Mesh {
     private readonly origMatrices: Map<Node, Matrix>;
     private readonly node: Node;
      constructor(gl: RenderingContext
-        , texture: GLTexture
+        , texture: Texture
         , position: Float32Array
         , normal: Float32Array
         , weights: Float32Array
@@ -21,7 +21,7 @@ export default class SkinMesh extends Mesh {
         , indices: Uint16Array
         , jointNodes: Node[]
         , inverseBindMatrixData: Float32Array
-        , jointTexture: GLTexture, node: Node) {
+        , jointTexture: Texture, node: Node) {
         super(gl, texture, position, normal, indices);
         this.origMatrices = new Map();
         this.jointNodes = jointNodes;

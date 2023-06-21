@@ -5,28 +5,33 @@ import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
+import ShaderFactory from "./ShaderFactory.js";
+import { PrimitiveType } from "../contextobject/Primitive.js";
 
 export default class RendererFactory {
     private readonly gl: RenderingContext;
-    constructor(gl: RenderingContext) {
+    private readonly shaderFactory: ShaderFactory;
+    constructor(gl: RenderingContext, shaderFactory: ShaderFactory) {
         this.gl = gl;
+        this.shaderFactory = shaderFactory;
     }
     createPointRenderer() {
-        return new PointRenderer(this.gl);
+        return new PointRenderer(this.shaderFactory.createShader("Point"), this.gl.makePrimitive(PrimitiveType.POINTS));
     }
     createSpriteRenderer() {
-        return new SpriteRenderer(this.gl)
+        this.gl.useBlendFuncOneAndOneMinusSrcAlpha();
+        return new SpriteRenderer(this.shaderFactory.createShader("Sprite"), this.gl.makePrimitive(PrimitiveType.TRIANGLES))
     }
     createLineRenderer() {
-        return new LineRenderer(this.gl)
+        return new LineRenderer(this.shaderFactory.createShader("Line"), this.gl.makePrimitive(PrimitiveType.LINES))
     }
     createGLTFMeshRenderer() {
-        return new GLTFMeshRenderer(this.gl)
+        return new GLTFMeshRenderer(this.shaderFactory.createShader("Mesh"), this.gl.makePrimitive(PrimitiveType.TRIANGLES))
     }
     createGLTFSkinMeshRenderer() {
-        return new GLTFSkinMeshRenderer(this.gl)
+        return new GLTFSkinMeshRenderer(this.shaderFactory.createShader("SkinMesh"), this.gl.makePrimitive(PrimitiveType.TRIANGLES))
     }
     createMainRenderer() {
-        return new TriangleRenderer(this.gl)
+        return new TriangleRenderer(this.shaderFactory.createShader("VertexColorTriangle"), this.gl.makePrimitive(PrimitiveType.TRIANGLES))
     }
 }

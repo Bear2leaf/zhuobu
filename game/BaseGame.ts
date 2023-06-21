@@ -7,13 +7,14 @@ import RendererFactory from "../factory/RendererFactory.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import Device, { ViewPortType } from "../device/Device.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 import TextureFactory from "../factory/TextureFactory.js";
 import Renderer from "../renderer/Renderer.js";
 import Node from "../structure/Node.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
 import Clock from "../clock/Clock.js";
+import ShaderFactory from "../factory/ShaderFactory.js";
 
 export default abstract class BaseGame {
   private debugSystem?: DebugSystem;
@@ -87,7 +88,7 @@ export default abstract class BaseGame {
     this.gltfRenderer = rendererFactory.createGLTFMeshRenderer();
   }
 
-  initUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: GLTexture) {
+  initUISystem(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory, fontTexture: Texture) {
 
     this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory);
   }
@@ -139,7 +140,8 @@ export default abstract class BaseGame {
 
     const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"), this.device.getFontCache());
 
-    const rendererFactory = new RendererFactory(this.device.gl);
+    const shaderFactory = new ShaderFactory(this.device.getTxtCache(), this.device.gl);
+    const rendererFactory = new RendererFactory(this.device.gl, shaderFactory);
     this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
     const gltfCache = this.device.getGLTFCache();
