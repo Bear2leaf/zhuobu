@@ -1,12 +1,12 @@
 import Camera from "../camera/Camera.js";
 import Renderer from "./Renderer.js";
 import Node from "../structure/Node.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 
 export class TriangleRenderer extends Renderer {
     private readonly primitive: Primitive;
-    constructor(gl: RenderingCtx) {
+    constructor(gl: RenderingContext) {
         super(gl.makeShader("VertexColorTriangle"))
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
     }

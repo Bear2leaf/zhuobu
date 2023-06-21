@@ -1,11 +1,11 @@
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import GLTexture from "../texture/GLTexture.js";
 import { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureFactory {
-    private readonly gl: RenderingCtx;
+    private readonly gl: RenderingContext;
     private readonly imageCache: Map<string, HTMLImageElement>;
-    constructor(gl: RenderingCtx, imageCache: Map<string, HTMLImageElement>) {
+    constructor(gl: RenderingContext, imageCache: Map<string, HTMLImageElement>) {
         this.gl = gl;
         this.imageCache = imageCache
     }

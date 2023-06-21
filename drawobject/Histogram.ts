@@ -5,7 +5,7 @@ import UISystem from "../system/UISystem.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Histogram extends DrawObject {
     private readonly quads: Quad[];
@@ -13,7 +13,7 @@ export default class Histogram extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly uiSystem: UISystem;
-    constructor( gl: RenderingCtx, uiSystem: UISystem, texture: GLTexture) {
+    constructor( gl: RenderingContext, uiSystem: UISystem, texture: GLTexture) {
         const width = 100;
         const height = 100;
         const hisY = 30;

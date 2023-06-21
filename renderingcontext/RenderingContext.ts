@@ -2,7 +2,7 @@ import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Shader from "../shader/Shader.js";
-import GLTexture from "../texture/GLTexture.js";
+import Texture from "../texture/Texture.js";
 
 export enum ArrayBufferIndex {
     Position = 0,
@@ -14,7 +14,7 @@ export enum ArrayBufferIndex {
 }
 
 
-export default interface RenderingCtx {
+export default interface RenderingContext {
     clear(r?:number, g?:number, b?:number, a?:number): void;
     init(): void;
     draw(mode: number, count: number): void;
@@ -22,7 +22,7 @@ export default interface RenderingCtx {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): GLVertexArrayObject;
-    makeTexture(unit: number): GLTexture;
+    makeTexture(unit: number): Texture;
     switchDepthTest(enable: boolean): void;
     switchDepthWrite(enable: boolean): void;
     switchBlend(enable: boolean): void;

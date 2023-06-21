@@ -1,6 +1,6 @@
 import { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../loader/gltf/GLTF.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import GLRenderingContext from "../renderingcontext/GLRenderingContext";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
@@ -35,7 +35,7 @@ export default abstract class Device {
       this.deviceInfo.pixelRatio = 1;
     }
   }
-  get gl(): RenderingCtx {
+  get gl(): RenderingContext {
     return this.renderingContext;
   }
   abstract getDeviceInfo(): DeviceInfo;

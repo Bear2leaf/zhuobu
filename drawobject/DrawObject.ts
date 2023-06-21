@@ -1,6 +1,6 @@
 import GLTexture from "../texture/GLTexture.js";
 import Node from "../structure/Node.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import { TextureIndex } from "../texture/Texture.js";
@@ -11,9 +11,9 @@ export default abstract class DrawObject {
     private readonly ebo: ArrayBufferObject;
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
     private readonly textureMap: Map<TextureIndex, GLTexture>;
-    private readonly gl: RenderingCtx;
+    private readonly gl: RenderingContext;
     private count: number;
-    constructor(gl: RenderingCtx, defaultTexture: GLTexture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
+    constructor(gl: RenderingContext, defaultTexture: GLTexture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
         this.gl = gl;
         this.count = count;
         this.aboMap = aboMap;

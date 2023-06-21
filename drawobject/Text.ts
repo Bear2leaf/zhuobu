@@ -2,7 +2,7 @@ import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import GLTexture from "../texture/GLTexture.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
@@ -19,7 +19,7 @@ export default class Text extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly fontInfo: FontInfo;
-    constructor(gl: RenderingCtx, fontInfo: FontInfo, texture: GLTexture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
+    constructor(gl: RenderingContext, fontInfo: FontInfo, texture: GLTexture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
         super(gl, texture, new Map<number, GLArrayBufferObject>(), 0);
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)

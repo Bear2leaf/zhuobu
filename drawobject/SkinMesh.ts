@@ -2,7 +2,7 @@ import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 
 export default class SkinMesh extends Mesh {
@@ -11,7 +11,7 @@ export default class SkinMesh extends Mesh {
     private readonly inverseBindMatrices: Matrix[];
     private readonly origMatrices: Map<Node, Matrix>;
     private readonly node: Node;
-     constructor(gl: RenderingCtx
+     constructor(gl: RenderingContext
         , texture: GLTexture
         , position: Float32Array
         , normal: Float32Array

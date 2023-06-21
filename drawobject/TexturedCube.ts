@@ -5,11 +5,11 @@ import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
-    constructor(gl: RenderingCtx, texture: GLTexture) {
+    constructor(gl: RenderingContext, texture: GLTexture) {
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();

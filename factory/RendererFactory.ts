@@ -4,11 +4,11 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export default class RendererFactory {
-    private readonly gl: RenderingCtx;
-    constructor(gl: RenderingCtx) {
+    private readonly gl: RenderingContext;
+    constructor(gl: RenderingContext) {
         this.gl = gl;
     }
     createPointRenderer() {

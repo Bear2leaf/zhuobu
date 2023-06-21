@@ -2,14 +2,14 @@ import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import Cone from "../geometry/Cone.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 
 export default class BlackWireCone extends DrawObject {
-    constructor(gl: RenderingCtx, texture: GLTexture) {
+    constructor(gl: RenderingContext, texture: GLTexture) {
         const cone = new Cone();
         const lines = cone.getLines();
         const points = cone.getPoints();

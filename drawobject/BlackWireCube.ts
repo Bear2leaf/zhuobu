@@ -6,10 +6,10 @@ import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class BlackWireCube extends DrawObject {
-    constructor(gl: RenderingCtx, texture: GLTexture) {
+    constructor(gl: RenderingContext, texture: GLTexture) {
         const cube = new Cube(undefined, undefined, new Vec4(0, 0, 0, 1));
         const lines = cube.getLines();
         const points = cube.getPoints();

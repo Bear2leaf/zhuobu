@@ -1,13 +1,13 @@
 import Camera from "../camera/Camera.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import Renderer from "./Renderer.js";
 
 export default class SpriteRenderer extends Renderer {
     private readonly primitive: Primitive
-    private readonly gl: RenderingCtx
-    constructor(gl: RenderingCtx) {
+    private readonly gl: RenderingContext
+    constructor(gl: RenderingContext) {
         super(gl.makeShader("Sprite"));
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
         this.gl = gl;

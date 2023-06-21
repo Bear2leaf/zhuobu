@@ -7,9 +7,9 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive";
 import GLShader from "../shader/GLShader";
 import Shader from "../shader/Shader";
 import GLTexture from "../texture/GLTexture";
-import RenderingCtx, { ArrayBufferIndex } from "./RenderingCtx";
+import RenderingContext, { ArrayBufferIndex } from "./RenderingContext";
 
-export default class GLRenderingContext implements RenderingCtx {
+export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
     private readonly txtCache: Map<string, string>;
     constructor(canvas: HTMLCanvasElement, txtCache: Map<string, string>) {

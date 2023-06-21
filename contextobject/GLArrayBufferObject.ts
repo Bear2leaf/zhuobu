@@ -1,4 +1,4 @@
-import  { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import  { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "./ArrayBufferObject.js";
 export default class GLArrayBufferObject implements ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;

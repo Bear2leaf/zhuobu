@@ -6,7 +6,7 @@ import RendererFactory from "../factory/RendererFactory.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 
@@ -68,7 +68,7 @@ export default class UISystem {
             drawObject.update(this.pointer);
         });
     }
-    render(gl: RenderingCtx) {
+    render(gl: RenderingContext) {
         if (!this.mainRenderer) {
             throw new Error("mainRenderer not exist");
         }

@@ -2,12 +2,12 @@ import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Pointer extends DrawObject {
     private x: number = 0;
     private y: number = 0;
-    constructor(gl: RenderingCtx, texture: GLTexture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function) {
+    constructor(gl: RenderingContext, texture: GLTexture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function) {
         onTouchStart((e: { x: number, y: number } | undefined) => this.setPosition(e))
         onTouchMove((e: { x: number, y: number } | undefined) => this.setPosition(e))
         onTouchEnd(() => { })

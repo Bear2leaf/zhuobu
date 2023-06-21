@@ -13,16 +13,16 @@ import Text, { FontInfo } from "../drawobject/Text.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
 import Point from "../geometry/Point.js";
 import { Vec4 } from "../math/Vector.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import UISystem from "../system/UISystem.js";
 import GLTexture from "../texture/GLTexture.js";
 
 export default class DrawObjectFactory {
-  private readonly gl: RenderingCtx;
+  private readonly gl: RenderingContext;
   private readonly texture: GLTexture;
   private readonly fontInfo: FontInfo;
-  constructor(gl: RenderingCtx, texture: GLTexture, fontCache: Map<string, FontInfo>) {
+  constructor(gl: RenderingContext, texture: GLTexture, fontCache: Map<string, FontInfo>) {
     this.gl = gl;
     this.texture = texture;
 

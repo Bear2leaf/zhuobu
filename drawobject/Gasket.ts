@@ -8,11 +8,11 @@ import Node from "../structure/Node.js";
 import GLTexture from "../texture/GLTexture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingCtx, { ArrayBufferIndex } from "../renderingcontext/RenderingCtx.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Gasket extends DrawObject {
     private frame = 0;
-    constructor(gl: RenderingCtx, texture: GLTexture) {
+    constructor(gl: RenderingContext, texture: GLTexture) {
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
         const pC = new Point(1, -1, -1);

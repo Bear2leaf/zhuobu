@@ -1,13 +1,13 @@
 import Camera from "../camera/Camera.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
-import RenderingCtx from "../renderingcontext/RenderingCtx.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {
     private readonly primitive: Primitive
-    constructor(gl: RenderingCtx) {
+    constructor(gl: RenderingContext) {
         super(gl.makeShader("SkinMesh"));
         this.primitive = gl.makePrimitive(PrimitiveType.TRIANGLES);
     }
