@@ -2,6 +2,11 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureFactory {
+    createTestTexture() {
+        const texture = this.gl.makeTexture(TextureIndex.Default);
+        texture.generate(2, 2, new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]));
+        return texture;
+    }
     private readonly gl: RenderingContext;
     private readonly imageCache: Map<string, HTMLImageElement>;
     constructor(gl: RenderingContext, imageCache: Map<string, HTMLImageElement>) {

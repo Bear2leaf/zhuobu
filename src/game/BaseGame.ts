@@ -124,7 +124,6 @@ export default abstract class BaseGame {
     await this.device.loadFontCache("boxy_bold_font")
     await this.device.loadSubpackage()
     await this.device.loadImageCache("happy");
-    await this.device.loadImageCache("test");
 
     await this.device.loadGLTFCache("hello")
     await this.device.loadGLTFCache("hello-multi")
@@ -135,7 +134,7 @@ export default abstract class BaseGame {
     const deviceInfo = this.device.getDeviceInfo();
     const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
     const textureFactory = new TextureFactory(this.device.gl, this.device.getImageCache());
-    const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"), this.device.getFontCache());
+    const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTestTexture(), this.device.getFontCache());
     const shaderFactory = new ShaderFactory(this.device.getTxtCache(), this.device.gl);
     const rendererFactory = new RendererFactory(this.device.gl, shaderFactory);
 

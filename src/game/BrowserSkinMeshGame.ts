@@ -18,7 +18,6 @@ export default class BrowserSkinMeshGame extends BrowserGame {
         await device.loadShaderTxtCache("Line")
         await device.loadShaderTxtCache("SkinMesh")
         await device.loadFontCache("boxy_bold_font")
-        await device.loadImageCache("test");
         await device.loadGLTFCache("hello")
         await device.loadGLTFCache("hello-multi")
         await device.loadGLTFCache("whale.CYCLES");
@@ -30,7 +29,7 @@ export default class BrowserSkinMeshGame extends BrowserGame {
         device.gl.init();
         const deviceInfo = device.getDeviceInfo();
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
+        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTestTexture(), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
         const rendererFactory = new RendererFactory(device.gl, shaderFactory);

@@ -1,6 +1,5 @@
 import { ViewPortType } from "../device/Device";
 import WxDevice from "../device/WxDevice.js";
-import SplashText from "../drawobject/SplashText";
 import CameraFactory from "../factory/CameraFactory";
 import DrawObjectFactory from "../factory/DrawObjectFactory";
 import RendererFactory from "../factory/RendererFactory";
@@ -35,7 +34,7 @@ export default class WxGame extends BaseGame {
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
         const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
         const rendererFactory = new RendererFactory(device.gl, shaderFactory);
-        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache());
+        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTestTexture(), device.getFontCache());
         this.splashTextNode.addDrawObject(drawObjectFactory.createSplashText(textureFactory, device));
         this.splashTextNode.getDrawObjects().forEach((drawObject) => {
             drawObject.update(this.splashTextNode);
