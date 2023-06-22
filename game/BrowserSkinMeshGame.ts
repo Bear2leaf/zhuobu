@@ -27,18 +27,16 @@ export default class BrowserSkinMeshGame extends BrowserGame {
     init() {
 
         const device = this.getDevice();
-        const deviceInfo = device.getDeviceInfo();
         device.gl.init();
-        const gltfCache = device.getGLTFCache();
-        const bufferCache = device.getGLBCache();
+        const deviceInfo = device.getDeviceInfo();
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const fontTexture = textureFactory.createFontTexture();
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
         const rendererFactory = new RendererFactory(device.gl, shaderFactory);
-        const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "whale.CYCLES");
+        const gltf = this.createGLTF(drawObjectFactory, textureFactory, "whale.CYCLES");
         this.setGLTFObj(gltf.createRootNode());
+        const fontTexture = textureFactory.createFontTexture();
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.initDebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
         const mainCamera = cameraFactory.createMainCamera();

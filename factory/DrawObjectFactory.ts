@@ -1,6 +1,8 @@
+import Device from "../device/Device.js";
 import BlackWireCone from "../drawobject/BlackWireCone.js";
 import BlackWireCube from "../drawobject/BlackWireCube.js";
 import ColorArrowLine from "../drawobject/ColorArrowLine.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import FpsText from "../drawobject/FpsText.js";
 import FramesText from "../drawobject/FramesText.js";
 import Gasket from "../drawobject/Gasket.js";
@@ -8,6 +10,7 @@ import Histogram from "../drawobject/Histogram.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
+import SplashText from "../drawobject/SplashText.js";
 import Sprite from "../drawobject/Sprite.js";
 import { FontInfo } from "../drawobject/Text.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
@@ -17,8 +20,18 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
 import UISystem from "../system/UISystem.js";
 import Texture from "../texture/Texture.js";
+import TextureFactory from "./TextureFactory.js";
 
 export default class DrawObjectFactory {
+  createSplashText(textureFactory: TextureFactory, device: Device) {
+    const fontTexture = textureFactory.createFontTexture();
+    const fontInfo = device.getFontCache().get("static/font/boxy_bold_font.json");
+    if (!fontInfo) {
+        throw new Error("fontInfo is null");
+    }
+    const splashText = new SplashText(device.gl, fontInfo, fontTexture);
+    return splashText;
+  }
   private readonly gl: RenderingContext;
   private readonly texture: Texture;
   private readonly fontInfo: FontInfo;

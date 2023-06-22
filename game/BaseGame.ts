@@ -97,11 +97,11 @@ export default abstract class BaseGame {
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
   }
 
-  createGLTF(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>, name?: string) {
+  createGLTF(drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, name?: string) {
     if (!name) {
       name = "hello";
     }
-    return new GLTF(name, drawObjectFactory, textureFactory, gltfCache, bufferCache);
+    return new GLTF(name, drawObjectFactory, textureFactory, this.device.getGLTFCache(), this.device.getGLBCache());
   }
   getFrames() {
     return this.clock.getFrames();
@@ -131,22 +131,18 @@ export default abstract class BaseGame {
     await this.device.loadGLTFCache("whale.CYCLES");
   }
   init() {
-    const deviceInfo = this.device.getDeviceInfo();
     this.device.gl.init();
+    const deviceInfo = this.device.getDeviceInfo();
     const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
-
     const textureFactory = new TextureFactory(this.device.gl, this.device.getImageCache());
-    const fontTexture = textureFactory.createFontTexture();
-
     const drawObjectFactory = new DrawObjectFactory(this.device.gl, textureFactory.createTexture("test"), this.device.getFontCache());
-
     const shaderFactory = new ShaderFactory(this.device.getTxtCache(), this.device.gl);
     const rendererFactory = new RendererFactory(this.device.gl, shaderFactory);
+
+    const fontTexture = textureFactory.createFontTexture();
     this.uiSystem = new UISystem(this.clock, fontTexture, this.device.onTouchStart.bind(this.device), this.device.onTouchMove.bind(this.device), this.device.onTouchEnd.bind(this.device), this.device.onTouchCancel.bind(this.device), cameraFactory, rendererFactory, drawObjectFactory)
     this.debugSystem = new DebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
-    const gltfCache = this.device.getGLTFCache();
-    const bufferCache = this.device.getGLBCache();
-    const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "whale.CYCLES");
+    const gltf = this.createGLTF(drawObjectFactory, textureFactory, "whale.CYCLES");
 
 
     this.setMainCamera(cameraFactory.createMainCamera());

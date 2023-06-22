@@ -23,19 +23,19 @@ export default class BrowserSpriteGame extends BrowserGame {
     init() {
 
         const device = this.getDevice();
-        const deviceInfo = device.getDeviceInfo();
         device.gl.init();
+        const deviceInfo = device.getDeviceInfo();
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const fontTexture = textureFactory.createFontTexture();
-        const happyTexture = textureFactory.createTexture("happy");
-        const flowersTexture = textureFactory.createTexture("flowers");
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache());
-        const defaultSprite = drawObjectFactory.createSprite(200, 100, 5);
-        const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
-        const flowersSprite = drawObjectFactory.createSprite(0, 0, 0.7, flowersTexture);
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
         const rendererFactory = new RendererFactory(device.gl, shaderFactory);
+        const fontTexture = textureFactory.createFontTexture();
+        const happyTexture = textureFactory.createTexture("happy");
+        const flowersTexture = textureFactory.createTexture("flowers");
+        const defaultSprite = drawObjectFactory.createSprite(200, 100, 5);
+        const happySprite = drawObjectFactory.createSprite(100, 0, 5, happyTexture);
+        const flowersSprite = drawObjectFactory.createSprite(0, 0, 0.7, flowersTexture);
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.getUISystem().setMainRenderer(rendererFactory.createMainRenderer())
         this.getUISystem().addSprite(flowersSprite);

@@ -2,6 +2,7 @@ import { ViewPortType } from "../device/Device";
 import WxDevice from "../device/WxDevice.js";
 import SplashText from "../drawobject/SplashText";
 import CameraFactory from "../factory/CameraFactory";
+import DrawObjectFactory from "../factory/DrawObjectFactory";
 import RendererFactory from "../factory/RendererFactory";
 import ShaderFactory from "../factory/ShaderFactory";
 import TextureFactory from "../factory/TextureFactory";
@@ -28,23 +29,18 @@ export default class WxGame extends BaseGame {
     }
     init() {
         const device = this.getDevice();
-        const deviceInfo = this.getDevice().getDeviceInfo();
         device.gl.init();
+        const deviceInfo = this.getDevice().getDeviceInfo();
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight);
-
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const fontTexture = textureFactory.createFontTexture();
-        const fontInfo = device.getFontCache().get("static/font/boxy_bold_font.json");
-        if (!fontInfo) {
-            throw new Error("fontInfo is null");
-        }
-        this.splashTextNode.addDrawObject(new SplashText(device.gl, fontInfo, fontTexture));
+        const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
+        const rendererFactory = new RendererFactory(device.gl, shaderFactory);
+        const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache());
+        this.splashTextNode.addDrawObject(drawObjectFactory.createSplashText(textureFactory, device));
         this.splashTextNode.getDrawObjects().forEach((drawObject) => {
             drawObject.update(this.splashTextNode);
         });
         const camera = cameraFactory.createOrthoCamera();
-        const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
-        const rendererFactory = new RendererFactory(device.gl, shaderFactory);
         const renderer = rendererFactory.createSpriteRenderer();
         device.viewportTo(ViewPortType.Full);
         renderer.render(camera, this.splashTextNode);

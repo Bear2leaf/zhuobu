@@ -29,5 +29,5 @@ export default interface RenderingContext {
     switchUnpackPremultiplyAlpha(enable: boolean): void;
     useBlendFuncOneAndOneMinusSrcAlpha(): void;
     makePrimitive(type: PrimitiveType): Primitive;
-    makeShader(name: string, vert: string, frag: string): Shader; 
+    makeShader(vert: string, frag: string): Shader; 
 }

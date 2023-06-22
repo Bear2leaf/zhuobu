@@ -14,6 +14,6 @@ export default class ShaderFactory {
         if (vert === undefined || frag === undefined) {
             throw new Error("Shader text not found");
         }
-        return this.gl.makeShader(name, vert, frag);
+        return this.gl.makeShader(vert, frag);
     }
 }

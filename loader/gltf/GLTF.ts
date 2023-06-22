@@ -1,5 +1,3 @@
-import DrawObject from "../../drawobject/DrawObject.js";
-import SkinMesh from "../../drawobject/SkinMesh.js";
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
 import TextureFactory from "../../factory/TextureFactory.js";
 import Node from "../../structure/Node.js";

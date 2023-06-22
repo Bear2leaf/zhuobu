@@ -25,19 +25,18 @@ export default class BrowserMeshGame extends BrowserGame {
     init() {
 
         const device = this.getDevice();
+        device.gl.init();
         const deviceInfo = device.getDeviceInfo();
 
-        device.gl.init();
-        const gltfCache = device.getGLTFCache();
-        const bufferCache = device.getGLBCache();
         const textureFactory = new TextureFactory(device.gl, device.getImageCache());
-        const fontTexture = textureFactory.createFontTexture();
         const drawObjectFactory = new DrawObjectFactory(device.gl, textureFactory.createTexture("test"), device.getFontCache())
         const cameraFactory = new CameraFactory(deviceInfo.windowWidth, deviceInfo.windowHeight)
         const shaderFactory = new ShaderFactory(device.getTxtCache(), device.gl);
         const rendererFactory = new RendererFactory(device.gl, shaderFactory);
-        const gltf = this.createGLTF(drawObjectFactory, textureFactory, gltfCache, bufferCache, "hello-multi");
+
+        const gltf = this.createGLTF(drawObjectFactory, textureFactory, "hello-multi");
         this.setGLTFObj(gltf.createRootNode());
+        const fontTexture = textureFactory.createFontTexture();
         this.initUISystem(cameraFactory, rendererFactory, drawObjectFactory, fontTexture);
         this.initDebugSystem(cameraFactory, rendererFactory, drawObjectFactory);
         const mainCamera = cameraFactory.createMainCamera();

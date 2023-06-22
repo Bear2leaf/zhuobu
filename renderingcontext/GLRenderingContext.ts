@@ -69,7 +69,7 @@ export default class GLRenderingContext implements RenderingContext {
     makePrimitive(type: PrimitiveType): Primitive {
         return new GLPrimitive(this.gl, type);
     }
-    makeShader(name: string, vert: string, frag: string): Shader {
+    makeShader(vert: string, frag: string): Shader {
         return new GLShader(this.gl, vert, frag);
     }
 
