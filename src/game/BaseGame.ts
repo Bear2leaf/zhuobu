@@ -25,9 +25,11 @@ export default abstract class BaseGame {
   private cube?: Node;
   private gltfRootNode?: Node;
   private gltfRenderer?: Renderer;
+  private preloading: boolean;
   private readonly device: Device;
   private readonly clock: Clock;
   constructor(device: Device) {
+    this.preloading = true;
     this.device = device;
     this.clock = new Clock(device);
     this.load().then(() => {
@@ -152,11 +154,15 @@ export default abstract class BaseGame {
     this.setGLTFObj(gltf.createRootNode());
     this.uiSystem.setMainRenderer(this.mainRenderer);
 
+    this.preloading = false;
   }
   tickClock() {
     this.clock.tick()
   }
   tick() {
+    if (this.preloading) {
+        return
+    }
     if (!this.mainCamera) {
       throw new Error("mainCamera is not initialized");
     }

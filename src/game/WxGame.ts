@@ -10,11 +10,9 @@ import BaseGame from "./BaseGame.js";
 
 export default class WxGame extends BaseGame {
     private readonly splashTextNode: Node;
-    private preloading: boolean;
     constructor() {
         super(new WxDevice())
         this.splashTextNode = new Node();
-        this.preloading = true;
     }
     async load() {
 
@@ -24,7 +22,6 @@ export default class WxGame extends BaseGame {
         this.init();
         await super.load();
         super.init();
-        this.preloading = false;
     }
     init() {
         const device = this.getDevice();
@@ -43,10 +40,5 @@ export default class WxGame extends BaseGame {
         const renderer = rendererFactory.createSpriteRenderer();
         device.viewportTo(ViewPortType.Full);
         renderer.render(camera, this.splashTextNode);
-    }
-    tick(): void {
-        if (!this.preloading) {
-            super.tick();
-        }
     }
 }
