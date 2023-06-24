@@ -1,2 +1,2 @@
-import WxGame from "game/WxGame.js"
-const game = new WxGame();
+import MiniGame from "./game/MiniGame.js";
+const game = new MiniGame();

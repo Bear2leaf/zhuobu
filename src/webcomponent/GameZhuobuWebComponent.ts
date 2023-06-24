@@ -4,8 +4,7 @@ import BrowserGame from "../game/BrowserGame.js";
 export default class GameZhuobuWebComponent extends HTMLElement {
     constructor() {
         super()
-        const canvas = this.appendChild(document.createElement("canvas"))
-        new BrowserGame(canvas);
+        new BrowserGame(this);
         
     }
 }

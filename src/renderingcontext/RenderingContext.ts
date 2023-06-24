@@ -15,6 +15,8 @@ export enum ArrayBufferIndex {
 
 
 export default interface RenderingContext {
+    getCanvasWidth(): number;
+    getCanvasHeight(): number;
     clear(r?:number, g?:number, b?:number, a?:number): void;
     init(): void;
     draw(mode: number, count: number): void;

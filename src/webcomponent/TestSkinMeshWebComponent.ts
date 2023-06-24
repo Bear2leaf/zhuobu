@@ -4,8 +4,7 @@ import BrowserSkinMeshGame from "../game/BrowserSkinMeshGame.js";
 export default class TestSkinMeshWebComponent extends HTMLElement {
     constructor() {
         super();
-        const canvas = this.appendChild(document.createElement("canvas"))
-        new BrowserSkinMeshGame(canvas);
+        new BrowserSkinMeshGame(this);
 
     }
 }

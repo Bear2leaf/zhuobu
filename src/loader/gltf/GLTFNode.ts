@@ -1,6 +1,8 @@
 import SkinMesh from "../../drawobject/SkinMesh.js";
+import RenderingContext from "../../renderingcontext/RenderingContext.js";
 import Node from "../../structure/Node.js";
 import TRS from "../../structure/TRS.js";
+import Texture from "../../texture/Texture.js";
 import GLTF from "./GLTF.js";
 
 export default class GLTFNode {
@@ -45,7 +47,7 @@ export default class GLTFNode {
         }
         return node;
     }
-    createFirstPrimitiveDrawObject(gltf: GLTF) {
+    createFirstPrimitiveDrawObject(gltf: GLTF, gl: RenderingContext, texture: Texture) {
         if (this.mesh === undefined) {
             return;
         }
@@ -71,14 +73,20 @@ export default class GLTFNode {
                 , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , jointNodes
                 , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
-                , gltf.getTextureFactory().createJointTexture()
-                , this.node);
+                , gltf.getTextureFactory().createJointTexture(gl)
+                , this.node
+                , gl
+                , texture
+            );
         } else {
             gltf.getDrawObjectFactory().createMesh(
                 gltf.getDataByAccessorIndex(positionIndex) as Float32Array
                 , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
                 , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
-                , this.node);
+                , this.node
+                , gl
+                , texture
+            );
         }
     }
     buildRootChildren(gltf: GLTF, parent: Node) {

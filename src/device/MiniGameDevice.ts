@@ -3,7 +3,7 @@ import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 const wx = (globalThis as any).wx;
 
-export default class WxDevice extends Device {
+export default class MiniGameDevice extends Device {
     constructor() {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {

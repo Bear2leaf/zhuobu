@@ -12,20 +12,10 @@ export enum ViewPortType {
 }
 export default abstract class Device {
   private readonly renderingContext: RenderingContext;
-  private readonly imageCache: Map<string, HTMLImageElement>;
-  private readonly txtCache: Map<string, string>;
-  private readonly fontCache: Map<string, FontInfo>;
-  private readonly gltfCache: Map<string, GLTF>;
-  private readonly glbCache: Map<string, ArrayBuffer>;
   private readonly performance: Performance;
   private readonly deviceInfo: DeviceInfo;
   constructor(renderingContext: RenderingContext) {
-    this.txtCache = new Map();
     this.renderingContext = renderingContext;
-    this.imageCache = new Map();
-    this.fontCache = new Map();
-    this.gltfCache = new Map();
-    this.glbCache = new Map();
     this.deviceInfo = this.getDeviceInfo();
     this.performance = this.getPerformance();
     if (typeof document !== 'undefined') {
@@ -37,21 +27,6 @@ export default abstract class Device {
   }
   abstract getDeviceInfo(): DeviceInfo;
   protected abstract getPerformance(): Performance;
-  getImageCache(): Map<string, HTMLImageElement> {
-    return this.imageCache;
-  }
-  getTxtCache(): Map<string, string> {
-    return this.txtCache;
-  }
-  getFontCache(): Map<string, FontInfo> {
-    return this.fontCache;
-  }
-  getGLTFCache(): Map<string, GLTF> {
-    return this.gltfCache;
-  }
-  getGLBCache(): Map<string, ArrayBuffer> {
-    return this.glbCache;
-  }
   viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
     const leftWidth = windowWidth * (2 / 3) * pixelRatio
@@ -72,31 +47,6 @@ export default abstract class Device {
   }
   now(): number {
     return this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
-  }
-  async loadImageCache(url: string) {
-    url = `resource/texture/${url}.png`
-    const img = this.createImage() as HTMLImageElement;
-    img.src = url;
-    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-    this.getImageCache().set(url, img);
-  }
-  
-  async loadGLTFCache(name: string) {
-    this.getGLTFCache().set(`resource/gltf/${name}.gltf`, await this.readJson(`resource/gltf/${name}.gltf`) as GLTF)
-    this.getGLBCache().set(`resource/gltf/${name}.bin`, await this.readBuffer(`resource/gltf/${name}.bin`))
-  }
-  async loadFontCache(name: string) {
-    this.getFontCache().set(`static/font/${name}.json`, await this.readJson(`static/font/${name}.json`) as FontInfo)
-    const fontTextureUrl = `static/font/${name}.png`
-    const img = this.createImage() as HTMLImageElement;
-    img.src = fontTextureUrl;
-    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-    this.getImageCache().set(fontTextureUrl, img);
-  }
-  
-  async loadShaderTxtCache(name: string) {
-    this.getTxtCache().set(`static/shader/${name}.vert.sk`, await this.readTxt(`static/shader/${name}.vert.sk`))
-    this.getTxtCache().set(`static/shader/${name}.frag.sk`, await this.readTxt(`static/shader/${name}.frag.sk`))
   }
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;

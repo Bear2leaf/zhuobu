@@ -1,7 +1,9 @@
 import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
 import TextureFactory from "../../factory/TextureFactory.js";
+import RenderingContext from "../../renderingcontext/RenderingContext.js";
 import Node from "../../structure/Node.js";
 import TRS from "../../structure/TRS.js";
+import Texture from "../../texture/Texture.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -110,7 +112,7 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createRootNode(): Node {
+    createRootNode(gl: RenderingContext, texture: Texture): Node {
         const rootNode = new Node(new TRS(), "root");
         for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
             const gltfNode = this.nodes[sceneNodeIndex];
@@ -121,7 +123,7 @@ export default class GLTF {
             this.buildNodeTree(gltfNode);
         }
         this.nodes.forEach((node) => {
-            node.createFirstPrimitiveDrawObject(this);
+            node.createFirstPrimitiveDrawObject(this, gl, texture);
         });
         return rootNode;
     }

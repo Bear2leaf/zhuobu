@@ -4,8 +4,7 @@ import BrowserMeshGame from "../game/BrowserMeshGame.js";
 export default class TestMeshWebComponent extends HTMLElement {
     constructor() {
         super();
-        const canvas = this.appendChild(document.createElement("canvas"))
-        new BrowserMeshGame(canvas);
+        new BrowserMeshGame(this);
 
     }
 }

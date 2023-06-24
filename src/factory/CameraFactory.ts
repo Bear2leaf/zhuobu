@@ -1,28 +1,19 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
+import Factory from "./Factory.js";
 
-export default class CameraFactory {
-    private readonly width: number;
-    private readonly height: number;
-    private mainCamera?: PerspectiveCamera;
-    constructor(width: number, height: number) {
-        this.width = width;
-        this.height = height;
-    }
-    createMainCamera() {
+export default class CameraFactory implements Factory {
+    createMainCamera(width: number, height: number) {
         const fov = Math.PI / 180 * 60;
-        const aspect = this.width / this.height;
+        const aspect = width / height;
         return new PerspectiveCamera(fov, aspect, 1, 50);
     }
-    createDebugCamera() {
+    createDebugCamera(width: number, height: number) {
         const fov = Math.PI / 180 * 90;
-        const aspect = this.width / this.height;
+        const aspect = width / height;
         return new PerspectiveCamera(fov, aspect, 1, 500);
     }
-    createOrthoCamera() {
-        return  new OrthoCamera(0, this.width, this.height, 0, 1, -1);
-    }
-    createUICamera() {
-        return this.createOrthoCamera();
+    createOrthoCamera(width: number, height: number) {
+        return  new OrthoCamera(0, width, height, 0, 1, -1);
     }
 }
