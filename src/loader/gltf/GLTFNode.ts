@@ -47,7 +47,7 @@ export default class GLTFNode {
         }
         return node;
     }
-    createFirstPrimitiveDrawObject(gltf: GLTF, gl: RenderingContext, texture: Texture) {
+    createFirstPrimitiveDrawObject(gltf: GLTF) {
         if (this.mesh === undefined) {
             return;
         }
@@ -73,10 +73,8 @@ export default class GLTFNode {
                 , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , jointNodes
                 , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
-                , gltf.getTextureFactory().createJointTexture(gl)
+                , gltf.getTextureFactory().createJointTexture()
                 , this.node
-                , gl
-                , texture
             );
         } else {
             gltf.getDrawObjectFactory().createMesh(
@@ -84,8 +82,6 @@ export default class GLTFNode {
                 , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
                 , gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.node
-                , gl
-                , texture
             );
         }
     }

@@ -1,5 +1,4 @@
 import { OrthoCamera } from "../camera/OrthoCamera.js";
-import Clock from "../clock/Clock.js";
 import { FontInfo } from "../drawobject/Text.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
@@ -23,24 +22,22 @@ export default class UISystem {
     private readonly histogram: Node;
     private mainRenderer?: Renderer;
     private readonly sprites: Node[];
-    private readonly clock: Clock;
-    constructor(gl: RenderingContext , texture: Texture, fontInfo: FontInfo, factoryManager: FactoryManager, cacheManager:CacheManager, clock: Clock, fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
-        this.clock = clock;
+    constructor(gl: RenderingContext , texture: Texture, fontInfo: FontInfo, factoryManager: FactoryManager, cacheManager:CacheManager, fontTexture: Texture, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function, cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
         this.sprites = [];
-        this.pointRenderer = rendererFactory.createPointRenderer(factoryManager, gl, cacheManager);
-        this.spriteRenderer = rendererFactory.createSpriteRenderer(factoryManager, gl, cacheManager);
-        this.pointer = drawObjectFactory.createPointer(onTouchStart, onTouchMove, onTouchEnd, onTouchCancel, gl, texture);
+        this.pointRenderer = rendererFactory.createPointRenderer();
+        this.spriteRenderer = rendererFactory.createSpriteRenderer();
+        this.pointer = drawObjectFactory.createPointer();
+        this.uiCamera = cameraFactory.createOrthoCamera();
 
-        this.framesText = drawObjectFactory.createFramesText(this, fontTexture, gl, fontInfo);
-        this.fpsText = drawObjectFactory.createFpsText(this, fontTexture, gl, fontInfo);
-        this.uiCamera = cameraFactory.createOrthoCamera(gl.getCanvasWidth(), gl.getCanvasHeight());
-        this.histogram = drawObjectFactory.createHistogram(this, gl, texture);
+        this.framesText = drawObjectFactory.createFramesText();
+        this.fpsText = drawObjectFactory.createFpsText();
+        this.histogram = drawObjectFactory.createHistogram();
     }
     getFPS() {
-        return this.clock.getFPS();
+        // return this.clock.getFPS();
     }
     getFrames() {
-        return this.clock.getFrames();
+        // return this.clock.getFrames();
     }
     addSprite(sprite: Node) {
         this.sprites.push(sprite);
@@ -49,27 +46,6 @@ export default class UISystem {
         this.mainRenderer = renderer;
     }
     update() {
-
-        if (!this.mainRenderer) {
-            throw new Error("mainRenderer not exist")
-        }
-        this.sprites.forEach(sprite => {
-            sprite.getDrawObjects().forEach(drawObject => {
-                drawObject.update(sprite);
-            });
-        });
-        this.framesText.getDrawObjects().forEach(drawObject => {
-            drawObject.update(this.framesText);
-        });
-        this.fpsText.getDrawObjects().forEach(drawObject => {
-            drawObject.update(this.fpsText);
-        });
-        this.histogram.getDrawObjects().forEach(drawObject => {
-            drawObject.update(this.histogram);
-        });
-        this.pointer.getDrawObjects().forEach(drawObject => {
-            drawObject.update(this.pointer);
-        });
     }
     render(gl: RenderingContext) {
         if (!this.mainRenderer) {

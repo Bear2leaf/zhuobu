@@ -73,15 +73,12 @@ export default class Text extends DrawObject {
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
     }
-    update(): void {
+    draw(mode: number): void {
         this.bind();
         this.create(this.fontInfo, this.getTexture(TextureIndex.Default).getSize());
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
-    }
-    draw(mode: number): void {
-        this.bind();
         super.draw(mode);
     }
 

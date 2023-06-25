@@ -112,7 +112,7 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createRootNode(gl: RenderingContext, texture: Texture): Node {
+    createRootNode(): Node {
         const rootNode = new Node(new TRS(), "root");
         for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
             const gltfNode = this.nodes[sceneNodeIndex];
@@ -123,7 +123,7 @@ export default class GLTF {
             this.buildNodeTree(gltfNode);
         }
         this.nodes.forEach((node) => {
-            node.createFirstPrimitiveDrawObject(this, gl, texture);
+            node.createFirstPrimitiveDrawObject(this);
         });
         return rootNode;
     }

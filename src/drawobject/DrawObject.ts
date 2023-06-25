@@ -23,7 +23,6 @@ export default abstract class DrawObject {
         this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
         this.textureMap.set(TextureIndex.Default, defaultTexture);
     }
-    abstract update(node: Node): void;
     bind() {
         this.vao.bind();
         this.textureMap.forEach((texture) => {

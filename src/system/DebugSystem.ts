@@ -2,14 +2,10 @@ import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import CameraFactory from "../factory/CameraFactory.js";
 import DrawObjectFactory from "../factory/DrawObjectFactory.js";
 import RendererFactory from "../factory/RendererFactory.js";
-import CacheManager from "../manager/CacheManager.js";
-import FactoryManager from "../manager/FactoryManager.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Renderer from "../renderer/Renderer.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
-import Texture from "../texture/Texture.js";
 
 export default class DebugSystem {
     private readonly lineRenderer: LineRenderer;
@@ -19,19 +15,16 @@ export default class DebugSystem {
     private readonly lenCone: Node;
     private readonly upCube: Node;
     private readonly debugCamera: PerspectiveCamera;
-    constructor(factoryManager: FactoryManager, gl: RenderingContext, cacheManager: CacheManager, texture: Texture) {
-        const cameraFactory = factoryManager.getCameraFactory();
-        const rendererFactory = factoryManager.getRendererFactory();
-        const drawObjectFactory = factoryManager.getDrawObjectFactory();
+    constructor(cameraFactory: CameraFactory, rendererFactory: RendererFactory, drawObjectFactory: DrawObjectFactory) {
 
-        this.lineRenderer = rendererFactory.createLineRenderer(factoryManager, gl, cacheManager);
+        this.lineRenderer = rendererFactory.createLineRenderer();
 
-        this.debugCamera = cameraFactory.createDebugCamera(gl.getCanvasWidth(), gl.getCanvasHeight());
-        this.xyzAxis = drawObjectFactory.createColorArrowLine(gl, texture);
-        this.frustumCube = drawObjectFactory.createBlackWireCube(gl, texture) ; 
-        this.cameraCube = drawObjectFactory.createBlackWireCube(gl, texture); 
-        this.lenCone = drawObjectFactory.createBlackWireCone(gl, texture);
-        this.upCube = drawObjectFactory.createBlackWireCube(gl, texture);
+        this.debugCamera = cameraFactory.createDebugCamera();
+        this.xyzAxis = drawObjectFactory.createColorArrowLine();
+        this.frustumCube = drawObjectFactory.createBlackWireCube() ; 
+        this.cameraCube = drawObjectFactory.createBlackWireCube(); 
+        this.lenCone = drawObjectFactory.createBlackWireCone();
+        this.upCube = drawObjectFactory.createBlackWireCube();
         this.debugCamera.lookAtInverse(new Vec3(5, 5, 10), new Vec3(0, 0, -10), new Vec3(0, 1, 0));
     }
     renderCamera(mainCamera: PerspectiveCamera): void {

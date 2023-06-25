@@ -1,8 +1,6 @@
-import Device from "../device/Device.js";
 import BlackWireCone from "../drawobject/BlackWireCone.js";
 import BlackWireCube from "../drawobject/BlackWireCube.js";
 import ColorArrowLine from "../drawobject/ColorArrowLine.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import FpsText from "../drawobject/FpsText.js";
 import FramesText from "../drawobject/FramesText.js";
 import Gasket from "../drawobject/Gasket.js";
@@ -16,32 +14,38 @@ import { FontInfo } from "../drawobject/Text.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
 import Point from "../geometry/Point.js";
 import CacheManager from "../manager/CacheManager.js";
+import InputManager from "../manager/InputManager.js";
 import { Vec4 } from "../math/Vector.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Node from "../structure/Node.js";
-import UISystem from "../system/UISystem.js";
 import Texture from "../texture/Texture.js";
 import Factory from "./Factory.js";
 import TextureFactory from "./TextureFactory.js";
 
 export default class DrawObjectFactory implements Factory {
-  createSplashText(textureFactory: TextureFactory, cacheManager: CacheManager, gl: RenderingContext) {
-    const fontTexture = textureFactory.createFontTexture(gl, cacheManager);
-    const fontInfo = cacheManager.getFontCache().get("static/font/boxy_bold_font.json");
-    if (!fontInfo) {
-      throw new Error("fontInfo is null");
-    }
-    const splashText = new SplashText(gl, fontInfo, fontTexture);
+  private readonly fontTexture: Texture;
+  private readonly fontInfo: FontInfo;
+  private readonly defaultTexture: Texture;
+  constructor(
+    private readonly gl: RenderingContext
+    , cacheManager: CacheManager
+    , textureFactory: TextureFactory
+    , private readonly inputManager: InputManager
+  ) {
+    this.fontTexture = textureFactory.createFontTexture();
+    this.fontInfo = cacheManager.getFontInfo("boxy_bold_font");
+    this.defaultTexture = textureFactory.createTestTexture();
+  }
+  createSplashText() {
+    const splashText = new SplashText(this.gl, this.fontInfo, this.fontTexture);
     return splashText;
   }
   createMesh(positions: Float32Array
     , normals: Float32Array
     , indices: Uint16Array
     , node: Node
-    , gl: RenderingContext
-    , texture: Texture
   ) {
-    node.addDrawObject(new Mesh(gl, texture, positions, normals, indices));
+    node.addDrawObject(new Mesh(this.gl, this.defaultTexture, positions, normals, indices));
     return node;
   }
   createSkinMesh(position: Float32Array
@@ -54,11 +58,9 @@ export default class DrawObjectFactory implements Factory {
     , inverseBindMatrixData: Float32Array
     , jointTexture: Texture
     , node: Node
-    , gl: RenderingContext
-    , texture: Texture
   ) {
-    node.addDrawObject(new SkinMesh(gl
-      , texture
+    node.addDrawObject(new SkinMesh(this.gl
+      , this.defaultTexture
       , position
       , normal
       , weights
@@ -70,82 +72,55 @@ export default class DrawObjectFactory implements Factory {
       , jointTexture
       , node));
   }
-  createPointer(onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function, onTouchCancel: Function
-    , gl: RenderingContext
-    , texture: Texture) {
+  createPointer() {
     const node = new Node();
-    node.addDrawObject(new Pointer(gl, texture, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel))
+    node.addDrawObject(new Pointer(this.gl, this.defaultTexture, this.inputManager.onTouchStart, this.inputManager.onTouchMove, this.inputManager.onTouchEnd, this.inputManager.onTouchCancel))
     return node;
   }
-  createFramesText(uiSystem: UISystem, fontTexture: Texture
-    , gl: RenderingContext
-    , fontInfo: FontInfo
-  ) {
+  createFramesText() {
     const node = new Node();
-    node.addDrawObject(new FramesText(uiSystem, gl, fontInfo, fontTexture))
+    node.addDrawObject(new FramesText(this.gl, this.fontInfo, this.fontTexture))
     return node
   }
-  createFpsText(uiSystem: UISystem, fontTexture: Texture
-    , gl: RenderingContext
-    , fontInfo: FontInfo
-  ) {
+  createFpsText() {
     const node = new Node();
-    node.addDrawObject(new FpsText(uiSystem, gl, fontInfo, fontTexture))
+    node.addDrawObject(new FpsText(this.gl, this.fontInfo, this.fontTexture))
     return node
   }
-  createHistogram(uiSystem: UISystem
-    , gl: RenderingContext
-    , texture: Texture) {
+  createHistogram() {
     const node = new Node();
-    node.addDrawObject(new Histogram(gl, uiSystem, texture))
+    node.addDrawObject(new Histogram(this.gl, this.defaultTexture))
     return node;
   }
-  createSprite(x: number = 0, y: number = 0, scale: number = 1
-    , gl: RenderingContext
-    , texture: Texture
-  ) {
+  createSprite(x: number = 0, y: number = 0, scale: number = 1) {
     const node = new Node();
-    node.addDrawObject(new Sprite(gl, texture, x, y, scale, [1, 1, 1, 1], [0, 0]))
+    node.addDrawObject(new Sprite(this.gl, this.defaultTexture, x, y, scale, [1, 1, 1, 1], [0, 0]))
     return node;
   }
-  createColorArrowLine(
-    gl: RenderingContext
-    , texture: Texture
-  ) {
+  createColorArrowLine() {
     const node = new Node();
-    node.addDrawObject(new ColorArrowLine(gl, texture, new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5)));
+    node.addDrawObject(new ColorArrowLine(this.gl, this.defaultTexture, new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5)));
     return node;
   }
-  createBlackWireCube(
-    gl: RenderingContext
-    , texture: Texture
-  ) {
+  createBlackWireCube() {
     const node = new Node();
-    node.addDrawObject(new BlackWireCube(gl, texture));
+    node.addDrawObject(new BlackWireCube(this.gl, this.defaultTexture));
     return node;
   }
-  createBlackWireCone(
-    gl: RenderingContext
-    , texture: Texture
-  ) {
+  createBlackWireCone() {
     const node = new Node();
-    node.addDrawObject(new BlackWireCone(gl, texture));
+    node.addDrawObject(new BlackWireCone(this.gl, this.defaultTexture));
     return node;
   }
-  createGasket(
-    gl: RenderingContext
-    , texture: Texture
-  ) {
+  createGasket() {
     const node = new Node();
-    node.addDrawObject(new Gasket(gl, texture));
+    node.addDrawObject(new Gasket(this.gl, this.defaultTexture));
     return node;
   }
   createTexturedCube(
-    gl: RenderingContext
-    , texture: Texture
   ) {
     const node = new Node();
-    node.addDrawObject(new TexturedCube(gl, texture));
+    node.addDrawObject(new TexturedCube(this.gl, this.defaultTexture));
     return node;
   }
 }
