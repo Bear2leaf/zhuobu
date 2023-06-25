@@ -1,6 +1,6 @@
 import Device from "../device/Device.js";
 import { FontInfo } from "../drawobject/Text.js";
-import GLTF from "../loader/gltf/GLTF.js";
+import GLTF from "../gltf/GLTF.js";
 import Manager from "./Manager.js";
 
 

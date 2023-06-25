@@ -5,7 +5,7 @@ import RendererFactory from "../factory/RendererFactory.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Renderer from "../renderer/Renderer.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 
 export default class DebugSystem {
     private readonly lineRenderer: LineRenderer;

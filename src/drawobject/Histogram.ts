@@ -1,4 +1,4 @@
-import Quad from "../geometry/Quad.js";
+import Quad from "../math/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";

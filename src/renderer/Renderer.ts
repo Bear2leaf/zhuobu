@@ -2,7 +2,7 @@ import Camera from "../camera/Camera.js";
 import Primitive from "../contextobject/Primitive.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import Shader from "../shader/Shader.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 
 
 export default class Renderer {

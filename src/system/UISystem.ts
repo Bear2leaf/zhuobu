@@ -9,7 +9,7 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 import Texture from "../texture/Texture.js";
 
 export default class UISystem {

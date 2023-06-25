@@ -10,7 +10,7 @@
 
 import Device from "../device/Device.js";
 import MiniGameDevice from "../device/MiniGameDevice.js";
-import AGame from "./AGame.js";
+import Game from "./Game.js";
 
 // export default class WxGame extends BaseGame {
 //     private readonly splashTextNode: Node;
@@ -56,7 +56,7 @@ import AGame from "./AGame.js";
 //     }
 // }
 
-export default class MiniGame extends AGame {
+export default class MiniGame extends Game {
     constructor() {
         super(new MiniGameDevice())
     }

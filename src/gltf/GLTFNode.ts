@@ -1,8 +1,5 @@
-import SkinMesh from "../../drawobject/SkinMesh.js";
-import RenderingContext from "../../renderingcontext/RenderingContext.js";
-import Node from "../../structure/Node.js";
-import TRS from "../../structure/TRS.js";
-import Texture from "../../texture/Texture.js";
+import Node from "../component/Node.js";
+import TRS from "../component/TRS.js";
 import GLTF from "./GLTF.js";
 
 export default class GLTFNode {

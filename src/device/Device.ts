@@ -1,5 +1,5 @@
 import { FontInfo } from "../drawobject/Text.js";
-import GLTF from "../loader/gltf/GLTF.js";
+import GLTF from "../gltf/GLTF.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }

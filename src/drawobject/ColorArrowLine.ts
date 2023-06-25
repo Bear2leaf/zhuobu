@@ -1,5 +1,5 @@
-import LineSegment from "../geometry/LineSegment.js";
-import Point from "../geometry/Point.js";
+import LineSegment from "../math/LineSegment.js";
+import Point from "../math/Point.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";

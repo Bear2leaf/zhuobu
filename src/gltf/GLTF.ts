@@ -1,9 +1,6 @@
-import DrawObjectFactory from "../../factory/DrawObjectFactory.js";
-import TextureFactory from "../../factory/TextureFactory.js";
-import RenderingContext from "../../renderingcontext/RenderingContext.js";
-import Node from "../../structure/Node.js";
-import TRS from "../../structure/TRS.js";
-import Texture from "../../texture/Texture.js";
+import DrawObjectFactory from "../factory/DrawObjectFactory.js";
+import TextureFactory from "../factory/TextureFactory.js";
+import Node from "../component/Node.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -17,6 +14,7 @@ import GLTFSampler from "./GLTFSampler.js";
 import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
+import TRS from "../component/TRS.js";
 
 const glTypeToTypedArrayMap = {
     '5120': Int8Array,    // device.gl.BYTE

@@ -1,6 +1,6 @@
 import Camera from "../camera/Camera.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {

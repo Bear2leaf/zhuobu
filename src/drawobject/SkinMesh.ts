@@ -1,4 +1,4 @@
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 import Texture from "../texture/Texture.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";

@@ -1,8 +1,9 @@
 import DrawObject from "../drawobject/DrawObject.js";
 import Matrix from "../math/Matrix.js";
+import Component from "./Component.js";
 import TRS from "./TRS.js";
 
-export default class Node {
+export default class Node implements Component {
     private readonly name: string;
     private readonly source: TRS;
     private parent: Node | null;

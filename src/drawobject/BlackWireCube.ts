@@ -1,10 +1,10 @@
-import Cube from "../geometry/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import Cube from "../math/Cube.js";
 
 export default class BlackWireCube extends DrawObject {
     constructor(gl: RenderingContext, texture: Texture) {

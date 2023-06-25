@@ -1,7 +1,7 @@
-import Cube from "../geometry/Cube.js";
+import Cube from "../math/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";

@@ -1,12 +1,13 @@
 import Texture from "../texture/Texture.js";
-import Node from "../structure/Node.js";
+import Node from "../component/Node.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import { TextureIndex } from "../texture/Texture.js";
+import Component from "../component/Component.js";
 
 
-export default abstract class DrawObject {
+export default abstract class DrawObject implements Component {
     private readonly vao: VertexArrayObject;
     private readonly ebo: ArrayBufferObject;
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;

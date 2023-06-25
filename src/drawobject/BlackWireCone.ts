@@ -1,4 +1,4 @@
-import Cone from "../geometry/Cone.js";
+import Cone from "../math/Cone.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
