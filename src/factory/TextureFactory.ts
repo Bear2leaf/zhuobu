@@ -7,7 +7,7 @@ export default class TextureFactory implements Factory {
     constructor(private readonly gl: RenderingContext
         , private readonly cacheManager: CacheManager
         ){}
-    createTestTexture() {
+    createDefaultTexture() {
         const texture = this.gl.makeTexture(TextureIndex.Default);
         texture.generate(2, 2, new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]));
         return texture;

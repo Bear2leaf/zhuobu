@@ -23,21 +23,27 @@ import Factory from "./Factory.js";
 import TextureFactory from "./TextureFactory.js";
 
 export default class DrawObjectFactory implements Factory {
-  private readonly fontTexture: Texture;
-  private readonly fontInfo: FontInfo;
-  private readonly defaultTexture: Texture;
+  private readonly fontTexture?: Texture;
+  private readonly defaultTexture?: Texture;
+  private readonly fontInfo?: FontInfo;
   constructor(
     private readonly gl: RenderingContext
-    , cacheManager: CacheManager
-    , textureFactory: TextureFactory
+    , private readonly cacheManager: CacheManager
+    , private readonly textureFactory: TextureFactory
     , private readonly inputManager: InputManager
   ) {
-    this.fontTexture = textureFactory.createFontTexture();
-    this.fontInfo = cacheManager.getFontInfo("boxy_bold_font");
-    this.defaultTexture = textureFactory.createTestTexture();
+  }
+  getFontInfo() {
+    return this.fontInfo ?? this.cacheManager.getFontInfo("boxy_bold_font");
+  }
+  getFontTexture() {
+    return this.fontTexture ?? this.textureFactory.createFontTexture();
+  }
+  getDefaultTexture() {
+    return this.defaultTexture ?? this.textureFactory.createDefaultTexture();
   }
   createSplashText() {
-    const splashText = new SplashText(this.gl, this.fontInfo, this.fontTexture);
+    const splashText = new SplashText(this.gl, this.getFontInfo(), this.getFontTexture());
     return splashText;
   }
   createMesh(positions: Float32Array
@@ -45,7 +51,7 @@ export default class DrawObjectFactory implements Factory {
     , indices: Uint16Array
     , node: Node
   ) {
-    node.addDrawObject(new Mesh(this.gl, this.defaultTexture, positions, normals, indices));
+    node.addDrawObject(new Mesh(this.gl, this.getDefaultTexture(), positions, normals, indices));
     return node;
   }
   createSkinMesh(position: Float32Array
@@ -60,7 +66,7 @@ export default class DrawObjectFactory implements Factory {
     , node: Node
   ) {
     node.addDrawObject(new SkinMesh(this.gl
-      , this.defaultTexture
+      , this.getDefaultTexture()
       , position
       , normal
       , weights
@@ -74,53 +80,53 @@ export default class DrawObjectFactory implements Factory {
   }
   createPointer() {
     const node = new Node();
-    node.addDrawObject(new Pointer(this.gl, this.defaultTexture, this.inputManager.onTouchStart, this.inputManager.onTouchMove, this.inputManager.onTouchEnd, this.inputManager.onTouchCancel))
+    node.addDrawObject(new Pointer(this.gl, this.getDefaultTexture(), this.inputManager.onTouchStart, this.inputManager.onTouchMove, this.inputManager.onTouchEnd, this.inputManager.onTouchCancel))
     return node;
   }
   createFramesText() {
     const node = new Node();
-    node.addDrawObject(new FramesText(this.gl, this.fontInfo, this.fontTexture))
+    node.addDrawObject(new FramesText(this.gl, this.getFontInfo(), this.getFontTexture()))
     return node
   }
   createFpsText() {
     const node = new Node();
-    node.addDrawObject(new FpsText(this.gl, this.fontInfo, this.fontTexture))
+    node.addDrawObject(new FpsText(this.gl, this.getFontInfo(), this.getFontTexture()))
     return node
   }
   createHistogram() {
     const node = new Node();
-    node.addDrawObject(new Histogram(this.gl, this.defaultTexture))
+    node.addDrawObject(new Histogram(this.gl, this.getDefaultTexture()))
     return node;
   }
   createSprite(x: number = 0, y: number = 0, scale: number = 1) {
     const node = new Node();
-    node.addDrawObject(new Sprite(this.gl, this.defaultTexture, x, y, scale, [1, 1, 1, 1], [0, 0]))
+    node.addDrawObject(new Sprite(this.gl, this.getDefaultTexture(), x, y, scale, [1, 1, 1, 1], [0, 0]))
     return node;
   }
   createColorArrowLine() {
     const node = new Node();
-    node.addDrawObject(new ColorArrowLine(this.gl, this.defaultTexture, new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5)));
+    node.addDrawObject(new ColorArrowLine(this.gl, this.getDefaultTexture(), new Point(0, 0, 0, 1, new Vec4(1, 0, 0, 1), 0), new Point(2, 0, 0, 1, new Vec4(1, 0, 0, 1), 1), new Point(0, 0, 0, 1, new Vec4(0, 1, 0, 1), 2), new Point(0, 2, 0, 1, new Vec4(0, 1, 0, 1), 3), new Point(0, 0, 0, 1, new Vec4(0, 0, 1, 1), 4), new Point(0, 0, 2, 1, new Vec4(0, 0, 1, 1), 5)));
     return node;
   }
   createBlackWireCube() {
     const node = new Node();
-    node.addDrawObject(new BlackWireCube(this.gl, this.defaultTexture));
+    node.addDrawObject(new BlackWireCube(this.gl, this.getDefaultTexture()));
     return node;
   }
   createBlackWireCone() {
     const node = new Node();
-    node.addDrawObject(new BlackWireCone(this.gl, this.defaultTexture));
+    node.addDrawObject(new BlackWireCone(this.gl, this.getDefaultTexture()));
     return node;
   }
   createGasket() {
     const node = new Node();
-    node.addDrawObject(new Gasket(this.gl, this.defaultTexture));
+    node.addDrawObject(new Gasket(this.gl, this.getDefaultTexture()));
     return node;
   }
   createTexturedCube(
   ) {
     const node = new Node();
-    node.addDrawObject(new TexturedCube(this.gl, this.defaultTexture));
+    node.addDrawObject(new TexturedCube(this.gl, this.getDefaultTexture()));
     return node;
   }
 }
