@@ -69,7 +69,7 @@ export default class BrowserDevice extends Device {
         const response = await fetch(file);
         return await response.json();
     }
-    async readTxt(file: string): Promise<string> {
+    async readText(file: string): Promise<string> {
         const response = await fetch(file);
         return await response.text();
     }

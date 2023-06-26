@@ -57,7 +57,7 @@ export default abstract class Device {
   abstract onTouchEnd(listener: TouchInfoFunction): void;
   abstract onTouchCancel(listener: TouchInfoFunction): void;
   abstract readJson(file: string): Promise<Object>;
-  abstract readTxt(file: string): Promise<string>;
+  abstract readText(file: string): Promise<string>;
   abstract readBuffer(file: string): Promise<ArrayBuffer>;
 }
 

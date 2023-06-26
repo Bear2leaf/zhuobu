@@ -4,13 +4,14 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Factory from "./Factory.js";
-import CacheManager from "../manager/CacheManager.js";
+import FactoryManager from "../manager/FactoryManager.js";
 
 export default class RendererFactory implements Factory {
-    constructor(private readonly gl: RenderingContext, private readonly cacheManager: CacheManager) {
+    private readonly cacheManager = this.factoryManager.getCacheManager();
+    private readonly gl = this.factoryManager.getRenderingContext();
+    constructor(private readonly factoryManager: FactoryManager) {
 
     }
     createPointRenderer() {

@@ -97,7 +97,7 @@ export default class MiniGameDevice extends Device {
     readJson(file: string): Promise<Object> {
         return new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))));
     }
-    readTxt(file: string): Promise<string> {
+    readText(file: string): Promise<string> {
         return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')));
     }
     readBuffer(file: string): Promise<ArrayBuffer> {

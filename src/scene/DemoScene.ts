@@ -1,8 +1,7 @@
-import SceneManager from "../manager/SceneManager.js";
 import Scene from "./Scene";
 
 export default class DemoScene implements Scene {
-    constructor(private readonly manager: SceneManager) {
+    constructor() {
     }
     load(): Promise<void> {
         throw new Error("Method not implemented.");
@@ -10,7 +9,7 @@ export default class DemoScene implements Scene {
     init(): void {
         throw new Error("Method not implemented.");
     }
-    update(): void {
+    tick(): void {
         throw new Error("Method not implemented.");
     }
 

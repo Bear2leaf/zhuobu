@@ -1,78 +1,95 @@
-import Device from "../device/Device.js";
+import ArrayBufferCache from "../cache/ArrayBufferCache.js";
+import Cache from "../cache/Cache.js";
+import JSONCache from "../cache/FontInfoCache.js";
+import ImageCache from "../cache/ImageCache.js";
+import TextCache from "../cache/TextCache.js";
 import { FontInfo } from "../drawobject/Text.js";
-import GLTF from "../gltf/GLTF.js";
+import Game from "../game/Game.js";
+import WithAddGet from "../interface/WithAddGet.js";
 import Manager from "./Manager.js";
 
 
-export default class CacheManager implements Manager {
-    private readonly imageCache: Map<string, HTMLImageElement>;
-    private readonly txtCache: Map<string, string>;
-    private readonly fontCache: Map<string, FontInfo>;
-    private readonly gltfCache: Map<string, GLTF>;
-    private readonly glbCache: Map<string, ArrayBuffer>;
-    constructor(private readonly device: Device) {
-        this.txtCache = new Map();
-        this.imageCache = new Map();
-        this.fontCache = new Map();
-        this.gltfCache = new Map();
-        this.glbCache = new Map();
+export default class CacheManager implements Manager, WithAddGet<Cache<Object>, CacheManager> {
+    private readonly caches: Cache<Object>[] = [];
+
+    constructor(private readonly game: Game) {
+        [
+            ArrayBufferCache,
+            ImageCache,
+            TextCache,
+            JSONCache
+        ].forEach(o => this.add<Cache<Object>>(o));
+    }
+    add<T extends Cache<Object>>(ctor: new (from: CacheManager) => T): void {
+        const caches = this.caches.filter(m => m instanceof ctor);
+        if (caches.length !== 0) {
+            throw new Error(`addCache error, cache ${ctor.name} already exist`);
+        }
+        this.caches.push(new ctor(this));
+
+    }
+    get<T extends Cache<Object>>(ctor: new (from: CacheManager) => T): T {
+        const caches = this.caches.filter(m => m instanceof ctor);
+        if (caches.length === 0) {
+            throw new Error(`cache ${ctor.name} not exist`);
+        } else if (caches.length > 1) {
+            throw new Error(`cache ${ctor.name} is duplicated`);
+        } else {
+            return caches[0] as T;
+        }
+    }
+    load(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    init(): void {
+        throw new Error("Method not implemented.");
+    }
+    tick(): void {
+        throw new Error("Method not implemented.");
     }
 
     getVertShaderTxt(name: string) {
-        const txt = this.txtCache.get(`static/shader/${name}.vert.sk`);
-        if (txt === undefined) throw new Error(`txtCache static/shader/${name}.vert.sk not found`);
-        return txt;
+        return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
     }
     getFragShaderTxt(name: string) {
-        const txt = this.txtCache.get(`static/shader/${name}.frag.sk`);
-        if (txt === undefined) throw new Error(`txtCache static/shader/${name}.frag.sk not found`);
-        return txt;
+        return this.get(TextCache).get(`static/shader/${name}.frag.sk`);
     }
     getTxt(name: string) {
-        const txt = this.txtCache.get(name);
+        const txt = this.get(TextCache).get(name);
         if (txt === undefined) throw new Error(`txtCache ${name} not found`);
         return txt;
     }
     getResourceImage(name: string) {
-        const img = this.imageCache.get(name);
-        if (img === undefined) throw new Error(`imageCache resource/texture/${name}.png not found`);
-        return img;
+        return this.get(ImageCache).get(`resource/texture/${name}.png`);
     }
     getStaticImage(name: string) {
-        const img = this.imageCache.get(`static/font/${name}.png`);
-        if (img === undefined) throw new Error(`imageCache static/font/${name}.png not found`);
-        return img;
+        return this.get(ImageCache).get(`static/texture/${name}.png`);
     }
     getFontInfo(name: string) {
-        const font = this.fontCache.get(`static/font/${name}.json`);
+        const font = this.get(JSONCache).get(`static/font/${name}.json`) as FontInfo;
         if (font === undefined) throw new Error(`fontCache static/font/${name}.json not found`);
         return font;
     }
 
 
     async loadImageCache(url: string) {
-        url = `resource/texture/${url}.png`
-        const img = this.device.createImage() as HTMLImageElement;
-        img.src = url;
-        await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-        this.imageCache.set(url, img);
+        await this.get(ImageCache).load(`resource/texture/${url}.png`);
     }
 
     async loadGLTFCache(name: string) {
-        this.gltfCache.set(`resource/gltf/${name}.gltf`, await this.device.readJson(`resource/gltf/${name}.gltf`) as GLTF)
-        this.glbCache.set(`resource/gltf/${name}.bin`, await this.device.readBuffer(`resource/gltf/${name}.bin`))
+        await this.get(JSONCache).load(`resource/gltf/${name}.gltf`)
+        await this.get(ArrayBufferCache).load(`resource/gltf/${name}.bin`)
     }
     async loadFontCache(name: string) {
-        this.fontCache.set(`static/font/${name}.json`, await this.device.readJson(`static/font/${name}.json`) as FontInfo)
-        const fontTextureUrl = `static/font/${name}.png`
-        const img = this.device.createImage() as HTMLImageElement;
-        img.src = fontTextureUrl;
-        await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-        this.imageCache.set(fontTextureUrl, img);
+        await this.get(JSONCache).load(`static/font/${name}.json`)
+        await this.get(ImageCache).load(`static/font/${name}.png`);
     }
 
     async loadShaderTxtCache(name: string) {
-        this.txtCache.set(`static/shader/${name}.vert.sk`, await this.device.readTxt(`static/shader/${name}.vert.sk`))
-        this.txtCache.set(`static/shader/${name}.frag.sk`, await this.device.readTxt(`static/shader/${name}.frag.sk`))
+        await this.get(TextCache).load(`static/shader/${name}.vert.sk`)
+        await this.get(TextCache).load(`static/shader/${name}.frag.sk`)
+    }
+    getDevice() {
+        return this.game.getDevice();
     }
 }

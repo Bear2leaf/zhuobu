@@ -1,4 +1,5 @@
 import Device from "../device/Device.js";
+import Game from "../game/Game.js";
 import Manager from "./Manager";
 
 export default class TimestepManager implements Manager {
@@ -6,7 +7,20 @@ export default class TimestepManager implements Manager {
     private lastFrame: number;
     private lastFrameTime: number;
     private fps: number;
-    constructor(private readonly device: Device) {
+    private readonly device: Device = this.game.getDevice();
+    constructor(private readonly game: Game) {
+        this.currentFrame = 0;
+        this.lastFrame = this.currentFrame;
+        this.lastFrameTime = this.now();
+        this.fps = 0;
+    }
+    load(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    init(): void {
+        throw new Error("Method not implemented.");
+    }
+    reset() {
         this.currentFrame = 0;
         this.lastFrame = this.currentFrame;
         this.lastFrameTime = this.now();

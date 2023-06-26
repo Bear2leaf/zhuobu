@@ -21,25 +21,27 @@ import Node from "../component/Node.js";
 import Texture from "../texture/Texture.js";
 import Factory from "./Factory.js";
 import TextureFactory from "./TextureFactory.js";
+import FactoryManager from "../manager/FactoryManager.js";
 
 export default class DrawObjectFactory implements Factory {
   private readonly fontTexture?: Texture;
   private readonly defaultTexture?: Texture;
   private readonly fontInfo?: FontInfo;
-  constructor(
-    private readonly gl: RenderingContext
-    , private readonly cacheManager: CacheManager
-    , private readonly textureFactory: TextureFactory
-    , private readonly inputManager: InputManager
-  ) {
+  private readonly textureFactory: TextureFactory;
+  private readonly cacheManager = this.factoryManager.getCacheManager();
+  private readonly gl = this.factoryManager.getRenderingContext();
+  private readonly inputManager = this.factoryManager.getInputManager();
+  constructor(private readonly factoryManager: FactoryManager) {
+    this.textureFactory = factoryManager.get(TextureFactory);
+    
   }
-  getFontInfo() {
+  private getFontInfo() {
     return this.fontInfo ?? this.cacheManager.getFontInfo("boxy_bold_font");
   }
-  getFontTexture() {
+  private getFontTexture() {
     return this.fontTexture ?? this.textureFactory.createFontTexture();
   }
-  getDefaultTexture() {
+  private getDefaultTexture() {
     return this.defaultTexture ?? this.textureFactory.createDefaultTexture();
   }
   createSplashText() {
