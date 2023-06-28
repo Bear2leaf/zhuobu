@@ -58,7 +58,8 @@ import Game from "./Game.js";
 
 export default class MiniGame extends Game {
     constructor() {
-        super(new MiniGameDevice())
+        super();
+        this.init(new MiniGameDevice())
         console.log(this)
     }
 }

@@ -2,20 +2,20 @@ import { Vec2 } from "../math/Vector.js";
 import Texture from "./Texture.js";
 
 export default class GLTexture implements Texture {
-  private readonly gl;
-  private readonly tex: WebGLTexture | null;
-  private bindIndex: number;
-  private readonly internalFormat: number;
-  private readonly imageFormat: number;
-  private readonly wrapS: number;
-  private readonly wrapT: number;
-  private readonly filterMin: number;
-  private readonly filterMax: number;
-  private width: number;
-  private height: number;
-  constructor(gl: WebGL2RenderingContext, bindIndex: number, wrapS: number = gl.CLAMP_TO_EDGE, wrapT: number = gl.CLAMP_TO_EDGE, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
+  private gl?: WebGL2RenderingContext;
+  private texture: WebGLTexture | null = null;
+  private bindIndex: number = 0;
+  private internalFormat: number = 0;
+  private imageFormat: number = 0;
+  private wrapS: number = 0;
+  private wrapT: number = 0;
+  private filterMin: number = 0;
+  private filterMax: number = 0;
+  private width: number = 0;
+  private height: number = 0;
+  init(gl: WebGL2RenderingContext, bindIndex: number, wrapS: number = gl.CLAMP_TO_EDGE, wrapT: number = gl.CLAMP_TO_EDGE, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
     this.gl = gl;
-    this.tex = this.gl.createTexture();
+    this.texture = this.gl.createTexture();
     this.bindIndex = this.gl.TEXTURE0 + bindIndex;
     this.internalFormat = this.gl.RGBA;
     this.imageFormat = this.gl.RGBA;
@@ -23,12 +23,12 @@ export default class GLTexture implements Texture {
     this.wrapT = wrapT;
     this.filterMin = filterMin;
     this.filterMax = filterMax;
-
-    this.width = 0;
-    this.height = 0;
   }
   generate(width: number, height: number, data: HTMLImageElement | Float32Array | undefined) {
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.tex);
+    if (this.gl === undefined) {
+      throw new Error("GLTexture is not initialized.");
+    }
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
     if (data === undefined) {
       this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.internalFormat, width, height, 0, this.imageFormat, this.gl.UNSIGNED_BYTE, null)
       this.width = width;
@@ -52,7 +52,10 @@ export default class GLTexture implements Texture {
     return new Vec2(this.width, this.height);
   }
   bind() {
+    if (this.gl === undefined) {
+      throw new Error("GLTexture is not initialized.");
+    }
     this.gl.activeTexture(this.bindIndex)
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.tex);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
   }
 }

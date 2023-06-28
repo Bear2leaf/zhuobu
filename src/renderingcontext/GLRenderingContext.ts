@@ -52,7 +52,9 @@ export default class GLRenderingContext implements RenderingContext {
         return new GLArrayBufferObject(this.gl, index, data, size);
     }
     makeTexture(unit: number): Texture {
-        return new GLTexture(this.gl, unit);
+        const texture = new GLTexture()
+        texture.init(this.gl, unit)
+        return texture;
     }
     switchDepthTest(enable: boolean): void {
         if (enable) {

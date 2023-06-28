@@ -4,19 +4,21 @@ import JSONCache from "../cache/FontInfoCache.js";
 import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
 import { FontInfo } from "../drawobject/Text.js";
-import Game from "../game/Game.js";
 import Manager from "./Manager.js";
 
 
 export default class CacheManager extends Manager<Cache<Object>> {
-    constructor(game: Game) {
-        super(game);
+    init() {
+
         [
             ArrayBufferCache,
             ImageCache,
             TextCache,
             JSONCache
-        ].forEach(o => this.add<Cache<Object>>(o));
+        ].forEach(o => {
+            this.add<Cache<Object>>(o);
+            this.get<Cache<Object>>(o).setDevice(this.getDevice());
+        });
     }
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
@@ -58,8 +60,5 @@ export default class CacheManager extends Manager<Cache<Object>> {
     async loadShaderTxtCache(name: string) {
         await this.get(TextCache).load(`static/shader/${name}.vert.sk`)
         await this.get(TextCache).load(`static/shader/${name}.frag.sk`)
-    }
-    getDevice() {
-        return this.game.getDevice();
     }
 }

@@ -58,6 +58,7 @@ import Game from "./Game.js";
 
 export default class BrowserSpriteGame extends Game {
     constructor(el: HTMLElement) {
-        super(new BrowserDevice(el.appendChild(document.createElement("canvas"))));
+        super();
+        this.init(new BrowserDevice(el.appendChild(document.createElement("canvas"))))
     }
 }

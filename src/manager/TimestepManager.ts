@@ -1,11 +1,9 @@
-import Device from "../device/Device.js";
-import Manager from "./Manager";
+import Manager from "./Manager.js";
 
 export default class TimestepManager extends Manager<unknown> {
-    private readonly device: Device = this.game.getDevice();
     private currentFrame: number = 0;
     private lastFrame: number = this.currentFrame;
-    private lastFrameTime: number = this.now();
+    private lastFrameTime: number = 0;
     private fps: number = 0;
     reset() {
         this.currentFrame = 0;
@@ -14,7 +12,7 @@ export default class TimestepManager extends Manager<unknown> {
         this.fps = 0;
     }
     now(): number {
-        return this.device.now();
+        return this.getDevice().now();
     }
     getFrames(): number {
         return this.currentFrame;
@@ -34,4 +32,5 @@ export default class TimestepManager extends Manager<unknown> {
         }
 
     }
+
 }
