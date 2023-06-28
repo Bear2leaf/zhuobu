@@ -4,6 +4,7 @@ import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
+import Entity from "../entity/Entity.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[];
@@ -11,23 +12,17 @@ export default class SkinMesh extends Mesh {
     private readonly inverseBindMatrices: Matrix[];
     private readonly origMatrices: Map<Node, Matrix>;
     private readonly node: Node;
-     constructor(gl: RenderingContext
-        , texture: Texture
-        , position: Float32Array
-        , normal: Float32Array
-        , weights: Float32Array
-        , textureCoord: Float32Array
-        , joints: Uint16Array
-        , indices: Uint16Array
-        , jointNodes: Node[]
-        , inverseBindMatrixData: Float32Array
-        , jointTexture: Texture, node: Node) {
-        super(gl, texture, position, normal, indices);
+    constructor(entity: Entity) {
+        super(entity);
         this.origMatrices = new Map();
-        this.jointNodes = jointNodes;
+        this.jointNodes = [];
         this.jointMatrices = [];
         this.inverseBindMatrices = [];
-        this.node = node;
+        this.node = entity.getComponent(Node);
+    }
+    setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Float32Array, jointTexture: Texture, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
+        this.setMeshData(indices, position, normal);
+        this.jointNodes.splice(0, this.jointNodes.length, ...jointNodes);
         // create views for each joint and inverseBindMatrix
         for (let i = 0; i < this.jointNodes.length; ++i) {
             this.inverseBindMatrices.push(Matrix.fromFloat32Array(new Float32Array(
@@ -44,6 +39,12 @@ export default class SkinMesh extends Mesh {
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
         this.addTexture(TextureIndex.Joint, jointTexture);
+    }
+    setMeshData(indices: Uint16Array, position: Float32Array, normal: Float32Array) {
+
+        this.updateEBO(indices);
+        this.createABO(ArrayBufferIndex.Position, position, 3);
+        this.createABO(ArrayBufferIndex.Normal, normal, 3);
     }
     update() {
         const globalWorldInverse = this.node.getWorldMatrix().inverse();

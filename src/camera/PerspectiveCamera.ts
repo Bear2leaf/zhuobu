@@ -1,16 +1,21 @@
+import SizeContainer from "../component/SizeContainer.js";
+import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
 import Camera from "./Camera.js";
 
 
 
-export class PerspectiveCamera implements Camera {
+export class PerspectiveCamera extends Camera {
     private readonly view: Matrix;
     private readonly projection: Matrix;
 
-    constructor(fieldOfViewYInRadians: number, aspect: number, zNear: number, zFar: number) {
+    constructor(entity: Entity) {
+        super(entity);
+        const fov = Math.PI / 180 * 90;
+        const aspect = entity.getComponent(SizeContainer).getWidth() / entity.getComponent(SizeContainer).getHeight();
         this.view = Matrix.lookAt(new Vec3(0, 0, 0), new Vec3(0, 0, -1), new Vec3(0, 1, 0)).inverse();
-        this.projection = Matrix.perspective(fieldOfViewYInRadians, aspect, zNear, zFar);
+        this.projection = Matrix.perspective(fov, aspect, 1, 50);
     }
     getView(): Matrix {
         return this.view;

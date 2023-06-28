@@ -1,24 +1,17 @@
 import DrawObject from "../drawobject/DrawObject.js";
+import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
 import TRS from "./TRS.js";
 
 export default class Node implements Component {
-    private readonly name: string;
-    private readonly source: TRS;
-    private parent: Node | null;
-    private readonly children: Node[];
-    private readonly localMatrix: Matrix;
-    private readonly worldMatrix: Matrix;
-    private readonly drawObjects: DrawObject[]
-    constructor(source?: TRS, name?: string) {
-      this.name = name ?? "untitled";
-      this.source = source ?? new TRS();
-      this.parent = null;
-      this.children = [];
-      this.localMatrix = Matrix.identity();
-      this.worldMatrix = Matrix.identity();
-      this.drawObjects = [];
+    private readonly source: TRS = this.entity.getComponent(TRS);
+    private parent: Node | null = null;
+    private readonly children: Node[] = [];
+    private readonly localMatrix: Matrix = Matrix.identity();
+    private readonly worldMatrix: Matrix = Matrix.identity();
+    private readonly drawObjects: DrawObject[] = [];
+    constructor(private readonly entity: Entity) {
     }
     getChildByIndex(index: number) {
       const childNode = this.children[index];

@@ -1,4 +1,7 @@
-export default interface Cache<T> {
-    load(name: string): Promise<void>;
-    get(name: string): T;
+
+
+export default abstract class Cache<T> {
+    abstract load(name: string): Promise<void>;
+    abstract get(name: string): T;
+    
 }

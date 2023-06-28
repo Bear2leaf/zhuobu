@@ -1,21 +1,20 @@
 import Quad from "../math/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
-import Texture from "../texture/Texture.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import Entity from "../entity/Entity.js";
 
 export default class Histogram extends DrawObject {
     private readonly quads: Quad[];
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    constructor( gl: RenderingContext, texture: Texture) {
+    constructor(entity: Entity) {
+        super(entity);
         const width = 100;
         const height = 100;
         const hisY = 30;
         const lines = 100;
-        super(gl, texture, new Map<number, GLArrayBufferObject>(), 0);
 
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)

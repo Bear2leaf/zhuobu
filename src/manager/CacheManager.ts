@@ -5,14 +5,12 @@ import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
 import { FontInfo } from "../drawobject/Text.js";
 import Game from "../game/Game.js";
-import WithAddGet from "../interface/WithAddGet.js";
 import Manager from "./Manager.js";
 
 
-export default class CacheManager implements Manager, WithAddGet<Cache<Object>, CacheManager> {
-    private readonly caches: Cache<Object>[] = [];
-
-    constructor(private readonly game: Game) {
+export default class CacheManager extends Manager<Cache<Object>> {
+    constructor(game: Game) {
+        super(game);
         [
             ArrayBufferCache,
             ImageCache,
@@ -20,34 +18,6 @@ export default class CacheManager implements Manager, WithAddGet<Cache<Object>, 
             JSONCache
         ].forEach(o => this.add<Cache<Object>>(o));
     }
-    add<T extends Cache<Object>>(ctor: new (from: CacheManager) => T): void {
-        const caches = this.caches.filter(m => m instanceof ctor);
-        if (caches.length !== 0) {
-            throw new Error(`addCache error, cache ${ctor.name} already exist`);
-        }
-        this.caches.push(new ctor(this));
-
-    }
-    get<T extends Cache<Object>>(ctor: new (from: CacheManager) => T): T {
-        const caches = this.caches.filter(m => m instanceof ctor);
-        if (caches.length === 0) {
-            throw new Error(`cache ${ctor.name} not exist`);
-        } else if (caches.length > 1) {
-            throw new Error(`cache ${ctor.name} is duplicated`);
-        } else {
-            return caches[0] as T;
-        }
-    }
-    load(): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    init(): void {
-        throw new Error("Method not implemented.");
-    }
-    tick(): void {
-        throw new Error("Method not implemented.");
-    }
-
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
     }

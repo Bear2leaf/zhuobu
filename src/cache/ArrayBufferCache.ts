@@ -2,10 +2,11 @@ import Device from "../device/Device.js";
 import CacheManager from "../manager/CacheManager.js";
 import Cache from "./Cache.js";
 
-export default class ArrayBufferCache implements Cache<ArrayBuffer> {
+export default class ArrayBufferCache extends Cache<ArrayBuffer> {
     private readonly device: Device = this.cacheManager.getDevice();
     private readonly cache: Map<string, ArrayBuffer> = new Map();
     constructor(private readonly cacheManager: CacheManager) {
+        super();
     }
     async load(name: string): Promise<void> {
         this.cache.set(`resource/gltf/${name}.bin`, await this.device.readBuffer(`resource/gltf/${name}.bin`))

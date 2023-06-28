@@ -1,10 +1,12 @@
 import Texture from "../texture/Texture.js";
-import Node from "../component/Node.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import { TextureIndex } from "../texture/Texture.js";
 import Component from "../component/Component.js";
+import Entity from "../entity/Entity.js";
+import GLContainer from "../component/GLContainer.js";
+import TextureContainer from "../component/TextureContainer.js";
 
 
 export default abstract class DrawObject implements Component {
@@ -14,26 +16,26 @@ export default abstract class DrawObject implements Component {
     private readonly textureMap: Map<TextureIndex, Texture>;
     private readonly gl: RenderingContext;
     private count: number;
-    constructor(gl: RenderingContext, defaultTexture: Texture, aboMap: Map<ArrayBufferIndex, ArrayBufferObject>, count: number) {
-        this.gl = gl;
-        this.count = count;
-        this.aboMap = aboMap;
+    constructor(protected readonly entity: Entity) {
+        
+        this.gl = entity.getComponent(GLContainer).getRenderingContext();
+        this.count = 0;
+        this.aboMap = new Map<ArrayBufferIndex, ArrayBufferObject>();
         this.textureMap = new Map<TextureIndex, Texture>();
         this.vao = this.gl.makeVertexArrayObject();
         this.vao.bind();
         this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
-        this.textureMap.set(TextureIndex.Default, defaultTexture);
+        this.textureMap.set(TextureIndex.Default, entity.getComponent(TextureContainer).getTexture());
     }
-    bind() {
+    draw(mode: number) {
+        this.gl.draw(mode, this.count);
+    }
+    protected bind() {
         this.vao.bind();
         this.textureMap.forEach((texture) => {
             texture.bind();
         });
     }
-    draw(mode: number) {
-        this.gl.draw(mode, this.count);
-    }
-
     protected updateEBO(buffer: Uint16Array) {
         this.ebo.updateBuffer(buffer);
         this.count = buffer.length;

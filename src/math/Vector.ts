@@ -133,6 +133,13 @@ export class Vec4 {
     clone() {
         return new Vec4(this.x, this.y, this.z, this.w);
     }
+    from(vec4: Vec4) {
+        this.x = vec4.x;
+        this.y = vec4.y;
+        this.z = vec4.z;
+        this.w = vec4.w;
+        return this;
+    }
 }
 
 export class Vec3 extends Vec4 {

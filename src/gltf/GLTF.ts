@@ -1,6 +1,3 @@
-import DrawObjectFactory from "../factory/DrawObjectFactory.js";
-import TextureFactory from "../factory/TextureFactory.js";
-import Node from "../component/Node.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -14,7 +11,6 @@ import GLTFSampler from "./GLTFSampler.js";
 import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
-import TRS from "../component/TRS.js";
 
 const glTypeToTypedArrayMap = {
     '5120': Int8Array,    // device.gl.BYTE
@@ -54,18 +50,14 @@ export default class GLTF {
     private readonly extensionsRequired?: readonly string[];
     private readonly extensions?: readonly string[];
     private readonly extras?: readonly string[];
-    private readonly drawObjectFactory: DrawObjectFactory;
-    private readonly textureFactory: TextureFactory;
     private readonly bufferCache: Map<string, ArrayBuffer>;
 
-    constructor(name: string, drawObjectFactory: DrawObjectFactory, textureFactory: TextureFactory, gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
+    constructor(name: string,  gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
         this.bufferCache = bufferCache;
         const data = gltfCache.get(`resource/gltf/${name}.gltf`);
         if (!data) {
             throw new Error(`data ${`resource/gltf/${name}.gltf`} not found`);
         }
-        this.drawObjectFactory = drawObjectFactory;
-        this.textureFactory = textureFactory;
         this.scene = data.scene;
         this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes.map((node) => new GLTFNode(node));
@@ -86,12 +78,6 @@ export default class GLTF {
         this.extras = data.extras;
     }
 
-    getDrawObjectFactory() {
-        return this.drawObjectFactory;
-    }
-    getTextureFactory() {
-        return this.textureFactory;
-    }
     getSkinByIndex(index: number) {
         if (!this.skins) {
             throw new Error("skins not found");
@@ -110,30 +96,30 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createRootNode(): Node {
-        const rootNode = new Node(new TRS(), "root");
-        for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
-            const gltfNode = this.nodes[sceneNodeIndex];
-            if (!gltfNode) {
-                throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
-            }
-            gltfNode.getNode().setParent(rootNode);
-            this.buildNodeTree(gltfNode);
-        }
-        this.nodes.forEach((node) => {
-            node.createFirstPrimitiveDrawObject(this);
-        });
-        return rootNode;
-    }
+    // createRootNode(): Node {
+        // const rootNode = new Node(new TRS(), "root");
+        // for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
+        //     const gltfNode = this.nodes[sceneNodeIndex];
+        //     if (!gltfNode) {
+        //         throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
+        //     }
+        //     gltfNode.getNode().setParent(rootNode);
+        //     this.buildNodeTree(gltfNode);
+        // }
+        // this.nodes.forEach((node) => {
+        //     node.createFirstPrimitiveDrawObject(this);
+        // });
+        // return rootNode;
+    // }
     buildNodeTree(root: GLTFNode) {
-        const childrenIndices = root.getChildrenIndices();
-        if (childrenIndices && childrenIndices.length > 0) {
-            for (const childIndex of childrenIndices) {
-                const childGLTFNode = this.getNodeByIndex(childIndex);
-                childGLTFNode.getNode().setParent(root.getNode());
-                this.buildNodeTree(childGLTFNode)
-            }
-        }
+        // const childrenIndices = root.getChildrenIndices();
+        // if (childrenIndices && childrenIndices.length > 0) {
+        //     for (const childIndex of childrenIndices) {
+        //         const childGLTFNode = this.getNodeByIndex(childIndex);
+        //         childGLTFNode.getNode().setParent(root.getNode());
+        //         this.buildNodeTree(childGLTFNode)
+        //     }
+        // }
     }
     getMeshByIndex(index: number) {
         const mesh = this.meshes[index];

@@ -5,9 +5,11 @@ import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/Renderin
 import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
+import Entity from "../entity/Entity.js";
 
 export default class BlackWireCone extends DrawObject {
-    constructor(gl: RenderingContext, texture: Texture) {
+    constructor(entity: Entity) {
+        super(entity);
         const cone = new Cone();
         const lines = cone.getLines();
         const points = cone.getPoints();
@@ -19,7 +21,6 @@ export default class BlackWireCone extends DrawObject {
             point.appendTo(vertices, colors);
         });
 
-        super(gl, texture, new Map<number, GLArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));

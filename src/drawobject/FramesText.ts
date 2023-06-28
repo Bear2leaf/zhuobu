@@ -4,7 +4,7 @@ import Text, { FontInfo } from "./Text.js";
 
 export default class FramesText extends Text {
 
-    constructor(gl: RenderingContext, fontInfo: FontInfo, fontTexture: Texture) {
-        super(gl, fontInfo, fontTexture, 0, 40, 2, [1, 1, 1, 1], 0);
-    }
+    // constructor(gl: RenderingContext, fontInfo: FontInfo, fontTexture: Texture) {
+    //     super(gl, fontInfo, fontTexture, 0, 40, 2, [1, 1, 1, 1], 0);
+    // }
 }

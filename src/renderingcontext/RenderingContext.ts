@@ -1,6 +1,7 @@
+
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
-import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Shader from "../shader/Shader.js";
 import Texture from "../texture/Texture.js";
 
@@ -11,6 +12,7 @@ export enum ArrayBufferIndex {
     Normal = 3,
     Weights = 4,
     Joints = 5,
+    Indices = 6,
 }
 
 

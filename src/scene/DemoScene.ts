@@ -1,16 +1,20 @@
+
+import Entity from "../entity/Entity.js";
+import NodeObject from "../entity/NodeObject.js";
+import SpriteObject from "../entity/SpriteObject.js";
 import Scene from "./Scene";
 
 export default class DemoScene implements Scene {
+    private readonly entities: Entity[] = [];
     constructor() {
-    }
-    load(): Promise<void> {
-        throw new Error("Method not implemented.");
+
+        [   
+            new NodeObject(),
+            new NodeObject(),
+            new SpriteObject()
+        ].forEach(entity => this.entities.push(entity));
     }
     init(): void {
-        throw new Error("Method not implemented.");
+        this.entities.forEach(entity => entity.create());
     }
-    tick(): void {
-        throw new Error("Method not implemented.");
-    }
-
 }

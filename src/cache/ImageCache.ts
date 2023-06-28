@@ -2,10 +2,11 @@ import Device from "../device/Device.js";
 import CacheManager from "../manager/CacheManager.js";
 import Cache from "./Cache.js";
 
-export default class ImageCache implements Cache<HTMLImageElement> {
+export default class ImageCache extends Cache<HTMLImageElement> {
     private readonly device: Device = this.cacheManager.getDevice();
     private readonly cache: Map<string, HTMLImageElement> = new Map();
     constructor(private readonly cacheManager: CacheManager) {
+        super();
     }
     async load(name: string): Promise<void> {
         const url = name

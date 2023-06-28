@@ -1,13 +1,13 @@
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import Texture from "../texture/Texture.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Cube from "../math/Cube.js";
+import Entity from "../entity/Entity.js";
 
 export default class BlackWireCube extends DrawObject {
-    constructor(gl: RenderingContext, texture: Texture) {
+    constructor(entity: Entity) {
+        super(entity);
         const cube = new Cube(undefined, undefined, new Vec4(0, 0, 0, 1));
         const lines = cube.getLines();
         const points = cube.getPoints();
@@ -20,7 +20,6 @@ export default class BlackWireCube extends DrawObject {
         });
 
         
-        super(gl, texture, new Map<number, GLArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));

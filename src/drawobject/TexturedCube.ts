@@ -6,10 +6,12 @@ import Texture from "../texture/Texture.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import Entity from "../entity/Entity.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
-    constructor(gl: RenderingContext, texture: Texture) {
+    constructor(entity: Entity) {
+        super(entity);
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();
@@ -32,7 +34,6 @@ export default class TexturedCube extends DrawObject {
         }
 
 
-        super(gl, texture, new Map<number, GLArrayBufferObject>(), indices.length);
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);

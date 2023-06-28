@@ -1,37 +1,41 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
-import Texture from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
+import Entity from "../entity/Entity.js";
+import TRS from "../component/TRS.js";
+import TextureContainer from "../component/TextureContainer.js";
+import FontInfoContainer from "../component/FontInfoContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
-export default class Text extends DrawObject {
+export default abstract class Text extends DrawObject {
     private readonly x: number;
     private readonly y: number;
     private readonly scale: number;
     private readonly color: [number, number, number, number];
-    private readonly spacing: number;
+    private readonly spacing: number = 1;
     private readonly chars: string[]
-    private readonly originX: number;
-    private readonly originY: number;
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    private readonly fontInfo: FontInfo;
-    constructor(gl: RenderingContext, fontInfo: FontInfo, texture: Texture, x: number, y: number, scale: number, color: [number, number, number, number], spacing: number, ...chars: string[]) {
-        super(gl, texture, new Map<number, GLArrayBufferObject>(), 0);
+    private readonly fontInfo: FontInfo = {};
+    constructor(entity: Entity) {
+        super(entity);
+        const trs = entity.getComponent(TRS);
+        const x = trs.getPosition().x;
+        const y = trs.getPosition().y;
+        const scale = trs.getScale().x;
+        const spacing = 1;
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.x = x;
         this.y = y;
         this.scale = scale;
-        this.color = color;
+        this.color = [1, 1, 1, 1];
         this.spacing = spacing;
-        this.chars = chars;
-        this.originX = 0;
-        this.originY = 0;
-        this.fontInfo = fontInfo;
+        this.chars = [..."Hello world!"];
+        this.fontInfo = entity.getComponent(FontInfoContainer).getFontInfo();
+        this.addTexture(TextureIndex.Default, entity.getComponent(TextureContainer).getTexture())
 
     }
     updateChars(chars: string) {
