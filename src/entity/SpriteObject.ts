@@ -14,6 +14,6 @@ export default class SpriteObject extends Entity {
             TRS,
             Node,
             SpriteRenderer
-        ].forEach(ctor => this.addComponent<Component>(ctor));
+        ].forEach(ctor => this.add<Component>(ctor));
     }
 }

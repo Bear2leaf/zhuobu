@@ -8,10 +8,10 @@ export default class Pointer extends DrawObject {
     private y: number = 0;
     constructor(entity: Entity) {
         super(entity);
-        entity.getComponent(TouchEventContainer).getOnTouchStart()((e: { x: number, y: number }) => this.setPosition(e))
-        entity.getComponent(TouchEventContainer).getOnTouchMove()((e: { x: number, y: number } | undefined) => this.setPosition(e))
-        entity.getComponent(TouchEventContainer).getOnTouchEnd()(() => { })
-        entity.getComponent(TouchEventContainer).getOnTouchCancel()(() => { })
+        entity.get(TouchEventContainer).getOnTouchStart()((e: { x: number, y: number }) => this.setPosition(e))
+        entity.get(TouchEventContainer).getOnTouchMove()((e: { x: number, y: number } | undefined) => this.setPosition(e))
+        entity.get(TouchEventContainer).getOnTouchEnd()(() => { })
+        entity.get(TouchEventContainer).getOnTouchCancel()(() => { })
 
         this.createABO(ArrayBufferIndex.Position, new Float32Array([0, 0, 0, 1]), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1, 1]), 4)

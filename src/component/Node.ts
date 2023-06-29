@@ -1,18 +1,15 @@
 import DrawObject from "../drawobject/DrawObject.js";
-import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
 import TRS from "./TRS.js";
 
 export default class Node implements Component {
-    private readonly source: TRS = this.entity.getComponent(TRS);
+    private source?: TRS;
     private parent: Node | null = null;
     private readonly children: Node[] = [];
     private readonly localMatrix: Matrix = Matrix.identity();
     private readonly worldMatrix: Matrix = Matrix.identity();
     private readonly drawObjects: DrawObject[] = [];
-    constructor(private readonly entity: Entity) {
-    }
     getChildByIndex(index: number) {
       const childNode = this.children[index];
       if (!childNode) {
@@ -73,6 +70,9 @@ export default class Node implements Component {
       this.children.splice(ndx, 1);
     }
     getSource() {
+      if (!this.source) {
+        throw new Error(`source not found`);
+      }
       return this.source;
     }
 }

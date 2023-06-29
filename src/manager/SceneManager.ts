@@ -7,6 +7,7 @@ export default class SceneManager extends Manager<Scene> {
 
         this.add(DemoScene);
         this.get(DemoScene).init();
+        console.log("SceneManager init");
     }
 
 }

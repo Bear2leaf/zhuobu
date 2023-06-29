@@ -18,14 +18,14 @@ export default abstract class DrawObject implements Component {
     private count: number;
     constructor(protected readonly entity: Entity) {
         
-        this.gl = entity.getComponent(GLContainer).getRenderingContext();
+        this.gl = entity.get(GLContainer).getRenderingContext();
         this.count = 0;
         this.aboMap = new Map<ArrayBufferIndex, ArrayBufferObject>();
         this.textureMap = new Map<TextureIndex, Texture>();
         this.vao = this.gl.makeVertexArrayObject();
         this.vao.bind();
         this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
-        this.textureMap.set(TextureIndex.Default, entity.getComponent(TextureContainer).getTexture());
+        this.textureMap.set(TextureIndex.Default, entity.get(TextureContainer).getTexture());
     }
     draw(mode: number) {
         this.gl.draw(mode, this.count);

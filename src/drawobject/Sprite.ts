@@ -9,7 +9,7 @@ export default class Sprite extends DrawObject {
     updateSprite() {
 
         const texSize = this.getTexture(TextureIndex.Default).getSize();
-        const trs = this.entity.getComponent(TRS);
+        const trs = this.entity.get(TRS);
         const x = trs.getPosition().x;
         const y = trs.getPosition().y;
         const scale = trs.getScale().x;

@@ -21,7 +21,7 @@ export default abstract class Text extends DrawObject {
     private readonly fontInfo: FontInfo = {};
     constructor(entity: Entity) {
         super(entity);
-        const trs = entity.getComponent(TRS);
+        const trs = entity.get(TRS);
         const x = trs.getPosition().x;
         const y = trs.getPosition().y;
         const scale = trs.getScale().x;
@@ -34,8 +34,8 @@ export default abstract class Text extends DrawObject {
         this.color = [1, 1, 1, 1];
         this.spacing = spacing;
         this.chars = [..."Hello world!"];
-        this.fontInfo = entity.getComponent(FontInfoContainer).getFontInfo();
-        this.addTexture(TextureIndex.Default, entity.getComponent(TextureContainer).getTexture())
+        this.fontInfo = entity.get(FontInfoContainer).getFontInfo();
+        this.addTexture(TextureIndex.Default, entity.get(TextureContainer).getTexture())
 
     }
     updateChars(chars: string) {

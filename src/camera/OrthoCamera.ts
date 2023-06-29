@@ -14,8 +14,8 @@ export class OrthoCamera extends Camera {
         
         super(entity);
         const left = 0;
-        const right = entity.getComponent(SizeContainer).getWidth();
-        const bottom = entity.getComponent(SizeContainer).getHeight();
+        const right = entity.get(SizeContainer).getWidth();
+        const bottom = entity.get(SizeContainer).getHeight();
         const top = 0;
         const near = 1;
         const far = -1;

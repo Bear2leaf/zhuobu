@@ -28,9 +28,10 @@ export default abstract class Game extends SingletonCollection<Manager<unknown>>
         ].forEach(ctor => {
             this.add(ctor);
             this.get(ctor).setDevice(device);
+            this.get(ctor).init();
         });
-        this.get(CacheManager).init();
-        this.get(SceneManager).init();
+        console.log("Game init");
+        console.log(this);
     }
     tick() {
         this.rafId = requestAnimationFrame(this.tick.bind(this));

@@ -8,8 +8,6 @@
 // import Node from "../structure/Node";
 // import BaseGame from "./BaseGame.js";
 
-import Device from "../device/Device.js";
-import MiniGameDevice from "../device/MiniGameDevice.js";
 import Game from "./Game.js";
 
 // export default class WxGame extends BaseGame {
@@ -57,9 +55,4 @@ import Game from "./Game.js";
 // }
 
 export default class MiniGame extends Game {
-    constructor() {
-        super();
-        this.init(new MiniGameDevice())
-        console.log(this)
-    }
 }

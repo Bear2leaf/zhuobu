@@ -18,7 +18,7 @@ export default class SkinMesh extends Mesh {
         this.jointNodes = [];
         this.jointMatrices = [];
         this.inverseBindMatrices = [];
-        this.node = entity.getComponent(Node);
+        this.node = entity.get(Node);
     }
     setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Float32Array, jointTexture: Texture, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal);

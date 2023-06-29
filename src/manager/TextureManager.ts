@@ -6,6 +6,7 @@ export default class TextureManager extends Manager<Texture> {
     init() {
 
         this.add(DefaultTexture);
+        console.log("TextureManager init");
     }
 
 }

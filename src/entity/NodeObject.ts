@@ -12,7 +12,7 @@ export default class NodeObject extends Entity {
             SizeContainer,
             TRS,
             Node
-        ].forEach(ctor => this.addComponent<Component>(ctor));
+        ].forEach(ctor => this.add<Component>(ctor));
         
     }
 }
