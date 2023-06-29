@@ -6,15 +6,12 @@ import Scene from "./Scene";
 
 export default class DemoScene implements Scene {
     private readonly entities: Entity[] = [];
-    constructor() {
-
+    init(): void {
         [   
             new NodeObject(),
             new NodeObject(),
             new SpriteObject()
         ].forEach(entity => this.entities.push(entity));
-    }
-    init(): void {
         this.entities.forEach(entity => entity.create());
     }
 }

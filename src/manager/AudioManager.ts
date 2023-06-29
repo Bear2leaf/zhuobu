@@ -5,4 +5,6 @@ export default class AudioManager extends Manager<unknown> {
     init(): void {
         console.log("AudioManager init");
     }
+    update(): void {
+    }
 }

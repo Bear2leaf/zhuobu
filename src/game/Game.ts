@@ -13,19 +13,21 @@ import Manager from "../manager/Manager.js";
 
 export default abstract class Game extends SingletonCollection<Manager<unknown>> {
     private rafId: number = 0;
+    private readonly ctors = 
+    [
+        CacheManager,
+        InputManager,
+        SceneManager,
+        RendererManager,
+        CameraManager,
+        TimestepManager,
+        AudioManager,
+        EventManager
+    ];
 
     init(device: Device) {
 
-        [
-            CacheManager,
-            InputManager,
-            RendererManager,
-            CameraManager,
-            TimestepManager,
-            SceneManager,
-            AudioManager,
-            EventManager
-        ].forEach(ctor => {
+        this.ctors.forEach(ctor => {
             this.add(ctor);
             this.get(ctor).setDevice(device);
             this.get(ctor).init();
@@ -34,6 +36,7 @@ export default abstract class Game extends SingletonCollection<Manager<unknown>>
         console.log(this);
     }
     tick() {
+        this.ctors.forEach(ctor => this.get(ctor).update());
         this.rafId = requestAnimationFrame(this.tick.bind(this));
     }
     stop() {

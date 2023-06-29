@@ -21,6 +21,9 @@ export default class CacheManager extends Manager<Cache<Object>> {
         });
         console.log("CacheManager init");
     }
+    update(): void {
+        
+    }
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
     }

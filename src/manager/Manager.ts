@@ -13,4 +13,5 @@ export default abstract class Manager<T> extends SingletonCollection<T> {
         return this.device;
     }
     abstract init(): void;
+    abstract update(): void;
 }

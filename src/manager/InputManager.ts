@@ -2,9 +2,6 @@ import { TouchInfoFunction } from "../device/Device.js";
 import Manager from "./Manager.js";
 
 export default class InputManager extends Manager<unknown> {
-    init(): void {
-        console.log("InputManager init");
-    }
     onTouchStart(listener: TouchInfoFunction): void {
         this.getDevice().onTouchStart(listener)
     };
@@ -17,4 +14,9 @@ export default class InputManager extends Manager<unknown> {
     onTouchCancel(listener: TouchInfoFunction): void {
         this.getDevice().onTouchCancel(listener)
     };
+    init(): void {
+        console.log("InputManager init");
+    }
+    update(): void {
+    }
 }
