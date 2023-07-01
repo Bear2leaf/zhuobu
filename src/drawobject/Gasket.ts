@@ -7,12 +7,10 @@ import { Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../component/Node.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Entity from "../entity/Entity.js";
 
 export default class Gasket extends DrawObject {
     private frame = 0;
-    constructor(entity: Entity) {
-        super(entity);
+    init(){
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
         const pC = new Point(1, -1, -1);

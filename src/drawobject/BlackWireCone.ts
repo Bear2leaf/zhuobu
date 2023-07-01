@@ -1,15 +1,11 @@
 import Cone from "../math/Cone.js";
 import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Texture from "../texture/Texture.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import DrawObject from "./DrawObject.js";
-import Entity from "../entity/Entity.js";
 
 export default class BlackWireCone extends DrawObject {
-    constructor(entity: Entity) {
-        super(entity);
+    init() {
         const cone = new Cone();
         const lines = cone.getLines();
         const points = cone.getPoints();

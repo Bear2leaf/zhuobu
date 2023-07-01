@@ -19,5 +19,8 @@ export default abstract class SingletonCollection<BaseType> {
             return object[0] as T;
         }
     }
+    has<T extends BaseType>(ctor: new () => T): boolean {
+        return this.objects.filter(m => m instanceof ctor).length !== 0;
+    }
     
 }

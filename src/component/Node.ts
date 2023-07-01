@@ -1,15 +1,16 @@
 import DrawObject from "../drawobject/DrawObject.js";
+import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
 import TRS from "./TRS.js";
 
 export default class Node implements Component {
     private source?: TRS;
-    private parent: Node | null = null;
+    private parent?: Node;
+    private entity?: Entity;
     private readonly children: Node[] = [];
     private readonly localMatrix: Matrix = Matrix.identity();
     private readonly worldMatrix: Matrix = Matrix.identity();
-    private readonly drawObjects: DrawObject[] = [];
     getChildByIndex(index: number) {
       const childNode = this.children[index];
       if (!childNode) {
@@ -17,16 +18,19 @@ export default class Node implements Component {
       }
       return childNode;
     }
-    addDrawObject(drawObject: DrawObject) {
-      this.drawObjects.push(drawObject);
+    setEntity(entity: Entity) {
+      this.entity = entity
     }
-    getDrawObjects() {
-      return this.drawObjects;
+    getEntity() {
+      if (!this.entity) {
+        throw new Error("entity not found");
+      }
+      return this.entity;
     }
     setParent(parent?: Node) {
       if (this.parent) {
         this.parent.removeChild(this);
-        this.parent = null;
+        this.parent = undefined;
       }
       if (parent) {
         parent.addChild(this);

@@ -2,12 +2,10 @@ import LineSegment from "../math/LineSegment.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Entity from "../entity/Entity.js";
 import Point from "../math/Point.js";
 
 export default class XYZAxis extends DrawObject {
-    constructor(entity: Entity) {
-        super(entity);
+    init() {
         const from = new Point();
         const to = new Point(1, 0, 0);
         const others: Point[] = [

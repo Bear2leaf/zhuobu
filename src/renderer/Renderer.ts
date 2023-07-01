@@ -1,35 +1,57 @@
 import Camera from "../camera/Camera.js";
-import Primitive from "../contextobject/Primitive.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
-import Shader from "../shader/Shader.js";
-import Node from "../component/Node.js";
 import Component from "../component/Component.js";
+import PrimitiveTypeContainer from "../component/PrimitiveTypeContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
+import Entity from "../entity/Entity.js";
+import Node from "../component/Node.js";
+import Shader from "../shader/Shader.js";
 
 
-export default abstract class Renderer implements Component {
+export default class Renderer implements Component {
+    private camera?: Camera;
+    private entity?: Entity;
     private shader?: Shader;
-    private primitive?: Primitive;
     setShader(shader: Shader) {
         this.shader = shader;
     }
-    setPrimitive(primitive: Primitive) {
-        this.primitive = primitive;
-    }
-    render(camera: Camera, node: Node) {
+    getShader() {
         if (!this.shader) {
             throw new Error("shader not exist");
         }
-        this.shader.use();
-        this.shader.setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
-        this.shader.setMatrix4fv("u_view", camera.getView().getVertics())
-        this.shader.setMatrix4fv("u_projection", camera.getProjection().getVertics())
-        this.shader.setInteger("u_texture", 0);
-        node.getDrawObjects().forEach(drawObject => {
-            if (!this.primitive) {
-                throw new Error("primitive not exist");
-            }
-            drawObject.draw(this.primitive.getMode());
-        });
+        return this.shader;
+    }
+    
+    setCamera(camera: Camera) {
+        this.camera = camera;
+    }
+    getCamera() {
+        if (!this.camera) {
+            throw new Error("camera not exist");
+        }
+        return this.camera;
+    }
+    setEntity(entity: Entity) {
+        this.entity = entity;
+    }
+    getEntity() {
+        if (!this.entity) {
+            throw new Error("entity not exist");
+        }
+        return this.entity;
+    }
+
+    render() {
+        const node = this.getEntity().get(Node);
+        const camera = this.getCamera();
+        this.getShader().use();
+        this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
+        this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
+        this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
+        this.getShader().setInteger("u_texture", 0);
+        const primitiveType = node.getEntity().get(PrimitiveTypeContainer).getPrimitiveType();
+        node.getEntity().get(DrawObject).draw(primitiveType);
+
     }
     setMatrix4fv(name: string, data: Float32Array) {
         if (!this.shader) {

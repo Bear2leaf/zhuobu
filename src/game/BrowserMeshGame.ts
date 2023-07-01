@@ -71,6 +71,6 @@ import Game from "./Game.js";
 export default class BrowserMeshGame extends Game {
     constructor(el: HTMLElement) {
         super();
-        this.init(new BrowserDevice(el.appendChild(document.createElement("canvas"))))
+        this.setDevice(new BrowserDevice(el.appendChild(document.createElement("canvas"))))
     }
 }

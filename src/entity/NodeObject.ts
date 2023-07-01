@@ -3,6 +3,7 @@ import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
+import TouchEventContainer from "../component/TouchEventContainer.js";
 import Entity from "./Entity.js";
 
 export default class NodeObject extends Entity {
@@ -11,8 +12,11 @@ export default class NodeObject extends Entity {
             GLContainer,
             SizeContainer,
             TRS,
-            Node
+            Node,
+            TouchEventContainer
         ].forEach(ctor => this.add<Component>(ctor));
+    }
+    update(): void {
         
     }
 }

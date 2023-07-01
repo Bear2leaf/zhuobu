@@ -9,39 +9,58 @@ import GLContainer from "../component/GLContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
 
 
-export default abstract class DrawObject implements Component {
-    private readonly vao: VertexArrayObject;
-    private readonly ebo: ArrayBufferObject;
-    private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject>;
-    private readonly textureMap: Map<TextureIndex, Texture>;
-    private readonly gl: RenderingContext;
-    private count: number;
-    constructor(protected readonly entity: Entity) {
-        
-        this.gl = entity.get(GLContainer).getRenderingContext();
-        this.count = 0;
-        this.aboMap = new Map<ArrayBufferIndex, ArrayBufferObject>();
-        this.textureMap = new Map<TextureIndex, Texture>();
-        this.vao = this.gl.makeVertexArrayObject();
+export default class DrawObject implements Component {
+    private entity?: Entity;
+    private vao?: VertexArrayObject;
+    private ebo?: ArrayBufferObject;
+    private aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
+    private textureMap: Map<TextureIndex, Texture> = new Map();
+    private count: number = 0;
+    setEntity(entity: Entity) {
+        this.entity = entity;
+    }
+    getEntity() {
+        if (!this.entity) {
+            throw new Error("entity not exist");
+        }
+        return this.entity;
+    }
+
+    init() {
+        this.vao = this.getGL().makeVertexArrayObject();
         this.vao.bind();
-        this.ebo = this.gl.makeElementBufferObject(new Uint16Array(0));
-        this.textureMap.set(TextureIndex.Default, entity.get(TextureContainer).getTexture());
+        this.ebo = this.getGL().makeElementBufferObject(new Uint16Array(0));
+        this.textureMap.set(TextureIndex.Default, this.getEntity().get(TextureContainer).getTexture());
     }
     draw(mode: number) {
-        this.gl.draw(mode, this.count);
+        this.getGL().draw(mode, this.count);
     }
     protected bind() {
+        if (!this.vao) {
+            throw new Error("vao is not set");
+        }
         this.vao.bind();
         this.textureMap.forEach((texture) => {
             texture.bind();
         });
     }
+    private getGL() {
+        return this.getEntity().get(GLContainer).getRenderingContext();
+    }
+
     protected updateEBO(buffer: Uint16Array) {
+        if (!this.ebo) {
+            throw new Error("ebo is not set");
+        }
         this.ebo.updateBuffer(buffer);
         this.count = buffer.length;
     }
     protected createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, szie: number) {
-        this.aboMap.set(index, this.gl.makeArrayBufferObject(index, data, szie));
+        if (!this.aboMap) {
+            throw new Error("aboMap is not set");
+        }
+
+        this.aboMap.set(index, this.getGL().makeArrayBufferObject(index, data, szie));
     }
     protected getTexture(index: TextureIndex) {
         const texture = this.textureMap.get(index);
@@ -57,7 +76,7 @@ export default abstract class DrawObject implements Component {
         const abo = this.aboMap.get(index);
         if (!abo) {
             throw new Error("abo not exist");
-        }            
+        }
         abo.updateBuffer(data);
     }
 }

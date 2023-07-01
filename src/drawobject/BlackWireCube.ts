@@ -3,11 +3,9 @@ import { Vec4, flatten } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Cube from "../math/Cube.js";
-import Entity from "../entity/Entity.js";
 
 export default class BlackWireCube extends DrawObject {
-    constructor(entity: Entity) {
-        super(entity);
+    init(){
         const cube = new Cube(undefined, undefined, new Vec4(0, 0, 0, 1));
         const lines = cube.getLines();
         const points = cube.getPoints();

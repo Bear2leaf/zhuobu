@@ -6,16 +6,27 @@ import Camera from "./Camera.js";
 
 
 
-export class OrthoCamera extends Camera {
-    private readonly view: Matrix;
-    private readonly projection: Matrix;
+export class OrthoCamera implements Camera {
+    private view?: Matrix;
+    private projection?: Matrix;
+    private width?: number;
+    private height?: number;
+    
+    setSize(width: number, height: number) {
+        this.width = width;
+        this.height = height;
+    }
 
-    constructor(entity: Entity) {
-        
-        super(entity);
+    init() {
+        if (!this.width) {
+            throw new Error("width not exist");
+        }
+        if (!this.height) {
+            throw new Error("height not exist");
+        }
         const left = 0;
-        const right = entity.get(SizeContainer).getWidth();
-        const bottom = entity.get(SizeContainer).getHeight();
+        const right = this.width;
+        const bottom = this.height;
         const top = 0;
         const near = 1;
         const far = -1;
@@ -24,9 +35,15 @@ export class OrthoCamera extends Camera {
 
     }
     getView(): Matrix {
+        if (!this.view) {
+            throw new Error("view not exist");
+        }
         return this.view;
     }
     getProjection(): Matrix {
+        if (!this.projection) {
+            throw new Error("projection not exist");
+        }
         return this.projection;
     }
 

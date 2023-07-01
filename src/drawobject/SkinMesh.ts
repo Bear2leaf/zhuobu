@@ -4,21 +4,15 @@ import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
-import Entity from "../entity/Entity.js";
 
 export default class SkinMesh extends Mesh {
-    private readonly jointNodes: Node[];
-    private readonly jointMatrices: Matrix[];
-    private readonly inverseBindMatrices: Matrix[];
-    private readonly origMatrices: Map<Node, Matrix>;
-    private readonly node: Node;
-    constructor(entity: Entity) {
-        super(entity);
-        this.origMatrices = new Map();
-        this.jointNodes = [];
-        this.jointMatrices = [];
-        this.inverseBindMatrices = [];
-        this.node = entity.get(Node);
+    private readonly jointNodes: Node[] = [];
+    private readonly jointMatrices: Matrix[]  = [];
+    private readonly inverseBindMatrices: Matrix[]  = [];
+    private readonly origMatrices: Map<Node, Matrix> = new Map();
+    private node?: Node;
+    init() {
+        this.node = this.getEntity().get(Node);
     }
     setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Float32Array, jointTexture: Texture, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal);
@@ -47,6 +41,9 @@ export default class SkinMesh extends Mesh {
         this.createABO(ArrayBufferIndex.Normal, normal, 3);
     }
     update() {
+        if (!this.node) {
+            throw new Error("Node is not set");
+        }
         const globalWorldInverse = this.node.getWorldMatrix().inverse();
         // go through each joint and get its current worldMatrix
         // apply the inverse bind matrices and store the

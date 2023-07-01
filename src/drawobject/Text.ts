@@ -2,26 +2,24 @@ import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
-import Entity from "../entity/Entity.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default abstract class Text extends DrawObject {
-    private readonly x: number;
-    private readonly y: number;
-    private readonly scale: number;
-    private readonly color: [number, number, number, number];
-    private readonly spacing: number = 1;
-    private readonly chars: string[]
+    private x: number = 0;
+    private y: number = 0;
+    private scale: number  = 1;
+    private color: [number, number, number, number] = [1, 1, 1, 1];
+    private spacing: number = 1;
+    private chars: string[] = [];
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    private readonly fontInfo: FontInfo = {};
-    constructor(entity: Entity) {
-        super(entity);
-        const trs = entity.get(TRS);
+    private fontInfo: FontInfo = {};
+    init() {
+        const trs = this.getEntity().get(TRS);
         const x = trs.getPosition().x;
         const y = trs.getPosition().y;
         const scale = trs.getScale().x;
@@ -34,8 +32,8 @@ export default abstract class Text extends DrawObject {
         this.color = [1, 1, 1, 1];
         this.spacing = spacing;
         this.chars = [..."Hello world!"];
-        this.fontInfo = entity.get(FontInfoContainer).getFontInfo();
-        this.addTexture(TextureIndex.Default, entity.get(TextureContainer).getTexture())
+        this.fontInfo = this.getEntity().get(FontInfoContainer).getFontInfo();
+        this.addTexture(TextureIndex.Default, this.getEntity().get(TextureContainer).getTexture())
 
     }
     updateChars(chars: string) {

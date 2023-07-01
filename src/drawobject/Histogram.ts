@@ -2,15 +2,13 @@ import Quad from "../math/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Entity from "../entity/Entity.js";
 
 export default class Histogram extends DrawObject {
-    private readonly quads: Quad[];
+    private readonly quads: Quad[] = [];
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    constructor(entity: Entity) {
-        super(entity);
+    init() {
         const width = 100;
         const height = 100;
         const hisY = 30;
@@ -19,7 +17,6 @@ export default class Histogram extends DrawObject {
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.updateEBO(new Uint16Array(0));
-        this.quads = [];
         const background = new Quad(0, hisY, width, height);
         this.quads.push(background);
         for (let i = 0; i < lines; i++) {

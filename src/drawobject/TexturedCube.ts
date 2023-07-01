@@ -2,16 +2,12 @@ import Cube from "../math/Cube.js";
 import Matrix from "../math/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../component/Node.js";
-import Texture from "../texture/Texture.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import DrawObject from "./DrawObject.js";
 import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Entity from "../entity/Entity.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
-    constructor(entity: Entity) {
-        super(entity);
+    init() {
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();
