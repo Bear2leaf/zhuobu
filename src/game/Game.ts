@@ -42,14 +42,11 @@ export default abstract class Game extends Manager<unknown> {
         this.ctors.forEach(ctor => this.get(ctor).init());
     }
     init() {
-        this.initAndLoadCache().then(() => {
             this.createOthers();
             this.buildDependency();
             this.initOthers();
             console.log("Game init");
             console.log(this);
-            this.update();
-        });
     }
     update() {
         this.ctors.forEach(ctor => this.get(ctor).update());
