@@ -22,17 +22,6 @@ export default class MiniGameDevice extends Device {
     getPerformance(): Performance {
         return wx.getPerformance();
     }
-    createCanvas(): HTMLCanvasElement {
-        const canvas = wx.createCanvas()
-        if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = this.getDeviceInfo();
-            (canvas.clientWidth) = windowWidth * pixelRatio;
-            (canvas.clientHeight) = windowHeight * pixelRatio;
-            (canvas.width) = windowWidth * pixelRatio;
-            (canvas.height) = windowHeight * pixelRatio;
-        }
-        return canvas
-    }
     async loadSubpackage(): Promise<null> {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({

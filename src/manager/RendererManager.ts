@@ -7,14 +7,14 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
 export default class RendererManager extends Manager<unknown> {
-    private scene?: Scene;
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
     init(): void {
         const vs = this.getCacheManager().getVertShaderTxt("Sprite");
         const fs = this.getCacheManager().getFragShaderTxt("Sprite");
         const gl = this.getDevice().gl;
-        this.getSceneManager().get(DemoScene).getComponents(Renderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
+        gl.init();
+        this.getScene().getComponents(Renderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
         console.log("RendererManager init");
     }
     update(): void {
@@ -38,13 +38,7 @@ export default class RendererManager extends Manager<unknown> {
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
     }
-    setScene(scene: Scene): void {
-        this.scene = scene;
-    }
     getScene(): Scene {
-        if (this.scene === undefined) {
-            throw new Error("scene is undefined");
-        }
-        return this.scene;
+        return this.getSceneManager().get(DemoScene);
     }
 }

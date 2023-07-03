@@ -49,8 +49,13 @@ export default abstract class Game extends Manager<unknown> {
             console.log(this);
     }
     update() {
-        this.ctors.forEach(ctor => this.get(ctor).update());
-        this.rafId = requestAnimationFrame(this.update.bind(this));
+        this.get(CacheManager).update();
+        this.get(TimestepManager).update();
+        this.get(InputManager).update();
+        this.get(RendererManager).update();
+        this.get(SceneManager).update();
+        this.get(AudioManager).update();
+        // this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {
         cancelAnimationFrame(this.rafId);

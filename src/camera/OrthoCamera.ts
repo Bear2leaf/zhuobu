@@ -1,5 +1,3 @@
-import SizeContainer from "../component/SizeContainer.js";
-import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
 import Camera from "./Camera.js";
@@ -12,11 +10,6 @@ export class OrthoCamera implements Camera {
     private width?: number;
     private height?: number;
     
-    setSize(width: number, height: number) {
-        this.width = width;
-        this.height = height;
-    }
-
     init() {
         if (!this.width) {
             throw new Error("width not exist");
@@ -34,6 +27,11 @@ export class OrthoCamera implements Camera {
         this.projection = Matrix.ortho(left, right, bottom, top, near, far);
 
     }
+    setSize(width: number, height: number) {
+        this.width = width;
+        this.height = height;
+    }
+
     getView(): Matrix {
         if (!this.view) {
             throw new Error("view not exist");

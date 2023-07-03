@@ -33,8 +33,8 @@ export default class GLRenderingContext implements RenderingContext {
         return new GLVertexArrayObject(this.gl);
     }
     clear(r: number = 0, g: number = 0, b: number = 0, a: number = 1): void {
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
         this.gl.clearColor(r, g, b, a);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
     }
     init(): void {
         this.gl.enable(this.gl.CULL_FACE)

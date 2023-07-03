@@ -7,7 +7,8 @@ import TouchEventContainer from "../component/TouchEventContainer.js";
 import Entity from "./Entity.js";
 
 export default class NodeObject extends Entity {
-    create(): void {
+    registerComponents(): void {
+        
         [
             GLContainer,
             SizeContainer,
@@ -15,6 +16,8 @@ export default class NodeObject extends Entity {
             Node,
             TouchEventContainer
         ].forEach(ctor => this.add<Component>(ctor));
+    }
+    init(): void {
     }
     update(): void {
         

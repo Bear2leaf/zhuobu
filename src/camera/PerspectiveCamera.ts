@@ -1,5 +1,3 @@
-import SizeContainer from "../component/SizeContainer.js";
-import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import { Vec3 } from "../math/Vector.js";
 import Camera from "./Camera.js";
@@ -12,10 +10,6 @@ export class PerspectiveCamera implements Camera {
     private width?: number;
     private height?: number;
     
-    setSize(width: number, height: number) {
-        this.width = width;
-        this.height = height;
-    }
 
     init() {
         if (!this.width) {
@@ -28,6 +22,10 @@ export class PerspectiveCamera implements Camera {
         const aspect = this.width / this.height;
         this.view = Matrix.lookAt(new Vec3(0, 0, 0), new Vec3(0, 0, -1), new Vec3(0, 1, 0)).inverse();
         this.projection = Matrix.perspective(fov, aspect, 1, 50);
+    }
+    setSize(width: number, height: number) {
+        this.width = width;
+        this.height = height;
     }
     getView(): Matrix {
         if (!this.view) {

@@ -1,4 +1,3 @@
-import DrawObject from "../drawobject/DrawObject.js";
 import Entity from "../entity/Entity.js";
 import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
