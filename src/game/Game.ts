@@ -24,6 +24,7 @@ export default abstract class Game extends Manager<unknown> {
         this.get(CacheManager).setDevice(this.getDevice());
         this.get(CacheManager).init();
         await this.get(CacheManager).loadShaderTxtCache("Sprite");
+        await this.get(CacheManager).loadShaderTxtCache("Point");
 
     }
     createOthers() {
@@ -55,7 +56,7 @@ export default abstract class Game extends Manager<unknown> {
         this.get(RendererManager).update();
         this.get(SceneManager).update();
         this.get(AudioManager).update();
-        // this.rafId = requestAnimationFrame(this.update.bind(this));
+        this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {
         cancelAnimationFrame(this.rafId);

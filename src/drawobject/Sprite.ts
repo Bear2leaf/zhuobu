@@ -13,7 +13,7 @@ export default class Sprite extends DrawObject {
         const trs = this.getEntity().get(TRS);
         const x = trs.getPosition().x + 10;
         const y = trs.getPosition().y + 10;
-        const scale = trs.getScale().x;
+        const scale = trs.getScale().x * 10;
         const quad = new Quad(x, y, texSize.x * scale, texSize.y * scale);
         quad.setZWToTexCoord();
         const vertices: Vec4[] = []

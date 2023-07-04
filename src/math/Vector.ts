@@ -140,6 +140,9 @@ export class Vec4 {
         this.w = vec4.w;
         return this;
     }
+    toFloatArray(): Float32Array {
+        return new Float32Array([this.x, this.y, this.z, this.w]);
+    }
 }
 
 export class Vec3 extends Vec4 {

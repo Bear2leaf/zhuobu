@@ -1,5 +1,7 @@
 import { ViewPortType } from "../device/Device.js";
+import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
+import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
@@ -12,9 +14,12 @@ export default class RendererManager extends Manager<unknown> {
     init(): void {
         const vs = this.getCacheManager().getVertShaderTxt("Sprite");
         const fs = this.getCacheManager().getFragShaderTxt("Sprite");
+        const pvs = this.getCacheManager().getVertShaderTxt("Point");
+        const pfs = this.getCacheManager().getFragShaderTxt("Point");
         const gl = this.getDevice().gl;
         gl.init();
-        this.getScene().getComponents(Renderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
+        this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
+        this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
         console.log("RendererManager init");
     }
     update(): void {

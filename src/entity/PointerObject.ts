@@ -5,12 +5,13 @@ import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
+import TouchEventContainer from "../component/TouchEventContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
-import Sprite from "../drawobject/Sprite.js";
-import SpriteRenderer from "../renderer/SpriteRenderer.js";
+import Pointer from "../drawobject/Pointer.js";
+import { PointRenderer } from "../renderer/PointRenderer.js";
 import Entity from "./Entity.js";
 
-export default class SpriteObject extends Entity {
+export default class PointerObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
@@ -18,19 +19,23 @@ export default class SpriteObject extends Entity {
             SizeContainer,
             TRS,
             Node,
-            Sprite,
-            SpriteRenderer,
+            Pointer,
+            PointRenderer,
+            TouchEventContainer,
             PrimitiveContainer
         ].forEach(ctor => this.add<Component>(ctor));
     }
     init(): void {
-        this.get(Sprite).setEntity(this);
-        this.get(SpriteRenderer).setEntity(this);
-        this.get(Sprite).init();
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
+        this.get(Pointer).setEntity(this);
+        this.get(PointRenderer).setEntity(this);
+        this.get(Pointer).init();
+        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.POINTS));
         
     }
     update(): void {
-        this.get(SpriteRenderer).render();
+        if (this.get(TouchEventContainer).getIsTouchingStart()) {
+            console.log("PointerObject is touched");
+        }
+        this.get(PointRenderer).render();
     }
 }
