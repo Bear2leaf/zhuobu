@@ -12,6 +12,8 @@ export default abstract class Manager<T> extends SingletonCollection<T> {
         }
         return this.device;
     }
+    abstract addObjects(): void;
+    abstract load(): Promise<void>;
     abstract init(): void;
     abstract update(): void;
 }

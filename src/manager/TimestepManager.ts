@@ -5,6 +5,11 @@ export default class TimestepManager extends Manager<unknown> {
     private lastFrame: number = this.currentFrame;
     private lastFrameTime: number = 0;
     private fps: number = 0;
+    addObjects(): void {
+    }
+    async load(): Promise<void> {
+        
+    }
     init(): void {
         this.currentFrame = 0;
         this.lastFrame = this.currentFrame;

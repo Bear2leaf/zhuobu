@@ -11,7 +11,13 @@ export default class InputManager extends Manager<unknown> {
     private isTouchingEnd: boolean = false;
     private x: number = 0;
     private y: number = 0;
+    addObjects(): void {
+    }
+    async load(): Promise<void> {
+        
+    }
     init(): void {
+        
         this.getDevice().onTouchStart((touchInfo) => {
             this.isTouching = false;
             this.isTouchingStart = true;

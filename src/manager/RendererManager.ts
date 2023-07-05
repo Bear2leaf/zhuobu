@@ -12,25 +12,26 @@ import SceneManager from "./SceneManager.js";
 export default class RendererManager extends Manager<unknown> {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
-    private ready = false;
+    addObjects(): void {
+    }
+    async load(): Promise<void> {
+        
+    }
     init(): void {
         this.getDevice().gl.init();
+        const { gl } = this.getDevice();
+        const vs = this.getCacheManager().getVertShaderTxt("Sprite");
+        const fs = this.getCacheManager().getFragShaderTxt("Sprite");
+        const pvs = this.getCacheManager().getVertShaderTxt("Point");
+        const pfs = this.getCacheManager().getFragShaderTxt("Point");
+        const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
+        this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
+        this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
+        this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
+        this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
         console.log("RendererManager init");
     }
     update(): void {
-        if (!this.ready) {
-            const { gl } = this.getDevice();
-            const vs = this.getCacheManager().getVertShaderTxt("Sprite");
-            const fs = this.getCacheManager().getFragShaderTxt("Sprite");
-            const pvs = this.getCacheManager().getVertShaderTxt("Point");
-            const pfs = this.getCacheManager().getFragShaderTxt("Point");
-            const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
-            this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
-            this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
-            this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
-            this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
-            this.ready = true;
-        }
         this.getDevice().viewportTo(ViewPortType.Full);
     }
     setCacheManager(cacheManager: CacheManager) {

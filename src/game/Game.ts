@@ -22,6 +22,25 @@ export default abstract class Game extends Manager<unknown> {
             TimestepManager,
             AudioManager
         ];
+    addObjects() {
+        this.ctors.forEach(ctor => {
+            this.add(ctor);
+            this.get(ctor).setDevice(this.getDevice());
+            this.get(ctor).addObjects();
+        });
+    }
+    async load(): Promise<void> {
+        for await (const iterator of this.ctors) {
+            await this.get(iterator).load();
+        }
+    }
+    init(): void {
+
+        this.buildDependency();
+        this.ctors.forEach(ctor => this.get(ctor).init());
+        console.log("Game init");
+        console.log(this);
+    }
     buildDependency() {
         this.get(InputManager).setSceneManager(this.get(SceneManager));
         this.get(CameraManager).setSceneManager(this.get(SceneManager));
@@ -30,20 +49,8 @@ export default abstract class Game extends Manager<unknown> {
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
     }
-    init() {
-        this.ctors.forEach(ctor => {
-            this.add(ctor);
-            this.get(ctor).setDevice(this.getDevice());
-        });
-        this.buildDependency();
-        this.ctors.forEach(ctor => this.get(ctor).init());
-        console.log("Game init");
-        console.log(this);
-    }
     update() {
-        if (this.get(CacheManager).isReady()) {
-            this.ctors.forEach(ctor => this.get(ctor).update());
-        }
+        this.ctors.forEach(ctor => this.get(ctor).update());
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {

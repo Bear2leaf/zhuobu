@@ -3,14 +3,10 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import TRS from "../component/TRS.js";
-import TextureContainer from "../component/TextureContainer.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
-    private x: number = 0;
-    private y: number = 0;
-    private scale: number  = 1;
     private color: [number, number, number, number] = [1, 1, 1, 1];
     private spacing: number = 1;
     private chars: string[] = [];
@@ -20,31 +16,25 @@ export default class Text extends DrawObject {
     private fontInfo: FontInfo = {};
     init() {
         super.init();
-        const trs = this.getEntity().get(TRS);
-        const x = trs.getPosition().x;
-        const y = trs.getPosition().y;
-        const scale = trs.getScale().x;
         const spacing = 1;
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
-        this.x = x;
-        this.y = y;
-        this.scale = scale;
         this.color = [1, 1, 1, 1];
         this.spacing = spacing;
         this.chars = [..."Hello world!"];
         this.fontInfo = this.getEntity().get(FontInfoContainer).getFontInfo();
-        console.log(this)
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
     create(fontInfo: FontInfo, texSize: Vec2) {
-        let { x, y, scale, spacing, chars } = this;
+        const trs = this.getEntity().get(TRS);
+        let { x, y } = trs.getPosition();
+        const scale = trs.getScale().x * 5;
+        let { spacing, chars } = this;
         const texHeight = texSize.y;
         const texWidth = texSize.x;
         const ox = x;
-        const oy = y;
         this.vertices.splice(0, this.vertices.length);
         const batch = this.vertices;
         for (const c of chars) {

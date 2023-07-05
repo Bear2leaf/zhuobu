@@ -14,26 +14,28 @@ import SceneManager from "./SceneManager.js";
 export default class TextureManager extends Manager<Texture> {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
-    private ready = false;
-    init(): void {
+    addObjects(): void {
         [
             DefaultTexture,
             FontTexture
         ].forEach((ctor) => {
             this.add(ctor);
         });
+    }
+    async load(): Promise<void> {
+        
+    }
+    init(): void {
+        
+        const { gl } = this.getDevice();
+        this.get(FontTexture).setFontImage(this.getCacheManager().getStaticImage("boxy_bold_font"));
+        this.all().forEach(texture => gl.makeTexture(texture));
+        this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
+        this.getScene().getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture)));
+        this.getScene().getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture)));
         console.log("TextureManager init");
     }
     update(): void {
-        if (!this.ready) {
-            const { gl } = this.getDevice();
-            this.get(FontTexture).setFontImage(this.getCacheManager().getStaticImage("boxy_bold_font"));
-            this.all().forEach(texture => gl.makeTexture(texture));
-            this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
-            this.getScene().getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture)));
-            this.getScene().getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture)));
-            this.ready = true;
-        }
 
     }
     setCacheManager(cacheManager: CacheManager) {

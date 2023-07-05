@@ -8,8 +8,7 @@ import Manager from "./Manager.js";
 
 
 export default class CacheManager extends Manager<Cache<Object>> {
-    private ready = false;
-    init() {
+    addObjects() {
 
         [
             ArrayBufferCache,
@@ -20,19 +19,17 @@ export default class CacheManager extends Manager<Cache<Object>> {
             this.add<Cache<Object>>(o);
             this.get<Cache<Object>>(o).setDevice(this.getDevice());
         });
-        new Promise<void>(async (resolve) => {
+    }
+    async load(): Promise<void> {
+        
             await this.loadShaderTxtCache("Sprite");
             await this.loadShaderTxtCache("Point");
             await this.loadFontCache("boxy_bold_font");
-            this.ready = true;
-            console.log("CacheManager init");
-            resolve();
-        });
+    }
+    init(): void {
+        console.log("CacheManager init");
     }
 
-    isReady() {
-        return this.ready;
-    }
     update(): void {
 
     }

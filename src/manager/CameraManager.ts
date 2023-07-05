@@ -9,8 +9,7 @@ import SceneManager from "./SceneManager.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
-    private ready = false;
-    init(): void {
+    addObjects(): void {
         const deviceInfo = this.getDevice().getDeviceInfo();
         [
             OrthoCamera,
@@ -21,11 +20,15 @@ export default class CameraManager extends Manager<Camera> {
             this.get<Camera>(ctor).init();
         });
     }
+    async load(): Promise<void> {
+        
+    }
+    init(): void {
+        this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
+        console.log("CameraManager init");
+    }
     update(): void {
-        if (!this.ready) {
-            this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
-            this.ready = true;
-        }
+
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

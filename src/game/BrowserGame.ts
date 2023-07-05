@@ -6,7 +6,10 @@ export default class BrowserGame extends Game {
     constructor(el: HTMLElement) {
         super();
         this.setDevice(new BrowserDevice(el.appendChild(document.createElement("canvas"))))
-        this.init();
-        this.update();
+        this.addObjects();
+        this.load().then(() => {
+            this.init();
+            this.update();
+        });
     }
 }
