@@ -15,13 +15,13 @@ export default class DrawObject extends Component {
     private textureMap: Map<TextureIndex, Texture> = new Map();
     private count: number = 0;
     init() {
-        this.vao = this.getGL().makeVertexArrayObject();
+        this.vao = this.getRenderingContext().makeVertexArrayObject();
         this.vao.bind();
-        this.ebo = this.getGL().makeElementBufferObject(new Uint16Array(0));
+        this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
         this.textureMap.set(TextureIndex.Default, this.getEntity().get(TextureContainer).getTexture());
     }
     draw(mode: number) {
-        this.getGL().draw(mode, this.count);
+        this.getRenderingContext().draw(mode, this.count);
     }
     protected bind() {
         if (!this.vao) {
@@ -32,7 +32,7 @@ export default class DrawObject extends Component {
             texture.bind();
         });
     }
-    private getGL() {
+    protected getRenderingContext() {
         return this.getEntity().get(GLContainer).getRenderingContext();
     }
 
@@ -48,7 +48,7 @@ export default class DrawObject extends Component {
             throw new Error("aboMap is not set");
         }
 
-        this.aboMap.set(index, this.getGL().makeArrayBufferObject(index, data, szie));
+        this.aboMap.set(index, this.getRenderingContext().makeArrayBufferObject(index, data, szie));
     }
     protected getTexture(index: TextureIndex) {
         const texture = this.textureMap.get(index);

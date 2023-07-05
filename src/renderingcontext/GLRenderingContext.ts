@@ -40,6 +40,7 @@ export default class GLRenderingContext implements RenderingContext {
         this.gl.enable(this.gl.CULL_FACE)
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.enable(this.gl.SCISSOR_TEST)
+        this.useBlendFuncOneAndOneMinusSrcAlpha();
     }
     draw(mode: number, count: number): void {
         this.gl.drawElements(mode, count, this.gl.UNSIGNED_SHORT, 0)
