@@ -2,7 +2,7 @@
 import Component from "../component/Component.js";
 import Primitive from "../contextobject/Primitive.js";
 
-export default class PrimitiveContainer implements Component {
+export default class PrimitiveContainer extends Component {
     private primitive?: Primitive;
     setPrimitive(primitiveType: Primitive) {
         this.primitive = primitiveType;

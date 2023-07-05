@@ -15,7 +15,10 @@ export default class NodeObject extends Entity {
             TRS,
             Node,
             TouchEventContainer
-        ].forEach(ctor => this.add<Component>(ctor));
+        ].forEach(ctor => {
+            this.add<Component>(ctor);
+            this.get<Component>(ctor).setEntity(this);
+        });
     }
     init(): void {
     }

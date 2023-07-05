@@ -13,7 +13,7 @@ export default class GLTexture implements Texture {
   private filterMax: number = 0;
   private width: number = 0;
   private height: number = 0;
-  init(gl: WebGL2RenderingContext, bindIndex: number, wrapS: number = gl.CLAMP_TO_EDGE, wrapT: number = gl.CLAMP_TO_EDGE, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
+  create(gl: WebGL2RenderingContext, bindIndex: number, wrapS: number = gl.CLAMP_TO_EDGE, wrapT: number = gl.CLAMP_TO_EDGE, filterMin: number = gl.NEAREST, filterMax: number = gl.NEAREST) {
     this.gl = gl;
     this.texture = this.gl.createTexture();
     this.bindIndex = this.gl.TEXTURE0 + bindIndex;

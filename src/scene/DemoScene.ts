@@ -2,6 +2,7 @@
 import NodeObject from "../entity/NodeObject.js";
 import PointerObject from "../entity/PointerObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
+import TextObject from "../entity/TextObject.js";
 import Scene from "./Scene.js";
 
 export default class DemoScene extends Scene {
@@ -10,7 +11,8 @@ export default class DemoScene extends Scene {
             new NodeObject(),
             new NodeObject(),
             new SpriteObject(),
-            new PointerObject()
+            new PointerObject(),
+            new TextObject()
         ].forEach(entity => this.addEntity(entity));
         this.getEntities().forEach(entity => entity.registerComponents());
     }

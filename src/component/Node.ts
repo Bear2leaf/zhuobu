@@ -3,10 +3,9 @@ import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
 import TRS from "./TRS.js";
 
-export default class Node implements Component {
+export default class Node extends Component {
     private source?: TRS;
     private parent?: Node;
-    private entity?: Entity;
     private readonly children: Node[] = [];
     private readonly localMatrix: Matrix = Matrix.identity();
     private readonly worldMatrix: Matrix = Matrix.identity();
@@ -16,15 +15,6 @@ export default class Node implements Component {
           throw new Error(`childNode not found: ${index}`);
       }
       return childNode;
-    }
-    setEntity(entity: Entity) {
-      this.entity = entity
-    }
-    getEntity() {
-      if (!this.entity) {
-        throw new Error("entity not found");
-      }
-      return this.entity;
     }
     setParent(parent?: Node) {
       if (this.parent) {

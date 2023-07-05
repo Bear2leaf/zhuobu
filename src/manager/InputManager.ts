@@ -1,4 +1,6 @@
-import { TouchInfoFunction } from "../device/Device.js";
+import TouchEventContainer from "../component/TouchEventContainer.js";
+import DemoScene from "../scene/DemoScene.js";
+import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
@@ -9,15 +11,6 @@ export default class InputManager extends Manager<unknown> {
     private isTouchingEnd: boolean = false;
     private x: number = 0;
     private y: number = 0;
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
-    }
     init(): void {
         this.getDevice().onTouchStart((touchInfo) => {
             this.isTouching = false;
@@ -56,7 +49,7 @@ export default class InputManager extends Manager<unknown> {
     }
     update(): void {
 
-        this.getSceneManager().getCurrentTouchEventContainerComponents().forEach((touchEvent) => {
+        this.getScene().getComponents(TouchEventContainer).forEach((touchEvent) => {
             touchEvent.setIsTouching(this.isTouching);
             touchEvent.setIsTouchingStart(this.isTouchingStart);
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);
@@ -64,5 +57,17 @@ export default class InputManager extends Manager<unknown> {
             touchEvent.setY(this.y);
             
         });
+    }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getScene(): Scene {
+        return this.getSceneManager().get(DemoScene);
     }
 }

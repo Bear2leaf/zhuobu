@@ -3,14 +3,12 @@ import { Vec3, Vec4 } from "../math/Vector.js";
 import Component from "../component/Component.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import Entity from "../entity/Entity.js";
 import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
 
 
-export default class Renderer implements Component {
+export default class Renderer extends Component {
     private camera?: Camera;
-    private entity?: Entity;
     private shader?: Shader;
     setShader(shader: Shader) {
         this.shader = shader;
@@ -30,15 +28,6 @@ export default class Renderer implements Component {
             throw new Error("camera not exist");
         }
         return this.camera;
-    }
-    setEntity(entity: Entity) {
-        this.entity = entity;
-    }
-    getEntity() {
-        if (!this.entity) {
-            throw new Error("entity not exist");
-        }
-        return this.entity;
     }
 
     render() {

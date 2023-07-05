@@ -1,4 +1,5 @@
 import Component from "../component/Component.js";
+import FontInfoContainer from "../component/FontInfoContainer.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
@@ -6,11 +7,11 @@ import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
-import Sprite from "../drawobject/Sprite.js";
+import FpsText from "../drawobject/FpsText.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
-export default class SpriteObject extends Entity {
+export default class TextObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
@@ -18,18 +19,20 @@ export default class SpriteObject extends Entity {
             SizeContainer,
             TRS,
             Node,
-            Sprite,
+            FpsText,
             SpriteRenderer,
-            PrimitiveContainer
+            PrimitiveContainer,
+            FontInfoContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
         });
     }
     init(): void {
-        this.get(Sprite).setEntity(this);
+        this.get(FpsText).setEntity(this);
         this.get(SpriteRenderer).setEntity(this);
-        this.get(Sprite).init();
+        this.get(FpsText).init();
+
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         
     }

@@ -8,6 +8,7 @@ import Manager from "./Manager.js";
 
 
 export default class CacheManager extends Manager<Cache<Object>> {
+    private ready = false;
     init() {
 
         [
@@ -19,10 +20,21 @@ export default class CacheManager extends Manager<Cache<Object>> {
             this.add<Cache<Object>>(o);
             this.get<Cache<Object>>(o).setDevice(this.getDevice());
         });
-        console.log("CacheManager init");
+        new Promise<void>(async (resolve) => {
+            await this.loadShaderTxtCache("Sprite");
+            await this.loadShaderTxtCache("Point");
+            await this.loadFontCache("boxy_bold_font");
+            this.ready = true;
+            console.log("CacheManager init");
+            resolve();
+        });
+    }
+
+    isReady() {
+        return this.ready;
     }
     update(): void {
-        
+
     }
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
@@ -58,7 +70,7 @@ export default class CacheManager extends Manager<Cache<Object>> {
     }
     async loadFontCache(name: string) {
         await this.get(JSONCache).load(`static/font/${name}.json`)
-        await this.get(ImageCache).load(`static/font/${name}.png`);
+        await this.get(ImageCache).load(`static/texture/${name}.png`);
     }
 
     async loadShaderTxtCache(name: string) {

@@ -1,31 +1,19 @@
 import Texture from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import { TextureIndex } from "../texture/Texture.js";
 import Component from "../component/Component.js";
-import Entity from "../entity/Entity.js";
 import GLContainer from "../component/GLContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
 
 
-export default class DrawObject implements Component {
-    private entity?: Entity;
+export default class DrawObject extends Component {
     private vao?: VertexArrayObject;
     private ebo?: ArrayBufferObject;
     private aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
     private textureMap: Map<TextureIndex, Texture> = new Map();
     private count: number = 0;
-    setEntity(entity: Entity) {
-        this.entity = entity;
-    }
-    getEntity() {
-        if (!this.entity) {
-            throw new Error("entity not exist");
-        }
-        return this.entity;
-    }
-
     init() {
         this.vao = this.getGL().makeVertexArrayObject();
         this.vao.bind();

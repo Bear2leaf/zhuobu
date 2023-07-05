@@ -2,7 +2,7 @@
 import Component from "../component/Component.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
-export default class GLContainer implements Component {
+export default class GLContainer extends Component {
     private gl?: RenderingContext;
     setRenderingContext(gl: RenderingContext) {
         this.gl = gl;

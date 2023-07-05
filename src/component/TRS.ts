@@ -2,7 +2,7 @@ import Matrix from "../math/Matrix.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import Component from "../component/Component.js";
 
-export default class TRS implements Component {
+export default class TRS extends Component {
     private readonly position: Vec3 = new Vec3();
     private readonly rotation: Vec3 = new Vec3();
     private readonly scale: Vec3 = new Vec3(1, 1, 1);

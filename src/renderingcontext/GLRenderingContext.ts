@@ -51,10 +51,8 @@ export default class GLRenderingContext implements RenderingContext {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
     }
-    makeTexture(unit: number): Texture {
-        const texture = new GLTexture()
-        texture.init(this.gl, unit)
-        return texture;
+    makeTexture<T extends Texture>(texture: T): void {
+        texture.create(this.gl)
     }
     switchDepthTest(enable: boolean): void {
         if (enable) {

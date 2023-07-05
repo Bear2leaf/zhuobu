@@ -7,7 +7,7 @@ import TextureContainer from "../component/TextureContainer.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
-export default abstract class Text extends DrawObject {
+export default class Text extends DrawObject {
     private x: number = 0;
     private y: number = 0;
     private scale: number  = 1;
@@ -19,6 +19,7 @@ export default abstract class Text extends DrawObject {
     private readonly vertices: Vec4[] = [];
     private fontInfo: FontInfo = {};
     init() {
+        super.init();
         const trs = this.getEntity().get(TRS);
         const x = trs.getPosition().x;
         const y = trs.getPosition().y;
@@ -33,8 +34,7 @@ export default abstract class Text extends DrawObject {
         this.spacing = spacing;
         this.chars = [..."Hello world!"];
         this.fontInfo = this.getEntity().get(FontInfoContainer).getFontInfo();
-        this.addTexture(TextureIndex.Default, this.getEntity().get(TextureContainer).getTexture())
-
+        console.log(this)
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);

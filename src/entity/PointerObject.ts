@@ -23,7 +23,10 @@ export default class PointerObject extends Entity {
             PointRenderer,
             TouchEventContainer,
             PrimitiveContainer
-        ].forEach(ctor => this.add<Component>(ctor));
+        ].forEach(ctor => {
+            this.add<Component>(ctor);
+            this.get<Component>(ctor).setEntity(this);
+        });
     }
     init(): void {
         this.get(Pointer).setEntity(this);
