@@ -29,8 +29,6 @@ export default class PointerObject extends Entity {
         });
     }
     init(): void {
-        this.get(Pointer).setEntity(this);
-        this.get(PointRenderer).setEntity(this);
         this.get(Pointer).init();
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.POINTS));
         

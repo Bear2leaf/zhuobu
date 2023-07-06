@@ -30,7 +30,7 @@ export default class Text extends DrawObject {
     create(fontInfo: FontInfo, texSize: Vec2) {
         const trs = this.getEntity().get(TRS);
         let { x, y } = trs.getPosition();
-        const scale = trs.getScale().x * 5;
+        const scale = trs.getScale();
         let { spacing, chars } = this;
         const texHeight = texSize.y;
         const texWidth = texSize.x;
@@ -41,8 +41,8 @@ export default class Text extends DrawObject {
             const ch = fontInfo[c];
             const xpos = x;
             const ypos = y;
-            const w = ch.width * scale;
-            const h = ch.height * scale;
+            const w = ch.width * scale.x;
+            const h = ch.height * scale.y;
             x += w + spacing;
             if (c === '\n') {
                 x = ox;
@@ -66,16 +66,12 @@ export default class Text extends DrawObject {
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
     }
     draw(mode: number): void {
-        this.getRenderingContext().switchBlend(true);
-        this.getRenderingContext().switchUnpackPremultiplyAlpha(true);
         this.bind();
         this.create(this.fontInfo, this.getTexture(TextureIndex.Default).getSize());
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
         super.draw(mode);
-        this.getRenderingContext().switchUnpackPremultiplyAlpha(true);
-        this.getRenderingContext().switchBlend(false);
     }
 
 }

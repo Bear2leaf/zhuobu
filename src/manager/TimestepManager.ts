@@ -1,6 +1,11 @@
+import Histogram from "../drawobject/Histogram.js";
+import DemoScene from "../scene/DemoScene.js";
+import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
+import SceneManager from "./SceneManager.js";
 
 export default class TimestepManager extends Manager<unknown> {
+    private sceneManager?: SceneManager;
     private currentFrame: number = 0;
     private lastFrame: number = this.currentFrame;
     private lastFrameTime: number = 0;
@@ -29,12 +34,25 @@ export default class TimestepManager extends Manager<unknown> {
     getFPS(): number {
         return this.fps;
     }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getScene(): Scene {
+        return this.getSceneManager().get(DemoScene);
+    }
     update(): void {
         this.currentFrame++;
         if (this.now() - this.lastFrameTime >= 1000) {
             this.fps = this.currentFrame - this.lastFrame;
             this.lastFrameTime = this.now();
             this.lastFrame = this.currentFrame;
+            this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
         }
     }
 

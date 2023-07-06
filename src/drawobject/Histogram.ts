@@ -2,6 +2,7 @@ import Quad from "../math/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import GLContainer from "../component/GLContainer.js";
 
 export default class Histogram extends DrawObject {
     private readonly quads: Quad[] = [];
@@ -9,11 +10,11 @@ export default class Histogram extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     init() {
+        super.init();
         const width = 100;
         const height = 100;
         const hisY = 30;
         const lines = 100;
-
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.updateEBO(new Uint16Array(0));
@@ -38,7 +39,11 @@ export default class Histogram extends DrawObject {
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
         super.draw(mode);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(true);
     }
 }
 

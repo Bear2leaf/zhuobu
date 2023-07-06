@@ -11,10 +11,10 @@ export default class Sprite extends DrawObject {
         super.init();
         const texSize = this.getTexture(TextureIndex.Default).getSize();
         const trs = this.getEntity().get(TRS);
-        const x = trs.getPosition().x + 10;
-        const y = trs.getPosition().y + 10;
-        const scale = trs.getScale().x * 10;
-        const quad = new Quad(x, y, texSize.x * scale, texSize.y * scale);
+        const x = trs.getPosition().x;
+        const y = trs.getPosition().y;
+        const scale = trs.getScale();
+        const quad = new Quad(x, y, texSize.x * scale.x, texSize.y * scale.y);
         quad.setZWToTexCoord();
         const vertices: Vec4[] = []
         const colors: Vec4[] = []

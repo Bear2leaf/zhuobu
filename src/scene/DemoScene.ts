@@ -1,4 +1,5 @@
 
+import FpsChartObject from "../entity/FpsChartObject.js";
 import NodeObject from "../entity/NodeObject.js";
 import PointerObject from "../entity/PointerObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
@@ -12,7 +13,8 @@ export default class DemoScene extends Scene {
             new NodeObject(),
             new SpriteObject(),
             new PointerObject(),
-            new TextObject()
+            new TextObject(),
+            new FpsChartObject()
         ].forEach(entity => this.addEntity(entity));
         this.getEntities().forEach(entity => entity.registerComponents());
     }

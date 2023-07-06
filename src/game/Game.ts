@@ -48,6 +48,7 @@ export default abstract class Game extends Manager<unknown> {
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
+        this.get(TimestepManager).setSceneManager(this.get(SceneManager));
     }
     update() {
         this.ctors.forEach(ctor => this.get(ctor).update());

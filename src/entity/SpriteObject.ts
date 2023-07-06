@@ -27,11 +27,10 @@ export default class SpriteObject extends Entity {
         });
     }
     init(): void {
-        this.get(Sprite).setEntity(this);
-        this.get(SpriteRenderer).setEntity(this);
+        this.get(TRS).getScale().multiply(10);
+
         this.get(Sprite).init();
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
-        
     }
     update(): void {
         this.get(SpriteRenderer).render();

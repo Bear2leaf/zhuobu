@@ -24,6 +24,7 @@ export default class CacheManager extends Manager<Cache<Object>> {
         
             await this.loadShaderTxtCache("Sprite");
             await this.loadShaderTxtCache("Point");
+            await this.loadShaderTxtCache("VertexColorTriangle");
             await this.loadFontCache("boxy_bold_font");
     }
     init(): void {
