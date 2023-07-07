@@ -1,16 +1,20 @@
 
 import Component from "../component/Component.js";
-import Texture from "../texture/Texture.js";
+import Texture, { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureContainer extends Component {
-    private texture?: Texture;
-    setTexture(texture: Texture) {
-        this.texture = texture;
+    private readonly textureMap: Map<TextureIndex, Texture> = new Map();
+    setTexture(texture: Texture, index: TextureIndex = TextureIndex.Default) {
+        this.textureMap.set(index, texture);
     }
-    getTexture(): Texture {
-        if (this.texture === undefined) {
-            throw new Error("Texture is not set");
+    getTexture(index: TextureIndex = TextureIndex.Default): Texture {
+        const texture = this.textureMap.get(index);
+        if (texture === undefined) {
+            throw new Error("texture not exist");
         }
-        return this.texture;
+        return texture;
+    }
+    getTextures() {
+        return [...this.textureMap.values()];
     }
 }

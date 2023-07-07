@@ -4,6 +4,7 @@ import JSONCache from "../cache/FontInfoCache.js";
 import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
 import { FontInfo } from "../drawobject/Text.js";
+import GLTF from "../gltf/GLTF.js";
 import Manager from "./Manager.js";
 
 
@@ -25,7 +26,12 @@ export default class CacheManager extends Manager<Cache<Object>> {
             await this.loadShaderTxtCache("Sprite");
             await this.loadShaderTxtCache("Point");
             await this.loadShaderTxtCache("VertexColorTriangle");
+            await this.loadShaderTxtCache("SkinMesh");
+            await this.loadShaderTxtCache("Mesh");
             await this.loadFontCache("boxy_bold_font");
+            await this.loadGLTFCache("whale.CYCLES");
+            await this.loadGLTFCache("hello");
+            await this.loadGLTFCache("hello-multi");
     }
     init(): void {
         console.log("CacheManager init");
@@ -44,6 +50,11 @@ export default class CacheManager extends Manager<Cache<Object>> {
         const txt = this.get(TextCache).get(name);
         if (txt === undefined) throw new Error(`txtCache ${name} not found`);
         return txt;
+    }
+    getGLTF(name: string) {
+        const gltf = this.get(JSONCache).get(`resource/gltf/${name}.gltf`);
+        if (gltf === undefined) throw new Error(`resource/gltf/${name}.gltf not found`);
+        return gltf as GLTF;
     }
     getResourceImage(name: string) {
         return this.get(ImageCache).get(`resource/texture/${name}.png`);

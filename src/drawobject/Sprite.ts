@@ -1,15 +1,15 @@
 import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import { TextureIndex } from "../texture/Texture.js";
 import Quad from "../math/Quad.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TRS from "../component/TRS.js";
+import TextureContainer from "../component/TextureContainer.js";
 
 export default class Sprite extends DrawObject {
     init() {
 
         super.init();
-        const texSize = this.getTexture(TextureIndex.Default).getSize();
+        const texSize = this.getEntity().get(TextureContainer).getTexture().getSize();
         const trs = this.getEntity().get(TRS);
         const x = trs.getPosition().x;
         const y = trs.getPosition().y;

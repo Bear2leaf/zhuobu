@@ -30,9 +30,11 @@ export default abstract class Game extends Manager<unknown> {
         });
     }
     async load(): Promise<void> {
+        await this.getDevice().loadSubpackage();
         for await (const iterator of this.ctors) {
             await this.get(iterator).load();
         }
+        await this.getDevice().loadSubpackage();
     }
     init(): void {
 

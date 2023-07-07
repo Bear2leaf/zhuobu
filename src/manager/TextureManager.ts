@@ -1,11 +1,13 @@
 import GLContainer from "../component/GLContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
+import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";
 import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import DefaultTexture from "../texture/DefaultTexture.js";
 import FontTexture from "../texture/FontTexture.js";
-import Texture from "../texture/Texture.js";
+import JointTexture from "../texture/JointTexture.js";
+import Texture, { TextureIndex } from "../texture/Texture.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
@@ -17,7 +19,8 @@ export default class TextureManager extends Manager<Texture> {
     addObjects(): void {
         [
             DefaultTexture,
-            FontTexture
+            FontTexture,
+            JointTexture
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -32,6 +35,7 @@ export default class TextureManager extends Manager<Texture> {
         this.all().forEach(texture => gl.makeTexture(texture));
         this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
         this.getScene().getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture)));
+        this.getScene().getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint));
         this.getScene().getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture)));
         console.log("TextureManager init");
     }

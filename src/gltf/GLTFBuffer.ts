@@ -1,3 +1,4 @@
+import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 
 export default class GLTFBuffer {
     private readonly byteLength: number;
@@ -6,7 +7,7 @@ export default class GLTFBuffer {
         this.byteLength = buffer.byteLength;
         this.uri = buffer.uri;
     }
-    getBufferData(cache: Map<string, ArrayBuffer>): ArrayBuffer {
+    getBufferData(cache: ArrayBufferCache): ArrayBuffer {
         const buffer = cache.get(`resource/gltf/${this.uri}`);
         if (!buffer) {
             throw new Error(`Buffer not found: ${this.uri}`);

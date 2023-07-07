@@ -140,6 +140,12 @@ export class Vec4 {
         this.w = vec4.w;
         return this;
     }
+    fromArray(array: number[]) {
+        this.x = array[0];
+        this.y = array[1];
+        this.z = array[2];
+        this.w = array[3];
+    }
     toFloatArray(): Float32Array {
         return new Float32Array([this.x, this.y, this.z, this.w]);
     }

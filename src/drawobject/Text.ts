@@ -4,6 +4,7 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import TRS from "../component/TRS.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
+import TextureContainer from "../component/TextureContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
@@ -67,7 +68,7 @@ export default class Text extends DrawObject {
     }
     draw(mode: number): void {
         this.bind();
-        this.create(this.fontInfo, this.getTexture(TextureIndex.Default).getSize());
+        this.create(this.fontInfo, this.getEntity().get(TextureContainer).getTexture().getSize());
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));

@@ -18,9 +18,9 @@ export class PerspectiveCamera implements Camera {
         if (!this.height) {
             throw new Error("height not exist");
         }
-        const fov = Math.PI / 180 * 90;
+        const fov = Math.PI / 180 * 60;
         const aspect = this.width / this.height;
-        this.view = Matrix.lookAt(new Vec3(0, 0, 0), new Vec3(0, 0, -1), new Vec3(0, 1, 0)).inverse();
+        this.view = Matrix.lookAt(new Vec3(17, 17, 15), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse();
         this.projection = Matrix.perspective(fov, aspect, 1, 50);
     }
     setSize(width: number, height: number) {

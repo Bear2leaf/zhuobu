@@ -1,3 +1,10 @@
+import ArrayBufferCache from "../cache/ArrayBufferCache.js";
+import JSONCache from "../cache/FontInfoCache.js";
+import Node from "../component/Node.js";
+import TRS from "../component/TRS.js";
+import Entity from "../entity/Entity.js";
+import NodeObject from "../entity/NodeObject.js";
+import SkinMeshObject from "../entity/SkinMeshObject.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -50,11 +57,11 @@ export default class GLTF {
     private readonly extensionsRequired?: readonly string[];
     private readonly extensions?: readonly string[];
     private readonly extras?: readonly string[];
-    private readonly bufferCache: Map<string, ArrayBuffer>;
+    private readonly bufferCache: ArrayBufferCache;
 
-    constructor(name: string,  gltfCache: Map<string, GLTF>, bufferCache: Map<string, ArrayBuffer>) {
+    constructor(name: string,  gltfCache: JSONCache, bufferCache: ArrayBufferCache) {
         this.bufferCache = bufferCache;
-        const data = gltfCache.get(`resource/gltf/${name}.gltf`);
+        const data = gltfCache.get(`resource/gltf/${name}.gltf`) as GLTF;
         if (!data) {
             throw new Error(`data ${`resource/gltf/${name}.gltf`} not found`);
         }
@@ -96,30 +103,33 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    // createRootNode(): Node {
-        // const rootNode = new Node(new TRS(), "root");
-        // for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
-        //     const gltfNode = this.nodes[sceneNodeIndex];
-        //     if (!gltfNode) {
-        //         throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
-        //     }
-        //     gltfNode.getNode().setParent(rootNode);
-        //     this.buildNodeTree(gltfNode);
-        // }
-        // this.nodes.forEach((node) => {
-        //     node.createFirstPrimitiveDrawObject(this);
-        // });
-        // return rootNode;
-    // }
-    buildNodeTree(root: GLTFNode) {
-        // const childrenIndices = root.getChildrenIndices();
-        // if (childrenIndices && childrenIndices.length > 0) {
-        //     for (const childIndex of childrenIndices) {
-        //         const childGLTFNode = this.getNodeByIndex(childIndex);
-        //         childGLTFNode.getNode().setParent(root.getNode());
-        //         this.buildNodeTree(childGLTFNode)
-        //     }
-        // }
+    createRootNode(entity: SkinMeshObject) {
+        for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
+            const gltfNode = this.nodes[sceneNodeIndex];
+            if (!gltfNode) {
+                throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
+            }
+            this.buildNodeTree(gltfNode, entity);
+        }
+        this.nodes.forEach((node) => {
+            node.createFirstPrimitiveDrawObject(this, entity);
+        });
+    }
+    buildNodeTree(gltfNode: GLTFNode, entity: Entity) {
+        const node = entity.get(Node);
+        node.setSource(entity.get(TRS));
+        gltfNode.createSkinJointNode(entity);
+        const childrenIndices = gltfNode.getChildrenIndices();
+        if (childrenIndices && childrenIndices.length > 0) {
+            for (const childIndex of childrenIndices) {
+                const childGLTFNode = this.getNodeByIndex(childIndex);
+                const childEntity = new NodeObject();
+                childEntity.registerComponents();
+                childGLTFNode.createSkinJointNode(childEntity);
+                childEntity.get(Node).setParent(node);
+                this.buildNodeTree(childGLTFNode, childEntity);
+            }
+        }
     }
     getMeshByIndex(index: number) {
         const mesh = this.meshes[index];

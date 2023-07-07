@@ -1,6 +1,13 @@
+import ArrayBufferCache from "../cache/ArrayBufferCache.js";
+import JSONCache from "../cache/FontInfoCache.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 import GLContainer from "../component/GLContainer.js";
 import { ViewPortType } from "../device/Device.js";
+import Mesh from "../drawobject/Mesh.js";
+import SkinMesh from "../drawobject/SkinMesh.js";
+import GLTF from "../gltf/GLTF.js";
+import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
+import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
@@ -16,7 +23,7 @@ export default class RendererManager extends Manager<unknown> {
     addObjects(): void {
     }
     async load(): Promise<void> {
-        
+
     }
     init(): void {
         this.getDevice().gl.init();
@@ -27,12 +34,32 @@ export default class RendererManager extends Manager<unknown> {
         const pfs = this.getCacheManager().getFragShaderTxt("Point");
         const tvs = this.getCacheManager().getVertShaderTxt("VertexColorTriangle");
         const tfs = this.getCacheManager().getFragShaderTxt("VertexColorTriangle");
+        const smvs = this.getCacheManager().getVertShaderTxt("SkinMesh");
+        const smfs = this.getCacheManager().getFragShaderTxt("SkinMesh");
+        const mvs = this.getCacheManager().getVertShaderTxt("Mesh");
+        const mfs = this.getCacheManager().getFragShaderTxt("Mesh");
+        const whaleGltf = new GLTF("whale.CYCLES", this.getCacheManager().get(JSONCache), this.getCacheManager().get(ArrayBufferCache));
+        const helloGltf = new GLTF("hello", this.getCacheManager().get(JSONCache), this.getCacheManager().get(ArrayBufferCache));
         const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
         this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
         this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
         this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setShader(gl.makeShader(tvs, tfs)));
+
         this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
+
+        this.getScene().getComponents(GLTFMeshRenderer).forEach(skinMeshRenderer => {
+            skinMeshRenderer.setShader(gl.makeShader(mvs, mfs));
+            skinMeshRenderer.getEntity().get(Mesh).setGLTF(helloGltf);
+        });
+        this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(skinMeshRenderer => {
+            skinMeshRenderer.setShader(gl.makeShader(smvs, smfs));
+            skinMeshRenderer.getEntity().get(SkinMesh).setGLTF(whaleGltf);
+        });
+
+
         this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
+
+
         console.log("RendererManager init");
     }
     update(): void {

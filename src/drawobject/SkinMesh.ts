@@ -1,20 +1,16 @@
 import Node from "../component/Node.js";
-import Texture from "../texture/Texture.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../math/Matrix.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
+import TextureContainer from "../component/TextureContainer.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
-    private readonly jointMatrices: Matrix[]  = [];
-    private readonly inverseBindMatrices: Matrix[]  = [];
+    private readonly jointMatrices: Matrix[] = [];
+    private readonly inverseBindMatrices: Matrix[] = [];
     private readonly origMatrices: Map<Node, Matrix> = new Map();
-    private node?: Node;
-    init() {
-        this.node = this.getEntity().get(Node);
-    }
-    setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Float32Array, jointTexture: Texture, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
+    setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal);
         this.jointNodes.splice(0, this.jointNodes.length, ...jointNodes);
         // create views for each joint and inverseBindMatrix
@@ -28,23 +24,11 @@ export default class SkinMesh extends Mesh {
                 Float32Array.BYTES_PER_ELEMENT * 16 * i,
                 16)));
         }
-        // this.createABO(ArrayBufferIndex.Color, new Float32Array(position.length), 3);
-        // this.createABO(ArrayBufferIndex.TextureCoord, textureCoord, 2);
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
-        this.addTexture(TextureIndex.Joint, jointTexture);
     }
-    setMeshData(indices: Uint16Array, position: Float32Array, normal: Float32Array) {
-
-        this.updateEBO(indices);
-        this.createABO(ArrayBufferIndex.Position, position, 3);
-        this.createABO(ArrayBufferIndex.Normal, normal, 3);
-    }
-    update() {
-        if (!this.node) {
-            throw new Error("Node is not set");
-        }
-        const globalWorldInverse = this.node.getWorldMatrix().inverse();
+    private update() {
+        const globalWorldInverse = this.getEntity().get(Node).getWorldMatrix().inverse();
         // go through each joint and get its current worldMatrix
         // apply the inverse bind matrices and store the
         // entire result in the texture
@@ -55,7 +39,7 @@ export default class SkinMesh extends Mesh {
             Matrix.multiply(dst, this.inverseBindMatrices[j], dst);
         }
         const jointData = Matrix.flatten(this.jointMatrices);
-        this.getTexture(TextureIndex.Joint).generate(4, this.jointNodes.length, jointData);
+        this.getEntity().get(TextureContainer).getTexture(TextureIndex.Joint).generate(4, this.jointNodes.length, jointData);
     }
     private frames = 0;
     draw(mode: number): void {

@@ -1,8 +1,6 @@
 import Camera from "../camera/Camera.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
 import Component from "../component/Component.js";
-import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
 
@@ -38,8 +36,6 @@ export default class Renderer extends Component {
         this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
         this.getShader().setInteger("u_texture", 0);
-        const primitive = this.getEntity().get(PrimitiveContainer).getPrimitive();
-        this.getEntity().get(DrawObject).draw(primitive.getMode());
 
     }
     setMatrix4fv(name: string, data: Float32Array) {
