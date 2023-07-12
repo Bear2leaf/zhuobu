@@ -62,7 +62,7 @@ export default class GLTFNode {
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
-        if (this.skin !== undefined) {
+        if (this.skin !== undefined && entity.has(SkinMesh)) {
 
             const skin = gltf.getSkinByIndex(this.skin);
             const jointNodes = skin.getJoints().map((joint) => gltf.getNodeByIndex(joint).getNode());

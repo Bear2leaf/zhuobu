@@ -39,43 +39,57 @@ function glTypeToTypedArray(type: GLType) {
     throw new Error(`no key: ${type}`);
 }
 export default class GLTF {
-    private readonly scene: number;
-    private readonly scenes: readonly GLTFScene[];
-    private readonly nodes: readonly GLTFNode[];
-    private readonly buffers: readonly GLTFBuffer[];
-    private readonly bufferViews: readonly GLTFBufferView[];
-    private readonly accessors: readonly GLTFAccessor[];
-    private readonly images?: readonly GLTFImage[];
-    private readonly samplers?: readonly GLTFSampler[];
-    private readonly textures?: readonly GLTFTexture[];
-    private readonly materials: readonly GLTFMaterial[];
-    private readonly meshes: readonly GLTFMesh[];
-    private readonly cameras?: readonly GLTFCamera[];
-    private readonly animations?: readonly GLTFAnimation[];
-    private readonly skins?: readonly GLTFSkin[];
-    private readonly extensionsUsed?: readonly string[];
-    private readonly extensionsRequired?: readonly string[];
-    private readonly extensions?: readonly string[];
-    private readonly extras?: readonly string[];
-    private readonly bufferCache: ArrayBufferCache;
+    private  scene?: number;
+    private  scenes?: readonly GLTFScene[];
+    private  nodes?: readonly GLTFNode[];
+    private  buffers?: readonly GLTFBuffer[];
+    private  bufferViews?: readonly GLTFBufferView[];
+    private  accessors?: readonly GLTFAccessor[];
+    private  images?: readonly GLTFImage[];
+    private  samplers?: readonly GLTFSampler[];
+    private  textures?: readonly GLTFTexture[];
+    private  materials?: readonly GLTFMaterial[];
+    private  meshes?: readonly GLTFMesh[];
+    private  cameras?: readonly GLTFCamera[];
+    private  animations?: readonly GLTFAnimation[];
+    private  skins?: readonly GLTFSkin[];
+    private  extensionsUsed?: readonly string[];
+    private  extensionsRequired?: readonly string[];
+    private  extensions?: readonly string[];
+    private  extras?: readonly string[];
 
-    constructor(name: string,  gltfCache: JSONCache, bufferCache: ArrayBufferCache) {
+    private name?: string;
+    private gltfCache?: JSONCache;
+    private bufferCache?: ArrayBufferCache;
+
+    setName(name: string) {
+        this.name = name;
+    }
+    setGLTFCache(gltfCache: JSONCache) {
+        this.gltfCache = gltfCache;
+    }
+    setBufferCache(bufferCache: ArrayBufferCache) {
         this.bufferCache = bufferCache;
-        const data = gltfCache.get(`resource/gltf/${name}.gltf`) as GLTF;
+    }
+    init() {
+        if (!this.name || !this.gltfCache || !this.bufferCache) {
+            throw new Error("name or gltfCache or bufferCache not initialized");
+        }
+        const data = this.gltfCache.get(`resource/gltf/${this.name}.gltf`) as GLTF;
         if (!data) {
-            throw new Error(`data ${`resource/gltf/${name}.gltf`} not found`);
+            throw new Error(`data ${`resource/gltf/${this.name}.gltf`} not found`);
         }
         this.scene = data.scene;
-        this.scenes = data.scenes.map((scene) => new GLTFScene(scene));
-        this.nodes = data.nodes.map((node) => new GLTFNode(node));
-        this.buffers = data.buffers.map((buffer) => new GLTFBuffer(buffer));
-        this.bufferViews = data.bufferViews.map((bufferView) => new GLTFBufferView(bufferView));
-        this.accessors = data.accessors.map((accessor) => new GLTFAccessor(accessor));
+        this.scenes = data.scenes?.map((scene) => new GLTFScene(scene));
+        this.nodes = data.nodes?.map((node) => new GLTFNode(node));
+        this.buffers = data.buffers?.map((buffer) => new GLTFBuffer(buffer));
+        this.bufferViews = data.bufferViews?.map((bufferView) => new GLTFBufferView(bufferView));
+        this.accessors = data.accessors?.map((accessor) => new GLTFAccessor(accessor));
         this.images = data.images;
         this.samplers = data.samplers;
         this.textures = data.textures;
         this.materials = data.materials;
-        this.meshes = data.meshes.map((mesh) => new GLTFMesh(mesh));
+        this.meshes = data.meshes?.map((mesh) => new GLTFMesh(mesh));
         this.cameras = data.cameras;
         this.animations = data.animations;
         this.skins = data.skins?.map((skin) => new GLTFSkin(skin));
@@ -96,6 +110,18 @@ export default class GLTF {
         return skin;
     }
     getDataByAccessorIndex(index: number) {
+        if (!this.accessors) {
+            throw new Error("accessors not found");
+        }
+        if (!this.bufferViews) {
+            throw new Error("bufferViews not found");
+        }
+        if (!this.buffers) {
+            throw new Error("buffers not found");
+        }
+        if (!this.bufferCache) {
+            throw new Error("bufferCache not found");
+        }
         const accessor = this.accessors[index];
         const bufferView = this.bufferViews[accessor.getBufferView()];
         const buffer = this.buffers[bufferView.getBuffer()];
@@ -104,14 +130,15 @@ export default class GLTF {
         return data;
     }
     createRootNode(entity: SkinMeshObject) {
-        for (const sceneNodeIndex of this.scenes[this.scene].getNodes()) {
-            const gltfNode = this.nodes[sceneNodeIndex];
+        const sceneNodes = this.scenes && this.scenes[this.scene || 0].getNodes() || []
+        for (const sceneNodeIndex of sceneNodes) {
+            const gltfNode = this.nodes && this.nodes[sceneNodeIndex];
             if (!gltfNode) {
                 throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
             }
             this.buildNodeTree(gltfNode, entity);
         }
-        this.nodes.forEach((node) => {
+        this.nodes?.forEach((node) => {
             node.createFirstPrimitiveDrawObject(this, entity);
         });
     }
@@ -132,14 +159,14 @@ export default class GLTF {
         }
     }
     getMeshByIndex(index: number) {
-        const mesh = this.meshes[index];
+        const mesh = this.meshes && this.meshes[index];
         if (!mesh) {
             throw new Error(`mesh not found: ${index}`);
         }
         return mesh;
     }
     getNodeByIndex(index: number) {
-        const node = this.nodes[index];
+        const node = this.nodes && this.nodes[index];
         if (!node) {
             throw new Error(`node not found: ${index}`);
         }

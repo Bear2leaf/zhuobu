@@ -7,6 +7,7 @@ import SceneManager from "../manager/SceneManager.js";
 import TimestepManager from "../manager/TimestepManager.js";
 import Manager from "../manager/Manager.js";
 import TextureManager from "../manager/TextureManager.js";
+import GLTFManager from "../manager/GLTFManager.js";
 
 
 export default abstract class Game extends Manager<unknown> {
@@ -15,6 +16,7 @@ export default abstract class Game extends Manager<unknown> {
         [
             CacheManager,
             RendererManager,
+            GLTFManager,
             CameraManager,
             InputManager,
             TextureManager,
@@ -50,6 +52,8 @@ export default abstract class Game extends Manager<unknown> {
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
+        this.get(GLTFManager).setSceneManager(this.get(SceneManager));
+        this.get(GLTFManager).setCacheManager(this.get(CacheManager));
         this.get(TimestepManager).setSceneManager(this.get(SceneManager));
     }
     update() {

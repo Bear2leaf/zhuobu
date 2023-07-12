@@ -38,8 +38,6 @@ export default class RendererManager extends Manager<unknown> {
         const smfs = this.getCacheManager().getFragShaderTxt("SkinMesh");
         const mvs = this.getCacheManager().getVertShaderTxt("Mesh");
         const mfs = this.getCacheManager().getFragShaderTxt("Mesh");
-        const whaleGltf = new GLTF("whale.CYCLES", this.getCacheManager().get(JSONCache), this.getCacheManager().get(ArrayBufferCache));
-        const helloGltf = new GLTF("hello", this.getCacheManager().get(JSONCache), this.getCacheManager().get(ArrayBufferCache));
         const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
         this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
         this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
@@ -49,11 +47,9 @@ export default class RendererManager extends Manager<unknown> {
 
         this.getScene().getComponents(GLTFMeshRenderer).forEach(skinMeshRenderer => {
             skinMeshRenderer.setShader(gl.makeShader(mvs, mfs));
-            skinMeshRenderer.getEntity().get(Mesh).setGLTF(helloGltf);
         });
         this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(skinMeshRenderer => {
             skinMeshRenderer.setShader(gl.makeShader(smvs, smfs));
-            skinMeshRenderer.getEntity().get(SkinMesh).setGLTF(whaleGltf);
         });
 
 
