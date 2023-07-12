@@ -31,7 +31,7 @@ export default class TextObject extends Entity {
     }
     init(): void {
         this.get(TRS).getScale().multiply(4);
-        this.get(TRS).getPosition().add(new Vec4(0, 400, 0, 0))
+        this.get(TRS).getPosition().add(new Vec4(40, 0, 0, 0))
         this.get(FpsText).init();
 
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));

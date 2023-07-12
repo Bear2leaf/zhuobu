@@ -27,6 +27,7 @@ export default class TextureManager extends Manager<Texture> {
     }
     async load(): Promise<void> {
         
+        await this.getCacheManager().loadFontCache("boxy_bold_font");
     }
     init(): void {
         

@@ -30,17 +30,16 @@ export default abstract class Game extends Manager<unknown> {
             this.get(ctor).setDevice(this.getDevice());
             this.get(ctor).addObjects();
         });
+        this.buildDependency();
     }
     async load(): Promise<void> {
         await this.getDevice().loadSubpackage();
         for await (const iterator of this.ctors) {
             await this.get(iterator).load();
         }
-        await this.getDevice().loadSubpackage();
     }
     init(): void {
 
-        this.buildDependency();
         this.ctors.forEach(ctor => this.get(ctor).init());
         console.log("Game init");
         console.log(this);

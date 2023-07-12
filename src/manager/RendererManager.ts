@@ -23,6 +23,11 @@ export default class RendererManager extends Manager<unknown> {
     addObjects(): void {
     }
     async load(): Promise<void> {
+        await this.getCacheManager().loadShaderTxtCache("Sprite");
+        await this.getCacheManager().loadShaderTxtCache("Point");
+        await this.getCacheManager().loadShaderTxtCache("VertexColorTriangle");
+        await this.getCacheManager().loadShaderTxtCache("SkinMesh");
+        await this.getCacheManager().loadShaderTxtCache("Mesh");
 
     }
     init(): void {

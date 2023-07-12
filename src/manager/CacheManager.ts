@@ -23,15 +23,6 @@ export default class CacheManager extends Manager<Cache<Object>> {
     }
     async load(): Promise<void> {
         
-            await this.loadShaderTxtCache("Sprite");
-            await this.loadShaderTxtCache("Point");
-            await this.loadShaderTxtCache("VertexColorTriangle");
-            await this.loadShaderTxtCache("SkinMesh");
-            await this.loadShaderTxtCache("Mesh");
-            await this.loadFontCache("boxy_bold_font");
-            await this.loadGLTFCache("whale.CYCLES");
-            await this.loadGLTFCache("hello");
-            await this.loadGLTFCache("hello-multi");
     }
     init(): void {
         console.log("CacheManager init");

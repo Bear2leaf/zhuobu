@@ -23,6 +23,9 @@ export default class GLTFManager extends Manager<GLTF> {
         });
     }
     async load(): Promise<void> {
+        await this.getCacheManager().loadGLTFCache("whale.CYCLES");
+        await this.getCacheManager().loadGLTFCache("hello");
+        await this.getCacheManager().loadGLTFCache("hello-multi");
         
     }
     init(): void {
