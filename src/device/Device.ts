@@ -1,5 +1,3 @@
-import { FontInfo } from "../drawobject/Text.js";
-import GLTF from "../gltf/GLTF.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
@@ -25,7 +23,13 @@ export default abstract class Device {
   get gl(): RenderingContext {
     return this.renderingContext;
   }
-  abstract getDeviceInfo(): DeviceInfo;
+  getDeviceInfo(): DeviceInfo {
+      return {
+          windowWidth: this.renderingContext.getCanvasWidth(),
+          windowHeight: this.renderingContext.getCanvasHeight(),
+          pixelRatio: devicePixelRatio,
+      };
+  }
   protected abstract getPerformance(): Performance;
   viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;

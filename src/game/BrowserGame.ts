@@ -7,7 +7,10 @@ import Game from "./Game.js";
 export default class BrowserGame extends Game {
     constructor(el: HTMLElement) {
         super();
-        this.setDevice(new BrowserDevice(el.appendChild(document.createElement("canvas"))));
+        const canvas = document.createElement("canvas");
+        canvas.width = 320;
+        canvas.height = 568;
+        this.setDevice(new BrowserDevice(el.appendChild(canvas)));
         this.addObjects();
         this.load().then(() => {
             this.get(SceneManager).add(DemoScene);

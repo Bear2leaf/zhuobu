@@ -10,13 +10,6 @@ export default class BrowserDevice extends Device {
         this.canvas = canvas;
         this.isMouseDown = false;
     }
-    getDeviceInfo(): DeviceInfo {
-        return {
-            windowWidth: 300,
-            windowHeight: 150,
-            pixelRatio: devicePixelRatio,
-        };
-    }
     getPerformance(): Performance {
         return performance;
     }

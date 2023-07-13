@@ -2,7 +2,6 @@
 import Entity from "../entity/Entity.js";
 import FpsChartObject from "../entity/FpsChartObject.js";
 import MeshObject from "../entity/MeshObject.js";
-import NodeObject from "../entity/NodeObject.js";
 import PointerObject from "../entity/PointerObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
 import SpriteObject from "../entity/SpriteObject.js";

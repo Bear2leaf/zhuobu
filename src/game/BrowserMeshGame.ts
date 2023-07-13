@@ -7,7 +7,9 @@ import Game from "./Game.js";
 export default class BrowserMeshGame extends Game {
     constructor(el: HTMLElement) {
         super();
-        this.setDevice(new BrowserDevice(el.appendChild(document.createElement("canvas"))))
+        const canvas = document.createElement("canvas");
+        canvas.width = 320;
+        this.setDevice(new BrowserDevice(el.appendChild(canvas)));
         this.addObjects();
         this.load().then(() => {
             this.get(SceneManager).add(MeshScene);
