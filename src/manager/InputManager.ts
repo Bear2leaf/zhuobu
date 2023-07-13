@@ -51,7 +51,7 @@ export default class InputManager extends Manager<unknown> {
             this.x = touchInfo?.x || 0;
             this.y = touchInfo?.y || 0;
         })
-        console.log("InputManager init");
+        
     }
     update(): void {
 

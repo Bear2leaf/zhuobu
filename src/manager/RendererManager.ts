@@ -61,7 +61,7 @@ export default class RendererManager extends Manager<unknown> {
         this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
 
 
-        console.log("RendererManager init");
+        
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);

@@ -41,8 +41,7 @@ export default abstract class Game extends Manager<unknown> {
     init(): void {
 
         this.ctors.forEach(ctor => this.get(ctor).init());
-        console.log("Game init");
-        console.log(this);
+        
     }
     buildDependency() {
         this.get(InputManager).setSceneManager(this.get(SceneManager));

@@ -7,7 +7,7 @@ export default class AudioManager extends Manager<unknown> {
     async load(): Promise<void> {
     }
     init(): void {
-        console.log("AudioManager init");
+        
     }
     update(): void {
     }

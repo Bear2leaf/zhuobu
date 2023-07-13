@@ -1,6 +1,2 @@
 .DS_Store
-*.js
-*.js.map
-node_modules
-!dist/index.html
-!dist/game.js
+dist

@@ -75,9 +75,9 @@ export default class GLTF {
         if (!this.name || !this.gltfCache || !this.bufferCache) {
             throw new Error("name or gltfCache or bufferCache not initialized");
         }
-        const data = this.gltfCache.get(`resource/gltf/${this.name}.gltf`) as GLTF;
+        const data = this.gltfCache.get(`resources/gltf/${this.name}.gltf`) as GLTF;
         if (!data) {
-            throw new Error(`data ${`resource/gltf/${this.name}.gltf`} not found`);
+            throw new Error(`data ${`resources/gltf/${this.name}.gltf`} not found`);
         }
         this.scene = data.scene;
         this.scenes = data.scenes?.map((scene) => new GLTFScene(scene));

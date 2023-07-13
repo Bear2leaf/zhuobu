@@ -25,17 +25,17 @@ export default class CacheManager extends Manager<Cache<Object>> {
         
     }
     init(): void {
-        console.log("CacheManager init");
+        
     }
 
     update(): void {
 
     }
     getVertShaderTxt(name: string) {
-        return this.get(TextCache).get(`static/shader/${name}.vert.sk`);
+        return this.get(TextCache).get(`resources/shader/${name}.vert.sk`);
     }
     getFragShaderTxt(name: string) {
-        return this.get(TextCache).get(`static/shader/${name}.frag.sk`);
+        return this.get(TextCache).get(`resources/shader/${name}.frag.sk`);
     }
     getTxt(name: string) {
         const txt = this.get(TextCache).get(name);
@@ -43,38 +43,38 @@ export default class CacheManager extends Manager<Cache<Object>> {
         return txt;
     }
     getGLTF(name: string) {
-        const gltf = this.get(JSONCache).get(`resource/gltf/${name}.gltf`);
-        if (gltf === undefined) throw new Error(`resource/gltf/${name}.gltf not found`);
+        const gltf = this.get(JSONCache).get(`resources/gltf/${name}.gltf`);
+        if (gltf === undefined) throw new Error(`resources/gltf/${name}.gltf not found`);
         return gltf as GLTF;
     }
     getResourceImage(name: string) {
-        return this.get(ImageCache).get(`resource/texture/${name}.png`);
+        return this.get(ImageCache).get(`resources/texture/${name}.png`);
     }
     getStaticImage(name: string) {
-        return this.get(ImageCache).get(`static/texture/${name}.png`);
+        return this.get(ImageCache).get(`resources/texture/${name}.png`);
     }
     getFontInfo(name: string) {
-        const font = this.get(JSONCache).get(`static/font/${name}.json`) as FontInfo;
-        if (font === undefined) throw new Error(`fontCache static/font/${name}.json not found`);
+        const font = this.get(JSONCache).get(`resources/font/${name}.json`) as FontInfo;
+        if (font === undefined) throw new Error(`fontCache resources/font/${name}.json not found`);
         return font;
     }
 
 
     async loadImageCache(url: string) {
-        await this.get(ImageCache).load(`resource/texture/${url}.png`);
+        await this.get(ImageCache).load(`resources/texture/${url}.png`);
     }
 
     async loadGLTFCache(name: string) {
-        await this.get(JSONCache).load(`resource/gltf/${name}.gltf`)
-        await this.get(ArrayBufferCache).load(`resource/gltf/${name}.bin`)
+        await this.get(JSONCache).load(`resources/gltf/${name}.gltf`)
+        await this.get(ArrayBufferCache).load(`resources/gltf/${name}.bin`)
     }
     async loadFontCache(name: string) {
-        await this.get(JSONCache).load(`static/font/${name}.json`)
-        await this.get(ImageCache).load(`static/texture/${name}.png`);
+        await this.get(JSONCache).load(`resources/font/${name}.json`)
+        await this.get(ImageCache).load(`resources/texture/${name}.png`);
     }
 
     async loadShaderTxtCache(name: string) {
-        await this.get(TextCache).load(`static/shader/${name}.vert.sk`)
-        await this.get(TextCache).load(`static/shader/${name}.frag.sk`)
+        await this.get(TextCache).load(`resources/shader/${name}.vert.sk`)
+        await this.get(TextCache).load(`resources/shader/${name}.frag.sk`)
     }
 }

@@ -30,7 +30,7 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
         this.getScene().getComponents(GLTFMeshRenderer).forEach(renderer => renderer.getEntity().get(GLTFMeshRenderer).setCamera(this.get(PerspectiveCamera)));
         this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(renderer => renderer.getEntity().get(GLTFSkinMeshRenderer).setCamera(this.get(PerspectiveCamera)));
-        console.log("CameraManager init");
+        
     }
     update(): void {
 

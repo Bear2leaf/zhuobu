@@ -35,7 +35,7 @@ export default class PointerObject extends Entity {
     }
     update(): void {
         if (this.get(TouchEventContainer).getIsTouchingStart()) {
-            console.log("PointerObject is touched");
+            
         }
         this.get(PointRenderer).render();
     }

@@ -1,9 +1,0 @@
-{
-    "subpackages": [
-        {
-            "name": "resource",
-            "root": "resource"
-        }
-    ]
-    
-}

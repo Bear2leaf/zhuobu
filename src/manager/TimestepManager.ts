@@ -20,7 +20,7 @@ export default class TimestepManager extends Manager<unknown> {
         this.lastFrame = this.currentFrame;
         this.lastFrameTime = this.now();
         this.fps = 0;
-        console.log("TimestepManager init");
+        
     }
     now(): number {
         return this.getDevice().now();

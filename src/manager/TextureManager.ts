@@ -37,7 +37,7 @@ export default class TextureManager extends Manager<Texture> {
         this.getScene().getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture)));
         this.getScene().getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint));
         this.getScene().getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture)));
-        console.log("TextureManager init");
+        
     }
     update(): void {
 
