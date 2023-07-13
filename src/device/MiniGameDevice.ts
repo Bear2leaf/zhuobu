@@ -4,6 +4,7 @@ import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 const wx = (globalThis as any).wx;
 
 export default class MiniGameDevice extends Device {
+    private readonly divideTimeBy: number;
     constructor() {
         const canvas = wx.createCanvas()
         if (typeof document === 'undefined') {
@@ -14,6 +15,8 @@ export default class MiniGameDevice extends Device {
             (canvas.height) = windowHeight * pixelRatio;
         }
         super(new GLRenderingContext(canvas));
+        const isDevTool = wx.getSystemInfoSync().platform === "devtools";
+        this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 
     getDeviceInfo(): DeviceInfo {
@@ -21,6 +24,9 @@ export default class MiniGameDevice extends Device {
     }
     getPerformance(): Performance {
         return wx.getPerformance();
+    }
+    now(): number {
+        return this.getPerformance().now() / this.divideTimeBy;
     }
     async loadSubpackage(): Promise<null> {
         return await new Promise<null>(resolve => {

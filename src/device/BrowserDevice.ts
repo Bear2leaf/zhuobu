@@ -1,6 +1,6 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
-export type Rectangle = {left: number, top: number, width: number, height: number, right: number, bottom: number}
+export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 
 export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
@@ -12,6 +12,9 @@ export default class BrowserDevice extends Device {
     }
     getPerformance(): Performance {
         return performance;
+    }
+    now(): number {
+        return this.getPerformance().now();
     }
     async loadSubpackage(): Promise<null> {
         return null;

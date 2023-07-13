@@ -4,9 +4,9 @@ export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio
 
 export type TouchInfoFunction = (info?: { x: number, y: number }) => void
 export enum ViewPortType {
-    Full,
-    TopRight,
-    LeftTop
+  Full,
+  TopRight,
+  LeftTop
 }
 export default abstract class Device {
   private readonly renderingContext: RenderingContext;
@@ -49,9 +49,7 @@ export default abstract class Device {
         break;
     }
   }
-  now(): number {
-    return this.performance.now() / (typeof document !== 'undefined' ? 1 : 1000);
-  }
+  abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;
   abstract createWorker(path: string, handlerCallback: Function): void;
