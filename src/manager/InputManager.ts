@@ -74,6 +74,6 @@ export default class InputManager extends Manager<unknown> {
         this.sceneManager = sceneManager;
     }
     getScene(): Scene {
-        return this.getSceneManager().get(DemoScene);
+        return this.getSceneManager().first();
     }
 }

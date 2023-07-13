@@ -62,6 +62,6 @@ export default class GLTFManager extends Manager<GLTF> {
         this.sceneManager = sceneManager;
     }
     getScene(): Scene {
-        return this.getSceneManager().get(DemoScene);
+        return this.getSceneManager().first();
     }
 }

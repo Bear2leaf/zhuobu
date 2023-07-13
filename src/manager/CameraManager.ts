@@ -45,6 +45,6 @@ export default class CameraManager extends Manager<Camera> {
         this.sceneManager = sceneManager;
     }
     getScene(): Scene {
-        return this.getSceneManager().get(DemoScene);
+        return this.getSceneManager().first();
     }
 }

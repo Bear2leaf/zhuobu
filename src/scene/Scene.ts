@@ -3,10 +3,18 @@ import Entity from "../entity/Entity.js";
 
 export default abstract class Scene {
     private readonly entities: Entity[] = [];
+    abstract getCtors(): Entity[];
+    registerEntities(): void {
+        this.getCtors().forEach(entity => this.addEntity(entity));
+        this.getEntities().forEach(entity => entity.registerComponents());
+    }
     update(): void {
         this.entities.forEach(element => {
             element.update();
         });
+    }
+    initEntities(): void {
+        this.getEntities().forEach(entity => entity.init());
     }
     addEntity(entity: Entity) {
         this.entities.push(entity);

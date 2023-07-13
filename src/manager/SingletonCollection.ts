@@ -9,6 +9,13 @@ export default abstract class SingletonCollection<BaseType> {
         this.objects.push(new ctor());
 
     }
+    first<T extends BaseType>(): T {
+        if (this.objects.length === 0) {
+            throw new Error(`object not exist`);
+        }
+        return this.objects[0] as T;
+    }
+
     get<T extends BaseType>(ctor: new () => T): T {
         const object = this.objects.filter(m => m instanceof ctor);
         if (object.length === 0) {

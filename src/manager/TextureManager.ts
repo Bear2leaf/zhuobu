@@ -2,7 +2,6 @@ import GLContainer from "../component/GLContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";
-import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import DefaultTexture from "../texture/DefaultTexture.js";
 import FontTexture from "../texture/FontTexture.js";
@@ -62,6 +61,6 @@ export default class TextureManager extends Manager<Texture> {
         this.sceneManager = sceneManager;
     }
     getScene(): Scene {
-        return this.getSceneManager().get(DemoScene);
+        return this.getSceneManager().first();
     }
 }
