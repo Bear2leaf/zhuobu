@@ -1,11 +1,9 @@
 import Camera from "../camera/Camera.js";
 import { OrthoCamera } from "../camera/OrthoCamera.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
-import Node from "../component/Node.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import Renderer from "../renderer/Renderer.js";
-import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
@@ -13,13 +11,15 @@ import SceneManager from "./SceneManager.js";
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
     addObjects(): void {
-        const deviceInfo = this.getDevice().getDeviceInfo();
+        const deviceInfo = this.getDevice().getWindowInfo()
+        const windowWidth = deviceInfo.windowWidth;
+        const windowHeight = deviceInfo.windowHeight;
         [
             OrthoCamera,
             PerspectiveCamera
         ].forEach((ctor) => {
             this.add<Camera>(ctor);
-            this.get<Camera>(ctor).setSize(deviceInfo.windowWidth, deviceInfo.windowHeight);
+            this.get<Camera>(ctor).setSize(windowWidth, windowHeight);
             this.get<Camera>(ctor).init();
         });
     }

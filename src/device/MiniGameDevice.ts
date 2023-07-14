@@ -7,22 +7,18 @@ export default class MiniGameDevice extends Device {
     private readonly divideTimeBy: number;
     constructor() {
         const canvas = wx.createCanvas()
-        if (typeof document === 'undefined') {
-            const { windowWidth, windowHeight, pixelRatio } = wx.getDeviceInfo();
-            (canvas.clientWidth) = windowWidth * pixelRatio;
-            (canvas.clientHeight) = windowHeight * pixelRatio;
-            (canvas.width) = windowWidth * pixelRatio;
-            (canvas.height) = windowHeight * pixelRatio;
-        }
-        super(new GLRenderingContext(canvas));
         const isDevTool = wx.getSystemInfoSync().platform === "devtools";
+        const { windowWidth, windowHeight, pixelRatio } = wx.getWindowInfo();
+        (canvas.width) = windowWidth * pixelRatio;
+        (canvas.height) = windowHeight * pixelRatio;
+        super(new GLRenderingContext(canvas));
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 
-    getDeviceInfo(): DeviceInfo {
+    getWindowInfo(): DeviceInfo {
         return wx.getWindowInfo();
     }
-    getPerformance(): Performance {
+    protected getPerformance(): Performance {
         return wx.getPerformance();
     }
     now(): number {

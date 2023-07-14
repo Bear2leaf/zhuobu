@@ -7,12 +7,12 @@ import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
-import Text from "../drawobject/Text.js";
+import FramesText from "../drawobject/FramesText.js";
 import { Vec4 } from "../math/Vector.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
-export default class TextObject extends Entity {
+export default class FramesTextObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
@@ -20,7 +20,7 @@ export default class TextObject extends Entity {
             SizeContainer,
             TRS,
             Node,
-            Text,
+            FramesText,
             SpriteRenderer,
             PrimitiveContainer,
             FontInfoContainer
@@ -30,9 +30,9 @@ export default class TextObject extends Entity {
         });
     }
     init(): void {
-        this.get(TRS).getScale().multiply(4);
-        this.get(TRS).getPosition().add(new Vec4(20, 0, 0, 0))
-        this.get(Text).init();
+        this.get(TRS).getScale().multiply(2);
+        this.get(TRS).getPosition().add(new Vec4(0, 40, 0, 0))
+        this.get(FramesText).init();
 
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         

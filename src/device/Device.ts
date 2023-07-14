@@ -10,29 +10,14 @@ export enum ViewPortType {
 }
 export default abstract class Device {
   private readonly renderingContext: RenderingContext;
-  private readonly performance: Performance;
-  private readonly deviceInfo: DeviceInfo;
   constructor(renderingContext: RenderingContext) {
     this.renderingContext = renderingContext;
-    this.deviceInfo = this.getDeviceInfo();
-    this.performance = this.getPerformance();
-    if (typeof document !== 'undefined') {
-      this.deviceInfo.pixelRatio = 1;
-    }
   }
   get gl(): RenderingContext {
     return this.renderingContext;
   }
-  getDeviceInfo(): DeviceInfo {
-      return {
-          windowWidth: this.renderingContext.getCanvasWidth(),
-          windowHeight: this.renderingContext.getCanvasHeight(),
-          pixelRatio: devicePixelRatio,
-      };
-  }
-  protected abstract getPerformance(): Performance;
   viewportTo(type: ViewPortType): void {
-    const { windowWidth, windowHeight, pixelRatio } = this.deviceInfo;
+    const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();
     const leftWidth = windowWidth * (2 / 3) * pixelRatio
     const rightWidth = windowWidth * (1 / 3) * pixelRatio;
     const leftHeight = windowHeight * (2 / 3) * pixelRatio
@@ -49,6 +34,8 @@ export default abstract class Device {
         break;
     }
   }
+  protected abstract getPerformance(): Performance;
+  abstract getWindowInfo(): DeviceInfo;
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;

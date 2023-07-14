@@ -1,3 +1,5 @@
+import FpsText from "../drawobject/FpsText.js";
+import FramesText from "../drawobject/FramesText.js";
 import Histogram from "../drawobject/Histogram.js";
 import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
@@ -53,7 +55,9 @@ export default class TimestepManager extends Manager<unknown> {
             this.lastFrameTime = this.now();
             this.lastFrame = this.currentFrame;
             this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
+            this.getScene().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
         }
+        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}`));
     }
 
 }

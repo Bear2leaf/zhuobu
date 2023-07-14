@@ -1,7 +1,6 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import { TextureIndex } from "../texture/Texture.js";
 import TRS from "../component/TRS.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 import TextureContainer from "../component/TextureContainer.js";

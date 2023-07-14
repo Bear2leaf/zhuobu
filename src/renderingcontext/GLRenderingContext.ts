@@ -7,24 +7,13 @@ import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
-import GLTexture from "../texture/GLTexture.js";
 import Texture from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
-    private readonly width: number;
-    private readonly height: number;
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
-        this.width = canvas.width;
-        this.height = canvas.height;
-    }
-    getCanvasWidth(): number {
-        return this.width;
-    }
-    getCanvasHeight(): number {
-        return this.height;
     }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {
         return new GLElementBufferObject(this.gl, data);
