@@ -2,7 +2,6 @@ import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
-import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";

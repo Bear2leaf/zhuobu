@@ -3,7 +3,6 @@ import FontInfoContainer from "../component/FontInfoContainer.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
-import SizeContainer from "../component/SizeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -17,7 +16,6 @@ export default class TextObject extends Entity {
         [
             GLContainer,
             TextureContainer,
-            SizeContainer,
             TRS,
             Node,
             Text,
@@ -31,7 +29,7 @@ export default class TextObject extends Entity {
     }
     init(): void {
         this.get(TRS).getScale().multiply(4);
-        this.get(TRS).getPosition().add(new Vec4(20, 0, 0, 0))
+        this.get(TRS).getPosition().add(new Vec4(0, 0, 0, 0))
         this.get(Text).init();
 
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
