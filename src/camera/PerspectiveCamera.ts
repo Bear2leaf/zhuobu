@@ -20,8 +20,8 @@ export class PerspectiveCamera implements Camera {
         }
         const fov = Math.PI / 180 * 60;
         const aspect = this.width / this.height;
-        this.view = Matrix.lookAt(new Vec3(17, 17, 15), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse();
-        this.projection = Matrix.perspective(fov, aspect, 1, 50);
+        this.view = Matrix.lookAt(new Vec3(10, 10, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse();
+        this.projection = Matrix.perspective(fov, aspect, 1, 30);
     }
     setSize(width: number, height: number) {
         this.width = width;

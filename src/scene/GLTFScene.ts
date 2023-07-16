@@ -1,12 +1,14 @@
 
 import Entity from "../entity/Entity.js";
-import HelloMeshObject from "../entity/HelloMeshObject.js";
+import MeshObject from "../entity/MeshObject.js";
+import SkinMeshObject from "../entity/SkinMeshObject.js";
 import Scene from "./Scene.js";
 
 export default class GLTFScene extends Scene {
-    getCtors(): Entity[] {
+    getDefaultEntities(): Entity[] {
         return [
-            new HelloMeshObject()
+            new SkinMeshObject()
+            , new MeshObject()
         ];
     }
 

@@ -9,7 +9,7 @@ import TextObject from "../entity/TextObject.js";
 import Scene from "./Scene.js";
 
 export default class DemoScene extends Scene {
-    getCtors(): Entity[] {
+    getDefaultEntities(): Entity[] {
         return [
             new SpriteObject()
             , new MeshObject()

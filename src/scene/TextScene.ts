@@ -6,7 +6,7 @@ import TextObject from "../entity/TextObject.js";
 import Scene from "./Scene.js";
 
 export default class TextScene extends Scene {
-    getCtors(): Entity[] {
+    getDefaultEntities(): Entity[] {
         return [
             new PointerObject()
             , new FpsTextObject()

@@ -52,12 +52,6 @@ export default class Node extends Component {
       child.updateWorldMatrix(worldMatrix);
     }
   }
-  traverse(fn: Function) {
-    fn(this);
-    for (const child of this.children) {
-      child.traverse(fn);
-    }
-  }
   getWorldMatrix() {
     return this.worldMatrix;
   }

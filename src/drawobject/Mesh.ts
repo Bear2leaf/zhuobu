@@ -5,9 +5,13 @@ import Node from "../component/Node.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
+    private nodeIndex?: number;
+    setNodeIndex(nodeIndex: number) {
+        this.nodeIndex = nodeIndex;
+    }
     init() {
         super.init();
-        this.getGLTF().createRootNode(this.getEntity());
+        this.getGLTF().buildMesh(this.getEntity(), this.nodeIndex);
     }
     setGLTF(gltf: GLTF) {
         this.gltf = gltf;

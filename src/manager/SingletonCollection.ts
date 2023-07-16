@@ -26,6 +26,13 @@ export default abstract class SingletonCollection<BaseType> {
             return object[0] as T;
         }
     }
+    set<T extends BaseType>(ctor: new () => T, object: T): void {
+        const index = this.objects.findIndex(m => m instanceof ctor);
+        if (index === -1) {
+            throw new Error(`object ${ctor.name} not exist`);
+        }
+        this.objects[index] = object;
+    }
     has<T extends BaseType>(ctor: new () => T): boolean {
         return this.objects.filter(m => m instanceof ctor).length !== 0;
     }

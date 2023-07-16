@@ -4,7 +4,7 @@ import SkinMeshObject from "../entity/SkinMeshObject.js";
 import Scene from "./Scene.js";
 
 export default class SkinMeshScene extends Scene {
-    getCtors(): Entity[] {
+    getDefaultEntities(): Entity[] {
         return [
             new SkinMeshObject()
             , new PointerObject()

@@ -4,7 +4,7 @@ import PointerObject from "../entity/PointerObject.js";
 import Scene from "./Scene.js";
 
 export default class MeshScene extends Scene {
-    getCtors(): Entity[] {
+    getDefaultEntities(): Entity[] {
         return [
             new MeshObject()
             , new PointerObject()

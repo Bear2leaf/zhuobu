@@ -1,13 +1,10 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import JSONCache from "../cache/FontInfoCache.js";
-import Mesh from "../drawobject/Mesh.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import GLTF from "../gltf/GLTF.js";
 import WhaleGLTF from "../gltf/object/WhaleGLTF.js";
 import HelloGLTF from "../gltf/object/HelloGLTF.js";
 import HelloMultiGLTF from "../gltf/object/HelloMultiGLTF.js";
-import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
-import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
@@ -43,7 +40,6 @@ export default class GLTFManager extends Manager<GLTF> {
         });
         this.getScene().getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF)));
         this.getScene().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF)));
-        this.getScene().getComponents(WhaleMesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF)));
         this.getScene().getComponents(SkinMesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF)));
     }
     update(): void {

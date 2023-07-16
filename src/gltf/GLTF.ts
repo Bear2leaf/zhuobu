@@ -2,9 +2,12 @@ import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import JSONCache from "../cache/FontInfoCache.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
+import Mesh from "../drawobject/Mesh.js";
+import SkinMesh from "../drawobject/SkinMesh.js";
 import Entity from "../entity/Entity.js";
 import NodeObject from "../entity/NodeObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
+import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -129,32 +132,52 @@ export default class GLTF {
         const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
     }
-    createRootNode(entity: SkinMeshObject) {
-        const sceneNodes = this.scenes && this.scenes[this.scene || 0].getNodes() || []
-        for (const sceneNodeIndex of sceneNodes) {
-            const gltfNode = this.nodes && this.nodes[sceneNodeIndex];
-            if (!gltfNode) {
-                throw new Error(`scene gltfNode not found: ${sceneNodeIndex}`);
-            }
-            this.buildNodeTree(gltfNode, entity);
+    buildMesh(entity: Entity, nodeIndex: number = 0) {
+        if (!this.nodes) {
+            throw new Error("nodes not found");
         }
-        this.nodes?.forEach((node) => {
-            node.createFirstPrimitiveDrawObject(this, entity);
-        });
+        const node = this.nodes[nodeIndex];
+        const mesh = this.getMeshByIndex(node.getMesh());
+        const primitive = mesh.getPrimitiveByIndex(0);
+        const positionIndex = primitive.getAttributes().getPosition();
+        const texcoordIndex = primitive.getAttributes().getTexCoord();
+        const normalIndex = primitive.getAttributes().getNormal();
+        const indicesIndex = primitive.getIndices();
+        if (node.hasSkin() && entity.has(SkinMesh) && entity.has(GLTFSkinMeshRenderer)) {
+            const skin = this.getSkinByIndex(node.getSkin());
+            const skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
+            this.buildNodeTree(skeletonRootNode);
+            entity.set(Node, skeletonRootNode.getNode())
+            const jointNodes = skin.getJoints().map((joint) => this.getNodeByIndex(joint).getNode());
+            const weightslIndex = primitive.getAttributes().getWeights();
+            const jointsIndex = primitive.getAttributes().getJoints();
+            const inverseBindMatrixIndex = skin.getInverseBindMatrices();
+            entity.get(SkinMesh).setSkinData(
+                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
+                , this.getDataByAccessorIndex(positionIndex) as Float32Array
+                , this.getDataByAccessorIndex(normalIndex) as Float32Array
+                , this.getDataByAccessorIndex(weightslIndex) as Float32Array
+                , this.getDataByAccessorIndex(jointsIndex) as Uint16Array
+                , jointNodes
+                , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
+            );
+        } else {
+            entity.set(Node, node.getNode())
+            entity.get(Mesh).setMeshData(
+                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
+                , this.getDataByAccessorIndex(positionIndex) as Float32Array
+                , this.getDataByAccessorIndex(normalIndex) as Float32Array
+            );
+        }
+        
     }
-    buildNodeTree(gltfNode: GLTFNode, entity: Entity) {
-        const node = entity.get(Node);
-        node.setSource(entity.get(TRS));
-        gltfNode.createSkinJointNode(entity);
+    buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();
         if (childrenIndices && childrenIndices.length > 0) {
             for (const childIndex of childrenIndices) {
                 const childGLTFNode = this.getNodeByIndex(childIndex);
-                const childEntity = new NodeObject();
-                childEntity.registerComponents();
-                childGLTFNode.createSkinJointNode(childEntity);
-                childEntity.get(Node).setParent(node);
-                this.buildNodeTree(childGLTFNode, childEntity);
+                childGLTFNode.getNode().setParent(gltfNode.getNode());
+                this.buildNodeTree(childGLTFNode);
             }
         }
     }
