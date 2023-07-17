@@ -1,5 +1,5 @@
-import BlackWireCube from "./BlackWireCube.js";
+import WireCube from "./WireCube.js";
 
-export default class FrustumCube extends BlackWireCube {
+export default class FrustumCube extends WireCube {
 }
 

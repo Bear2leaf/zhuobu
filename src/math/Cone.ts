@@ -6,7 +6,7 @@ import Triangle from "./Triangle.js";
 export default class Cone {
     private readonly points: readonly [Point, Point, Point, Point, Point];
     
-    constructor(tip: Vec4 = new Vec4(0, 0, 1, 1), tr: Vec4 = new Vec4(1, 1, -1, 1), br: Vec4 = new Vec4(1, -1, -1, 1), bl: Vec4 = new Vec4(-1, -1, -1, 1), tl: Vec4 = new Vec4(-1, 1, -1, 1), color: Vec4 = new Vec4(0, 0, 0, 1)) {
+    constructor(tip: Vec4 = new Vec4(0, 0, 1, 1), tr: Vec4 = new Vec4(1, 1, -1, 1), br: Vec4 = new Vec4(1, -1, -1, 1), bl: Vec4 = new Vec4(-1, -1, -1, 1), tl: Vec4 = new Vec4(-1, 1, -1, 1), color: Vec4 = new Vec4(1, 1, 1, 1)) {
         this.points = [
             new Point(tip.x, tip.y, tip.z, tip.w, color, 0)
             , new Point(tr.x, tr.y, tr.z, tr.w, color, 1)

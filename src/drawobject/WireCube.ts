@@ -1,14 +1,14 @@
-import Cone from "../math/Cone.js";
-import Matrix from "../math/Matrix.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import DrawObject from "./DrawObject.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import Cube from "../math/Cube.js";
 
-export default class BlackWireCone extends DrawObject {
-    init() {
-        const cone = new Cone();
-        const lines = cone.getLines();
-        const points = cone.getPoints();
+export default class WireCube extends DrawObject {
+    init(){
+        super.init();
+        const cube = new Cube();
+        const lines = cube.getLines();
+        const points = cube.getPoints();
         const colors: Vec4[] = [];
         const indices: number[] = [];
         const vertices: Vec4[] = [];
@@ -27,9 +27,6 @@ export default class BlackWireCone extends DrawObject {
     draw(mode: number): void {
         this.bind()
         super.draw(mode);
-    }
-    setWorldMatrix(matrix: Matrix) {
-        // this.getNode().updateWorldMatrix(matrix);
     }
 }
 

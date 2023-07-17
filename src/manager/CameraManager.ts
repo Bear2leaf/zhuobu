@@ -3,7 +3,11 @@ import { MainCamera } from "../camera/MainCamera.js";
 import { OrthoCamera } from "../camera/OrthoCamera.js";
 import { TestCamera } from "../camera/TestCamera.js";
 import Node from "../component/Node.js";
+import CameraCube from "../drawobject/CameraCube.js";
+import CameraLenCone from "../drawobject/CameraLenCone.js";
+import CameraUpCube from "../drawobject/CameraUpCube.js";
 import FrustumCube from "../drawobject/FrustumCube.js";
+import { Vec4 } from "../math/Vector.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
@@ -44,11 +48,14 @@ export default class CameraManager extends Manager<Camera> {
         
     }
     hasCameraCube() {
-        return this.getScene().getComponents(FrustumCube).length > 0;
+        return this.getScene().getComponents(CameraCube).length > 0;
     }
     update(): void {
         this.getScene().getComponents(FrustumCube).forEach(cube => cube.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getFrustumTransformMatrix()));
-
+        this.getScene().getComponents(CameraCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
+        this.getScene().getComponents(CameraLenCone).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
+        this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
+        
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

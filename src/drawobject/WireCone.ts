@@ -1,14 +1,14 @@
+import Cone from "../math/Cone.js";
 import { Vec4, flatten } from "../math/Vector.js";
-import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Cube from "../math/Cube.js";
+import DrawObject from "./DrawObject.js";
 
-export default class BlackWireCube extends DrawObject {
-    init(){
+export default class WireCone extends DrawObject {
+    init() {
         super.init();
-        const cube = new Cube();
-        const lines = cube.getLines();
-        const points = cube.getPoints();
+        const cone = new Cone();
+        const lines = cone.getLines();
+        const points = cone.getPoints();
         const colors: Vec4[] = [];
         const indices: number[] = [];
         const vertices: Vec4[] = [];
