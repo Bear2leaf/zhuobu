@@ -27,6 +27,15 @@ export class PerspectiveCamera implements Camera {
         this.width = width;
         this.height = height;
     }
+    getAspect(): number {
+        if (!this.width) {
+            throw new Error("width not exist");
+        }
+        if (!this.height) {
+            throw new Error("height not exist");
+        }
+        return this.width / this.height;
+    }
     getView(): Matrix {
         if (!this.view) {
             throw new Error("view not exist");

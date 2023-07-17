@@ -1,8 +1,12 @@
 import Camera from "../camera/Camera.js";
+import { MainCamera } from "../camera/MainCamera.js";
 import { OrthoCamera } from "../camera/OrthoCamera.js";
-import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
+import { TestCamera } from "../camera/TestCamera.js";
+import Node from "../component/Node.js";
+import FrustumCube from "../drawobject/FrustumCube.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
+import { LineRenderer } from "../renderer/LineRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
@@ -15,8 +19,9 @@ export default class CameraManager extends Manager<Camera> {
         const windowWidth = deviceInfo.windowWidth;
         const windowHeight = deviceInfo.windowHeight;
         [
-            OrthoCamera,
-            PerspectiveCamera
+            TestCamera,
+            MainCamera,
+            OrthoCamera
         ].forEach((ctor) => {
             this.add<Camera>(ctor);
             this.get<Camera>(ctor).setSize(windowWidth, windowHeight);
@@ -26,13 +31,23 @@ export default class CameraManager extends Manager<Camera> {
     async load(): Promise<void> {
 
     }
+    
     init(): void {
+        let camCtor = MainCamera;
+        if (this.hasCameraCube()) {
+            camCtor = TestCamera;
+        }
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
-        this.getScene().getComponents(GLTFMeshRenderer).forEach(renderer => renderer.getEntity().get(GLTFMeshRenderer).setCamera(this.get(PerspectiveCamera)));
-        this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(renderer => renderer.getEntity().get(GLTFSkinMeshRenderer).setCamera(this.get(PerspectiveCamera)));
+        this.getScene().getComponents(LineRenderer).forEach(renderer => renderer.setCamera(this.get(camCtor)));
+        this.getScene().getComponents(GLTFMeshRenderer).forEach(renderer => renderer.setCamera(this.get(camCtor)));
+        this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(renderer => renderer.setCamera(this.get(camCtor)));
         
     }
+    hasCameraCube() {
+        return this.getScene().getComponents(FrustumCube).length > 0;
+    }
     update(): void {
+        this.getScene().getComponents(FrustumCube).forEach(cube => cube.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getFrustumTransformMatrix()));
 
     }
     getSceneManager(): SceneManager {

@@ -3,6 +3,7 @@ import GLContainer from "../component/GLContainer.js";
 import { ViewPortType } from "../device/Device.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
+import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
@@ -19,6 +20,7 @@ export default class RendererManager extends Manager<unknown> {
     async load(): Promise<void> {
         await this.getCacheManager().loadShaderTxtCache("Sprite");
         await this.getCacheManager().loadShaderTxtCache("Point");
+        await this.getCacheManager().loadShaderTxtCache("Line");
         await this.getCacheManager().loadShaderTxtCache("VertexColorTriangle");
         await this.getCacheManager().loadShaderTxtCache("SkinMesh");
         await this.getCacheManager().loadShaderTxtCache("Mesh");
@@ -31,6 +33,8 @@ export default class RendererManager extends Manager<unknown> {
         const fs = this.getCacheManager().getFragShaderTxt("Sprite");
         const pvs = this.getCacheManager().getVertShaderTxt("Point");
         const pfs = this.getCacheManager().getFragShaderTxt("Point");
+        const lvs = this.getCacheManager().getVertShaderTxt("Line");
+        const lfs = this.getCacheManager().getFragShaderTxt("Line");
         const tvs = this.getCacheManager().getVertShaderTxt("VertexColorTriangle");
         const tfs = this.getCacheManager().getFragShaderTxt("VertexColorTriangle");
         const smvs = this.getCacheManager().getVertShaderTxt("SkinMesh");
@@ -41,6 +45,7 @@ export default class RendererManager extends Manager<unknown> {
         this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
         this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
         this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setShader(gl.makeShader(tvs, tfs)));
+        this.getScene().getComponents(LineRenderer).forEach(renderer => renderer.setShader(gl.makeShader(lvs, lfs)));
 
         this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
 

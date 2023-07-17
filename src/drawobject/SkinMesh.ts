@@ -26,7 +26,6 @@ export default class SkinMesh extends Mesh {
         }
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
-        console.log(this)
     }
     private update() {
         const globalWorldInverse = this.getEntity().get(Node).getWorldMatrix().inverse();
@@ -52,9 +51,13 @@ export default class SkinMesh extends Mesh {
         for (let i = 0; i < this.jointNodes.length; ++i) {
             const joint = this.jointNodes[i];
             // if there is no matrix saved for this joint
+            const jointSource = joint.getSource();
+            if (!jointSource) {
+                throw new Error("jointSource is undefined");
+            }
             if (!this.origMatrices.has(joint)) {
                 // save a matrix for joint
-                this.origMatrices.set(joint, joint.getSource().getMatrix());
+                this.origMatrices.set(joint, jointSource.getMatrix());
             }
             // get the original matrix
             const origMatrix = this.origMatrices.get(joint);
@@ -65,7 +68,7 @@ export default class SkinMesh extends Mesh {
             const m = Matrix.identity().multiply(origMatrix).rotateX(a);
             // decompose it back into position, rotation, scale
             // into the joint
-            Matrix.decompose(m, joint.getSource().getPosition(), joint.getSource().getRotation(), joint.getSource().getScale());
+            Matrix.decompose(m, jointSource.getPosition(), jointSource.getRotation(), jointSource.getScale());
         }
     }
 }

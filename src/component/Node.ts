@@ -63,9 +63,6 @@ export default class Node extends Component {
     this.children.splice(ndx, 1);
   }
   getSource() {
-    if (!this.source) {
-      throw new Error(`source not found`);
-    }
     return this.source;
   }
   setSource(source: TRS) {

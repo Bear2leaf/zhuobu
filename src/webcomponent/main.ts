@@ -6,6 +6,7 @@ import TestMeshWebComponent from "./TestMeshWebComponent.js";
 import TestTextWebComponent from "./TestTextWebComponent.js";
 import TextDebugWebComponent from "./TextDebugWebComponent.js";
 import TestGLTFWebComponent from "./TestGLTFWebComponent.js";
+import WhaleGLTFWebComponent from "./WhaleGLTFWebComponent.js";
 
 
 
@@ -19,3 +20,4 @@ customElements.define('test-text', TestTextWebComponent);
 customElements.define('text-debug', TextDebugWebComponent);
 customElements.define('game-zhuobu', GameZhuobuWebComponent);
 customElements.define('test-gltf', TestGLTFWebComponent);
+customElements.define('whale-gltf', WhaleGLTFWebComponent);
