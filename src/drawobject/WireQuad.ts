@@ -15,7 +15,12 @@ export default class WireQuad extends DrawObject {
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4)
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));
-        console.log(this, vertices, colors, indices)
+    }
+    updateQuad(left: number, top: number, width: number, height: number) {
+        const quad: Quad = new Quad(left, top, width, height);
+        const vertices: Vec4[] = [];
+        quad.getLines().forEach(line => line.appendTo(vertices))
+        this.updateABO(ArrayBufferIndex.Position, flatten(vertices))
     }
     update(): void {
 
