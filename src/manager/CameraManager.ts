@@ -49,7 +49,7 @@ export default class CameraManager extends Manager<Camera> {
             this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
             this.getScene().getComponents(WireQuad).forEach(obj => {
                 obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
-                obj.getEntity().get(TRS).getScale().set(0.25, 0.25, 0.25, 1);
+                obj.getEntity().get(TRS).getScale().set(0.003, 0.003, 0.003, 1);
                 obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
             });
         }
@@ -63,7 +63,10 @@ export default class CameraManager extends Manager<Camera> {
         return this.getScene().getComponents(FrustumCube).length > 0;
     }
     update(): void {
-
+        this.getScene().getComponents(WireQuad).forEach(obj => {
+            const windowInfo = this.getDevice().getWindowInfo();
+            obj.updateQuad(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
+        });
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {
