@@ -19,32 +19,32 @@ export default class DrawObject extends Component {
     draw(mode: number) {
         this.getRenderingContext().draw(mode, this.count);
     }
-    protected bind() {
+    bind() {
         if (!this.vao) {
             throw new Error("vao is not set");
         }
         this.vao.bind();
         this.getEntity().get(TextureContainer).getTextures().forEach(texture => texture.bind());
     }
-    protected getRenderingContext() {
+    getRenderingContext() {
         return this.getEntity().get(GLContainer).getRenderingContext();
     }
 
-    protected updateEBO(buffer: Uint16Array) {
+    updateEBO(buffer: Uint16Array) {
         if (!this.ebo) {
             throw new Error("ebo is not set");
         }
         this.ebo.updateBuffer(buffer);
         this.count = buffer.length;
     }
-    protected createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number) {
+    createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number) {
         if (!this.aboMap) {
             throw new Error("aboMap is not set");
         }
 
         this.aboMap.set(index, this.getRenderingContext().makeArrayBufferObject(index, data, size));
     }
-    protected updateABO(index: ArrayBufferIndex, data: Float32Array) {
+    updateABO(index: ArrayBufferIndex, data: Float32Array) {
         const abo = this.aboMap.get(index);
         if (!abo) {
             throw new Error("abo not exist");

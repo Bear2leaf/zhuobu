@@ -4,22 +4,20 @@ import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
-import Pointer from "../drawobject/Pointer.js";
-import { PointRenderer } from "../renderer/PointRenderer.js";
+import WireQuad from "../drawobject/WireQuad.js";
+import { LineRenderer } from "../renderer/LineRenderer.js";
 import Entity from "./Entity.js";
 
-export default class PointerObject extends Entity {
+export default class UISurfaceObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
             TextureContainer,
             TRS,
             Node,
-            Pointer,
-            PointRenderer,
-            TouchEventContainer,
+            WireQuad,
+            LineRenderer,
             PrimitiveContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
@@ -27,13 +25,10 @@ export default class PointerObject extends Entity {
         });
     }
     init(): void {
-        this.get(Pointer).init();
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.POINTS));
-        
+        this.get(WireQuad).init();
+        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {
-        if (this.get(TouchEventContainer).getIsTouchingStart()) {
-        }
-        this.get(PointRenderer).render();
+        this.get(LineRenderer).render();
     }
 }

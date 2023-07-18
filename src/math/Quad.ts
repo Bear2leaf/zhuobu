@@ -1,4 +1,5 @@
 import { Vec4 } from "../math/Vector.js";
+import LineSegment from "./LineSegment.js";
 import Point from "./Point.js";
 
 export default class Quad {
@@ -13,10 +14,10 @@ export default class Quad {
     private readonly vertices: Vec4[];
 
     constructor(left: number, top: number, width: number, height: number, color: Vec4 = new Vec4(1, 1, 1, 1), initIndex: number = 0) {
-        this.a = new Point(left, top, undefined, undefined, color);
-        this.b = new Point(left, top + height, undefined, undefined, color);
-        this.c = new Point(left + width, top + height, undefined, undefined, color);
-        this.d = new Point(left + width, top, undefined, undefined, color);
+        this.a = new Point(left, top, undefined, undefined, color, 0);
+        this.b = new Point(left, top + height, undefined, undefined, color, 1);
+        this.c = new Point(left + width, top + height, undefined, undefined, color, 2);
+        this.d = new Point(left + width, top, undefined, undefined, color, 3);
         this.indices = [
             initIndex, initIndex + 1, initIndex + 2,
             initIndex + 2, initIndex + 3, initIndex
@@ -28,6 +29,15 @@ export default class Quad {
         this.c.appendTo(this.vertices, this.colors);
         this.d.appendTo(this.vertices, this.colors);
         
+    }
+    getLines(): LineSegment[] {
+
+        return [
+            new LineSegment(this.a, this.b),
+            new LineSegment(this.b, this.c),
+            new LineSegment(this.c, this.d),
+            new LineSegment(this.d, this.a)
+        ]
     }
     setZWToTexCoord() {
         this.vertices[1].z = 0;

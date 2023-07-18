@@ -34,7 +34,7 @@ export default abstract class Device {
         break;
     }
   }
-  protected abstract getPerformance(): Performance;
+  abstract getPerformance(): Performance;
   abstract getWindowInfo(): DeviceInfo;
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;

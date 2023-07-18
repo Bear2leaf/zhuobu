@@ -1,10 +1,10 @@
 
 import BrowserDevice from "../device/BrowserDevice.js";
 import SceneManager from "../manager/SceneManager.js";
-import TextDebugScene from "../scene/TextDebugScene.js";
+import DebugScene from "../scene/DebugScene.js";
 import Game from "./Game.js";
 
-export default class BrowserTextDebugGame extends Game {
+export default class BrowserDebugGame extends Game {
     constructor(el: HTMLElement) {
         super();
         const canvas = document.createElement("canvas");
@@ -13,7 +13,7 @@ export default class BrowserTextDebugGame extends Game {
         this.setDevice(new BrowserDevice(el.appendChild(canvas)));
         this.addObjects();
         this.load().then(() => {
-            this.get(SceneManager).add(TextDebugScene);
+            this.get(SceneManager).add(DebugScene);
             this.get(SceneManager).addObjects();
             this.init();
             this.update();
