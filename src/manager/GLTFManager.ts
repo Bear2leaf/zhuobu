@@ -12,6 +12,8 @@ import SceneManager from "./SceneManager.js";
 import HelloMesh from "../drawobject/HelloMesh.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
+import Mesh from "../drawobject/Mesh.js";
+import Node from "../component/Node.js";
 
 
 export default class GLTFManager extends Manager<GLTF> {
@@ -43,7 +45,7 @@ export default class GLTFManager extends Manager<GLTF> {
         this.getScene().getComponents(SkinMesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF)));
     }
     update(): void {
-
+        this.getScene().getComponents(Mesh).forEach(mesh => mesh.getEntity().get(Node).updateWorldMatrix());
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

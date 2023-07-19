@@ -1,7 +1,6 @@
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLTF from "../gltf/GLTF.js";
-import Node from "../component/Node.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
@@ -28,7 +27,6 @@ export default class Mesh extends DrawObject {
         this.createABO(ArrayBufferIndex.Normal, normal, 3);
     }
     draw(mode: number): void {
-        this.getEntity().get(Node).updateWorldMatrix();
         super.bind();
         super.draw(mode);
     }
