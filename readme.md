@@ -1,5 +1,5 @@
 # zhuobu
-simple webgl 3d render engine.
+simple webgl 3d render engine from scratch.
 
 ## getting started
 
