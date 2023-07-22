@@ -26,16 +26,8 @@ export default abstract class Game extends Manager<unknown> {
             TimestepManager,
             AudioManager
         ];
-    getOtherCtors(): Array<new () => Manager<unknown>> {
-        return [];
-    }
     addObjects() {
         this.ctors.forEach(ctor => {
-            this.add(ctor);
-            this.get(ctor).setDevice(this.getDevice());
-            this.get(ctor).addObjects();
-        });
-        this.getOtherCtors().forEach(ctor => {
             this.add(ctor);
             this.get(ctor).setDevice(this.getDevice());
             this.get(ctor).addObjects();
@@ -47,15 +39,11 @@ export default abstract class Game extends Manager<unknown> {
         for await (const iterator of this.ctors) {
             await this.get(iterator).load();
         }
-        for await (const iterator of this.getOtherCtors()) {
-            await this.get(iterator).load();
-        }
     }
     init(): void {
 
         this.ctors.forEach(ctor => this.get(ctor).init());
-        this.getOtherCtors().forEach(ctor => this.get(ctor).init());
-
+        
     }
     buildDependency() {
         this.get(InputManager).setSceneManager(this.get(SceneManager));
@@ -71,7 +59,6 @@ export default abstract class Game extends Manager<unknown> {
     }
     update() {
         this.ctors.forEach(ctor => this.get(ctor).update());
-        this.getOtherCtors().forEach(ctor => this.get(ctor).update());
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {
