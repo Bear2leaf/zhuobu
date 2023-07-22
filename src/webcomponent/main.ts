@@ -7,6 +7,7 @@ import TestTextWebComponent from "./TestTextWebComponent.js";
 import GameDebugWebComponent from "./GameDebugWebComponent.js";
 import TestGLTFWebComponent from "./TestGLTFWebComponent.js";
 import WhaleGLTFWebComponent from "./WhaleGLTFWebComponent.js";
+import GameLibNHWebComponent from "./GameLibNHWebComponent.js";
 
 
 
@@ -21,3 +22,4 @@ customElements.define('game-debug', GameDebugWebComponent);
 customElements.define('game-zhuobu', GameZhuobuWebComponent);
 customElements.define('test-gltf', TestGLTFWebComponent);
 customElements.define('whale-gltf', WhaleGLTFWebComponent);
+customElements.define('game-libnh', GameLibNHWebComponent);

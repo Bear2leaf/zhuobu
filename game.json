@@ -4,6 +4,7 @@
             "name": "resources",
             "root": "resources"
         }
-    ]
+    ],
+    "workers": "workers"
     
 }
