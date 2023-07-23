@@ -5,8 +5,6 @@ import TRS from "../component/TRS.js";
 import Mesh from "../drawobject/Mesh.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Entity from "../entity/Entity.js";
-import NodeObject from "../entity/NodeObject.js";
-import SkinMeshObject from "../entity/SkinMeshObject.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
@@ -42,24 +40,24 @@ function glTypeToTypedArray(type: GLType) {
     throw new Error(`no key: ${type}`);
 }
 export default class GLTF {
-    private  scene?: number;
-    private  scenes?: readonly GLTFScene[];
-    private  nodes?: readonly GLTFNode[];
-    private  buffers?: readonly GLTFBuffer[];
-    private  bufferViews?: readonly GLTFBufferView[];
-    private  accessors?: readonly GLTFAccessor[];
-    private  images?: readonly GLTFImage[];
-    private  samplers?: readonly GLTFSampler[];
-    private  textures?: readonly GLTFTexture[];
-    private  materials?: readonly GLTFMaterial[];
-    private  meshes?: readonly GLTFMesh[];
-    private  cameras?: readonly GLTFCamera[];
-    private  animations?: readonly GLTFAnimation[];
-    private  skins?: readonly GLTFSkin[];
-    private  extensionsUsed?: readonly string[];
-    private  extensionsRequired?: readonly string[];
-    private  extensions?: readonly string[];
-    private  extras?: readonly string[];
+    private scene?: number;
+    private scenes?: readonly GLTFScene[];
+    private nodes?: readonly GLTFNode[];
+    private buffers?: readonly GLTFBuffer[];
+    private bufferViews?: readonly GLTFBufferView[];
+    private accessors?: readonly GLTFAccessor[];
+    private images?: readonly GLTFImage[];
+    private samplers?: readonly GLTFSampler[];
+    private textures?: readonly GLTFTexture[];
+    private materials?: readonly GLTFMaterial[];
+    private meshes?: readonly GLTFMesh[];
+    private cameras?: readonly GLTFCamera[];
+    private animations?: readonly GLTFAnimation[];
+    private skins?: readonly GLTFSkin[];
+    private extensionsUsed?: readonly string[];
+    private extensionsRequired?: readonly string[];
+    private extensions?: readonly string[];
+    private extras?: readonly string[];
 
     private name?: string;
     private gltfCache?: JSONCache;
@@ -143,11 +141,11 @@ export default class GLTF {
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
-        if (node.hasSkin() && entity.has(SkinMesh) && entity.has(GLTFSkinMeshRenderer)) {
+        if (entity.has(GLTFSkinMeshRenderer)) {
             const skin = this.getSkinByIndex(node.getSkin());
             const skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
             this.buildNodeTree(skeletonRootNode);
-            entity.set(Node, skeletonRootNode.getNode())
+            skeletonRootNode.getNode().setParent(node.getNode());
             const jointNodes = skin.getJoints().map((joint) => this.getNodeByIndex(joint).getNode());
             const weightslIndex = primitive.getAttributes().getWeights();
             const jointsIndex = primitive.getAttributes().getJoints();
@@ -162,14 +160,14 @@ export default class GLTF {
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
         } else {
-            entity.set(Node, node.getNode())
             entity.get(Mesh).setMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
             );
         }
-        
+        node.getNode().setParent(entity.get(Node));
+        console.log(entity)
     }
     buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();
@@ -194,6 +192,17 @@ export default class GLTF {
             throw new Error(`node not found: ${index}`);
         }
         return node;
+    }
+    clone() {
+        if (!this.name || !this.gltfCache || !this.bufferCache) {
+            throw new Error("name or gltfCache or bufferCache not initialized");
+        }
+        const gltf = new GLTF();
+        gltf.setName(this.name);
+        gltf.setGLTFCache(this.gltfCache);
+        gltf.setBufferCache(this.bufferCache);
+        gltf.init();
+        return gltf;
     }
 }
 

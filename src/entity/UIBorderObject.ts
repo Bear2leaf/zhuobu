@@ -28,7 +28,7 @@ export default class UIBorderObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getScale().set(0.5, 0.5, 1, 1);
+        this.get(TRS).getScale().set(1.1, 1.1, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {

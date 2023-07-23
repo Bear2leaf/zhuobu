@@ -1,6 +1,5 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import JSONCache from "../cache/FontInfoCache.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
 import GLTF from "../gltf/GLTF.js";
 import WhaleGLTF from "../gltf/object/WhaleGLTF.js";
 import HelloGLTF from "../gltf/object/HelloGLTF.js";
@@ -11,7 +10,6 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import HelloMesh from "../drawobject/HelloMesh.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
-import WhaleMesh from "../drawobject/WhaleMesh.js";
 import Mesh from "../drawobject/Mesh.js";
 import Node from "../component/Node.js";
 
@@ -40,9 +38,9 @@ export default class GLTFManager extends Manager<GLTF> {
             gltf.setGLTFCache(this.getCacheManager().get(JSONCache));
             gltf.init();
         });
-        this.getScene().getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF)));
-        this.getScene().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF)));
-        this.getScene().getComponents(SkinMesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF)));
+        this.getScene().getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF).clone()));
+        this.getScene().getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone()));
+        this.getScene().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF).clone()));
     }
     update(): void {
         this.getScene().getComponents(Mesh).forEach(mesh => mesh.getEntity().get(Node).updateWorldMatrix());

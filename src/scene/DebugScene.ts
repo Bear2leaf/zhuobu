@@ -12,14 +12,14 @@ import Scene from "./Scene.js";
 export default class DebugScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
-            new SkinMeshObject()
-            , new MeshObject()
-            , new UISurfaceObject()
-            , new UIBorderObject()
-            , new CameraObject()
+            new CameraObject()
             , new CameraCubeObject()
             , new CameraUpCubeObject()
             , new CameraLenConeObject()
+            , new UISurfaceObject()
+            , new UIBorderObject()
+            , new SkinMeshObject()
+            , new MeshObject()
         ];
     }
 

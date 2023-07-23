@@ -28,7 +28,7 @@ export default class UISurfaceObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getScale().set(0.01, 0.01, 1, 1);
+        this.get(TRS).getScale().set(0.005, 0.005, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {

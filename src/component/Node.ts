@@ -15,6 +15,9 @@ export default class Node extends Component {
   setName(name: string) {
     this.name = name;
   }
+  hasChildren() {
+    return this.children.length > 0;
+  }
   getChildByIndex(index: number) {
     const childNode = this.children[index];
     if (!childNode) {
