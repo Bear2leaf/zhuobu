@@ -2,6 +2,7 @@ import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
+import Surface from "../component/Surface.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -17,6 +18,7 @@ export default class UISurfaceObject extends Entity {
             TRS,
             Node,
             WireQuad,
+            Surface,
             LineRenderer,
             PrimitiveContainer
         ].forEach(ctor => {
@@ -26,6 +28,7 @@ export default class UISurfaceObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
+        this.get(TRS).getScale().set(0.01, 0.01, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {
