@@ -12,8 +12,8 @@ export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new SpriteObject()
-            , new MeshObject()
             , new SkinMeshObject()
+            , new MeshObject()
             , new PointerObject()
             , new TextObject()
             , new FpsChartObject()
