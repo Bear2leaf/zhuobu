@@ -167,7 +167,6 @@ export default class GLTF {
             );
         }
         node.getNode().setParent(entity.get(Node));
-        console.log(entity)
     }
     buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();
