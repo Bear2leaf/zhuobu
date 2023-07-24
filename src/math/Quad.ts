@@ -20,8 +20,8 @@ export default class Quad {
         this.c = new Point(left + width, top + height, undefined, undefined, color, 2);
         this.d = new Point(left + width, top, undefined, undefined, color, 3);
         this.indices = [
-            initIndex, initIndex + 1, initIndex + 2,
-            initIndex + 2, initIndex + 3, initIndex
+            initIndex, initIndex + 2, initIndex + 1,
+            initIndex + 2, initIndex, initIndex + 3
         ];
         this.colors = [];
         this.vertices = [];
@@ -30,7 +30,7 @@ export default class Quad {
         this.b.appendTo(this.vertices, this.colors, undefined, this.texcoords);
         this.c.appendTo(this.vertices, this.colors, undefined, this.texcoords);
         this.d.appendTo(this.vertices, this.colors, undefined, this.texcoords);
-        
+
     }
     getLines(): LineSegment[] {
 
@@ -50,7 +50,7 @@ export default class Quad {
         this.texcoords[2].y = 1;
         this.texcoords[3].x = 1;
         this.texcoords[3].y = 0;
-        
+
     }
     setHeight(height: number) {
         this.vertices[1].y = this.vertices[0].y + height;

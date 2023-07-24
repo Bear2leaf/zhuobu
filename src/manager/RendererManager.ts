@@ -5,6 +5,7 @@ import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
+import SpriteInPerspectiveRenderer from "../renderer/SpriteInPerspectiveRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import Scene from "../scene/Scene.js";
@@ -43,6 +44,7 @@ export default class RendererManager extends Manager<unknown> {
         const mfs = this.getCacheManager().getFragShaderTxt("Mesh");
         const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
         this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
+        this.getScene().getComponents(SpriteInPerspectiveRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
         this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
         this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setShader(gl.makeShader(tvs, tfs)));
         this.getScene().getComponents(LineRenderer).forEach(renderer => renderer.setShader(gl.makeShader(lvs, lfs)));

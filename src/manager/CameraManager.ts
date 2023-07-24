@@ -14,11 +14,12 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import TRS from "../component/TRS.js";
-import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import Surface from "../component/Surface.js";
 import Border from "../component/Border.js";
+import SpriteInPerspectiveRenderer from "../renderer/SpriteInPerspectiveRenderer.js";
+import SpriteRenderer from "../renderer/SpriteRenderer.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -55,13 +56,13 @@ export default class CameraManager extends Manager<Camera> {
         });
         if (this.hasFrustumCube()) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(TestCamera)));
-            this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
             this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
             this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
             this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
         }
+        this.getScene().getComponents(SpriteInPerspectiveRenderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
 
     }
     hasFrustumCube() {
