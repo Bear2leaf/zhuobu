@@ -27,13 +27,15 @@ export default class SpriteObject extends Entity {
     }
     init(): void {
         this.get(TRS).getScale().set(10, 10, 1, 1);
-        this.get(TRS).getPosition().add(new Vec4(0, 140, 0, 0));
         this.get(Node).setSource(this.get(TRS));
-        this.get(Node).updateWorldMatrix();
         this.get(Sprite).init();
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
+    private frame: number = 0;
     update(): void {
+        this.frame++;
+        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 20 + 20, 130,  0, 1);
+        this.get(Node).updateWorldMatrix();
         this.get(SpriteRenderer).render();
     }
 }
