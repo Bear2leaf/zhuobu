@@ -33,7 +33,7 @@ export default class SpriteInPerspectiveObject extends Entity {
     update(): void {
         // console.log([...this.get(Node).getWorldMatrix().getVertics()])
         this.frame++;
-        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 2, 0,  0, 1);
+        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 20 - 10, 0,  0, 1);
         this.get(Node).updateWorldMatrix();
 
         this.get(SpriteInPerspectiveRenderer).render();

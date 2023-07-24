@@ -21,7 +21,6 @@ export default class Sprite extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(texcoords), 4);
         this.updateEBO(new Uint16Array(indices));
-        console.log(this.getEntity())
     }
     draw(mode: number): void {
         this.bind();

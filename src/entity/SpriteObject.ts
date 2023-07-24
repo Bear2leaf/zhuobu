@@ -27,7 +27,7 @@ export default class SpriteObject extends Entity {
     }
     init(): void {
         this.get(TRS).getScale().set(10, 10, 1, 1);
-        this.get(TRS).getPosition().add(new Vec4(0, 100, 0, 0));
+        this.get(TRS).getPosition().add(new Vec4(0, 140, 0, 0));
         this.get(Node).setSource(this.get(TRS));
         this.get(Node).updateWorldMatrix();
         this.get(Sprite).init();
