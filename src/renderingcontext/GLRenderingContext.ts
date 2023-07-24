@@ -44,6 +44,13 @@ export default class GLRenderingContext implements RenderingContext {
     makeTexture<T extends Texture>(texture: T): void {
         texture.create(this.gl)
     }
+    switchCullFace(enable: boolean): void {
+        if (enable) {
+            this.gl.enable(this.gl.CULL_FACE);
+        } else {
+            this.gl.disable(this.gl.CULL_FACE);
+        }
+    }
     switchDepthTest(enable: boolean): void {
         if (enable) {
             this.gl.enable(this.gl.DEPTH_TEST);
