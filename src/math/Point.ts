@@ -1,4 +1,4 @@
-import { Vec4 } from "../math/Vector.js";
+import { Vec2, Vec4 } from "../math/Vector.js";
 import LineSegment from "./LineSegment.js";
 
 export default class Point {
@@ -9,7 +9,8 @@ export default class Point {
     private readonly vertices: [Vec4];
     private readonly colors: [Vec4];
     private readonly indices: [number];
-    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1, color: Vec4 = new Vec4(1, 1, 1, 1), index: number = 0) {
+    private readonly texcoords: [Vec4];
+    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1, color: Vec4 = new Vec4(1, 1, 1, 1), index: number = 0, texcoord: Vec4 = new Vec4()) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -17,6 +18,7 @@ export default class Point {
         this.vertices = [new Vec4(this.x, this.y, this.z, this.w)];
         this.colors = [color];
         this.indices = [index];
+        this.texcoords = [texcoord];
     }
     equels(a: Point): boolean {
         return this.x === a.x && this.y === a.y && this.z === a.z && this.w === a.w;
@@ -24,10 +26,11 @@ export default class Point {
     lineTo(point: Point): LineSegment {
         return new LineSegment(this, point);
     }
-    appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[]): void {
+    appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[], texcoords?: Vec4[]): void {
         vertices?.push(...this.vertices);
         colors?.push(...this.colors);
         indices?.push(...this.indices);
+        texcoords?.push(...this.texcoords);
     }
     static midPoint(a: Point, b: Point): Point {
         const vec = a.vertices[0].clone().lerp(b.vertices[0], 0.5);

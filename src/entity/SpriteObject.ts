@@ -6,6 +6,7 @@ import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Sprite from "../drawobject/Sprite.js";
+import { Vec4 } from "../math/Vector.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
@@ -25,8 +26,10 @@ export default class SpriteObject extends Entity {
         });
     }
     init(): void {
-        this.get(TRS).getScale().multiply(10);
-
+        this.get(TRS).getScale().set(10, 10, 1, 1);
+        this.get(TRS).getPosition().add(new Vec4(0, 100, 0, 0));
+        this.get(Node).setSource(this.get(TRS));
+        this.get(Node).updateWorldMatrix();
         this.get(Sprite).init();
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
