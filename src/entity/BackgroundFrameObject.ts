@@ -1,8 +1,8 @@
+import BackgroundFrame from "../component/BackgroundFrame.js";
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
-import Surface from "../component/Surface.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -10,7 +10,7 @@ import WireQuad from "../drawobject/WireQuad.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Entity from "./Entity.js";
 
-export default class UISurfaceObject extends Entity {
+export default class BackgroundFrameObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
@@ -18,7 +18,7 @@ export default class UISurfaceObject extends Entity {
             TRS,
             Node,
             WireQuad,
-            Surface,
+            BackgroundFrame,
             LineRenderer,
             PrimitiveContainer
         ].forEach(ctor => {
@@ -28,7 +28,8 @@ export default class UISurfaceObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getScale().set(0.005, 0.005, 1, 1);
+        this.get(TRS).getPosition().set(0, 0, -30, 1);
+        this.get(TRS).getScale().set(0.07, 0.07, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {

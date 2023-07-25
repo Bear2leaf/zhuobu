@@ -5,9 +5,10 @@ import CameraUpCubeObject from "../entity/CameraUpCubeObject.js";
 import Entity from "../entity/Entity.js";
 import MeshObject from "../entity/MeshObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
-import UIBorderObject from "../entity/UIBorderObject.js";
-import UISurfaceObject from "../entity/UISurfaceObject.js";
+import BackgroundFrameObject from "../entity/BackgroundFrameObject.js";
+import FrontgroundFrameObject from "../entity/FrontgroundFrameObject.js";
 import Scene from "./Scene.js";
+import UIFrameObject from "../entity/UIFrameObject.js";
 
 export default class DebugScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -16,8 +17,9 @@ export default class DebugScene extends Scene {
             , new CameraCubeObject()
             , new CameraUpCubeObject()
             , new CameraLenConeObject()
-            , new UISurfaceObject()
-            , new UIBorderObject()
+            , new UIFrameObject()
+            , new FrontgroundFrameObject()
+            , new BackgroundFrameObject()
             , new SkinMeshObject()
             , new MeshObject()
         ];

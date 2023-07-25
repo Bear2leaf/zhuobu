@@ -16,10 +16,11 @@ import WireQuad from "../drawobject/WireQuad.js";
 import TRS from "../component/TRS.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
-import Surface from "../component/Surface.js";
-import Border from "../component/Border.js";
+import FrontgroundFrame from "../component/FrontgroundFrame.js";
+import BackgroundFrame from "../component/BackgroundFrame.js";
 import SpriteInPerspectiveRenderer from "../renderer/SpriteInPerspectiveRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
+import UIFrame from "../component/UIFrame.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -46,11 +47,6 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(CameraCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraLenCone).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
-        this.getScene().getComponents(Surface).forEach((obj) => {
-            this.getScene().getComponents(Border).forEach(border => {
-                border.getEntity().get(Node).setParent(obj.getEntity().get(Node));
-            });
-        });
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
         });
@@ -73,7 +69,13 @@ export default class CameraManager extends Manager<Camera> {
             const windowInfo = this.getDevice().getWindowInfo();
             obj.getEntity().get(WireQuad).updateQuad(-windowInfo.windowWidth / 2, windowInfo.windowHeight / 2, windowInfo.windowWidth, -windowInfo.windowHeight);
         });
-        this.getScene().getComponents(Surface).forEach((obj) => {
+        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
+            obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
+        });
+        this.getScene().getComponents(BackgroundFrame).forEach((obj) => {
+            obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
+        });
+        this.getScene().getComponents(UIFrame).forEach((obj) => {
             obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
         });
     }

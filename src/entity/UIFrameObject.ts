@@ -1,4 +1,3 @@
-import Border from "../component/Border.js";
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
@@ -9,8 +8,9 @@ import { PrimitiveType } from "../contextobject/Primitive.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Entity from "./Entity.js";
+import UIFrame from "../component/UIFrame.js";
 
-export default class UIBorderObject extends Entity {
+export default class UIFrameObject extends Entity {
     registerComponents(): void {
         [
             GLContainer,
@@ -18,7 +18,7 @@ export default class UIBorderObject extends Entity {
             TRS,
             Node,
             WireQuad,
-            Border,
+            UIFrame,
             LineRenderer,
             PrimitiveContainer
         ].forEach(ctor => {
@@ -28,7 +28,8 @@ export default class UIBorderObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getScale().set(1.1, 1.1, 1, 1);
+        this.get(TRS).getPosition().set(0, 0, -0.5, 1);
+        this.get(TRS).getScale().set(0.0015, 0.0015, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {
