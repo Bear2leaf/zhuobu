@@ -19,12 +19,12 @@ export class OrthoCamera implements Camera {
         }
         const left = 0;
         const right = this.width;
-        const bottom = this.height;
-        const top = 0;
-        const near = 0;
-        const far = 1;
-        this.view = Matrix.lookAt(new Vec3(0, 0, far), new Vec3(0, 0, near), new Vec3(0, 1, 0)).inverse();
-        this.projection = Matrix.ortho(left, right, bottom, top, near, far);
+        const bottom = 0;
+        const top = this.height;
+        const near = 1;
+        const far = 0;
+        this.view = Matrix.lookAt(new Vec3(0, 0, near), new Vec3(0, 0, far), new Vec3(0, 1, 0)).inverse();
+        this.projection = Matrix.ortho(left, right, top, bottom, near, far);
 
     }
     setSize(width: number, height: number) {

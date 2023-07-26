@@ -13,7 +13,7 @@ export default class Histogram extends DrawObject {
         super.init();
         const width = 100;
         const height = 100;
-        const hisY = 30;
+        const hisY = 40;
         const lines = 100;
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)

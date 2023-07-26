@@ -20,7 +20,7 @@ export default class Pointer extends DrawObject {
     }
 
     private setPosition(x: number, y: number) {
-        this.getTRS().getPosition().set(x, y, 1, 1);
+        this.getTRS().getPosition().set(x, y, 0, 1);
     }
     draw(mode: number): void {
         this.setPosition(this.getTouchEventContainer().getX(), this.getTouchEventContainer().getY());
