@@ -50,6 +50,11 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
         });
+        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
+            this.getScene().getComponents(SpriteInPerspectiveRenderer).forEach(renderer => {
+                renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
+            });
+        });
         if (this.hasFrustumCube()) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(TestCamera)));
         } else {
@@ -58,7 +63,6 @@ export default class CameraManager extends Manager<Camera> {
             this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
             this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
         }
-        this.getScene().getComponents(SpriteInPerspectiveRenderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
 
     }
     hasFrustumCube() {

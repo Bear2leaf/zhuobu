@@ -26,15 +26,11 @@ export default class SpriteInPerspectiveObject extends Entity {
     }
     init(): void {
         this.get(Node).setSource(this.get(TRS));
+        this.get(TRS).getScale().set(50, 50, 1, 1);
         this.get(Sprite).init();
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
-    private frame: number = 0;
     update(): void {
-        // console.log([...this.get(Node).getWorldMatrix().getVertics()])
-        this.frame++;
-        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 20 - 10, 0,  0, 1);
-        this.get(Node).updateWorldMatrix();
 
         this.get(SpriteInPerspectiveRenderer).render();
     }

@@ -28,8 +28,7 @@ export default class FrontgroundFrameObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getPosition().set(0, 0, -1, 1);
-        this.get(TRS).getScale().set(0.003, 0.003, 1, 1);
+        this.get(TRS).getScale().set(0.005, 0.005, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {

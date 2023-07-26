@@ -9,6 +9,7 @@ import BackgroundFrameObject from "../entity/BackgroundFrameObject.js";
 import FrontgroundFrameObject from "../entity/FrontgroundFrameObject.js";
 import Scene from "./Scene.js";
 import UIFrameObject from "../entity/UIFrameObject.js";
+import SpriteInPerspectiveObject from "../entity/SpriteInPerspectiveObject.js";
 
 export default class DebugScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -18,6 +19,7 @@ export default class DebugScene extends Scene {
             , new CameraUpCubeObject()
             , new CameraLenConeObject()
             , new UIFrameObject()
+            , new SpriteInPerspectiveObject()
             , new FrontgroundFrameObject()
             , new BackgroundFrameObject()
             , new SkinMeshObject()
