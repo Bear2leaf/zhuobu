@@ -58,7 +58,7 @@ export default class Quad {
     }
     copyHeight(other: Quad) {
         this.vertices[1].y = other.vertices[1].y;
-        this.vertices[2].y = other.vertices[1].y;
+        this.vertices[2].y = other.vertices[2].y;
     }
     appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[], texcoords?: Vec4[]) {
         this.vertices.forEach(v => vertices?.push(v));

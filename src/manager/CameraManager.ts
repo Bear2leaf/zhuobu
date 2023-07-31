@@ -20,7 +20,6 @@ import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import BackgroundFrame from "../component/BackgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import UIFrame from "../component/UIFrame.js";
-import Sprite3dRenderer from "../renderer/Sprite3dRenderer.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -50,8 +49,11 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
         });
+        this.getScene().getComponents(TriangleRenderer).forEach((renderer) => {
+            renderer.getEntity().get(Node).setSource(renderer.getEntity().get(TRS));
+        });
         this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-            this.getScene().getComponents(Sprite3dRenderer).forEach(renderer => {
+            this.getScene().getComponents(SpriteRenderer).forEach(renderer => {
                 renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
             });
         });
@@ -70,6 +72,9 @@ export default class CameraManager extends Manager<Camera> {
     }
     update(): void {
         this.getScene().getComponents(SpriteRenderer).forEach((renderer) => {
+            renderer.getEntity().get(Node).updateWorldMatrix();
+        });
+        this.getScene().getComponents(TriangleRenderer).forEach((renderer) => {
             renderer.getEntity().get(Node).updateWorldMatrix();
         });
         this.getScene().getComponents(WireQuad).forEach((obj) => {

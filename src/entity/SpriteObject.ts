@@ -34,7 +34,7 @@ export default class SpriteObject extends Entity {
     private frame: number = 0;
     update(): void {
         this.frame++;
-        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 100 + 200, 40, 0, 1);
+        this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 150 + 150, 40, 0, 1);
         this.get(Renderer).render();
     }
 }

@@ -4,6 +4,7 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TRS from "../component/TRS.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
+import GLContainer from "../component/GLContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
@@ -85,7 +86,15 @@ export default class Text extends DrawObject {
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));
         this.updateEBO(new Uint16Array(this.indices));
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
+        this.getEntity().get(GLContainer).getRenderingContext().switchUnpackPremultiplyAlpha(true);
         super.draw(mode);
+        this.getEntity().get(GLContainer).getRenderingContext().switchUnpackPremultiplyAlpha(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(true);
     }
 
 }

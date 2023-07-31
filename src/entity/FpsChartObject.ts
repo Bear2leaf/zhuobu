@@ -26,6 +26,7 @@ export default class FpsChartObject extends Entity {
     }
     init(): void {
         this.get(Histogram).init();
+        this.get(TRS).getPosition().set(200, 40, 0, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         
     }

@@ -1,6 +1,5 @@
 
 import Entity from "../entity/Entity.js";
-import FpsChartObject from "../entity/FpsChartObject.js";
 import MeshObject from "../entity/MeshObject.js";
 import PointerObject from "../entity/PointerObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
@@ -16,7 +15,6 @@ export default class DemoScene extends Scene {
             , new SkinMeshObject()
             , new PointerObject()
             , new TextObject()
-            , new FpsChartObject()
         ];
     }
 
