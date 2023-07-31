@@ -29,7 +29,7 @@ export default class BackgroundFrameObject extends Entity {
     init(): void {
         this.get(WireQuad).init();
         this.get(TRS).getPosition().set(0, 0, -30, 1);
-        this.get(TRS).getScale().set(0.07, 0.07, 1, 1);
+        this.get(TRS).getScale().set(0.04, 0.04, 1, 1);
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {

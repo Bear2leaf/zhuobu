@@ -28,8 +28,9 @@ export default class FpsTextObject extends Entity {
         });
     }
     init(): void {
-        this.get(TRS).getScale().multiply(4);
-        this.get(TRS).getPosition().add(new Vec4(0, 40, 0, 0))
+        const scale = 4;
+        this.get(TRS).getScale().set(scale, -scale, scale, 1);
+        this.get(TRS).getPosition().add(new Vec4(0, scale * 20, 0, 0))
         this.get(FpsText).init();
 
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));

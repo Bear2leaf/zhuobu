@@ -6,7 +6,7 @@ import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Sprite from "../drawobject/Sprite.js";
-import { Vec4 } from "../math/Vector.js";
+import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
@@ -35,7 +35,6 @@ export default class SpriteObject extends Entity {
     update(): void {
         this.frame++;
         this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 100 + 200, 40, 0, 1);
-        this.get(Node).updateWorldMatrix();
-        this.get(SpriteRenderer).render();
+        this.get(Renderer).render();
     }
 }

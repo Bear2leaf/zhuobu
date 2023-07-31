@@ -43,13 +43,13 @@ export default class Quad {
     }
     initTexCoords() {
         this.texcoords[0].x = 0;
-        this.texcoords[0].y = 0;
+        this.texcoords[0].y = 1;
         this.texcoords[1].x = 0;
-        this.texcoords[1].y = 1;
+        this.texcoords[1].y = 0;
         this.texcoords[2].x = 1;
-        this.texcoords[2].y = 1;
+        this.texcoords[2].y = 0;
         this.texcoords[3].x = 1;
-        this.texcoords[3].y = 0;
+        this.texcoords[3].y = 1;
 
     }
     setHeight(height: number) {

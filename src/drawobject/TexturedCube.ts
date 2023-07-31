@@ -3,7 +3,7 @@ import Matrix from "../math/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
 import Node from "../component/Node.js";
 import DrawObject from "./DrawObject.js";
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;

@@ -1,14 +1,11 @@
-import GLContainer from "../component/GLContainer.js";
 import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Renderer from "./Renderer.js";
 
 export class TriangleRenderer extends Renderer {
     render(): void {
-        this.getEntity().get(GLContainer).getRenderingContext().switchCullFace(false);
         super.render();
         const primitive = this.getEntity().get(PrimitiveContainer).getPrimitive();
         this.getEntity().get(DrawObject).draw(primitive.getMode());
-        this.getEntity().get(GLContainer).getRenderingContext().switchCullFace(true);
     }
 }

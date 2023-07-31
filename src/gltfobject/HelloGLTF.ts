@@ -1,4 +1,4 @@
-import GLTF from "../GLTF.js";
+import GLTF from "../gltf/GLTF.js";
 
 export default class HelloGLTF extends GLTF {
     constructor() {

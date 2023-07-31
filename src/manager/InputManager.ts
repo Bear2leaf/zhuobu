@@ -60,7 +60,7 @@ export default class InputManager extends Manager<unknown> {
             touchEvent.setIsTouchingStart(this.isTouchingStart);
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);
             touchEvent.setX(this.x);
-            touchEvent.setY(this.y);
+            touchEvent.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
             
         });
     }

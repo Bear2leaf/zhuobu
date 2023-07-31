@@ -18,9 +18,9 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import BackgroundFrame from "../component/BackgroundFrame.js";
-import SpriteInPerspectiveRenderer from "../renderer/SpriteInPerspectiveRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import UIFrame from "../component/UIFrame.js";
+import Sprite3dRenderer from "../renderer/Sprite3dRenderer.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -51,7 +51,7 @@ export default class CameraManager extends Manager<Camera> {
             obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
         });
         this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-            this.getScene().getComponents(SpriteInPerspectiveRenderer).forEach(renderer => {
+            this.getScene().getComponents(Sprite3dRenderer).forEach(renderer => {
                 renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
             });
         });
@@ -69,9 +69,12 @@ export default class CameraManager extends Manager<Camera> {
         return this.getScene().getComponents(FrustumCube).length > 0;
     }
     update(): void {
+        this.getScene().getComponents(SpriteRenderer).forEach((renderer) => {
+            renderer.getEntity().get(Node).updateWorldMatrix();
+        });
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             const windowInfo = this.getDevice().getWindowInfo();
-            obj.getEntity().get(WireQuad).updateQuad(-windowInfo.windowWidth / 2, windowInfo.windowHeight / 2, windowInfo.windowWidth, -windowInfo.windowHeight);
+            obj.getEntity().get(WireQuad).updateQuad(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
         });
         this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
             obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());

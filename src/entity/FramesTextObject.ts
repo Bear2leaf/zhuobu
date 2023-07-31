@@ -28,8 +28,9 @@ export default class FramesTextObject extends Entity {
         });
     }
     init(): void {
-        this.get(TRS).getScale().multiply(2);
-        this.get(TRS).getPosition().add(new Vec4(0, 80, 0, 0))
+        const scale = 2;
+        this.get(TRS).getScale().set(scale, -scale, scale, 1);
+        this.get(TRS).getPosition().add(new Vec4(0, scale * 64, 0, 0))
         this.get(FramesText).init();
 
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
