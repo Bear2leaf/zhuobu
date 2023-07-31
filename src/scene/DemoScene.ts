@@ -13,8 +13,8 @@ export default class DemoScene extends Scene {
             new SpriteObject()
             , new MeshObject()
             , new SkinMeshObject()
-            , new PointerObject()
             , new TextObject()
+            , new PointerObject()
         ];
     }
 

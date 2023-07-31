@@ -9,11 +9,11 @@ import Scene from "./Scene.js";
 export default class TextScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
-            new PointerObject()
-            , new FpsChartObject()
+            new FpsChartObject()
             , new FpsTextObject()
             , new FramesTextObject()
             , new TextObject()
+            , new PointerObject()
         ];
     }
 
