@@ -3,11 +3,14 @@ import { Vec3, Vec4 } from "../math/Vector.js";
 import Component from "../component/Component.js";
 import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
+import CacheManager from "../manager/CacheManager.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 
 export default class Renderer extends Component {
     private camera?: Camera;
     private shader?: Shader;
+    private shaderName?: string;
     setShader(shader: Shader) {
         this.shader = shader;
     }
@@ -17,7 +20,24 @@ export default class Renderer extends Component {
         }
         return this.shader;
     }
-    
+    setShaderName(name: string) {
+        this.shaderName = name;
+    }
+    async loadShaderTxtCache(cacheManager: CacheManager) {
+        if (!this.shaderName) {
+            throw new Error("shader name not exist");
+        }
+        await cacheManager.loadShaderTxtCache(this.shaderName);
+    }
+    initShader(gl: RenderingContext, cacheManager: CacheManager) {
+        if (!this.shaderName) {
+            throw new Error("shader name not exist");
+        }
+        const vs = cacheManager.getVertShaderTxt(this.shaderName);
+        const fs = cacheManager.getFragShaderTxt(this.shaderName);
+        this.shader = gl.makeShader(vs, fs);
+    }
+
     setCamera(camera: Camera) {
         this.camera = camera;
     }

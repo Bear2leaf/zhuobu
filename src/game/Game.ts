@@ -41,9 +41,10 @@ export default abstract class Game extends Manager<unknown> {
     init(): void {
 
         this.ctors.forEach(ctor => this.get(ctor).init());
-        
+        this.get(RendererManager).bindEntityRenderer();
     }
     buildDependency() {
+        this.get(CacheManager).setSceneManager(this.get(SceneManager));
         this.get(InputManager).setSceneManager(this.get(SceneManager));
         this.get(CameraManager).setSceneManager(this.get(SceneManager));
         this.get(TextureManager).setSceneManager(this.get(SceneManager));

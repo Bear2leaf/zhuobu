@@ -37,6 +37,5 @@ export default class FramesTextObject extends Entity {
         
     }
     update(): void {
-        this.get(SpriteRenderer).render();
     }
 }

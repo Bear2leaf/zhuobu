@@ -37,6 +37,5 @@ export default class TextObject extends Entity {
         
     }
     update(): void {
-        this.get(SpriteRenderer).render();
     }
 }

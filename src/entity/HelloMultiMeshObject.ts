@@ -30,6 +30,5 @@ export default class HelloMultiMeshObject extends Entity {
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
     update(): void {
-        this.get(GLTFMeshRenderer).render();
     }
 }

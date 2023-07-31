@@ -3,12 +3,16 @@ import Cache from "../cache/Cache.js";
 import JSONCache from "../cache/FontInfoCache.js";
 import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
+import FontInfoContainer from "../component/FontInfoContainer.js";
 import { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../gltf/GLTF.js";
+import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
+import SceneManager from "./SceneManager.js";
 
 
 export default class CacheManager extends Manager<Cache<Object>> {
+    private sceneManager?: SceneManager;
     addObjects() {
 
         [
@@ -26,10 +30,27 @@ export default class CacheManager extends Manager<Cache<Object>> {
     }
     init(): void {
         
+
+        const fontInfo = this.getFontInfo("boxy_bold_font");
+        this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
     }
 
     update(): void {
 
+    }
+
+
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getScene(): Scene {
+        return this.getSceneManager().first();
     }
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`resources/shader/${name}.vert.sk`);

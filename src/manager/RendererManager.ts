@@ -5,65 +5,59 @@ import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
+import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
+import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
-export default class RendererManager extends Manager<unknown> {
+export default class RendererManager extends Manager<Renderer> {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
+    private readonly ctors =
+        [
+            SpriteRenderer
+            , PointRenderer
+            , VertexColorTriangleRenderer
+            , LineRenderer
+            , GLTFMeshRenderer
+            , GLTFSkinMeshRenderer
+        ]
     addObjects(): void {
+        this.ctors.forEach(ctor => {
+        this.add(ctor);
+        this.get(ctor).setShaderName(ctor.name.replace("Renderer", "").replace("GLTF", ""));
+    });
     }
     async load(): Promise<void> {
-        await this.getCacheManager().loadShaderTxtCache("Sprite");
-        await this.getCacheManager().loadShaderTxtCache("Point");
-        await this.getCacheManager().loadShaderTxtCache("Line");
-        await this.getCacheManager().loadShaderTxtCache("VertexColorTriangle");
-        await this.getCacheManager().loadShaderTxtCache("SkinMesh");
-        await this.getCacheManager().loadShaderTxtCache("Mesh");
+        for await (const renderer of this.all()) {
+            await renderer.loadShaderTxtCache(this.getCacheManager());
+        }
 
     }
     init(): void {
         this.getDevice().gl.init();
         const { gl } = this.getDevice();
-        const vs = this.getCacheManager().getVertShaderTxt("Sprite");
-        const fs = this.getCacheManager().getFragShaderTxt("Sprite");
-        const pvs = this.getCacheManager().getVertShaderTxt("Point");
-        const pfs = this.getCacheManager().getFragShaderTxt("Point");
-        const lvs = this.getCacheManager().getVertShaderTxt("Line");
-        const lfs = this.getCacheManager().getFragShaderTxt("Line");
-        const tvs = this.getCacheManager().getVertShaderTxt("VertexColorTriangle");
-        const tfs = this.getCacheManager().getFragShaderTxt("VertexColorTriangle");
-        const smvs = this.getCacheManager().getVertShaderTxt("SkinMesh");
-        const smfs = this.getCacheManager().getFragShaderTxt("SkinMesh");
-        const mvs = this.getCacheManager().getVertShaderTxt("Mesh");
-        const mfs = this.getCacheManager().getFragShaderTxt("Mesh");
-        const fontInfo = this.getCacheManager().getFontInfo("boxy_bold_font");
-        this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setShader(gl.makeShader(vs, fs)));
-        this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setShader(gl.makeShader(pvs, pfs)));
-        this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setShader(gl.makeShader(tvs, tfs)));
-        this.getScene().getComponents(LineRenderer).forEach(renderer => renderer.setShader(gl.makeShader(lvs, lfs)));
-
+        for (const renderer of this.all()) {
+            renderer.initShader(gl, this.getCacheManager());
+        }
         this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
 
-        this.getScene().getComponents(GLTFMeshRenderer).forEach(skinMeshRenderer => {
-            skinMeshRenderer.setShader(gl.makeShader(mvs, mfs));
-        });
-        this.getScene().getComponents(GLTFSkinMeshRenderer).forEach(skinMeshRenderer => {
-            skinMeshRenderer.setShader(gl.makeShader(smvs, smfs));
-        });
-
-
-        this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
-
-
-        
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);
+        this.getScene().getComponents(Renderer).forEach(renderer => renderer.render());
+    }
+    bindEntityRenderer() {
+        this.getScene().getComponents(Renderer).forEach(entityRenderer => {
+            for (const ctor of this.ctors) {
+                if (entityRenderer instanceof ctor) {
+                    entityRenderer.setShader(this.get(ctor).getShader());
+                }
+            }
+        });
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

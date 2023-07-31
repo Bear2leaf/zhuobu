@@ -33,6 +33,5 @@ export default class UIFrameObject extends Entity {
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
     }
     update(): void {
-        this.get(LineRenderer).render();
     }
 }

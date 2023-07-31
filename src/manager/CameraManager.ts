@@ -15,7 +15,7 @@ import SceneManager from "./SceneManager.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import TRS from "../component/TRS.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
-import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
+import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import BackgroundFrame from "../component/BackgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
@@ -49,7 +49,7 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
         });
-        this.getScene().getComponents(TriangleRenderer).forEach((renderer) => {
+        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => {
             renderer.getEntity().get(Node).setSource(renderer.getEntity().get(TRS));
         });
         this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
@@ -61,7 +61,7 @@ export default class CameraManager extends Manager<Camera> {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(TestCamera)));
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(TriangleRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
+            this.getScene().getComponents(VertexColorTriangleRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
             this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
             this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
         }
@@ -74,7 +74,7 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(SpriteRenderer).forEach((renderer) => {
             renderer.getEntity().get(Node).updateWorldMatrix();
         });
-        this.getScene().getComponents(TriangleRenderer).forEach((renderer) => {
+        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => {
             renderer.getEntity().get(Node).updateWorldMatrix();
         });
         this.getScene().getComponents(WireQuad).forEach((obj) => {

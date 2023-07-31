@@ -6,7 +6,7 @@ import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Histogram from "../drawobject/Histogram.js";
-import { TriangleRenderer } from "../renderer/TriangleRenderer.js";
+import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import Entity from "./Entity.js";
 
 export default class FpsChartObject extends Entity {
@@ -17,7 +17,7 @@ export default class FpsChartObject extends Entity {
             TRS,
             Node,
             Histogram,
-            TriangleRenderer,
+            VertexColorTriangleRenderer,
             PrimitiveContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
@@ -31,6 +31,5 @@ export default class FpsChartObject extends Entity {
         
     }
     update(): void {
-        this.get(TriangleRenderer).render();
     }
 }

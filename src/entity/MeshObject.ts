@@ -29,6 +29,5 @@ export default class MeshObject extends Entity {
         this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
     update(): void {
-        this.get(GLTFMeshRenderer).render();
     }
 }

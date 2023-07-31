@@ -35,6 +35,5 @@ export default class SpriteObject extends Entity {
     update(): void {
         this.frame++;
         this.get(TRS).getPosition().set(Math.sin(this.frame * 0.05) * 150 + 150, 40, 0, 1);
-        this.get(Renderer).render();
     }
 }

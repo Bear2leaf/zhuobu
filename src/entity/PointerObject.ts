@@ -34,6 +34,5 @@ export default class PointerObject extends Entity {
     update(): void {
         if (this.get(TouchEventContainer).getIsTouchingStart()) {
         }
-        this.get(PointRenderer).render();
     }
 }
