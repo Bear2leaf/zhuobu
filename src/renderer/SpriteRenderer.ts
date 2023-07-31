@@ -7,7 +7,6 @@ import Renderer from "./Renderer.js";
 export default class SpriteRenderer extends Renderer {
     render(): void {
 
-        this.getEntity().get(GLContainer).getRenderingContext().switchCullFace(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
@@ -19,6 +18,5 @@ export default class SpriteRenderer extends Renderer {
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(true);
-        this.getEntity().get(GLContainer).getRenderingContext().switchCullFace(true);
     }
 }
