@@ -2,6 +2,7 @@ import Quad from "../math/Quad.js";
 import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import TRS from "../component/TRS.js";
 
 export default class Histogram extends DrawObject {
     private readonly quads: Quad[] = [];
@@ -24,6 +25,7 @@ export default class Histogram extends DrawObject {
         const background = new Quad(0, hisY, width, height, new Vec4(1, 1, 1, 1), this.quads.length * 4);
         this.quads.push(background);
         this.quads.forEach((quad) => quad.appendTo(this.vertices, this.colors, this.indices));
+        this.getEntity().get(TRS).getPosition().set(200, 40, 0, 1);
     }
     updateHistogram(fps: number) {
         for (let index = this.quads.length - 2; index > 0; index--) {

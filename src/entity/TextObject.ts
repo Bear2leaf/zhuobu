@@ -2,7 +2,6 @@ import Component from "../component/Component.js";
 import FontInfoContainer from "../component/FontInfoContainer.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
-import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -20,7 +19,6 @@ export default class TextObject extends Entity {
             Node,
             Text,
             SpriteRenderer,
-            PrimitiveContainer,
             FontInfoContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
@@ -28,13 +26,8 @@ export default class TextObject extends Entity {
         });
     }
     init(): void {
-        const scale = 4;
-        this.get(TRS).getScale().set(scale, -scale, scale, 1);
-        this.get(TRS).getPosition().add(new Vec4(0, scale * 8, 0, 0))
         this.get(Text).init();
 
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
-        
     }
     update(): void {
     }

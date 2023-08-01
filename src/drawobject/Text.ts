@@ -26,6 +26,9 @@ export default class Text extends DrawObject {
         this.spacing = spacing;
         this.chars = [..."Hello world!"];
         this.fontInfo = this.getEntity().get(FontInfoContainer).getFontInfo();
+        const scale = 4;
+        this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);
+        this.getEntity().get(TRS).getPosition().add(new Vec4(0, scale * 8, 0, 0))
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);

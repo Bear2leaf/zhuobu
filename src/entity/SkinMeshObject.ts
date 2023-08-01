@@ -1,7 +1,6 @@
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
-import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -17,8 +16,7 @@ export default class SkinMeshObject extends Entity {
             TRS,
             Node,
             WhaleMesh,
-            GLTFSkinMeshRenderer,
-            PrimitiveContainer
+            GLTFSkinMeshRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
@@ -26,7 +24,6 @@ export default class SkinMeshObject extends Entity {
     }
     init(): void {
         this.get(WhaleMesh).init();
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
     }
     update(): void {
     }

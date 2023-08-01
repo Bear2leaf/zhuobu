@@ -1,7 +1,6 @@
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
-import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
@@ -19,8 +18,7 @@ export default class FrontgroundFrameObject extends Entity {
             Node,
             WireQuad,
             FrontgroundFrame,
-            LineRenderer,
-            PrimitiveContainer
+            LineRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
@@ -28,8 +26,7 @@ export default class FrontgroundFrameObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getScale().set(0.005, 0.005, 1, 1);
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
+        this.get(FrontgroundFrame).initTRS();
     }
     update(): void {
     }

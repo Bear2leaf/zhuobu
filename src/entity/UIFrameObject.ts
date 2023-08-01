@@ -1,7 +1,6 @@
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
-import PrimitiveContainer from "../component/PrimitiveTypeContainer.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
@@ -19,8 +18,7 @@ export default class UIFrameObject extends Entity {
             Node,
             WireQuad,
             UIFrame,
-            LineRenderer,
-            PrimitiveContainer
+            LineRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
@@ -28,9 +26,7 @@ export default class UIFrameObject extends Entity {
     }
     init(): void {
         this.get(WireQuad).init();
-        this.get(TRS).getPosition().set(0, 0, -0.5, 1);
-        this.get(TRS).getScale().set(0.0015, 0.0015, 1, 1);
-        this.get(PrimitiveContainer).setPrimitive(this.get(GLContainer).getRenderingContext().makePrimitive(PrimitiveType.LINES));
+        this.get(UIFrame).initTRS();
     }
     update(): void {
     }

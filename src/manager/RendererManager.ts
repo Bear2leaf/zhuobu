@@ -42,8 +42,9 @@ export default class RendererManager extends Manager<Renderer> {
         const { gl } = this.getDevice();
         for (const renderer of this.all()) {
             renderer.initShader(gl, this.getCacheManager());
+            renderer.initPrimitive(gl);
         }
-        this.getScene().getComponents(GLContainer).forEach(renderer => renderer.setRenderingContext(gl));
+        this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
 
     }
     update(): void {
@@ -55,6 +56,7 @@ export default class RendererManager extends Manager<Renderer> {
             for (const ctor of this.ctors) {
                 if (entityRenderer instanceof ctor) {
                     entityRenderer.setShader(this.get(ctor).getShader());
+                    entityRenderer.setPrimitive(this.get(ctor).getPrimitive());
                 }
             }
         });

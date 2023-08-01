@@ -5,12 +5,25 @@ import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
+import Primitive from "../contextobject/Primitive.js";
 
 
 export default class Renderer extends Component {
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
+    private primitive?: Primitive;
+
+    setPrimitive(primitive: Primitive) {
+        this.primitive = primitive;
+    }
+    getPrimitive() {
+        if (!this.primitive) {
+            throw new Error("primitive not exist");
+        }
+        return this.primitive;
+    }
+
     setShader(shader: Shader) {
         this.shader = shader;
     }
@@ -20,24 +33,6 @@ export default class Renderer extends Component {
         }
         return this.shader;
     }
-    setShaderName(name: string) {
-        this.shaderName = name;
-    }
-    async loadShaderTxtCache(cacheManager: CacheManager) {
-        if (!this.shaderName) {
-            throw new Error("shader name not exist");
-        }
-        await cacheManager.loadShaderTxtCache(this.shaderName);
-    }
-    initShader(gl: RenderingContext, cacheManager: CacheManager) {
-        if (!this.shaderName) {
-            throw new Error("shader name not exist");
-        }
-        const vs = cacheManager.getVertShaderTxt(this.shaderName);
-        const fs = cacheManager.getFragShaderTxt(this.shaderName);
-        this.shader = gl.makeShader(vs, fs);
-    }
-
     setCamera(camera: Camera) {
         this.camera = camera;
     }
@@ -47,16 +42,8 @@ export default class Renderer extends Component {
         }
         return this.camera;
     }
-
-    render() {
-        const node = this.getEntity().get(Node);
-        const camera = this.getCamera();
-        this.getShader().use();
-        this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
-        this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
-        this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
-        this.getShader().setInteger("u_texture", 0);
-
+    setShaderName(name: string) {
+        this.shaderName = name;
     }
     setMatrix4fv(name: string, data: Float32Array) {
         if (!this.shader) {
@@ -81,5 +68,34 @@ export default class Renderer extends Component {
             throw new Error("shader not exist");
         }
         this.shader.setInteger(name, data)
+    }
+    async loadShaderTxtCache(cacheManager: CacheManager) {
+        if (!this.shaderName) {
+            throw new Error("shader name not exist");
+        }
+        await cacheManager.loadShaderTxtCache(this.shaderName);
+    }
+    initShader(gl: RenderingContext, cacheManager: CacheManager) {
+        if (!this.shaderName) {
+            throw new Error("shader name not exist");
+        }
+        const vs = cacheManager.getVertShaderTxt(this.shaderName);
+        const fs = cacheManager.getFragShaderTxt(this.shaderName);
+        this.shader = gl.makeShader(vs, fs);
+    }
+    initPrimitive(gl: RenderingContext): void {
+        throw new Error("Method not implemented.");
+    }
+
+
+    render() {
+        const node = this.getEntity().get(Node);
+        const camera = this.getCamera();
+        this.getShader().use();
+        this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
+        this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
+        this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
+        this.getShader().setInteger("u_texture", 0);
+
     }
 }
