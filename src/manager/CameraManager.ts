@@ -1,7 +1,7 @@
 import Camera from "../camera/Camera.js";
 import { MainCamera } from "../camera/MainCamera.js";
-import { UICamera } from "../camera/UICamera.js";
-import { TestCamera } from "../camera/TestCamera.js";
+import { OrthoCamera } from "../camera/OrthoCamera.js";
+import { DebugCamera } from "../camera/DebugCamera.js";
 import Node from "../component/Node.js";
 import CameraCube from "../drawobject/CameraCube.js";
 import CameraLenCone from "../drawobject/CameraLenCone.js";
@@ -28,44 +28,32 @@ export default class CameraManager extends Manager<Camera> {
         const windowWidth = deviceInfo.windowWidth;
         const windowHeight = deviceInfo.windowHeight;
         [
-            TestCamera,
+            DebugCamera,
             MainCamera,
-            UICamera
+            OrthoCamera
         ].forEach((ctor) => {
             this.add<Camera>(ctor);
             this.get<Camera>(ctor).setSize(windowWidth, windowHeight);
             this.get<Camera>(ctor).init();
         });
     }
-    async load(): Promise<void> {
-
-    }
-
+    async load(): Promise<void> { }
     init(): void {
         this.getScene().getComponents(FrustumCube).forEach(cube => cube.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getFrustumTransformMatrix()));
         this.getScene().getComponents(CameraCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraLenCone).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
-        this.getScene().getComponents(WireQuad).forEach((obj) => {
-            obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS));
-        });
-        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => {
-            renderer.getEntity().get(Node).setSource(renderer.getEntity().get(TRS));
-        });
-        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-            this.getScene().getComponents(SpriteRenderer).forEach(renderer => {
-                renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
-            });
-        });
+        this.getScene().getComponents(WireQuad).forEach((obj) => obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS)));
+        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => renderer.getEntity().get(Node).setSource(renderer.getEntity().get(TRS)));
+        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node))));
         if (this.hasFrustumCube()) {
-            this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(TestCamera)));
+            this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(VertexColorTriangleRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
-            this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
-            this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(UICamera)));
+            this.getScene().getComponents(VertexColorTriangleRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
+            this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
+            this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
         }
-
     }
     hasFrustumCube() {
         return this.getScene().getComponents(FrustumCube).length > 0;

@@ -1,7 +1,6 @@
 import FpsText from "../drawobject/FpsText.js";
 import FramesText from "../drawobject/FramesText.js";
 import Histogram from "../drawobject/Histogram.js";
-import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";

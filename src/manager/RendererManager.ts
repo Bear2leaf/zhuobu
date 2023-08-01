@@ -1,4 +1,3 @@
-import FontInfoContainer from "../component/FontInfoContainer.js";
 import GLContainer from "../component/GLContainer.js";
 import { ViewPortType } from "../device/Device.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";

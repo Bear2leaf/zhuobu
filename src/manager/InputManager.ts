@@ -1,5 +1,4 @@
 import TouchEventContainer from "../component/TouchEventContainer.js";
-import DemoScene from "../scene/DemoScene.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";

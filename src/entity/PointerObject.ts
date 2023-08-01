@@ -4,7 +4,6 @@ import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
-import { PrimitiveType } from "../contextobject/Primitive.js";
 import Pointer from "../drawobject/Pointer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Entity from "./Entity.js";

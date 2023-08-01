@@ -5,7 +5,7 @@ import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 
 
-export class TestCamera extends PerspectiveCamera {
+export class DebugCamera extends PerspectiveCamera {
     init(): void {
         super.init()
         this.getView().set(Matrix.lookAt(new Vec3(5, 7, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse())

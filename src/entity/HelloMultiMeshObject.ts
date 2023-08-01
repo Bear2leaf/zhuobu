@@ -3,7 +3,6 @@ import GLContainer from "../component/GLContainer.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
-import { PrimitiveType } from "../contextobject/Primitive.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import Mesh from "../drawobject/Mesh.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";

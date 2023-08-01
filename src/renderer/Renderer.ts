@@ -87,7 +87,6 @@ export default class Renderer extends Component {
         throw new Error("Method not implemented.");
     }
 
-
     render() {
         const node = this.getEntity().get(Node);
         const camera = this.getCamera();
@@ -96,6 +95,5 @@ export default class Renderer extends Component {
         this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
         this.getShader().setInteger("u_texture", 0);
-
     }
 }

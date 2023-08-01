@@ -4,7 +4,6 @@ import Node from "../component/Node.js";
 import SinAnimation from "../component/SinAnimation.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
-import { PrimitiveType } from "../contextobject/Primitive.js";
 import Sprite from "../drawobject/Sprite.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";

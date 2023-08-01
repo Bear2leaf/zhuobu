@@ -3,8 +3,7 @@ import Cache from "../cache/Cache.js";
 import JSONCache from "../cache/FontInfoCache.js";
 import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
-import FontInfoContainer from "../component/FontInfoContainer.js";
-import { FontInfo } from "../drawobject/Text.js";
+import Text, { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../gltf/GLTF.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
@@ -32,7 +31,7 @@ export default class CacheManager extends Manager<Cache<Object>> {
         
 
         const fontInfo = this.getFontInfo("boxy_bold_font");
-        this.getScene().getComponents(FontInfoContainer).forEach(renderer => renderer.setFontInfo(fontInfo));
+        this.getScene().getComponents(Text).forEach(text => text.setFontInfo(fontInfo));
     }
 
     update(): void {

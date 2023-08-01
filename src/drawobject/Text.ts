@@ -2,7 +2,6 @@ import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TRS from "../component/TRS.js";
-import FontInfoContainer from "../component/FontInfoContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
 import GLContainer from "../component/GLContainer.js";
 
@@ -16,19 +15,20 @@ export default class Text extends DrawObject {
     private readonly vertices: Vec4[] = [];
     private readonly texcoords: Vec4[] = []
     private fontInfo: FontInfo = {};
+    setFontInfo(fontInfo: FontInfo) {
+        this.fontInfo = fontInfo;
+    }
+    getFontInfo(): FontInfo {
+        if (this.fontInfo === undefined) {
+            throw new Error("FontInfo is not set");
+        }
+        return this.fontInfo;
+    }
     init() {
         super.init();
-        const spacing = 1;
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
-        this.color = [1, 1, 1, 1];
-        this.spacing = spacing;
-        this.chars = [..."Hello world!"];
-        this.fontInfo = this.getEntity().get(FontInfoContainer).getFontInfo();
-        const scale = 4;
-        this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);
-        this.getEntity().get(TRS).getPosition().add(new Vec4(0, scale * 8, 0, 0))
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
@@ -59,14 +59,9 @@ export default class Text extends DrawObject {
             } else if (c === ' ') {
                 continue;
             }
-            // update VBO for each character
             const vertices = [
-                new Vec4(xpos, ypos + h),
-                new Vec4(xpos + w, ypos),
-                new Vec4(xpos, ypos),
-                new Vec4(xpos, ypos + h),
-                new Vec4(xpos + w, ypos + h),
-                new Vec4(xpos + w, ypos)
+                new Vec4(xpos, ypos + h), new Vec4(xpos + w, ypos), new Vec4(xpos, ypos),
+                new Vec4(xpos, ypos + h), new Vec4(xpos + w, ypos + h), new Vec4(xpos + w, ypos)
             ];
             const texcoords = [
                 new Vec4((ch.x) / texWidth, (ch.y + ch.height) / texHeight),
@@ -89,15 +84,10 @@ export default class Text extends DrawObject {
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));
         this.updateEBO(new Uint16Array(this.indices));
-        // this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
-        // this.getEntity().get(GLContainer).getRenderingContext().switchUnpackPremultiplyAlpha(true);
         super.draw(mode);
-        // this.getEntity().get(GLContainer).getRenderingContext().switchUnpackPremultiplyAlpha(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
-        // this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(true);
     }
-
 }
