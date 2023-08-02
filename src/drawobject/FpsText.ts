@@ -7,6 +7,6 @@ export default class FpsText extends Text {
 
         const scale = 4;
         this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);
-        this.getEntity().get(TRS).getPosition().set(0, scale * 20, 0, 0);
+        this.getEntity().get(TRS).getPosition().set(0, scale * 8 + 40, 0, 0);
     }
 }

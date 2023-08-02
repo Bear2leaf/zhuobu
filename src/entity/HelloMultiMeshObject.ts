@@ -22,9 +22,4 @@ export default class HelloMultiMeshObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(Mesh).init();
-    }
-    update(): void {
-    }
 }

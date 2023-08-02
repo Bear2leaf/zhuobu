@@ -27,7 +27,7 @@ export default class SkinMesh extends Mesh {
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
     }
-    private update() {
+     update() {
         const globalWorldInverse = this.getEntity().get(Node).getWorldMatrix().inverse();
         // go through each joint and get its current worldMatrix
         // apply the inverse bind matrices and store the

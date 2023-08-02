@@ -21,9 +21,4 @@ export default class CameraLenConeObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(CameraLenCone).init();
-    }
-    update(): void {
-    }
 }

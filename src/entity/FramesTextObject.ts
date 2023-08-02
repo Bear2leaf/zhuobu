@@ -21,11 +21,4 @@ export default class FramesTextObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(FramesText).init();
-
-                
-    }
-    update(): void {
-    }
 }

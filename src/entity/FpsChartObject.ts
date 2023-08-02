@@ -21,10 +21,4 @@ export default class FpsChartObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(Histogram).init();
-
-    }
-    update(): void {
-    }
 }

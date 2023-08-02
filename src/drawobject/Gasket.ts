@@ -41,8 +41,8 @@ export default class Gasket extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(points.map((_, i) => i)))
     }
-    update(node: Node): void {
-        this.rotatePerFrame(node, this.frame++);
+    update(): void {
+        this.rotatePerFrame(this.getEntity().get(Node), this.frame++);
     }
     draw(mode: number): void {
         this.bind()

@@ -23,13 +23,4 @@ export default class SpriteObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(TRS).getScale().set(10, 10, 1, 1);
-        this.get(Node).setSource(this.get(TRS));
-        this.get(Sprite).init();
-    }
-
-    update(): void {
-        this.get(SinAnimation).update();
-    }
 }

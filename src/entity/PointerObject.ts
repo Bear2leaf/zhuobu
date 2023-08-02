@@ -23,10 +23,4 @@ export default class PointerObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(Pointer).init();
-
-    }
-    update(): void {
-    }
 }

@@ -71,4 +71,7 @@ export default class Node extends Component {
   setSource(source: TRS) {
     this.source = source;
   }
+  init(): void {
+    this.setSource(this.getEntity().get(TRS));
+  }
 }

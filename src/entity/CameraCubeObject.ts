@@ -21,9 +21,4 @@ export default class CameraCubeObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(CameraCube).init();
-    }
-    update(): void {
-    }
 }

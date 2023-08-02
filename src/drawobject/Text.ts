@@ -34,9 +34,8 @@ export default class Text extends DrawObject {
         this.chars.splice(0, this.chars.length, ...chars);
     }
     create(fontInfo: FontInfo, texSize: Vec2) {
-        const trs = this.getEntity().get(TRS);
-        let { x, y } = trs.getPosition();
-        const scale = trs.getScale();
+        let { x, y } = new Vec2(0, 0);
+        const scale = new Vec2(1, 1);
         let { spacing, chars } = this;
         const texHeight = texSize.y;
         const texWidth = texSize.x;

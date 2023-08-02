@@ -35,8 +35,8 @@ export default class TexturedCube extends DrawObject {
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
     }
-    update(node: Node): void {
-        this.rotatePerFrame(node, this.frame++);
+    update(): void {
+        this.rotatePerFrame(this.getEntity().get(Node), this.frame++);
     }
     draw(mode: number): void {
         this.bind()

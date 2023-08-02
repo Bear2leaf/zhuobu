@@ -10,6 +10,6 @@ export default class HelloWorldText extends Text {
         this.updateChars("Hello world!");
         const scale = 4;
         this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);
-        this.getEntity().get(TRS).getPosition().add(new Vec4(0, scale * 8, 0, 0));
+        this.getEntity().get(TRS).getPosition().add(new Vec4(0, scale * 8, 1, 0));
     }
 }

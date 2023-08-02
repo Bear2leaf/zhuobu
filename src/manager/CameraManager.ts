@@ -13,7 +13,6 @@ import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import WireQuad from "../drawobject/WireQuad.js";
-import TRS from "../component/TRS.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
@@ -43,8 +42,6 @@ export default class CameraManager extends Manager<Camera> {
         this.getScene().getComponents(CameraCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraLenCone).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
         this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
-        this.getScene().getComponents(WireQuad).forEach((obj) => obj.getEntity().get(Node).setSource(obj.getEntity().get(TRS)));
-        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => renderer.getEntity().get(Node).setSource(renderer.getEntity().get(TRS)));
         this.getScene().getComponents(FrontgroundFrame).forEach((obj) => this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node))));
         if (this.hasFrustumCube()) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
@@ -59,12 +56,6 @@ export default class CameraManager extends Manager<Camera> {
         return this.getScene().getComponents(FrustumCube).length > 0;
     }
     update(): void {
-        this.getScene().getComponents(SpriteRenderer).forEach((renderer) => {
-            renderer.getEntity().get(Node).updateWorldMatrix();
-        });
-        this.getScene().getComponents(VertexColorTriangleRenderer).forEach((renderer) => {
-            renderer.getEntity().get(Node).updateWorldMatrix();
-        });
         this.getScene().getComponents(WireQuad).forEach((obj) => {
             const windowInfo = this.getDevice().getWindowInfo();
             obj.getEntity().get(WireQuad).updateQuad(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);

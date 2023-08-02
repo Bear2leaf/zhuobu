@@ -14,9 +14,4 @@ export default class NodeObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-    }
-    update(): void {
-        
-    }
 }

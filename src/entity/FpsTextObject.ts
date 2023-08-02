@@ -21,11 +21,4 @@ export default class FpsTextObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(FpsText).init();
-
-
-    }
-    update(): void {
-    }
 }

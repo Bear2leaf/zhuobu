@@ -21,9 +21,4 @@ export default class MeshObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(WhaleMesh).init();
-    }
-    update(): void {
-    }
 }

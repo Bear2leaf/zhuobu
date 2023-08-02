@@ -23,10 +23,4 @@ export default class UIFrameObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(WireQuad).init();
-        this.get(UIFrame).initTRS();
-    }
-    update(): void {
-    }
 }

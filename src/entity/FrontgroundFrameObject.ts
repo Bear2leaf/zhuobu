@@ -23,10 +23,4 @@ export default class FrontgroundFrameObject extends Entity {
             this.get<Component>(ctor).setEntity(this);
         });
     }
-    init(): void {
-        this.get(WireQuad).init();
-        this.get(FrontgroundFrame).initTRS();
-    }
-    update(): void {
-    }
 }
