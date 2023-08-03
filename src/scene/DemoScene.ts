@@ -6,11 +6,15 @@ import SkinMeshObject from "../entity/SkinMeshObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
 import HelloWorldTextObject from "../entity/HelloWorldTextObject.js";
 import Scene from "./Scene.js";
+import GasketObject from "../entity/GasketObject.js";
+import TexturedCubeObject from "../entity/TexturedCubeObject.js";
 
 export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new SpriteObject()
+            , new GasketObject()
+            , new TexturedCubeObject()
             , new MeshObject()
             , new SkinMeshObject()
             , new HelloWorldTextObject()

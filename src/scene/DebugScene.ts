@@ -10,6 +10,8 @@ import FrontgroundFrameObject from "../entity/FrontgroundFrameObject.js";
 import Scene from "./Scene.js";
 import UIFrameObject from "../entity/UIFrameObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
+import GasketObject from "../entity/GasketObject.js";
+import TexturedCubeObject from "../entity/TexturedCubeObject.js";
 
 export default class DebugScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -24,6 +26,8 @@ export default class DebugScene extends Scene {
             , new BackgroundFrameObject()
             , new SkinMeshObject()
             , new MeshObject()
+            , new GasketObject()
+            , new TexturedCubeObject()
         ];
     }
 

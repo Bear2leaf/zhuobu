@@ -14,6 +14,7 @@ import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRend
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import VisualizeCamera from "../component/VisualizeCamera.js";
+import Histogram from "../drawobject/Histogram.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -48,7 +49,7 @@ export default class CameraManager extends Manager<Camera> {
             });
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(VertexColorTriangleRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
+            this.getScene().getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(OrthoCamera)));
             this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
             this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
         }
