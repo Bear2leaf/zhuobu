@@ -21,9 +21,6 @@ export default class WireCube extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));
     }
-    update(): void {
-        
-    }
     draw(mode: number): void {
         this.bind()
         super.draw(mode);

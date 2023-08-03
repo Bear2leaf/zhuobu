@@ -7,6 +7,7 @@ import WireQuad from "../drawobject/WireQuad.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Entity from "./Entity.js";
 import UIFrame from "../component/UIFrame.js";
+import VisualizeCamera from "../component/VisualizeCamera.js";
 
 export default class UIFrameObject extends Entity {
     registerComponents(): void {
@@ -17,6 +18,7 @@ export default class UIFrameObject extends Entity {
             Node,
             WireQuad,
             UIFrame,
+            VisualizeCamera,
             LineRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);

@@ -3,11 +3,7 @@ import { MainCamera } from "../camera/MainCamera.js";
 import { OrthoCamera } from "../camera/OrthoCamera.js";
 import { DebugCamera } from "../camera/DebugCamera.js";
 import Node from "../component/Node.js";
-import CameraCube from "../drawobject/CameraCube.js";
-import CameraLenCone from "../drawobject/CameraLenCone.js";
-import CameraUpCube from "../drawobject/CameraUpCube.js";
 import FrustumCube from "../drawobject/FrustumCube.js";
-import { Vec4 } from "../math/Vector.js";
 import Renderer from "../renderer/Renderer.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
@@ -16,9 +12,8 @@ import WireQuad from "../drawobject/WireQuad.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
-import BackgroundFrame from "../component/BackgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import UIFrame from "../component/UIFrame.js";
+import VisualizeCamera from "../component/VisualizeCamera.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -37,14 +32,20 @@ export default class CameraManager extends Manager<Camera> {
         });
     }
     async load(): Promise<void> { }
+    update(): void { }
     init(): void {
-        this.getScene().getComponents(FrustumCube).forEach(cube => cube.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getFrustumTransformMatrix()));
-        this.getScene().getComponents(CameraCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 1, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
-        this.getScene().getComponents(CameraLenCone).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0, 0.5, 1)).scale(new Vec4(0.25, 0.25, 0.25, 1))));
-        this.getScene().getComponents(CameraUpCube).forEach(obj => obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse().translate(new Vec4(0, 0.5, 1, 1)).scale(new Vec4(0.1, 0.1, 0.1, 1))));
-        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node))));
         if (this.hasFrustumCube()) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
+            this.getScene().getComponents(VisualizeCamera).forEach(component => component.setMainCamera(this.get(MainCamera)));
+            this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
+                this.getScene().getComponents(SpriteRenderer).forEach(renderer => {
+                    renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
+                });
+            });
+            this.getScene().getComponents(WireQuad).forEach((obj) => {
+                const windowInfo = this.getDevice().getWindowInfo();
+                obj.getEntity().get(WireQuad).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
+            });
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
             this.getScene().getComponents(VertexColorTriangleRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
@@ -54,21 +55,6 @@ export default class CameraManager extends Manager<Camera> {
     }
     hasFrustumCube() {
         return this.getScene().getComponents(FrustumCube).length > 0;
-    }
-    update(): void {
-        this.getScene().getComponents(WireQuad).forEach((obj) => {
-            const windowInfo = this.getDevice().getWindowInfo();
-            obj.getEntity().get(WireQuad).updateQuad(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
-        });
-        this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-            obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
-        });
-        this.getScene().getComponents(BackgroundFrame).forEach((obj) => {
-            obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
-        });
-        this.getScene().getComponents(UIFrame).forEach((obj) => {
-            obj.getEntity().get(Node).updateWorldMatrix(this.get(MainCamera).getViewInverse());
-        });
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

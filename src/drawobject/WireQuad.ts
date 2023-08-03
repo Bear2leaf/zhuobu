@@ -4,6 +4,7 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Quad from "../math/Quad.js";
 
 export default class WireQuad extends DrawObject {
+    private rect: Vec4 = new Vec4();
     init() {
         super.init();
         const quad = new Quad(0, 0, 1, 1);
@@ -16,14 +17,14 @@ export default class WireQuad extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4)
         this.updateEBO(new Uint16Array(indices));
     }
-    updateQuad(left: number, top: number, width: number, height: number) {
-        const quad: Quad = new Quad(left, top, width, height);
+    updateRect(left: number, top: number, width: number, height: number) {
+        this.rect.set(left, top, width, height)
+    }
+    update(): void {
+        const quad: Quad = new Quad(this.rect.x, this.rect.y, this.rect.z, this.rect.w);
         const vertices: Vec4[] = [];
         quad.getLines().forEach(line => line.appendTo(vertices))
         this.updateABO(ArrayBufferIndex.Position, flatten(vertices))
-    }
-    update(): void {
-
     }
     draw(mode: number): void {
         this.bind()

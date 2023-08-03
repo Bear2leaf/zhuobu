@@ -42,9 +42,7 @@ export default class GLTFManager extends Manager<GLTF> {
         this.getScene().getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone()));
         this.getScene().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF).clone()));
     }
-    update(): void {
-        this.getScene().getComponents(Mesh).forEach(mesh => mesh.getEntity().get(Node).updateWorldMatrix());
-    }
+    update(): void { }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
     }

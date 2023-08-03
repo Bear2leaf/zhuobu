@@ -7,6 +7,7 @@ import TextureContainer from "../component/TextureContainer.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import Entity from "./Entity.js";
+import VisualizeCamera from "../component/VisualizeCamera.js";
 
 export default class FrontgroundFrameObject extends Entity {
     registerComponents(): void {
@@ -17,6 +18,7 @@ export default class FrontgroundFrameObject extends Entity {
             Node,
             WireQuad,
             FrontgroundFrame,
+            VisualizeCamera,
             LineRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);

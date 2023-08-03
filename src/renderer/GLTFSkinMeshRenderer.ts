@@ -7,9 +7,9 @@ import Renderer from "./Renderer.js";
 export default class GLTFSkinMeshRenderer extends Renderer {
     render() {
         super.render();
-        this.setVector4fv("u_diffuse", new Vec4(.5, .8, 1, 1));
-        this.setVector3fv("u_lightDirection", new Vec3(0, 0, 1));
-        this.setInteger("u_jointTexture", 1);
+        this.getShader().setVector4f("u_diffuse", new Vec4(.5, .8, 1, 1));
+        this.getShader().setVector3f("u_lightDirection", new Vec3(0, 0, 1));
+        this.getShader().setInteger("u_jointTexture", 1);
         this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
         
     }

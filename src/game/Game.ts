@@ -15,14 +15,14 @@ export default abstract class Game extends Manager<unknown> {
     private readonly ctors =
         [
             CacheManager,
-            RendererManager,
             GLTFManager,
             CameraManager,
             InputManager,
             TextureManager,
             SceneManager,
             TimestepManager,
-            AudioManager
+            AudioManager,
+            RendererManager
         ];
     addObjects() {
         this.ctors.forEach(ctor => {

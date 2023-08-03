@@ -1,5 +1,4 @@
 import Camera from "../camera/Camera.js";
-import { Vec3, Vec4 } from "../math/Vector.js";
 import Component from "../component/Component.js";
 import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
@@ -44,30 +43,6 @@ export default class Renderer extends Component {
     }
     setShaderName(name: string) {
         this.shaderName = name;
-    }
-    setMatrix4fv(name: string, data: Float32Array) {
-        if (!this.shader) {
-            throw new Error("shader not exist");
-        }
-        this.shader.setMatrix4fv(name, data)
-    }
-    setVector4fv(name: string, data: Vec4) {
-        if (!this.shader) {
-            throw new Error("shader not exist");
-        }
-        this.shader.setVector4f(name, data)
-    }
-    setVector3fv(name: string, data: Vec3) {
-        if (!this.shader) {
-            throw new Error("shader not exist");
-        }
-        this.shader.setVector3f(name, data)
-    }
-    setInteger(name: string, data: number) {
-        if (!this.shader) {
-            throw new Error("shader not exist");
-        }
-        this.shader.setInteger(name, data)
     }
     async loadShaderTxtCache(cacheManager: CacheManager) {
         if (!this.shaderName) {
