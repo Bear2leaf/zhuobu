@@ -4,7 +4,7 @@ import Camera from "./Camera.js";
 
 
 
-export class PerspectiveCamera implements Camera {
+export class PerspectiveCamera extends Camera {
     private view?: Matrix;
     private projection?: Matrix;
     private width?: number;
@@ -53,12 +53,5 @@ export class PerspectiveCamera implements Camera {
     }
     lookAtInverse(eye: Vec3, target: Vec3, up: Vec3) {
         Matrix.lookAt(eye, target, up).inverse(this.getView());
-    }
-    getFrustumTransformMatrix(): Matrix {
-        return this.getView().inverse()
-            .multiply(this.getProjection().inverse());
-    }
-    getViewInverse(): Matrix {
-        return this.getView().inverse();
     }
 }

@@ -1,6 +1,6 @@
 import Camera from "../camera/Camera.js";
 import { MainCamera } from "../camera/MainCamera.js";
-import { OrthoCamera } from "../camera/OrthoCamera.js";
+import { FrontgroundCamera } from "../camera/FrontgroundCamera.js";
 import { DebugCamera } from "../camera/DebugCamera.js";
 import Node from "../component/Node.js";
 import FrustumCube from "../drawobject/FrustumCube.js";
@@ -10,11 +10,19 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
-import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import FrontgroundFrame from "../component/FrontgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import VisualizeCamera from "../component/VisualizeCamera.js";
 import Histogram from "../drawobject/Histogram.js";
+import Flowers from "../component/Flowers.js";
+import BackgroundFrame from "../component/BackgroundFrame.js";
+import { BackgroundCamera } from "../camera/BackgroundCamera.js";
+import { UICamera } from "../camera/UICamera.js";
+import TRS from "../component/TRS.js";
+import UIFrame from "../component/UIFrame.js";
+import { OrthoCamera } from "../camera/OrthoCamera.js";
+import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
+import Text from "../drawobject/Text.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -25,7 +33,9 @@ export default class CameraManager extends Manager<Camera> {
         [
             DebugCamera,
             MainCamera,
-            OrthoCamera
+            UICamera,
+            FrontgroundCamera,
+            BackgroundCamera
         ].forEach((ctor) => {
             this.add<Camera>(ctor);
             this.get<Camera>(ctor).setSize(windowWidth, windowHeight);
@@ -33,13 +43,29 @@ export default class CameraManager extends Manager<Camera> {
         });
     }
     async load(): Promise<void> { }
-    update(): void { }
+    update(): void {
+        if (this.hasFrustumCube()) {
+        } else {
+            this.getScene().getComponents(SpriteRenderer).forEach(comp => {
+                comp.getEntity().get(Node).updateWorldMatrix();
+            });
+        }
+    }
     init(): void {
         if (this.hasFrustumCube()) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
-            this.getScene().getComponents(VisualizeCamera).forEach(component => component.setMainCamera(this.get(MainCamera)));
+            this.getScene().getComponents(VisualizeCamera).filter(comp => !(comp.getEntity().has(FrontgroundFrame) || comp.getEntity().has(BackgroundFrame) || comp.getEntity().has(UIFrame))).forEach(component => component.setCamera(this.get(MainCamera)));
+            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera)));
+            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera)));
+            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera)));
             this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-                this.getScene().getComponents(SpriteRenderer).forEach(renderer => {
+                this.getScene().getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(Flowers)).forEach(renderer => {
+                    renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
+
+                });
+            });
+            this.getScene().getComponents(BackgroundFrame).forEach((obj) => {
+                this.getScene().getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
             });
@@ -49,9 +75,18 @@ export default class CameraManager extends Manager<Camera> {
             });
         } else {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(OrthoCamera)));
-            this.getScene().getComponents(PointRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
-            this.getScene().getComponents(SpriteRenderer).forEach(renderer => renderer.setCamera(this.get(OrthoCamera)));
+            this.getScene().getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera)));
+            this.getScene().getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera)));
+            this.getScene().getComponents(SpriteRenderer).forEach(comp => {
+                if (comp.getEntity().has(Flowers)) {
+                    comp.getEntity().get(Renderer).setCamera(this.get(BackgroundCamera));
+                } else if (comp.getEntity().has(Text)) {
+                    comp.getEntity().get(Renderer).setCamera(this.get(UICamera));
+                } else {
+                    comp.getEntity().get(Renderer).setCamera(this.get(FrontgroundCamera));
+                }
+            });
+
         }
     }
     hasFrustumCube() {

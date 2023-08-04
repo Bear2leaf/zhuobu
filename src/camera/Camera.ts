@@ -1,10 +1,18 @@
 import Matrix from "../math/Matrix.js";
 
-export default interface Camera {
-    init(): void;
-    setSize(width: number, height: number): void;
-    getView(): Matrix;
-    getProjection(): Matrix;
+export default abstract class Camera {
+    abstract init(): void;
+    abstract setSize(width: number, height: number): void;
+    abstract getView(): Matrix;
+    abstract getProjection(): Matrix;
+
+    getFrustumTransformMatrix(): Matrix {
+        return this.getView().inverse()
+            .multiply(this.getProjection().inverse());
+    }
+    getViewInverse(): Matrix {
+        return this.getView().inverse();
+    }
 }
 
 

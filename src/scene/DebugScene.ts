@@ -14,6 +14,7 @@ import GasketObject from "../entity/GasketObject.js";
 import TexturedCubeObject from "../entity/TexturedCubeObject.js";
 import HelloMeshObject from "../entity/HelloMeshObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
+import FlowersObject from "../entity/FlowersObject.js";
 
 export default class DebugScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -23,15 +24,16 @@ export default class DebugScene extends Scene {
             , new CameraUpCubeObject()
             , new CameraLenConeObject()
             , new UIFrameObject()
-            , new SpriteObject()
             , new FrontgroundFrameObject()
             , new BackgroundFrameObject()
+            , new SpriteObject()
             , new SkinMeshObject()
             , new MeshObject()
             , new GasketObject()
             , new TexturedCubeObject()
             , new HelloMeshObject()
             , new HelloMultiMeshObject()
+            , new FlowersObject()
         ];
     }
 

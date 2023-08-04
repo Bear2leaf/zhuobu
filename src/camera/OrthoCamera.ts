@@ -4,7 +4,7 @@ import Camera from "./Camera.js";
 
 
 
-export class OrthoCamera implements Camera {
+export class OrthoCamera extends Camera {
     private view?: Matrix;
     private projection?: Matrix;
     private width?: number;
@@ -21,9 +21,9 @@ export class OrthoCamera implements Camera {
         const right = this.width;
         const bottom = this.height;
         const top = 0;
-        const near = 0;
-        const far = 2;
-        this.view = Matrix.lookAt(new Vec3(0, 0, 1), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse();
+        const near = -1;
+        const far = 1;
+        this.view = Matrix.lookAt(new Vec3(0, 0, far), new Vec3(0, 0, near), new Vec3(0, 1, 0)).inverse();
         this.projection = Matrix.ortho(left, right, top, bottom, near, far);
 
     }

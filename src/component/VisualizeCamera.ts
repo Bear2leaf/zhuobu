@@ -1,23 +1,23 @@
-import { MainCamera } from "../camera/MainCamera.js";
+import Camera from "../camera/Camera.js";
 import Matrix from "../math/Matrix.js";
 import Component from "./Component.js";
 
 
 export default class VisualizeCamera extends Component {
-    private camera?: MainCamera;
-    getMainCamera(): MainCamera {
+    private camera?: Camera;
+    getCamera(): Camera {
         if (this.camera === undefined) {
-            throw new Error("Main camera is not set");
+            throw new Error("camera is not set");
         }
         return this.camera;
     }
-    setMainCamera(camera: MainCamera) {
+    setCamera(camera: Camera) {
         this.camera = camera;
     }
     getFrustumTransformMatrix(): Matrix {
-        return this.getMainCamera().getFrustumTransformMatrix();
+        return this.getCamera().getFrustumTransformMatrix();
     }
     getViewInverse(): Matrix {
-        return this.getMainCamera().getViewInverse();
+        return this.getCamera().getViewInverse();
     }
 }

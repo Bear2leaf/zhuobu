@@ -2,6 +2,7 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
 import TRS from "../component/TRS.js";
+import GLContainer from "../component/GLContainer.js";
 
 export default class Pointer extends DrawObject {
     init() {
@@ -26,6 +27,8 @@ export default class Pointer extends DrawObject {
         this.setPosition(this.getTouchEventContainer().getX(), this.getTouchEventContainer().getY());
         this.bind();
         this.updateABO(ArrayBufferIndex.Position, this.getTRS().getPosition().toFloatArray());
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
         super.draw(mode);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
     }
 }

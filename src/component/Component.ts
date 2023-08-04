@@ -1,9 +1,6 @@
 import Entity from "../entity/Entity.js";
 
 export default abstract class Component {
-    getViewInverse() {
-        throw new Error("Method not implemented.");
-    }
     private entity?: Entity;
     setEntity(entity: Entity) {
         this.entity = entity;

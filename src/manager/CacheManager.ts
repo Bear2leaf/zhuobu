@@ -67,10 +67,7 @@ export default class CacheManager extends Manager<Cache<Object>> {
         if (gltf === undefined) throw new Error(`resources/gltf/${name}.gltf not found`);
         return gltf as GLTF;
     }
-    getResourceImage(name: string) {
-        return this.get(ImageCache).get(`resources/texture/${name}.png`);
-    }
-    getStaticImage(name: string) {
+    getImage(name: string) {
         return this.get(ImageCache).get(`resources/texture/${name}.png`);
     }
     getFontInfo(name: string) {
