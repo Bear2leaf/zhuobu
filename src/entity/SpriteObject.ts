@@ -5,6 +5,7 @@ import SinAnimation from "../component/SinAnimation.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import Sprite from "../drawobject/Sprite.js";
+import DemoObserver from "../observer/DemoObserver.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
@@ -17,6 +18,7 @@ export default class SpriteObject extends Entity {
             Node,
             Sprite,
             SpriteRenderer,
+            DemoObserver,
             SinAnimation
         ].forEach(ctor => {
             this.add<Component>(ctor);

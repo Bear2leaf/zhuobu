@@ -6,6 +6,7 @@ import TextureContainer from "../component/TextureContainer.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
 import Pointer from "../drawobject/Pointer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
+import DemoSubject from "../subject/DemoSubject.js";
 import Entity from "./Entity.js";
 
 export default class PointerObject extends Entity {
@@ -17,6 +18,7 @@ export default class PointerObject extends Entity {
             Node,
             Pointer,
             PointRenderer,
+            DemoSubject,
             TouchEventContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);

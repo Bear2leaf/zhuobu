@@ -8,6 +8,7 @@ import TimestepManager from "../manager/TimestepManager.js";
 import Manager from "../manager/Manager.js";
 import TextureManager from "../manager/TextureManager.js";
 import GLTFManager from "../manager/GLTFManager.js";
+import EventManager from "../manager/EventManager.js";
 
 
 export default abstract class Game extends Manager<unknown> {
@@ -18,6 +19,7 @@ export default abstract class Game extends Manager<unknown> {
             GLTFManager,
             CameraManager,
             InputManager,
+            EventManager,
             TextureManager,
             SceneManager,
             TimestepManager,
@@ -46,6 +48,7 @@ export default abstract class Game extends Manager<unknown> {
     buildDependency() {
         this.get(CacheManager).setSceneManager(this.get(SceneManager));
         this.get(InputManager).setSceneManager(this.get(SceneManager));
+        this.get(EventManager).setSceneManager(this.get(SceneManager));
         this.get(CameraManager).setSceneManager(this.get(SceneManager));
         this.get(TextureManager).setSceneManager(this.get(SceneManager));
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
