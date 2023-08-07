@@ -1,5 +1,4 @@
 import Component from "./Component.js";
-import Node from "./Node.js";
 import TRS from "./TRS.js";
 
 

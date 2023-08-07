@@ -18,10 +18,7 @@ import Flowers from "../component/Flowers.js";
 import BackgroundFrame from "../component/BackgroundFrame.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
-import TRS from "../component/TRS.js";
 import UIFrame from "../component/UIFrame.js";
-import { OrthoCamera } from "../camera/OrthoCamera.js";
-import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
 import Text from "../drawobject/Text.js";
 
 export default class CameraManager extends Manager<Camera> {
@@ -43,16 +40,9 @@ export default class CameraManager extends Manager<Camera> {
         });
     }
     async load(): Promise<void> { }
-    update(): void {
-        if (this.hasFrustumCube()) {
-        } else {
-            this.getScene().getComponents(SpriteRenderer).forEach(comp => {
-                comp.getEntity().get(Node).updateWorldMatrix();
-            });
-        }
-    }
+    update(): void { }
     init(): void {
-        if (this.hasFrustumCube()) {
+        if (this.getScene().getComponents(FrustumCube).length > 0) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
             this.getScene().getComponents(VisualizeCamera).filter(comp => !(comp.getEntity().has(FrontgroundFrame) || comp.getEntity().has(BackgroundFrame) || comp.getEntity().has(UIFrame))).forEach(component => component.setCamera(this.get(MainCamera)));
             this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera)));
@@ -61,7 +51,6 @@ export default class CameraManager extends Manager<Camera> {
             this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
                 this.getScene().getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
-
                 });
             });
             this.getScene().getComponents(BackgroundFrame).forEach((obj) => {
@@ -88,9 +77,6 @@ export default class CameraManager extends Manager<Camera> {
             });
 
         }
-    }
-    hasFrustumCube() {
-        return this.getScene().getComponents(FrustumCube).length > 0;
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {
