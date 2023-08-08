@@ -1,7 +1,10 @@
 import DemoObserver from "../observer/DemoObserver.js";
 import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
+import OnClickToggleScale from "../observer/OnClickToggleScale.js";
 import Scene from "../scene/Scene.js";
+import OnClickBottomLeftSubject from "../subject/OnClickBottomLeftSubject.js";
+import OnClickSpriteSubject from "../subject/OnClickSpriteSubject.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
@@ -23,7 +26,15 @@ export default class EventManager extends Manager<unknown> {
                 component.setSubject(subject);
                 subject.register(component);
             });
+        });
+        this.getScene().getComponents(OnClickBottomLeftSubject).forEach(subject => {
             this.getScene().getComponents(OnClickToggleAudio).forEach(component => {
+                component.setSubject(subject);
+                subject.register(component);
+            });
+        });
+        this.getScene().getComponents(OnClickSpriteSubject).forEach(subject => {
+            this.getScene().getComponents(OnClickToggleScale).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
