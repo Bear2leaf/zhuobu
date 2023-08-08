@@ -1,5 +1,6 @@
 import DemoObserver from "../observer/DemoObserver.js";
 import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
+import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import Scene from "../scene/Scene.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
 import Manager from "./Manager.js";
@@ -19,6 +20,10 @@ export default class EventManager extends Manager<unknown> {
     init(): void {
         this.getScene().getComponents(OnClickSubject).forEach(subject => {
             this.getScene().getComponents(OnClickToggleAnim).forEach(component => {
+                component.setSubject(subject);
+                subject.register(component);
+            });
+            this.getScene().getComponents(OnClickToggleAudio).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });

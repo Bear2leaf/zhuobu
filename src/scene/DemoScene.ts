@@ -11,6 +11,7 @@ import TexturedCubeObject from "../entity/TexturedCubeObject.js";
 import HelloMeshObject from "../entity/HelloMeshObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import FlowersObject from "../entity/FlowersObject.js";
+import AudioBGMObject from "../entity/AudioBGMObject.js";
 
 export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -25,6 +26,7 @@ export default class DemoScene extends Scene {
             , new HelloMultiMeshObject()
             , new HelloWorldTextObject()
             , new PointerObject()
+            , new AudioBGMObject()
         ];
     }
 

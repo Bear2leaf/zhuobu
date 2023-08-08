@@ -1,3 +1,4 @@
+import Component from "../component/Component.js";
 
 const notes: {
     [key: string]: number
@@ -157,7 +158,7 @@ feedback.gain.value = 0;
 //     feedback.gain.value = this.value;
 // })
 
-export default class DemoAudio {
+export default class DemoAudio extends Component {
 
 
     //LOOP CONTROLS
@@ -169,12 +170,19 @@ export default class DemoAudio {
     private isPlaying = false;
     private lfoGain?: GainNode;
     private lfo?: OscillatorNode;
+    private frames = 0;
+    update(): void {
+        const secondsPerBeat = 60 / this.tempo;
+        if (this.isPlaying && (this.frames / 60) > secondsPerBeat) {
+            this.playCurrentNote();
+            this.nextNote();
+            this.frames = 0;
+        };
+        this.frames++;
+    }
 
-    constructor() {
-        if (!this.isPlaying) {
-            this.isPlaying = true;
-            // this.noteLoop();
-        }
+    togglePlay() {
+        this.isPlaying = !this.isPlaying;
     }
 
     // tempoControl.addEventListener('input', function () {
@@ -191,16 +199,6 @@ export default class DemoAudio {
     // stopButton.addEventListener('click', function () {
     //     isPlaying = false;
     // })
-    noteLoop() {
-        const secondsPerBeat = 60.0 / this.tempo;
-        if (this.isPlaying) {
-            this.playCurrentNote();
-            this.nextNote();
-            setTimeout(() => {
-                this.noteLoop();
-            }, secondsPerBeat * 1000)
-        };
-    }
 
     nextNote() {
         // noteSelects[currentNoteIndex].style.background = "yellow";
