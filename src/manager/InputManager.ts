@@ -18,7 +18,7 @@ export default class InputManager extends Manager<unknown> {
     init(): void {
         
         this.getDevice().onTouchStart((touchInfo) => {
-            this.isTouching = false;
+            this.isTouching = true;
             this.isTouchingStart = true;
             this.isTouchingEnd = false;
             this.x = touchInfo?.x || 0;
@@ -26,9 +26,6 @@ export default class InputManager extends Manager<unknown> {
 
         });
         this.getDevice().onTouchMove((touchInfo) => {
-            if (!this.isTouching) {
-                return;
-            }
             this.isTouching = true;
             this.isTouchingStart = false;
             this.isTouchingEnd = false;
@@ -53,7 +50,6 @@ export default class InputManager extends Manager<unknown> {
         
     }
     update(): void {
-
         this.getScene().getComponents(TouchEventContainer).forEach((touchEvent) => {
             touchEvent.setIsTouching(this.isTouching);
             touchEvent.setIsTouchingStart(this.isTouchingStart);
@@ -62,6 +58,12 @@ export default class InputManager extends Manager<unknown> {
             touchEvent.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
             
         });
+        if (this.isTouchingEnd) {
+            this.isTouchingEnd = false;
+        }
+        if (this.isTouchingStart) {
+            this.isTouchingStart = false;
+        }
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {
