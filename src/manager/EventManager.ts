@@ -1,6 +1,7 @@
 import DemoObserver from "../observer/DemoObserver.js";
+import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
 import Scene from "../scene/Scene.js";
-import DemoSubject from "../subject/DemoSubject.js";
+import OnClickSubject from "../subject/OnClickSubject.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
@@ -16,8 +17,8 @@ export default class EventManager extends Manager<unknown> {
     async load(): Promise<void> {
     }
     init(): void {
-        this.getScene().getComponents(DemoSubject).forEach(subject => {
-            this.getScene().getComponents(DemoObserver).forEach(component => {
+        this.getScene().getComponents(OnClickSubject).forEach(subject => {
+            this.getScene().getComponents(OnClickToggleAnim).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
