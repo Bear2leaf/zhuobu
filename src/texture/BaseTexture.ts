@@ -7,7 +7,7 @@ export default class BaseTexture implements Texture {
   private bindIndex: TextureIndex = TextureIndex.Default;
   create(gl: RenderingContext) {
     this.gl = gl;
-    this.textureIndex =this.gl.createTexture();
+    this.textureIndex = this.gl.createTexture();
   }
   setBindIndex(bindIndex: TextureIndex) {
     this.bindIndex = bindIndex;
@@ -25,10 +25,8 @@ export default class BaseTexture implements Texture {
       gl.texImage2D_RGBA_RGBA_NULL(width, height);
     } else if (data instanceof Float32Array) {
       gl.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
-    } else if (data instanceof HTMLImageElement){
-      gl.texImage2D_RGBA_RGBA_Image(data);
     } else {
-      throw new Error("BaseTexture: invalid arguments.");
+      gl.texImage2D_RGBA_RGBA_Image(data);
     }
     gl.bindTexture();
   }

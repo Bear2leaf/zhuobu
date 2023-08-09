@@ -4,7 +4,7 @@ import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {
     private subject?: OnClickSubject;
-    private scale: number = 1;
+    private scale: number = 0.1;
 
     init(): void {
         
@@ -12,12 +12,12 @@ export default class OnClickToggleScale extends Observer {
     }
 
     public notify(): void {
-        if (this.scale === 1) {
-            this.scale = 2;
+        if (this.scale === 0.1) {
+            this.scale = 0.2;
         } else {
-            this.scale = 1;
+            this.scale = 0.1;
         }
-        this.getEntity().get(TRS).getScale().set(this.scale * 10, this.scale * 10, 1, 1);
+        this.getEntity().get(TRS).getScale().set(this.scale, this.scale, 1, 1);
     }
 
     getSubject(): OnClickSubject {
