@@ -1,3 +1,4 @@
+import DepthMap from "../component/DepthMap.js";
 import Flowers from "../component/Flowers.js";
 import GLContainer from "../component/GLContainer.js";
 import TextureContainer from "../component/TextureContainer.js";
@@ -5,6 +6,7 @@ import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";
 import Scene from "../scene/Scene.js";
 import DefaultTexture from "../texture/DefaultTexture.js";
+import DepthTexture from "../texture/DepthTexture.js";
 import FlowerTexture from "../texture/FlowerTexture.js";
 import FontTexture from "../texture/FontTexture.js";
 import JointTexture from "../texture/JointTexture.js";
@@ -22,7 +24,8 @@ export default class TextureManager extends Manager<Texture> {
             DefaultTexture,
             FontTexture,
             FlowerTexture,
-            JointTexture
+            JointTexture,
+            DepthTexture,
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -37,12 +40,13 @@ export default class TextureManager extends Manager<Texture> {
         const { gl } = this.getDevice();
         this.get(FontTexture).setFontImage(this.getCacheManager().getImage("boxy_bold_font"));
         this.get(FlowerTexture).setImage(this.getCacheManager().getImage("flowers"));
-        this.all().forEach(texture => gl.makeTexture(texture));
-        this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
-        this.getScene().getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture)));
-        this.getScene().getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint));
-        this.getScene().getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture)));
-        this.getScene().getComponents(Flowers).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(FlowerTexture)));
+        this.all().forEach(texture => texture.create(gl));
+        this.getAllScene().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(gl)));
+        this.getAllScene().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
+        this.getAllScene().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));
+        this.getAllScene().forEach(scene => scene.getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture))));
+        this.getAllScene().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(FlowerTexture))));
+        this.getAllScene().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(DepthTexture))));
         
     }
     update(): void {
@@ -68,5 +72,8 @@ export default class TextureManager extends Manager<Texture> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
+    }
+    getAllScene(): Scene[] {
+        return this.getSceneManager().all();
     }
 }

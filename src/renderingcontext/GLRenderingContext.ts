@@ -7,13 +7,63 @@ import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
-import Texture from "../texture/Texture.js";
+import { TextureIndex } from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
+    private readonly allWebGLFBOs: WebGLFramebuffer[] = [];
+    private readonly allWebGLTextures: WebGLTexture[] = [];
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
+    }
+    texImage2D_RGBA_RGBA_NULL(width: number, height: number): void {
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null)
+    }
+    texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void {
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, data)
+    }
+    texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void {
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA32F, width, height, 0, this.gl.RGBA, this.gl.FLOAT, data)
+    }
+    framebufferTexture2D(frameBufferObjectIndex: number, textureIndex: number): void {
+        const gl = this.gl;
+        this.bindFramebuffer(frameBufferObjectIndex);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+    }
+    createFramebuffer(): number {
+        const fbo = this.gl.createFramebuffer();
+        if (fbo === null) {
+            throw new Error("fbo is null");
+        }
+        return this.allWebGLFBOs.push(fbo) - 1;
+    }
+    createTexture(): number {
+        const texture = this.gl.createTexture();
+        if (texture === null) {
+            throw new Error("fbo is null");
+        }
+        return this.allWebGLTextures.push(texture) - 1;
+    }
+    activeTexture(bindIndex: TextureIndex): void {
+        this.gl.activeTexture(this.gl.TEXTURE0 + bindIndex)
+    }
+    bindTexture(textureIndex?: number): void {
+        if (textureIndex === undefined) {
+            this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+        } else {
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.allWebGLTextures[textureIndex]);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+            this.gl.texParameterf(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameterf(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        }
+    }
+    bindFramebuffer(frameBufferObjectIndex: number): void {
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.allWebGLFBOs[frameBufferObjectIndex]);
+    }
+    unbindFramebuffer(): void {
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
     }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {
         return new GLElementBufferObject(this.gl, data);
@@ -40,9 +90,6 @@ export default class GLRenderingContext implements RenderingContext {
     }
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
-    }
-    makeTexture<T extends Texture>(texture: T): void {
-        texture.create(this.gl)
     }
     switchDepthTest(enable: boolean): void {
         if (enable) {

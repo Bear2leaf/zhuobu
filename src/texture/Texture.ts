@@ -1,12 +1,12 @@
-import { Vec2 } from "../math/Vector.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export enum TextureIndex {
   Default = 0,
   Joint = 1,
+  Depth = 2,
 }
 export default interface Texture {
-  generate(width: number, height: number, data: HTMLImageElement | Float32Array | undefined): void;
-  getSize(): Vec2;
+  generate(width: number, height: number, data?: HTMLImageElement | Float32Array): void;
   bind(): void;
-  create(gl: WebGL2RenderingContext, bindIndex?: number, wrapS?: number, wrapT?: number, filterMin?: number, filterMax?: number): void;
+  create(gl: RenderingContext): void;
 }

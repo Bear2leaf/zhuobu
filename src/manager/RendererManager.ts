@@ -45,7 +45,6 @@ export default class RendererManager extends Manager<Renderer> {
             renderer.initShader(gl, this.getCacheManager());
             renderer.initPrimitive(gl);
         }
-        this.getScene().getComponents(GLContainer).forEach(container => container.setRenderingContext(gl));
 
     }
     update(): void {
@@ -53,14 +52,14 @@ export default class RendererManager extends Manager<Renderer> {
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.render());
     }
     bindEntityRenderer() {
-        this.getScene().getComponents(Renderer).forEach(entityRenderer => {
+        this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(entityRenderer => {
             for (const ctor of this.ctors) {
                 if (entityRenderer instanceof ctor) {
                     entityRenderer.setShader(this.get(ctor).getShader());
                     entityRenderer.setPrimitive(this.get(ctor).getPrimitive());
                 }
             }
-        });
+        }));
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
@@ -82,5 +81,8 @@ export default class RendererManager extends Manager<Renderer> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
+    }
+    getAllScene(): Scene[] {
+        return this.getSceneManager().all();
     }
 }

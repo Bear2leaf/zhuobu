@@ -1,7 +1,8 @@
-import GLTexture from "./GLTexture.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
+import BaseTexture from "./BaseTexture.js";
 import { TextureIndex } from "./Texture.js";
 
-export default class FontTexture extends GLTexture {
+export default class FontTexture extends BaseTexture {
     private fontImage?: HTMLImageElement;
     setFontImage(fontImage: HTMLImageElement) {
         this.fontImage = fontImage;
@@ -11,8 +12,8 @@ export default class FontTexture extends GLTexture {
         return this.fontImage;
     }
 
-    create(gl: WebGL2RenderingContext, bindIndex: number = TextureIndex.Default, wrapS?: number, wrapT?: number, filterMin?: number, filterMax?: number): void {
-        super.create(gl, bindIndex, wrapS, wrapT, filterMin, filterMax);
+    create(gl: RenderingContext): void {
+        super.create(gl);
         this.generate(0, 0, this.fontImage)
     }
 }

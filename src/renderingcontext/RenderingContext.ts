@@ -3,7 +3,7 @@ import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Shader from "../shader/Shader.js";
-import Texture from "../texture/Texture.js";
+import { TextureIndex } from "../texture/Texture.js";
 
 export enum ArrayBufferIndex {
     Position = 0,
@@ -16,6 +16,16 @@ export enum ArrayBufferIndex {
 
 
 export default interface RenderingContext {
+    texImage2D_RGBA_RGBA_NULL(width: number, height: number, data?: HTMLImageElement): void;
+    texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
+    texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
+    framebufferTexture2D(frameBufferObjectIndex: number, textureIndex: number): void;
+    createFramebuffer(): void;
+    createTexture(): number;
+    activeTexture(bindIndex: TextureIndex): void;
+    bindTexture(textureIndex?: number): void;
+    bindFramebuffer(frameBufferObjectIndex: number): void;
+    unbindFramebuffer(): void;
     clear(r?: number, g?: number, b?: number, a?: number): void;
     init(): void;
     draw(mode: number, count: number): void;
@@ -23,7 +33,6 @@ export default interface RenderingContext {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
-    makeTexture(texture: Texture): void;
     switchDepthTest(enable: boolean): void;
     switchDepthWrite(enable: boolean): void;
     switchBlend(enable: boolean): void;

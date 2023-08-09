@@ -9,6 +9,7 @@ import Manager from "../manager/Manager.js";
 import TextureManager from "../manager/TextureManager.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import EventManager from "../manager/EventManager.js";
+import FrameBufferManager from "../manager/FrameBufferManager.js";
 
 
 export default abstract class Game extends Manager<unknown> {
@@ -24,6 +25,7 @@ export default abstract class Game extends Manager<unknown> {
             SceneManager,
             TimestepManager,
             AudioManager,
+            FrameBufferManager,
             RendererManager
         ];
     addObjects() {

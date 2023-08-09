@@ -2,15 +2,13 @@ import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import Quad from "../math/Quad.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import TextureContainer from "../component/TextureContainer.js";
 import Node from "../component/Node.js";
 
 export default class Sprite extends DrawObject {
     init() {
 
         super.init();
-        const texSize = this.getEntity().get(TextureContainer).getTexture().getSize();
-        const quad = new Quad(0, 0, texSize.x, texSize.y);
+        const quad = new Quad(0, 0, 256, 256);
         quad.initTexCoords();
         const vertices: Vec4[] = []
         const colors: Vec4[] = []

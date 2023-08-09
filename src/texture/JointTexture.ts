@@ -1,9 +1,11 @@
-import GLTexture from "./GLTexture.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
+import BaseTexture from "./BaseTexture.js";
 import { TextureIndex } from "./Texture.js";
 
-export default class JointTexture extends GLTexture {
-    create(gl: WebGL2RenderingContext, bindIndex: number = TextureIndex.Joint, wrapS?: number, wrapT?: number, filterMin?: number, filterMax?: number): void {
-        super.create(gl, bindIndex, wrapS, wrapT, filterMin, filterMax);
+export default class JointTexture extends BaseTexture {
+    create(gl: RenderingContext): void {
+        super.create(gl);
+        this.setBindIndex(TextureIndex.Joint);
     }
     
 }

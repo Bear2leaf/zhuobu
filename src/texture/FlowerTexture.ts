@@ -1,7 +1,8 @@
-import GLTexture from "./GLTexture.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
+import BaseTexture from "./BaseTexture.js";
 import { TextureIndex } from "./Texture.js";
 
-export default class FlowerTexture extends GLTexture {
+export default class FlowerTexture extends BaseTexture {
     private image?: HTMLImageElement;
     setImage(fontImage: HTMLImageElement) {
         this.image = fontImage;
@@ -10,8 +11,8 @@ export default class FlowerTexture extends GLTexture {
         if (!this.image) throw new Error("Texture: Image is not set.");
         return this.image;
     }
-    create(gl: WebGL2RenderingContext, bindIndex: number = TextureIndex.Default, wrapS?: number, wrapT?: number, filterMin?: number, filterMax?: number): void {
-        super.create(gl, bindIndex, wrapS, wrapT, filterMin, filterMax);
+    create(gl: RenderingContext): void {
+        super.create(gl);
         this.generate(2, 2, this.getImage());
     }
     

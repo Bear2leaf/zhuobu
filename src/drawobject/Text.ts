@@ -9,6 +9,7 @@ export default class Text extends DrawObject {
     private color: [number, number, number, number] = [1, 1, 1, 1];
     private spacing: number = 1;
     private chars: string[] = [];
+    private readonly texSize: Vec2 = new Vec2(111, 80);
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
@@ -32,12 +33,12 @@ export default class Text extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(fontInfo: FontInfo, texSize: Vec2) {
+    create(fontInfo: FontInfo) {
         let { x, y } = new Vec2(0, 0);
         const scale = new Vec2(1, 1);
         let { spacing, chars } = this;
-        const texHeight = texSize.y;
-        const texWidth = texSize.x;
+        const texHeight = this.texSize.y;
+        const texWidth = this.texSize.x;
         const ox = x;
         this.vertices.splice(0, this.vertices.length);
         this.texcoords.splice(0, this.texcoords.length);
@@ -77,7 +78,7 @@ export default class Text extends DrawObject {
     }
     draw(mode: number): void {
         this.bind();
-        this.create(this.fontInfo, this.getEntity().get(TextureContainer).getTexture().getSize());
+        this.create(this.fontInfo);
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));

@@ -1,0 +1,40 @@
+import RenderingContext from "../renderingcontext/RenderingContext.js";
+import Texture, { TextureIndex } from "./Texture.js";
+
+export default class BaseTexture implements Texture {
+  private gl?: RenderingContext;
+  private textureIndex?: number;
+  private bindIndex: TextureIndex = TextureIndex.Default;
+  create(gl: RenderingContext) {
+    this.gl = gl;
+    this.textureIndex =this.gl.createTexture();
+  }
+  setBindIndex(bindIndex: TextureIndex) {
+    this.bindIndex = bindIndex;
+  }
+  getGL() {
+    if (this.gl === undefined) {
+      throw new Error("BaseTexture is not initialized.");
+    }
+    return this.gl;
+  }
+  generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
+    const gl = this.getGL();
+    gl.bindTexture(this.textureIndex);
+    if (data === undefined) {
+      gl.texImage2D_RGBA_RGBA_NULL(width, height);
+    } else if (data instanceof Float32Array) {
+      gl.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
+    } else if (data instanceof HTMLImageElement){
+      gl.texImage2D_RGBA_RGBA_Image(data);
+    } else {
+      throw new Error("BaseTexture: invalid arguments.");
+    }
+    gl.bindTexture();
+  }
+  bind() {
+    const gl = this.getGL();
+    gl.activeTexture(this.bindIndex)
+    gl.bindTexture(this.textureIndex);
+  }
+}
