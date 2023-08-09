@@ -15,6 +15,13 @@ export default class Node extends Component {
   setName(name: string) {
     this.name = name;
   }
+  getRoot() {
+    let root: Node = this;
+    while (root.parent) {
+      root = root.parent;
+    }
+    return root;
+  }
   hasChildren() {
     return this.children.length > 0;
   }
@@ -34,6 +41,9 @@ export default class Node extends Component {
       parent.addChild(this);
       this.parent = parent;
     }
+  }
+  setLocalMatrix(matrix: Matrix) {
+    Matrix.copy(matrix, this.localMatrix);
   }
   updateWorldMatrix(parentWorldMatrix?: Matrix) {
     const source = this.getSource();
@@ -68,7 +78,7 @@ export default class Node extends Component {
   getSource() {
     return this.source;
   }
-  setSource(source: TRS) {
+  setSource(source?: TRS) {
     this.source = source;
   }
   init(): void {

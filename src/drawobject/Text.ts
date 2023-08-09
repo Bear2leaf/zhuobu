@@ -1,10 +1,8 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import GLContainer from "../component/GLContainer.js";
-import Node from "../component/Node.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class Text extends DrawObject {
@@ -85,7 +83,6 @@ export default class Text extends DrawObject {
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));
         this.updateEBO(new Uint16Array(this.indices));
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
-        this.getEntity().get(Node).updateWorldMatrix();
         super.draw(mode);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
     }

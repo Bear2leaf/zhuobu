@@ -50,10 +50,6 @@ export default class RendererManager extends Manager<Renderer> {
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);
-        if (this.getScene().getComponents(FrustumCube).length > 0) {
-        } else {
-            this.getScene().getComponents(SpriteRenderer).forEach(comp => comp.getEntity().get(Node).updateWorldMatrix());
-        }
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.render());
     }
     bindEntityRenderer() {

@@ -3,6 +3,7 @@ import DrawObject from "./DrawObject.js";
 import Quad from "../math/Quad.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TextureContainer from "../component/TextureContainer.js";
+import Node from "../component/Node.js";
 
 export default class Sprite extends DrawObject {
     init() {
@@ -21,6 +22,9 @@ export default class Sprite extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(texcoords), 4);
         this.updateEBO(new Uint16Array(indices));
+    }
+    update(): void {
+        this.getEntity().get(Node).getRoot().updateWorldMatrix();
     }
     draw(mode: number): void {
         this.bind();

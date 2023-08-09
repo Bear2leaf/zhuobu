@@ -44,7 +44,7 @@ export default class CameraManager extends Manager<Camera> {
     init(): void {
         if (this.getScene().getComponents(FrustumCube).length > 0) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
-            this.getScene().getComponents(VisualizeCamera).filter(comp => !(comp.getEntity().has(FrontgroundFrame) || comp.getEntity().has(BackgroundFrame) || comp.getEntity().has(UIFrame))).forEach(component => component.setCamera(this.get(MainCamera)));
+            this.getScene().getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera)));
             this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera)));
             this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera)));
             this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera)));

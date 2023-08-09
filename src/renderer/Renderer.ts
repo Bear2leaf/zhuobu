@@ -64,6 +64,7 @@ export default class Renderer extends Component {
 
     render() {
         const node = this.getEntity().get(Node);
+        node.getRoot().updateWorldMatrix();
         const camera = this.getCamera();
         this.getShader().use();
         this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
