@@ -20,6 +20,8 @@ import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
 import UIFrame from "../component/UIFrame.js";
 import Text from "../drawobject/Text.js";
+import DepthMap from "../component/DepthMap.js";
+import Sprite from "../drawobject/Sprite.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -42,6 +44,7 @@ export default class CameraManager extends Manager<Camera> {
     async load(): Promise<void> { }
     update(): void { }
     init(): void {
+        const windowInfo = this.getDevice().getWindowInfo();
         if (this.getScene().getComponents(FrustumCube).length > 0) {
             this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
             this.getScene().getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera)));
@@ -59,7 +62,6 @@ export default class CameraManager extends Manager<Camera> {
                 });
             });
             this.getScene().getComponents(WireQuad).forEach((obj) => {
-                const windowInfo = this.getDevice().getWindowInfo();
                 obj.getEntity().get(WireQuad).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
             });
         } else {
@@ -77,6 +79,9 @@ export default class CameraManager extends Manager<Camera> {
             });
 
         }
+        this.getScene().getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight));
+        this.getScene().getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight));
+
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

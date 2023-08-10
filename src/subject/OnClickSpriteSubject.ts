@@ -14,8 +14,8 @@ export default class OnClickSpriteSubject extends DemoSubject {
             const scale = new Vec4();
             Matrix.decompose(this.getEntity().get(TRS).getMatrix(), transform, quat, scale);
             console.log(transform, touchEvent)
-            if (touchEvent.getX() < transform.x + scale.x * 256 && touchEvent.getX() > transform.x &&
-                touchEvent.getY() < transform.y + scale.y * 256 && touchEvent.getY() > transform.y) {
+            if (touchEvent.getX() < transform.x + scale.x * 2 && touchEvent.getX() > transform.x &&
+                touchEvent.getY() < transform.y + scale.y * 2 && touchEvent.getY() > transform.y) {
                 console.log("Sprite is clicked!")
                 this.notify();
             }

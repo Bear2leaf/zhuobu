@@ -6,7 +6,7 @@ export default class SinAnimation extends Component {
     private frame: number = 0;
     private paused: boolean = false;
     init(): void {
-        this.getEntity().get(TRS).getScale().set(0.1, 0.1, 1, 1);
+        this.getEntity().get(TRS).getScale().set(10, 10, 1, 1);
     }
     update(): void {
         if (this.paused) return;
