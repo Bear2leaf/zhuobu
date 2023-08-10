@@ -12,6 +12,12 @@ export default class BaseTexture implements Texture {
   setBindIndex(bindIndex: TextureIndex) {
     this.bindIndex = bindIndex;
   }
+  getTextureIndex() {
+    if (this.textureIndex === undefined) {
+      throw new Error("BaseTexture is not initialized.");
+    }
+    return this.textureIndex;
+  }
   getGL() {
     if (this.gl === undefined) {
       throw new Error("BaseTexture is not initialized.");
@@ -22,7 +28,11 @@ export default class BaseTexture implements Texture {
     const gl = this.getGL();
     gl.bindTexture(this.textureIndex);
     if (data === undefined) {
-      gl.texImage2D_RGBA_RGBA_NULL(width, height);
+      if (this.bindIndex === TextureIndex.Depth) {
+        gl.texImage2D_DEPTH24_UINT_NULL(width, height);
+      } else {
+        gl.texImage2D_RGBA_RGBA_NULL(width, height);
+      }
     } else if (data instanceof Float32Array) {
       gl.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
     } else {

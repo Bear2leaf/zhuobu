@@ -17,6 +17,9 @@ export default class GLRenderingContext implements RenderingContext {
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
     }
+    texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void {
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT24, width, height, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null)
+    }
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null)
     }
@@ -26,9 +29,8 @@ export default class GLRenderingContext implements RenderingContext {
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA32F, width, height, 0, this.gl.RGBA, this.gl.FLOAT, data)
     }
-    framebufferTexture2D(frameBufferObjectIndex: number, textureIndex: number): void {
+    framebufferDepthTexture2D(textureIndex: number): void {
         const gl = this.gl;
-        this.bindFramebuffer(frameBufferObjectIndex);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
     }
     createFramebuffer(): number {
@@ -59,11 +61,13 @@ export default class GLRenderingContext implements RenderingContext {
             this.gl.texParameterf(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         }
     }
-    bindFramebuffer(frameBufferObjectIndex: number): void {
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.allWebGLFBOs[frameBufferObjectIndex]);
-    }
-    unbindFramebuffer(): void {
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+    bindFramebuffer(fboIndex?: number): void {
+        if (fboIndex === undefined) {
+            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+        } else {
+            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.allWebGLFBOs[fboIndex]);
+
+        }
     }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {
         return new GLElementBufferObject(this.gl, data);
@@ -79,6 +83,7 @@ export default class GLRenderingContext implements RenderingContext {
         this.gl.enable(this.gl.CULL_FACE)
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.enable(this.gl.SCISSOR_TEST)
+
         this.useBlendFuncOneAndOneMinusSrcAlpha();
     }
     draw(mode: number, count: number): void {

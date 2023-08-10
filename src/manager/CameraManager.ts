@@ -45,30 +45,30 @@ export default class CameraManager extends Manager<Camera> {
     update(): void { }
     init(): void {
         const windowInfo = this.getDevice().getWindowInfo();
-        if (this.getScene().getComponents(FrustumCube).length > 0) {
-            this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera)));
-            this.getScene().getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera)));
-            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera)));
-            this.getScene().getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera)));
-            this.getScene().getComponents(FrontgroundFrame).forEach((obj) => {
-                this.getScene().getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(Flowers)).forEach(renderer => {
+        if (this.getAllScene().some(scene => scene.getComponents(FrustumCube).length > 0) ){
+            this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(FrontgroundFrame).forEach((obj) => {
+                scene.getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
-            });
-            this.getScene().getComponents(BackgroundFrame).forEach((obj) => {
-                this.getScene().getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(Flowers)).forEach(renderer => {
+            }));
+            this.getAllScene().forEach(scene => scene.getComponents(BackgroundFrame).forEach((obj) => {
+                scene.getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
-            });
-            this.getScene().getComponents(WireQuad).forEach((obj) => {
+            }));
+            this.getAllScene().forEach(scene => scene.getComponents(WireQuad).forEach((obj) => {
                 obj.getEntity().get(WireQuad).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
-            });
+            }));
         } else {
-            this.getScene().getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera)));
-            this.getScene().getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera)));
-            this.getScene().getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera)));
-            this.getScene().getComponents(SpriteRenderer).forEach(comp => {
+            this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
+            this.getAllScene().forEach(scene => scene.getComponents(SpriteRenderer).forEach(comp => {
                 if (comp.getEntity().has(Flowers)) {
                     comp.getEntity().get(Renderer).setCamera(this.get(BackgroundCamera));
                 } else if (comp.getEntity().has(Text)) {
@@ -76,11 +76,11 @@ export default class CameraManager extends Manager<Camera> {
                 } else {
                     comp.getEntity().get(Renderer).setCamera(this.get(FrontgroundCamera));
                 }
-            });
+            }));
 
         }
-        this.getScene().getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight));
-        this.getScene().getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight));
+        this.getAllScene().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getAllScene().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
 
     }
     getSceneManager(): SceneManager {
@@ -94,5 +94,8 @@ export default class CameraManager extends Manager<Camera> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
+    }
+    getAllScene(): Scene[] {
+        return this.getSceneManager().all();
     }
 }

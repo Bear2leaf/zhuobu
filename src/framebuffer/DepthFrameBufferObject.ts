@@ -1,14 +1,5 @@
-import Texture from "../texture/Texture.js";
-import FrameBufferObject from "./FrameBufferObject.js";
+import BaseFrameBufferObject from "./BaseFrameBufferObject.js";
 
-export default class DepthFrameBufferObject implements FrameBufferObject {
-    create(): void {
-    }
-    bind(): void {
-    }
-    unbind(): void {
-    }
-    attach(texture: Texture): void {
-    }
+export default class DepthFrameBufferObject extends BaseFrameBufferObject {
     
 }

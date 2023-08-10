@@ -16,16 +16,16 @@ export enum ArrayBufferIndex {
 
 
 export default interface RenderingContext {
-    texImage2D_RGBA_RGBA_NULL(width: number, height: number, data?: HTMLImageElement): void;
+    texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
+    texImage2D_RGBA_RGBA_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
-    framebufferTexture2D(frameBufferObjectIndex: number, textureIndex: number): void;
-    createFramebuffer(): void;
+    framebufferDepthTexture2D(textureIndex: number): void;
+    createFramebuffer(): number;
     createTexture(): number;
     activeTexture(bindIndex: TextureIndex): void;
     bindTexture(textureIndex?: number): void;
-    bindFramebuffer(frameBufferObjectIndex: number): void;
-    unbindFramebuffer(): void;
+    bindFramebuffer(fboIndex?: number): void;
     clear(r?: number, g?: number, b?: number, a?: number): void;
     init(): void;
     draw(mode: number, count: number): void;

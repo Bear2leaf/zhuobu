@@ -54,6 +54,8 @@ export default abstract class Game extends Manager<unknown> {
         this.get(CameraManager).setSceneManager(this.get(SceneManager));
         this.get(TextureManager).setSceneManager(this.get(SceneManager));
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
+        this.get(FrameBufferManager).setTextureManager(this.get(TextureManager));
+        this.get(FrameBufferManager).setSceneManager(this.get(SceneManager));
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
         this.get(GLTFManager).setSceneManager(this.get(SceneManager));

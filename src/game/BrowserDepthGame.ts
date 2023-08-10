@@ -1,5 +1,6 @@
 
 import BrowserDevice from "../device/BrowserDevice.js";
+import FrameBufferManager from "../manager/FrameBufferManager.js";
 import SceneManager from "../manager/SceneManager.js";
 import DemoScene from "../scene/DemoScene.js";
 import DepthScene from "../scene/DepthScene.js";
@@ -14,6 +15,7 @@ export default class BrowserDepthGame extends Game {
         this.setDevice(new BrowserDevice(el.appendChild(canvas)));
         this.addObjects();
         this.load().then(() => {
+            this.get(FrameBufferManager).setDepthOnly(true);
             this.get(SceneManager).add(DepthScene);
             this.get(SceneManager).add(DemoScene);
             this.get(SceneManager).addObjects();
