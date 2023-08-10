@@ -16,7 +16,7 @@ void main() {
         float depth = texture(u_texture, v_texcoord.xy).r;
         float near = 1.0f;
         float far = 30.0f;
-        float depthValue = (2.0f * near) / (far + near - depth * (far - near));
+        float depthValue = (near) / (far + near - depth * (far - near));
         color = vec4(depthValue, depthValue, depthValue, 1.0f);
     }
 }

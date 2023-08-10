@@ -5,6 +5,7 @@ import GLElementBufferObject from "../contextobject/GLElementBufferObject.js";
 import GLPrimitive from "../contextobject/GLPrimitive.js";
 import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import { Vec4 } from "../math/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { TextureIndex } from "../texture/Texture.js";
@@ -32,6 +33,16 @@ export default class GLRenderingContext implements RenderingContext {
     framebufferDepthTexture2D(textureIndex: number): void {
         const gl = this.gl;
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+    }
+    framebufferPickTexture2D(textureIndex: number): void {
+        const gl = this.gl;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+    }
+    readSinglePixel(x: number, y: number): Vec4 {
+        const gl = this.gl;
+        const pixel = new Uint8Array(4);
+        gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+        return new Vec4(pixel[0], pixel[1], pixel[2], pixel[3]);
     }
     createFramebuffer(): number {
         const fbo = this.gl.createFramebuffer();

@@ -2,6 +2,7 @@
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
+import { Vec4 } from "../math/Vector.js";
 import Shader from "../shader/Shader.js";
 import { TextureIndex } from "../texture/Texture.js";
 
@@ -21,6 +22,8 @@ export default interface RenderingContext {
     texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
     framebufferDepthTexture2D(textureIndex: number): void;
+    framebufferPickTexture2D(textureIndex: number): void;
+    readSinglePixel(x: number, y: number): Vec4;
     createFramebuffer(): number;
     createTexture(): number;
     activeTexture(bindIndex: TextureIndex): void;

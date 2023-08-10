@@ -6,10 +6,6 @@ import FrameBufferObject from "./FrameBufferObject.js";
 export default class BaseFrameBufferObject implements FrameBufferObject {
     private gl?: RenderingContext;
     private fboIndex?: number;
-    private attachmentPoint: TextureIndex = TextureIndex.Depth;
-    setAttachmentPoint(attachmentPoint: TextureIndex) {
-        this.attachmentPoint = attachmentPoint;
-    }
 
     create(gl: RenderingContext) {
         this.gl = gl;
@@ -23,8 +19,10 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
     }
     attach(texture: BaseTexture): void {
         this.bind();
-        if (this.attachmentPoint === TextureIndex.Depth) {
+        if (texture.getBindIndex() === TextureIndex.Depth) {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
+        } else if (texture.getBindIndex() === TextureIndex.Pick) {
+            this.getGL().framebufferPickTexture2D(texture.getTextureIndex());
         } else {
             throw new Error("attach Not implemented");
         }

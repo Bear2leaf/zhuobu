@@ -7,15 +7,21 @@ import DemoScene from "../scene/DemoScene.js";
 import SceneManager from "./SceneManager.js";
 import Renderer from "../renderer/Renderer.js";
 import { ViewPortType } from "../device/Device.js";
+import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
+import DefaultTexture from "../texture/DefaultTexture.js";
+import PickTexture from "../texture/PickTexture.js";
+import PickColorRed from "../pickcolor/PickColorRed.js";
 
 
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
     private sceneManager?: SceneManager;
     private textureManager?: TextureManager;
     private depthOnly: boolean = false
+    private pickOnly: boolean = false
     addObjects(): void {
         [
             DepthFrameBufferObject,
+            RenderFrameBufferObject,
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -34,11 +40,23 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
             this.getDevice().viewportTo(ViewPortType.Full)
             this.getSceneManager().get(DemoScene).getComponents(Renderer).forEach((renderer) => renderer.render());
             this.get(DepthFrameBufferObject).unbind();
-            
+        } else if (this.pickOnly) {
+            this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
+            this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
+            // if (this.getDevice().gl.readSinglePixel(130, 108).x === 255) {
+            //     console.log("picked red", ...this.getDevice().gl.readSinglePixel(130, 108).toFloatArray())
+            // }
+            this.getDevice().viewportTo(ViewPortType.Full)
+            this.getSceneManager().get(DemoScene).getComponents(PickColorRed).forEach((component) => component.activate());
+            this.getSceneManager().get(DemoScene).getComponents(Renderer).forEach((renderer) => renderer.render());
+            this.get(RenderFrameBufferObject).unbind();
         }
     }
     setDepthOnly(depthOnly: boolean) {
         this.depthOnly = depthOnly;
+    }
+    setPickOnly(pickOnly: boolean) {
+        this.pickOnly = pickOnly;
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

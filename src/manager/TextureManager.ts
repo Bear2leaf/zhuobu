@@ -1,6 +1,7 @@
 import DepthMap from "../component/DepthMap.js";
 import Flowers from "../component/Flowers.js";
 import GLContainer from "../component/GLContainer.js";
+import PickMap from "../component/PickMap.js";
 import TextureContainer from "../component/TextureContainer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";
@@ -10,6 +11,7 @@ import DepthTexture from "../texture/DepthTexture.js";
 import FlowerTexture from "../texture/FlowerTexture.js";
 import FontTexture from "../texture/FontTexture.js";
 import JointTexture from "../texture/JointTexture.js";
+import PickTexture from "../texture/PickTexture.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
@@ -26,6 +28,7 @@ export default class TextureManager extends Manager<Texture> {
             FlowerTexture,
             JointTexture,
             DepthTexture,
+            PickTexture,
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -43,12 +46,14 @@ export default class TextureManager extends Manager<Texture> {
         this.all().forEach(texture => texture.create(gl));
         const { windowWidth, windowHeight } = this.getDevice().getWindowInfo()
         this.get(DepthTexture).generate(windowWidth, windowHeight)
+        this.get(PickTexture).generate(windowWidth, windowHeight)
         this.getAllScene().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(gl)));
         this.getAllScene().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
         this.getAllScene().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));
         this.getAllScene().forEach(scene => scene.getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture))));
         this.getAllScene().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(FlowerTexture))));
         this.getAllScene().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(DepthTexture))));
+        this.getAllScene().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(PickTexture))));
         
     }
     update(): void {

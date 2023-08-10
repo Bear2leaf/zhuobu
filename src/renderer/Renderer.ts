@@ -5,6 +5,9 @@ import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
+import { TextureIndex } from "../texture/Texture.js";
+import PickColorRed from "../pickcolor/PickColorRed.js";
+import { Vec3, Vec4 } from "../math/Vector.js";
 
 
 export default class Renderer extends Component {
@@ -70,6 +73,9 @@ export default class Renderer extends Component {
         this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
         this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
-        this.getShader().setInteger("u_texture", 0);
+        this.getShader().setInteger("u_texture", TextureIndex.Default);
+        if (this.getEntity().has(PickColorRed) && this.getEntity().get(PickColorRed).getIsActive()) {
+            this.getShader().setVector3f("u_pickColor", new Vec3(1, 0, 0));
+        }
     }
 }

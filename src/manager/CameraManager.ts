@@ -22,6 +22,7 @@ import UIFrame from "../component/UIFrame.js";
 import Text from "../drawobject/Text.js";
 import DepthMap from "../component/DepthMap.js";
 import Sprite from "../drawobject/Sprite.js";
+import PickMap from "../component/PickMap.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -80,6 +81,7 @@ export default class CameraManager extends Manager<Camera> {
 
         }
         this.getAllScene().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getAllScene().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
         this.getAllScene().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
 
     }

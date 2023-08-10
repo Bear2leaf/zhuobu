@@ -18,6 +18,9 @@ export default class BaseTexture implements Texture {
     }
     return this.textureIndex;
   }
+  getBindIndex() {
+    return this.bindIndex;
+  }
   getGL() {
     if (this.gl === undefined) {
       throw new Error("BaseTexture is not initialized.");
