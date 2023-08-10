@@ -11,6 +11,7 @@ export default class SpriteRenderer extends Renderer {
         super.render();
         if (this.getEntity().has(DepthMap)) {
             this.getShader().setInteger("u_texture", 2);
+            this.getShader().setInteger("u_textureType", 1);
         }
         this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
     }

@@ -1,11 +1,22 @@
 #version 300 es 
-precision highp float; 
+precision highp float;
 
 in vec4 v_texcoord;
 in vec4 v_color;
 out vec4 color;
 uniform sampler2D u_texture;
+uniform int u_textureType;
 
 void main() {
-    color = texture(u_texture, v_texcoord.xy) * v_color;
+    const int TEXTURE_TYPE_COLOR = 0;
+    const int TEXTURE_TYPE_DEPTH = 1;
+    if(u_textureType == TEXTURE_TYPE_COLOR) {
+        color = texture(u_texture, v_texcoord.xy) * v_color;
+    } else if(u_textureType == TEXTURE_TYPE_DEPTH) {
+        float depth = texture(u_texture, v_texcoord.xy).r;
+        float near = 1.0f;
+        float far = 30.0f;
+        float depthValue = (2.0f * near) / (far + near - depth * (far - near));
+        color = vec4(depthValue, depthValue, depthValue, 1.0f);
+    }
 }
