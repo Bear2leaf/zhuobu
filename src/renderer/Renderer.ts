@@ -5,9 +5,8 @@ import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
-import { TextureIndex } from "../texture/Texture.js";
-import PickColor from "../pickcolor/PickColor.js";
-import { Vec3, Vec4 } from "../math/Vector.js";
+import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
+import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 
 
 export default class Renderer extends Component {
@@ -73,8 +72,8 @@ export default class Renderer extends Component {
         this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
         this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
-        if (this.getEntity().has(PickColor) && this.getEntity().get(PickColor).getIsActive()) {
-            this.getShader().setVector3f("u_pickColor", this.getEntity().get(PickColor).getColor());
+        if (this.getEntity().has(OnClickPickSubject) && this.getEntity().get(OnClickPickSubject).getIsActive()) {
+            this.getShader().setVector3u("u_pickColor", this.getEntity().get(OnClickPickSubject).getColor());
         }
     }
 }

@@ -66,6 +66,10 @@ export default class GLTF {
     setName(name: string) {
         this.name = name;
     }
+    getName() {
+        if (this.name === undefined) throw new Error("name is not set");
+        return this.name;
+    }
     setGLTFCache(gltfCache: JSONCache) {
         this.gltfCache = gltfCache;
     }

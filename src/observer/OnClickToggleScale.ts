@@ -1,9 +1,9 @@
 import TRS from "../component/TRS.js";
-import OnClickSubject from "../subject/OnClickSubject.js";
+import DemoSubject from "../subject/OnClickSubject.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {
-    private subject?: OnClickSubject;
+    private subject?: DemoSubject;
     private scale: number = 1;
 
     init(): void {
@@ -20,12 +20,12 @@ export default class OnClickToggleScale extends Observer {
         this.getEntity().get(TRS).getScale().set(this.scale * 10, this.scale * 10, 1, 1);
     }
 
-    getSubject(): OnClickSubject {
+    getSubject(): DemoSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: OnClickSubject) {
+    setSubject(subject: DemoSubject) {
         this.subject = subject;
     }
 }

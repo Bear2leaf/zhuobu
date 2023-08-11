@@ -1,12 +1,12 @@
-import OnPickSayHelloPick from "../observer/OnPickSayHelloPick.js";
+import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import OnClickToggleScale from "../observer/OnClickToggleScale.js";
 import Scene from "../scene/Scene.js";
 import OnClickBottomLeftSubject from "../subject/OnClickBottomLeftSubject.js";
+import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 import OnClickSpriteSubject from "../subject/OnClickSpriteSubject.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
-import OnPickSubject from "../subject/OnPickSubject.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
@@ -28,11 +28,10 @@ export default class EventManager extends Manager<unknown> {
                 subject.register(component);
             });
         }));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(OnPickSubject).forEach(subject => {
-            scene.getComponents(OnPickSayHelloPick).forEach(component => {
-                component.setSubject(subject);
-                subject.register(component);
-            });
+        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickPickSubject).forEach(subject => {
+            const component = subject.getEntity().get(OnClickPickSayHello);
+            component.setSubject(subject);
+            subject.register(component);
         }));
         this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickBottomLeftSubject).forEach(subject => {
             scene.getComponents(OnClickToggleAudio).forEach(component => {

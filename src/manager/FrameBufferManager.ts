@@ -8,12 +8,9 @@ import SceneManager from "./SceneManager.js";
 import Renderer from "../renderer/Renderer.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import PickTexture from "../texture/PickTexture.js";
-import PickColor from "../pickcolor/PickColor.js";
 import { ViewPortType } from "../device/Device.js";
-import OnPickSubject from "../subject/OnPickSubject.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
-import OnPickSayHelloPick from "../observer/OnPickSayHelloPick.js";
-import Pointer from "../drawobject/Pointer.js";
+import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
+import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 
 
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
@@ -43,6 +40,12 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
             this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
             this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
             this.get(RenderFrameBufferObject).unbind();
+
+            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject, index) => {
+                subject.activate();
+                subject.getColor().set(index * 100 + 50, index * 100 + 50, 125, 0)
+                subject.setFrameBufferObject(this.get(RenderFrameBufferObject));
+            });
         }
     }
     update(): void {
@@ -53,19 +56,9 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
             this.get(DepthFrameBufferObject).unbind();
         } else if (this.pickOnly) {
             this.get(RenderFrameBufferObject).bind();
-            this.getDevice().viewportTo(ViewPortType.Full)
-            this.getSceneManager().get(DemoScene).getComponents(PickColor).forEach((component) => component.activate());
-            this.getSceneManager().get(DemoScene).getComponents(Renderer).filter(renderer => !renderer.getEntity().has(Pointer)).forEach((renderer) => renderer.render());
-            this.getSceneManager().get(DemoScene).getComponents(PickColor).forEach((component) => {
-                const touch = this.getSceneManager().first().getComponents(TouchEventContainer)[0];
-                if (touch.getIsTouchingStart()) {
-                    this.getSceneManager().get(DemoScene).getComponents(PickColor).forEach((component) => {
-                        if (component.checkIsPicked(Math.round(touch.getX()), Math.round(touch.getY()))) {
-                            this.getSceneManager().first().getComponents(OnPickSayHelloPick).forEach(comp => comp.notify());
-                        }
-                    });
-                }
-                component.deactivate();
+            this.getDevice().viewportTo(ViewPortType.Full);
+            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((component) => {
+                component.getEntity().get(Renderer).render();
             });
             this.get(RenderFrameBufferObject).unbind();
         }

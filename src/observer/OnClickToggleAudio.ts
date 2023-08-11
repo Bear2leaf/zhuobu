@@ -1,9 +1,9 @@
 import DemoAudio from "../audio/DemoAudio.js";
-import OnClickSubject from "../subject/OnClickSubject.js";
+import DemoSubject from "../subject/OnClickSubject.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleAudio extends Observer {
-    private subject?: OnClickSubject;
+    private subject?: DemoSubject;
 
     init(): void {
         
@@ -14,12 +14,12 @@ export default class OnClickToggleAudio extends Observer {
         this.getEntity().get(DemoAudio).togglePlay();
     }
 
-    getSubject(): OnClickSubject {
+    getSubject(): DemoSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: OnClickSubject) {
+    setSubject(subject: DemoSubject) {
         this.subject = subject;
     }
 }
