@@ -2,7 +2,6 @@ import { flatten, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
 import Quad from "../math/Quad.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import Node from "../component/Node.js";
 
 export default class Sprite extends DrawObject {
     private rect: Vec4 = new Vec4(0, 0, 2, 2);

@@ -46,30 +46,30 @@ export default class CameraManager extends Manager<Camera> {
     update(): void { }
     init(): void {
         const windowInfo = this.getDevice().getWindowInfo();
-        if (this.getAllScene().some(scene => scene.getComponents(FrustumCube).length > 0) ){
-            this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(FrontgroundFrame).forEach((obj) => {
+        if (this.getSceneManager().all().some(scene => scene.getComponents(FrustumCube).length > 0) ){
+            this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(FrontgroundFrame).forEach((obj) => {
                 scene.getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
             }));
-            this.getAllScene().forEach(scene => scene.getComponents(BackgroundFrame).forEach((obj) => {
+            this.getSceneManager().all().forEach(scene => scene.getComponents(BackgroundFrame).forEach((obj) => {
                 scene.getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
             }));
-            this.getAllScene().forEach(scene => scene.getComponents(WireQuad).forEach((obj) => {
+            this.getSceneManager().all().forEach(scene => scene.getComponents(WireQuad).forEach((obj) => {
                 obj.getEntity().get(WireQuad).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight);
             }));
         } else {
-            this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
-            this.getAllScene().forEach(scene => scene.getComponents(SpriteRenderer).forEach(comp => {
+            this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(MainCamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
+            this.getSceneManager().all().forEach(scene => scene.getComponents(SpriteRenderer).forEach(comp => {
                 if (comp.getEntity().has(Flowers)) {
                     comp.getEntity().get(Renderer).setCamera(this.get(BackgroundCamera));
                 } else if (comp.getEntity().has(Text)) {
@@ -80,9 +80,9 @@ export default class CameraManager extends Manager<Camera> {
             }));
 
         }
-        this.getAllScene().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getAllScene().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getAllScene().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
 
     }
     getSceneManager(): SceneManager {
@@ -96,8 +96,5 @@ export default class CameraManager extends Manager<Camera> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
-    }
-    getAllScene(): Scene[] {
-        return this.getSceneManager().all();
     }
 }

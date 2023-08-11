@@ -38,9 +38,9 @@ export default class GLTFManager extends Manager<GLTF> {
             gltf.setGLTFCache(this.getCacheManager().get(JSONCache));
             gltf.init();
         });
-        this.getAllScene().forEach(scene => scene.getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF).clone())));
-        this.getAllScene().forEach(scene => scene.getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone())));
-        this.getAllScene().forEach(scene => scene.getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF).clone())));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF).clone())));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone())));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF).clone())));
     }
     update(): void { }
     setCacheManager(cacheManager: CacheManager) {
@@ -63,8 +63,5 @@ export default class GLTFManager extends Manager<GLTF> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
-    }
-    getAllScene(): Scene[] {
-        return this.getSceneManager().all();
     }
 }

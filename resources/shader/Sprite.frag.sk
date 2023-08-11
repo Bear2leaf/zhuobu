@@ -9,11 +9,14 @@ uniform int u_textureType;
 
 void main() {
     const int TEXTURE_TYPE_COLOR = 0;
-    const int TEXTURE_TYPE_DEPTH = 1;
+    const int TEXTURE_TYPE_DEPTH = 2;
+    const int TEXTURE_TYPE_PICK = 3;
     if(u_textureType == TEXTURE_TYPE_COLOR) {
         color = texture(u_texture, v_texcoord.xy) * v_color;
+    } else if(u_textureType == TEXTURE_TYPE_PICK) {
+        color = texture(u_texture, vec2(v_texcoord.x, 1.0f - v_texcoord.y)) * v_color;
     } else if(u_textureType == TEXTURE_TYPE_DEPTH) {
-        float depth = texture(u_texture, v_texcoord.xy).r;
+        float depth = texture(u_texture, vec2(v_texcoord.x, 1.0f - v_texcoord.y)).r;
         float near = 1.0f;
         float far = 30.0f;
         float depthValue = (near) / (far + near - depth * (far - near));

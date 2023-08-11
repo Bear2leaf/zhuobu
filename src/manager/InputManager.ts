@@ -50,14 +50,14 @@ export default class InputManager extends Manager<unknown> {
         
     }
     update(): void {
-        this.getScene().getComponents(TouchEventContainer).forEach((touchEvent) => {
+        this.getSceneManager().all().forEach(scene => scene.getComponents(TouchEventContainer).forEach((touchEvent) => {
             touchEvent.setIsTouching(this.isTouching);
             touchEvent.setIsTouchingStart(this.isTouchingStart);
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);
             touchEvent.setX(this.x);
             touchEvent.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
             
-        });
+        }));
         if (this.isTouchingEnd) {
             this.isTouchingEnd = false;
         }

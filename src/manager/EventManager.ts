@@ -1,4 +1,4 @@
-import DemoObserver from "../observer/DemoObserver.js";
+import OnPickSayHelloPick from "../observer/OnPickSayHelloPick.js";
 import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import OnClickToggleScale from "../observer/OnClickToggleScale.js";
@@ -6,6 +6,7 @@ import Scene from "../scene/Scene.js";
 import OnClickBottomLeftSubject from "../subject/OnClickBottomLeftSubject.js";
 import OnClickSpriteSubject from "../subject/OnClickSpriteSubject.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
+import OnPickSubject from "../subject/OnPickSubject.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
@@ -21,24 +22,30 @@ export default class EventManager extends Manager<unknown> {
     async load(): Promise<void> {
     }
     init(): void {
-        this.getScene().getComponents(OnClickSubject).forEach(subject => {
-            this.getScene().getComponents(OnClickToggleAnim).forEach(component => {
+        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickSubject).forEach(subject => {
+            scene.getComponents(OnClickToggleAnim).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        });
-        this.getScene().getComponents(OnClickBottomLeftSubject).forEach(subject => {
-            this.getScene().getComponents(OnClickToggleAudio).forEach(component => {
+        }));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(OnPickSubject).forEach(subject => {
+            scene.getComponents(OnPickSayHelloPick).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        });
-        this.getScene().getComponents(OnClickSpriteSubject).forEach(subject => {
-            this.getScene().getComponents(OnClickToggleScale).forEach(component => {
+        }));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickBottomLeftSubject).forEach(subject => {
+            scene.getComponents(OnClickToggleAudio).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        });
+        }));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickSpriteSubject).forEach(subject => {
+            scene.getComponents(OnClickToggleScale).forEach(component => {
+                component.setSubject(subject);
+                subject.register(component);
+            });
+        }));
     }
     update(): void {
     }

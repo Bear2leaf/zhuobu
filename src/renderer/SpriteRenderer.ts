@@ -13,9 +13,13 @@ export default class SpriteRenderer extends Renderer {
         super.render();
         if (this.getEntity().has(DepthMap)) {
             this.getShader().setInteger("u_texture", TextureIndex.Depth);
-            this.getShader().setInteger("u_textureType", 1);
+            this.getShader().setInteger("u_textureType", TextureIndex.Depth);
         } else if (this.getEntity().has(PickMap)) {
             this.getShader().setInteger("u_texture", TextureIndex.Pick);
+            this.getShader().setInteger("u_textureType", TextureIndex.Pick);
+        } else {
+            this.getShader().setInteger("u_texture", TextureIndex.Default);
+            this.getShader().setInteger("u_textureType", TextureIndex.Default);
         }
         this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
     }

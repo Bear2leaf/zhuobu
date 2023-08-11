@@ -4,8 +4,7 @@ import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
-import Mesh from "../drawobject/Mesh.js";
-import PickColorRed from "../pickcolor/PickColorRed.js";
+import PickColor from "../pickcolor/PickColor.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import Entity from "./Entity.js";
 
@@ -17,7 +16,7 @@ export default class HelloMultiMeshObject extends Entity {
             TRS,
             Node,
             HelloMultiMesh,
-            PickColorRed,
+            PickColor,
             GLTFMeshRenderer
         ].forEach(ctor => {
             this.add<Component>(ctor);

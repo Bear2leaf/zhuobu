@@ -49,7 +49,7 @@ export default class RendererManager extends Manager<Renderer> {
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.render());
     }
     bindEntityRenderer() {
-        this.getAllScene().forEach(scene => scene.getComponents(Renderer).forEach(entityRenderer => {
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(entityRenderer => {
             for (const ctor of this.ctors) {
                 if (entityRenderer instanceof ctor) {
                     entityRenderer.setShader(this.get(ctor).getShader());
@@ -78,8 +78,5 @@ export default class RendererManager extends Manager<Renderer> {
     }
     getScene(): Scene {
         return this.getSceneManager().first();
-    }
-    getAllScene(): Scene[] {
-        return this.getSceneManager().all();
     }
 }
