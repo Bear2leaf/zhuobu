@@ -7,6 +7,7 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
+import { Vec3, Vec4 } from "../math/Vector.js";
 
 
 export default class Renderer extends Component {
@@ -74,6 +75,8 @@ export default class Renderer extends Component {
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
         if (this.getEntity().has(OnClickPickSubject) && this.getEntity().get(OnClickPickSubject).getIsActive()) {
             this.getShader().setVector3u("u_pickColor", this.getEntity().get(OnClickPickSubject).getColor());
+        } else {
+            this.getShader().setVector3u("u_pickColor", new Vec3());
         }
     }
 }

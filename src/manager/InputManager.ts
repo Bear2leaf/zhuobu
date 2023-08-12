@@ -13,10 +13,10 @@ export default class InputManager extends Manager<unknown> {
     addObjects(): void {
     }
     async load(): Promise<void> {
-        
+
     }
     init(): void {
-        
+
         this.getDevice().onTouchStart((touchInfo) => {
             this.isTouching = true;
             this.isTouchingStart = true;
@@ -47,7 +47,12 @@ export default class InputManager extends Manager<unknown> {
             this.x = touchInfo?.x || 0;
             this.y = touchInfo?.y || 0;
         })
-        
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(TouchEventContainer).forEach((touchEvent) => {
+                touchEvent.setPixelRatio(this.getDevice().getWindowInfo().pixelRatio);
+            });
+        });
+
     }
     update(): void {
         this.getSceneManager().all().forEach(scene => scene.getComponents(TouchEventContainer).forEach((touchEvent) => {
@@ -56,7 +61,7 @@ export default class InputManager extends Manager<unknown> {
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);
             touchEvent.setX(this.x);
             touchEvent.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
-            
+
         }));
         if (this.isTouchingEnd) {
             this.isTouchingEnd = false;

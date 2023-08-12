@@ -42,8 +42,7 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
             this.get(RenderFrameBufferObject).unbind();
 
             this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject, index) => {
-                subject.activate();
-                subject.getColor().set(index * 100 + 50, index * 100 + 50, 125, 0)
+                subject.getColor().set(index + 1, 0, 0, 255)
                 subject.setFrameBufferObject(this.get(RenderFrameBufferObject));
             });
         }
@@ -58,7 +57,9 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
             this.get(RenderFrameBufferObject).bind();
             this.getDevice().viewportTo(ViewPortType.Full);
             this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((component) => {
+                component.activate()
                 component.getEntity().get(Renderer).render();
+                component.deactivate()
             });
             this.get(RenderFrameBufferObject).unbind();
         }

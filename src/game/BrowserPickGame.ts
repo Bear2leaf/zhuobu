@@ -16,8 +16,8 @@ export default class BrowserPickGame extends Game {
         this.addObjects();
         this.load().then(() => {
             this.get(FrameBufferManager).setPickOnly(true);
-            this.get(SceneManager).add(PickScene);
             this.get(SceneManager).add(DemoScene);
+            this.get(SceneManager).add(PickScene);
             this.get(SceneManager).addObjects();
             this.init();
             this.update();

@@ -7,6 +7,7 @@ export default class TouchEventContainer extends Component {
     private isTouching: boolean = false;
     private isTouchingStart: boolean = false;
     private isTouchingEnd: boolean = false;
+    private pixelRatio: number = 1;
     getX() {
         return this.x;
     }
@@ -18,6 +19,15 @@ export default class TouchEventContainer extends Component {
     }
     setY(y: number) {
         this.y = y;
+    }
+    setPixelRatio(pixelRatio: number): void {
+        this.pixelRatio = pixelRatio;
+    }
+    getScreenX() {
+        return this.x * this.pixelRatio;
+    }
+    getScreenY() {
+        return this.y * this.pixelRatio;
     }
 
     setIsTouchingEnd(isTouchingEnd: boolean) {

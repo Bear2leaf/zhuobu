@@ -44,9 +44,9 @@ export default class TextureManager extends Manager<Texture> {
         this.get(FontTexture).setFontImage(this.getCacheManager().getImage("boxy_bold_font"));
         this.get(FlowerTexture).setImage(this.getCacheManager().getImage("flowers"));
         this.all().forEach(texture => texture.create(gl));
-        const { windowWidth, windowHeight } = this.getDevice().getWindowInfo()
-        this.get(DepthTexture).generate(windowWidth, windowHeight)
-        this.get(PickTexture).generate(windowWidth, windowHeight)
+        const { windowWidth, windowHeight, pixelRatio } = this.getDevice().getWindowInfo()
+        this.get(DepthTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
+        this.get(PickTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.getSceneManager().all().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(gl)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));
