@@ -1,4 +1,3 @@
-import DemoAudio from "../audio/DemoAudio.js";
 import Component from "../component/Component.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
@@ -10,7 +9,6 @@ export default class AudioBGMObject extends Entity {
         [
             TRS,
             Node,
-            DemoAudio,
             OnClickToggleAudio
         ].forEach(ctor => {
             this.add<Component>(ctor);

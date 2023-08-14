@@ -9,7 +9,6 @@ import Renderer from "../renderer/Renderer.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import PickTexture from "../texture/PickTexture.js";
 import { ViewPortType } from "../device/Device.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 
 

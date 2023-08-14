@@ -14,7 +14,7 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 
 export default abstract class Game extends Manager<unknown> {
     private rafId: number = 0;
-    private readonly ctors =
+    private readonly ctors: (new() => Manager<unknown>)[] =
         [
             CacheManager,
             GLTFManager,

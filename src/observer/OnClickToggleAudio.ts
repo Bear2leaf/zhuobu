@@ -11,7 +11,7 @@ export default class OnClickToggleAudio extends Observer {
     }
 
     public notify(): void {
-        this.getEntity().get(DemoAudio).togglePlay();
+        // this.getEntity().get(DemoAudio).togglePlay();
     }
 
     getSubject(): DemoSubject {

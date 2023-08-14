@@ -1,164 +1,7 @@
-import Component from "../component/Component.js";
-
-const notes: {
-    [key: string]: number
-} = {
-    "C4": 261.63,
-    "Db4": 277.18,
-    "D4": 293.66,
-    "Eb4": 311.13,
-    "E4": 329.63,
-    "F4": 349.23,
-    "Gb4": 369.99,
-    "G4": 392.00,
-    "Ab4": 415.30,
-    "A4": 440,
-    "Bb4": 466.16,
-    "B4": 493.88,
-    "C5": 523.25
-}
-
-// NOTE SELECTS
-// const noteSelectsDiv = document.querySelector('#note-selects-div');
-
-// for (let i = 0; i <= 7; i++) {
-//     const select = document.createElement('select');
-//     select.id = `note ${i + 1}`;
-//     for (let j = 0; j < Object.keys(notes).length; j++) {
-//         const option = document.createElement('option');
-//         option.value = j;
-//         option.innerText = `${Object.keys(notes)[j]}`;
-//         select.appendChild(option);
-//         select.addEventListener('change', setCurrentNotes)
-//     }
-//     noteSelectsDiv.appendChild(select);
-// }
-
-let currentNotes = [0, 3, 0, 7, 8, 7, 3, 2]
-// const noteSelects = document.querySelectorAll('select');
-// function setNoteSelects() {
-//     for (let i = 0; i < currentNotes.length; i++) {
-//         noteSelects[i].value = currentNotes[i];
-//     }
-// }
-
-// function setCurrentNotes() {
-//     for (let i = 0; i < noteSelects.length; i++) {
-//         currentNotes[i] = noteSelects[i].value;
-//     }
-// }
-
-// setNoteSelects();
+import AudioClip from "./AudioClip.js";
 
 
-// CONTEXT AND MASTER VOLUME
-/**
- * @type {AudioContext}
- */
-const context: AudioContext = typeof AudioContext === "undefined" ? ((globalThis as any).wx).createWebAudioContext() : new AudioContext();
-
-/**
- * @type {AudioContext}
- */
-const masterVolume = context.createGain();
-masterVolume.connect(context.destination);
-masterVolume.gain.value = 0.2
-
-// const volumeControl = document.querySelector('#volume-control');
-
-// volumeControl.addEventListener('input', function () {
-//     masterVolume.gain.value = this.value;
-// });
-
-//WAVEFORM SELECT
-// const waveforms = document.getElementsByName('waveform');
-let waveform: OscillatorType = "sine";
-
-// function setWaveform() {
-//     for (var i = 0; i < waveforms.length; i++) {
-//         if (waveforms[i].checked) {
-//             waveform = waveforms[i].value;
-//         }
-//     }
-// }
-
-// waveforms.forEach((waveformInput) => {
-//     waveformInput.addEventListener('change', function () {
-//         setWaveform();
-//     });
-// });
-
-
-// EFFECTS CONTROLS
-
-// Envelope
-let attackTime = 0.3;
-let sustainLevel = 0.8;
-let releaseTime = 0.3;
-let noteLength = 1;
-
-// const attackControl = document.querySelector('#attack-control');
-// const releaseControl = document.querySelector('#release-control');
-// const noteLengthControl = document.querySelector('#note-length-control');
-
-// attackControl.addEventListener('input', function () {
-//     attackTime = Number(this.value);
-// });
-
-// releaseControl.addEventListener('input', function () {
-//     releaseTime = Number(this.value);
-// });
-
-// noteLengthControl.addEventListener('input', function () {
-//     noteLength = Number(this.value);
-// });
-
-// Vibrato
-let vibratoSpeed = 10;
-let vibratoAmount = 0;
-// const vibratoAmountControl = document.querySelector('#vibrato-amount-control');
-// const vibratoSpeedControl = document.querySelector('#vibrato-speed-control');
-
-// vibratoAmountControl.addEventListener('input', function () {
-//     vibratoAmount = this.value;
-// })
-
-// vibratoSpeedControl.addEventListener('input', function () {
-//     vibratoSpeed = this.value;
-// })
-
-// Delay
-// const delayAmountControl = document.querySelector('#delay-amount-control');
-// const delayTimeControl = document.querySelector('#delay-time-control');
-// const feedbackControl = document.querySelector('#feedback-control');
-const delay = context.createDelay(0.001); // weapp maxDelayTime is required.
-const feedback = context.createGain();
-const delayAmountGain = context.createGain();
-
-delayAmountGain.connect(delay)
-delay.connect(feedback)
-
-feedback.connect(delay)
-delay.connect(masterVolume)
-
-
-delay.delayTime.value = 0;
-delayAmountGain.gain.value = 0;
-feedback.gain.value = 0;
-
-// delayAmountControl.addEventListener('input', function () {
-//     delayAmountGain.value = this.value;
-// })
-
-// delayTimeControl.addEventListener('input', function () {
-//     delay.delayTime.value = this.value;
-// })
-
-// feedbackControl.addEventListener('input', function () {
-//     feedback.gain.value = this.value;
-// })
-
-export default class DemoAudio extends Component {
+export default class DemoAudio implements AudioClip {
 
 
     //LOOP CONTROLS
@@ -170,15 +13,173 @@ export default class DemoAudio extends Component {
     private isPlaying = false;
     private lfoGain?: GainNode;
     private lfo?: OscillatorNode;
-    private frames = 0;
-    update(): void {
-        const secondsPerBeat = 60 / this.tempo;
-        if (this.isPlaying && (this.frames / 60) > secondsPerBeat) {
-            this.playCurrentNote();
-            this.nextNote();
-            this.frames = 0;
-        };
-        this.frames++;
+    private context?: AudioContext;
+    private readonly notes: {
+        [key: string]: number
+    } = {
+            "C4": 261.63,
+            "Db4": 277.18,
+            "D4": 293.66,
+            "Eb4": 311.13,
+            "E4": 329.63,
+            "F4": 349.23,
+            "Gb4": 369.99,
+            "G4": 392.00,
+            "Ab4": 415.30,
+            "A4": 440,
+            "Bb4": 466.16,
+            "B4": 493.88,
+            "C5": 523.25
+        }
+
+
+    // NOTE SELECTS
+    // const noteSelectsDiv = document.querySelector('#note-selects-div');
+
+    // for (let i = 0; i <= 7; i++) {
+    //     const select = document.createElement('select');
+    //     select.id = `note ${i + 1}`;
+    //     for (let j = 0; j < Object.keys(notes).length; j++) {
+    //         const option = document.createElement('option');
+    //         option.value = j;
+    //         option.innerText = `${Object.keys(notes)[j]}`;
+    //         select.appendChild(option);
+    //         select.addEventListener('change', setCurrentNotes)
+    //     }
+    //     noteSelectsDiv.appendChild(select);
+    // }
+
+    private readonly currentNotes = [0, 3, 0, 7, 8, 7, 3, 2]
+    // const noteSelects = document.querySelectorAll('select');
+    // function setNoteSelects() {
+    //     for (let i = 0; i < currentNotes.length; i++) {
+    //         noteSelects[i].value = currentNotes[i];
+    //     }
+    // }
+
+    // function setCurrentNotes() {
+    //     for (let i = 0; i < noteSelects.length; i++) {
+    //         currentNotes[i] = noteSelects[i].value;
+    //     }
+    // }
+
+    // setNoteSelects();
+
+    private masterVolume?: GainNode;
+    private delay?: DelayNode;
+
+    // const volumeControl = document.querySelector('#volume-control');
+
+    // volumeControl.addEventListener('input', function () {
+    //     masterVolume.gain.value = this.value;
+    // });
+
+    //WAVEFORM SELECT
+    // const waveforms = document.getElementsByName('waveform');
+    private readonly waveform: OscillatorType = "sine";
+
+    // function setWaveform() {
+    //     for (var i = 0; i < waveforms.length; i++) {
+    //         if (waveforms[i].checked) {
+    //             waveform = waveforms[i].value;
+    //         }
+    //     }
+    // }
+
+    // waveforms.forEach((waveformInput) => {
+    //     waveformInput.addEventListener('change', function () {
+    //         setWaveform();
+    //     });
+    // });
+
+
+    // EFFECTS CONTROLS
+
+    // Envelope
+    private readonly attackTime = 0.3;
+    private readonly sustainLevel = 0.8;
+    private readonly releaseTime = 0.3;
+    private readonly noteLength = 1;
+
+    // const attackControl = document.querySelector('#attack-control');
+    // const releaseControl = document.querySelector('#release-control');
+    // const noteLengthControl = document.querySelector('#note-length-control');
+
+    // attackControl.addEventListener('input', function () {
+    //     attackTime = Number(this.value);
+    // });
+
+    // releaseControl.addEventListener('input', function () {
+    //     releaseTime = Number(this.value);
+    // });
+
+    // noteLengthControl.addEventListener('input', function () {
+    //     noteLength = Number(this.value);
+    // });
+
+    // Vibrato
+    private readonly vibratoSpeed = 10;
+    private readonly vibratoAmount = 0;
+    // const vibratoAmountControl = document.querySelector('#vibrato-amount-control');
+    // const vibratoSpeedControl = document.querySelector('#vibrato-speed-control');
+
+    // vibratoAmountControl.addEventListener('input', function () {
+    //     vibratoAmount = this.value;
+    // })
+
+    // vibratoSpeedControl.addEventListener('input', function () {
+    //     vibratoSpeed = this.value;
+    // })
+
+    // Delay
+    // const delayAmountControl = document.querySelector('#delay-amount-control');
+    // const delayTimeControl = document.querySelector('#delay-time-control');
+    // const feedbackControl = document.querySelector('#feedback-control');
+    setContext(context: AudioContext) {
+        this.context = context;
+    }
+    getContext() {
+        if (this.context === undefined) {
+            throw new Error("audiocontext not exist")
+        }
+        return this.context;
+    }
+    init() {
+
+        const masterVolume = this.getContext().createGain();
+        this.masterVolume = masterVolume;
+
+        const delay = this.getContext().createDelay(0.001); // weapp maxDelayTime is required.
+        this.delay = delay;
+        const feedback = this.getContext().createGain();
+        const delayAmountGain = this.getContext().createGain();
+
+        delayAmountGain.connect(delay)
+        delay.connect(feedback)
+
+        feedback.connect(delay)
+        delay.connect(masterVolume)
+
+
+        delay.delayTime.value = 0;
+        delayAmountGain.gain.value = 0;
+        feedback.gain.value = 0;
+
+        // delayAmountControl.addEventListener('input', function () {
+        //     delayAmountGain.value = this.value;
+        // })
+
+        // delayTimeControl.addEventListener('input', function () {
+        //     delay.delayTime.value = this.value;
+        // })
+
+        // feedbackControl.addEventListener('input', function () {
+        //     feedback.gain.value = this.value;
+        // })
+    }
+    playOnce(): void {
+        this.playCurrentNote();
+        this.nextNote();
     }
 
     togglePlay() {
@@ -214,31 +215,33 @@ export default class DemoAudio extends Component {
     }
 
     playCurrentNote() {
-        const osc = context.createOscillator();
-        const noteGain = context.createGain();
+        const osc = this.getContext().createOscillator();
+        const noteGain = this.getContext().createGain();
         noteGain.gain.setValueAtTime(0, 0);
-        noteGain.gain.linearRampToValueAtTime(sustainLevel, context.currentTime + noteLength * attackTime);
-        noteGain.gain.setValueAtTime(sustainLevel, context.currentTime + noteLength - noteLength * releaseTime);
-        noteGain.gain.linearRampToValueAtTime(0, context.currentTime + noteLength);
+        noteGain.gain.linearRampToValueAtTime(this.sustainLevel, this.getContext().currentTime + this.noteLength * this.attackTime);
+        noteGain.gain.setValueAtTime(this.sustainLevel, this.getContext().currentTime + this.noteLength - this.noteLength * this.releaseTime);
+        noteGain.gain.linearRampToValueAtTime(0, this.getContext().currentTime + this.noteLength);
 
-        this.lfoGain = context.createGain();
-        this.lfoGain.gain.setValueAtTime(vibratoAmount, 0);
+        this.lfoGain = this.getContext().createGain();
+        this.lfoGain.gain.setValueAtTime(this.vibratoAmount, 0);
         this.lfoGain.connect(osc.frequency)
 
-        this.lfo = context.createOscillator();
-        this.lfo.frequency.setValueAtTime(vibratoSpeed, 0);
+        this.lfo = this.getContext().createOscillator();
+        this.lfo.frequency.setValueAtTime(this.vibratoSpeed, 0);
         this.lfo.start(0);
-        this.lfo.stop(context.currentTime + noteLength);
+        this.lfo.stop(this.getContext().currentTime + this.noteLength);
         this.lfo.connect(this.lfoGain);
-        osc.type = waveform;
-        const notekeys = Object.keys(notes);
-        const currentNoteKey = notekeys[currentNotes[this.currentNoteIndex]];
-        osc.frequency.setValueAtTime(notes[currentNoteKey], 0);
+        osc.type = this.waveform;
+        const notekeys = Object.keys(this.notes);
+        const currentNoteKey = notekeys[this.currentNotes[this.currentNoteIndex]];
+        osc.frequency.setValueAtTime(this.notes[currentNoteKey], 0);
         osc.start(0);
-        osc.stop(context.currentTime + noteLength);
+        osc.stop(this.getContext().currentTime + this.noteLength);
         osc.connect(noteGain);
-        noteGain.connect(masterVolume);
-        noteGain.connect(delay);
+        if (this.masterVolume === undefined) throw new Error("masterVolume is not set!");
+        if (this.delay === undefined) throw new Error("delay is not set!");
+        noteGain.connect(this.masterVolume);
+        noteGain.connect(this.delay);
     }
 
 }
