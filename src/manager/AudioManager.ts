@@ -1,13 +1,16 @@
 import AudioClip from "../audio/AudioClip.js";
 import BleepAudio from "../audio/BleepAudio.js";
 import DemoAudio from "../audio/DemoAudio.js";
+import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import Scene from "../scene/Scene.js";
+import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 export default class AudioManager extends Manager<AudioClip> {
     private context?: AudioContext;
     private sceneManager?: SceneManager;
+    private cacheManager?: CacheManager;
     getAudioContext() {
         if (this.context === undefined) {
             throw new Error("audiocontext not exist")
@@ -23,10 +26,12 @@ export default class AudioManager extends Manager<AudioClip> {
         });
     }
     async load(): Promise<void> {
+        await this.getCacheManager().get(ArrayBufferCache).load("resources/audio/bleep.wav");
     }
     init() {
         this.context = this.getDevice().createWebAudioContext();
         this.all().forEach(clip => clip.setContext(this.getAudioContext()));
+        this.get(BleepAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/audio/bleep.wav"));
         this.all().forEach(clip => clip.init());
         this.getScene().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
     }
@@ -76,6 +81,15 @@ export default class AudioManager extends Manager<AudioClip> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
+    }
+    setCacheManager(cacheManager: CacheManager) {
+        this.cacheManager = cacheManager;
+    }
+    getCacheManager(): CacheManager {
+        if (this.cacheManager === undefined) {
+            throw new Error("cacheManager is undefined");
+        }
+        return this.cacheManager;
     }
     getScene(): Scene {
         return this.getSceneManager().first();
