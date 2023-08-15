@@ -3,4 +3,5 @@ export default interface AudioClip {
     setContext(context: AudioContext): void;
     getContext(): AudioContext;
     init(): void;
+    update(): void;
 }

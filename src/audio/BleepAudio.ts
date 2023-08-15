@@ -7,7 +7,7 @@ const lookup = new Uint8Array(256);
 for (var i = 0; i < chars.length; i++) {
     lookup[chars.charCodeAt(i)] = i;
 }
-function decodeBase64ToArrayBuffer (base64: string) {
+function decodeBase64ToArrayBuffer(base64: string) {
     var bufferLength = base64.length * 0.75,
         len = base64.length, i, p = 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -38,6 +38,7 @@ function decodeBase64ToArrayBuffer (base64: string) {
 
 export default class BleepAudio implements AudioClip {
     private context?: AudioContext;
+    private frames = 0;
     setContext(context: AudioContext) {
         this.context = context;
     }
@@ -49,7 +50,15 @@ export default class BleepAudio implements AudioClip {
     }
     init() {
     }
-    
+    update(): void {
+
+        this.frames++;
+        if (this.frames > 440) {
+            this.playOnce();
+            this.frames = 0;
+        }
+    }
+
     playOnce() {
         const source = this.getContext().createBufferSource();
         this.getContext().decodeAudioData(decodeBase64ToArrayBuffer(bleep), buffer => {

@@ -1,9 +1,13 @@
 import AudioClip from "../audio/AudioClip.js";
 import BleepAudio from "../audio/BleepAudio.js";
 import DemoAudio from "../audio/DemoAudio.js";
+import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
+import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
+import SceneManager from "./SceneManager.js";
 export default class AudioManager extends Manager<AudioClip> {
     private context?: AudioContext;
+    private sceneManager?: SceneManager;
     getAudioContext() {
         if (this.context === undefined) {
             throw new Error("audiocontext not exist")
@@ -24,20 +28,11 @@ export default class AudioManager extends Manager<AudioClip> {
         this.context = this.getDevice().createWebAudioContext();
         this.all().forEach(clip => clip.setContext(this.getAudioContext()));
         this.all().forEach(clip => clip.init());
+        this.getScene().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
     }
-    private frames = 0;
+    
     update(): void {
-        if (this.context === undefined) {
-            throw new Error("audiocontext not exist")
-        }
-        this.frames++;
-        if (this.frames > 440) {
-            this.get(BleepAudio).playOnce();
-            this.frames = 0;
-        }
-        if (this.frames % 60 === 0) {
-            this.get(DemoAudio).playOnce();
-        }
+        this.all().forEach(clip => clip.update());
     }
 
     // playBleepStuck() {
@@ -73,6 +68,18 @@ export default class AudioManager extends Manager<AudioClip> {
     //         source.start()
     //     }, console.error);
     // }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getScene(): Scene {
+        return this.getSceneManager().first();
+    }
 }
 
 

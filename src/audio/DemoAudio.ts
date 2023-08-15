@@ -14,6 +14,7 @@ export default class DemoAudio implements AudioClip {
     private lfoGain?: GainNode;
     private lfo?: OscillatorNode;
     private context?: AudioContext;
+    private frames = 0;
     private readonly notes: {
         [key: string]: number
     } = {
@@ -148,6 +149,8 @@ export default class DemoAudio implements AudioClip {
 
         const masterVolume = this.getContext().createGain();
         this.masterVolume = masterVolume;
+        masterVolume.connect(this.getContext().destination);
+        masterVolume.gain.value = 0.2
 
         const delay = this.getContext().createDelay(0.001); // weapp maxDelayTime is required.
         this.delay = delay;
@@ -184,6 +187,15 @@ export default class DemoAudio implements AudioClip {
 
     togglePlay() {
         this.isPlaying = !this.isPlaying;
+
+    }
+    update() {
+        const secondsPerBeat = 60 / this.tempo;
+        if (this.isPlaying && (this.frames / 60) > secondsPerBeat) {
+            this.playOnce();
+            this.frames = 0;
+        };
+        this.frames++;
     }
 
     // tempoControl.addEventListener('input', function () {
