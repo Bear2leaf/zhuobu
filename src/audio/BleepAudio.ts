@@ -1,9 +1,8 @@
 import AudioClip from "./AudioClip.js";
-
-
 export default class BleepAudio implements AudioClip {
     private context?: AudioContext;
     private buffer?: ArrayBuffer;
+    private source?: AudioBufferSourceNode;
     private frames = 0;
     setContext(context: AudioContext) {
         this.context = context;
@@ -24,21 +23,19 @@ export default class BleepAudio implements AudioClip {
         return this.buffer.slice(0);
     }
     init() {
+        this.playOnce();
     }
 
     update(): void {
 
-        this.frames++;
-        if (this.frames > 440) {
-            this.playOnce();
-            this.frames = 0;
-        }
     }
 
     playOnce() {
         const source = this.getContext().createBufferSource();
         this.getContext().decodeAudioData(this.getBuffer(), buffer => {
             source.buffer = buffer;
+            source.loop = true;
+            this.source = source;
             source.connect(this.getContext().destination);
             source.start();
         }, console.error);

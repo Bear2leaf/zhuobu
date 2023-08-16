@@ -1,6 +1,7 @@
 import AudioClip from "../audio/AudioClip.js";
 import BleepAudio from "../audio/BleepAudio.js";
 import DemoAudio from "../audio/DemoAudio.js";
+import GoodAudio from "../audio/GoodAudio.js";
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import Scene from "../scene/Scene.js";
@@ -20,7 +21,8 @@ export default class AudioManager extends Manager<AudioClip> {
     addObjects(): void {
         [
             DemoAudio,
-            BleepAudio
+            BleepAudio,
+            GoodAudio
         ].forEach(ctor => {
             this.add<AudioClip>(ctor);
         });
@@ -42,7 +44,7 @@ export default class AudioManager extends Manager<AudioClip> {
 
     // playBleepStuck() {
     //     const source = this.getAudioContext().createBufferSource();
-    //     this.getAudioContext().decodeAudioData(decodeBase64ToArrayBuffer(bleep_stuck), buffer => {
+    //     this.getAudioContext().decodeAudioData(decodeBase64ToArrayBuffer(breakout_stuck), buffer => {
     //         source.buffer = buffer;
     //         source.connect(this.getAudioContext().destination);
     //         source.start()
