@@ -1378,6 +1378,41 @@ const audioData = {
 }
 
 
+type Track = {
+    osc1_oct: number,
+    osc1_det: number,
+    osc1_detune: number,
+    osc1_xenv: number,
+    osc1_vol: number,
+    osc1_waveform: number,
+    osc2_oct: number,
+    osc2_det: number,
+    osc2_detune: number,
+    osc2_xenv: number,
+    osc2_vol: number,
+    osc2_waveform: number,
+    noise_fader: number,
+    env_attack: number,
+    env_sustain: number,
+    env_release: number,
+    env_master: number,
+    fx_filter: number,
+    fx_freq: number,
+    fx_resonance: number,
+    fx_delay_time: number,
+    fx_delay_amt: number,
+    fx_pan_freq: number,
+    fx_pan_amt: number,
+    lfo_osc1_freq: number,
+    lfo_fx_freq: number,
+    lfo_freq: number,
+    lfo_amt: number,
+    lfo_waveform: number,
+    p: number[],
+    c: { n: number[] }[]
+}
+
+type Song = { songData: Track[], rowLen: number, endPattern: number, songLen: number };
 // Oscillators
 function osc_sin(value: number) {
     return Math.sin(value * Math.PI * 2)
@@ -1633,61 +1668,31 @@ class TrackGenerator {
             nextNote += 1
             nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
             if (nextNoteSample < this.audioBuffer.length) {
-                setTimeout(() => {
+                requestAnimationFrame(() => {
                     process();
-                }, this.bpm);
+                });
             }
         }
         process();
     }
     start(when: number) {
-        this.source?.start(when)
+        this.getSource().start(when)
     }
-
+    getSource() {
+        if (this.source === undefined) {
+            throw new Error("source not exist")
+        }
+        return this.source;
+    }
     stop(when: number) {
-        this.source?.stop(when)
-        // this.mixer.disconnect()
+        this.getSource().stop(when)
+        this.mixer.disconnect()
     }
 
     connect(target: AudioNode) {
         this.mixer.connect(target)
     }
 }
-type Track = {
-    osc1_oct: number,
-    osc1_det: number,
-    osc1_detune: number,
-    osc1_xenv: number,
-    osc1_vol: number,
-    osc1_waveform: number,
-    osc2_oct: number,
-    osc2_det: number,
-    osc2_detune: number,
-    osc2_xenv: number,
-    osc2_vol: number,
-    osc2_waveform: number,
-    noise_fader: number,
-    env_attack: number,
-    env_sustain: number,
-    env_release: number,
-    env_master: number,
-    fx_filter: number,
-    fx_freq: number,
-    fx_resonance: number,
-    fx_delay_time: number,
-    fx_delay_amt: number,
-    fx_pan_freq: number,
-    fx_pan_amt: number,
-    lfo_osc1_freq: number,
-    lfo_fx_freq: number,
-    lfo_freq: number,
-    lfo_amt: number,
-    lfo_waveform: number,
-    p: number[],
-    c: { n: number[] }[]
-}
-
-type Song = { songData: Track[], rowLen: number, endPattern: number, songLen: number };
 class MusicGenerator {
     private readonly tracks: TrackGenerator[]
     private readonly mixer: GainNode
@@ -1702,7 +1707,6 @@ class MusicGenerator {
 
         this.song.songData.forEach((el) => {
             const track = new TrackGenerator(this.audioCtx, el, this.getBPM(), this.song.endPattern, this.song.songLen)
-            track.connect(mixer)
             this.tracks.push(track)
         })
 
@@ -1730,6 +1734,7 @@ class MusicGenerator {
     }
 
     connect(target: AudioDestinationNode) {
+        this.tracks.forEach((t) => t.connect(this.mixer))
         this.mixer.connect(target)
     }
 }
@@ -1768,6 +1773,10 @@ export default class GoodAudio implements AudioClip {
     }
     init() {
         this.soundGen = new MusicGenerator(this.getContext(), audioData);
+        if (!isPlaying) {
+            this.playOnce();
+            isPlaying = true;
+        }
     }
     playOnce(): void {
         if (isPlaying) {
@@ -1779,17 +1788,6 @@ export default class GoodAudio implements AudioClip {
         this.getSoundGen().connect(this.getContext().destination);
         this.getSoundGen().start(0);
 
-        setTimeout(() => {
-
-            if (isPlaying) {
-                this.getSoundGen().stop();
-            } else {
-                this.getSoundGen().processBuffer();
-            }
-            this.getSoundGen().resetSource();
-            this.getSoundGen().connect(this.getContext().destination);
-            this.getSoundGen().start(0);
-        }, 8000);
     }
     getSoundGen() {
         if (this.soundGen === undefined) {
@@ -1797,13 +1795,7 @@ export default class GoodAudio implements AudioClip {
         }
         return this.soundGen;
     }
-    private frames: number = 0;
     update() {
-        if (this.frames > 60 * 2 && !isPlaying) {
-            this.playOnce();
-            isPlaying = true;
-        }
-        this.frames++;
     }
 
 }
