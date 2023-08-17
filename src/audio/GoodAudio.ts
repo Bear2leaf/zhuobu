@@ -1569,90 +1569,129 @@ class SoundWriter {
 
 
 class TrackGenerator {
-    private readonly chain: AudioNode[]
-    private readonly source: AudioBufferSourceNode; // Tips: cache source, prevent bufferSourceNode been gc, result in short sound play
-    constructor(private readonly audioCtx: BaseAudioContext, instr: any, private readonly bpm: number, private readonly endPattern: number) {
-        bpm = bpm || 118
-        endPattern = endPattern || instr.p.length - 1
-        let nextNote = 0
-        let sounds: SoundWriter[] = []
+    private source?: AudioBufferSourceNode; // Tips: cache source, prevent bufferSourceNode been gc, result in short sound play
+    private readonly audioBuffer: AudioBuffer;
+    private readonly sounds: SoundWriter[];
+    private readonly delayGain: GainNode;
+    private readonly delay: DelayNode;
+    private readonly mixer: GainNode;
+    constructor(private readonly audioCtx: BaseAudioContext, private readonly instr: Track, private readonly bpm: number, private readonly endPattern: number, private readonly songLen: number) {
+        this.bpm = bpm || 118
+        this.endPattern = endPattern || instr.p.length - 1
+        this.sounds = []
+        this.audioBuffer = this.audioCtx.createBuffer(2, this.audioCtx.sampleRate * songLen, this.audioCtx.sampleRate);
 
+        const delayTime = this.instr.fx_delay_time * ((1 / (this.bpm / 60)) / 8)
+        const delayAmount = this.instr.fx_delay_amt / 255
 
+        this.delayGain = this.audioCtx.createGain()
+        this.delayGain.gain.value = delayAmount
 
-        const songLen = 123;
+        this.delay = this.audioCtx.createDelay(delayTime)
+        this.delay.delayTime.value = delayTime
+        this.delayGain.connect(this.delay)
+        this.delay.connect(this.delayGain)
+
+        this.mixer = this.audioCtx.createGain()
+        this.mixer.gain.value = 1
+        this.delay.connect(this.mixer)
+
+    }
+    resetSource() {
+
+        if (this.source !== undefined) {
+            this.source.disconnect()
+        }
         this.source = this.audioCtx.createBufferSource()
+        this.source.buffer = this.audioBuffer
+        this.source.connect(this.mixer)
+        this.source.connect(this.delay)
+    }
+    processBuffer() {
 
-        const audioBuffer = this.audioCtx.createBuffer(2, this.audioCtx.sampleRate * songLen, this.audioCtx.sampleRate);
-
-        const lchan = audioBuffer.getChannelData(0)
-        const rchan = audioBuffer.getChannelData(1)
-
-        sounds.slice().forEach((el) => {
+        const lchan = this.audioBuffer.getChannelData(0)
+        const rchan = this.audioBuffer.getChannelData(1)
+        this.sounds.slice().forEach((el) => {
             const finished = el.write(lchan, rchan, 0)
             if (finished) {
-                sounds = sounds.filter((el2) => {
+                this.sounds.splice(0, this.sounds.length, ...this.sounds.filter((el2) => {
                     return el2 !== el
-                })
+                }))
             }
         })
-
+        let nextNote = 0
         let nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
         //replace while loop with requestAnimationFrame to avoid blocking
         const process = () => {
-            const pattern = instr.p[Math.floor(nextNote / 32) % (this.endPattern + 1)] || 0
-            const note = pattern === 0 ? 0 : (instr.c[pattern - 1] || { n: [] }).n[nextNote % 32] || 0
+            const pattern = this.instr.p[Math.floor(nextNote / 32) % (this.endPattern + 1)] || 0
+            const note = pattern === 0 ? 0 : (this.instr.c[pattern - 1] || { n: [] }).n[nextNote % 32] || 0
             if (note !== 0) {
-                const sw = new SoundWriter(this.audioCtx, instr, note, this.bpm)
+                const sw = new SoundWriter(this.audioCtx, this.instr, note, this.bpm)
                 sw.write(lchan, rchan, nextNoteSample)
-                sounds.push(sw)
+                this.sounds.push(sw)
             }
             nextNote += 1
             nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
-            if (nextNoteSample < audioBuffer.length) {
-                requestAnimationFrame(() => process())
-            } else {
-                (this.audioCtx as AudioContext).resume();
+            if (nextNoteSample < this.audioBuffer.length) {
+                setTimeout(() => {
+                    process();
+                }, this.bpm);
             }
         }
-        process()
-        this.source.buffer = audioBuffer
-        const delayTime = instr.fx_delay_time * ((1 / (this.bpm / 60)) / 8)
-        const delayAmount = instr.fx_delay_amt / 255
-
-        const delayGain = this.audioCtx.createGain()
-        delayGain.gain.value = delayAmount
-        this.source.connect(delayGain)
-
-        const delay = this.audioCtx.createDelay(delayTime)
-        delay.delayTime.value = delayTime
-        delayGain.connect(delay)
-        delay.connect(delayGain)
-
-        const mixer = this.audioCtx.createGain()
-        mixer.gain.value = 1
-        this.source.connect(mixer)
-        delay.connect(mixer)
-
-        this.chain = [this.source, delayGain, delay, mixer]
+        process();
     }
     start(when: number) {
-        (this.chain[0] as AudioBufferSourceNode).start(when)
+        this.source?.start(when)
     }
 
     stop(when: number) {
-        (this.chain[0] as AudioBufferSourceNode).stop(when)
-        this.chain[this.chain.length - 1].disconnect()
+        this.source?.stop(when)
+        // this.mixer.disconnect()
     }
 
     connect(target: AudioNode) {
-        this.chain[this.chain.length - 1].connect(target)
+        this.mixer.connect(target)
     }
 }
+type Track = {
+    osc1_oct: number,
+    osc1_det: number,
+    osc1_detune: number,
+    osc1_xenv: number,
+    osc1_vol: number,
+    osc1_waveform: number,
+    osc2_oct: number,
+    osc2_det: number,
+    osc2_detune: number,
+    osc2_xenv: number,
+    osc2_vol: number,
+    osc2_waveform: number,
+    noise_fader: number,
+    env_attack: number,
+    env_sustain: number,
+    env_release: number,
+    env_master: number,
+    fx_filter: number,
+    fx_freq: number,
+    fx_resonance: number,
+    fx_delay_time: number,
+    fx_delay_amt: number,
+    fx_pan_freq: number,
+    fx_pan_amt: number,
+    lfo_osc1_freq: number,
+    lfo_fx_freq: number,
+    lfo_freq: number,
+    lfo_amt: number,
+    lfo_waveform: number,
+    p: number[],
+    c: { n: number[] }[]
+}
 
+type Song = { songData: Track[], rowLen: number, endPattern: number, songLen: number };
 class MusicGenerator {
     private readonly tracks: TrackGenerator[]
     private readonly mixer: GainNode
-    constructor(private readonly audioCtx: BaseAudioContext, private readonly song: { songData: any[], rowLen: number, endPattern: number }) {
+    constructor(private readonly audioCtx: BaseAudioContext, private readonly song: Song) {
         this.audioCtx = audioCtx
         this.song = song
 
@@ -1662,7 +1701,7 @@ class MusicGenerator {
         this.tracks = []
 
         this.song.songData.forEach((el) => {
-            const track = new TrackGenerator(this.audioCtx, el, this.bpm, this.song.endPattern)
+            const track = new TrackGenerator(this.audioCtx, el, this.getBPM(), this.song.endPattern, this.song.songLen)
             track.connect(mixer)
             this.tracks.push(track)
         })
@@ -1670,13 +1709,19 @@ class MusicGenerator {
         this.mixer = mixer
     }
 
-    get bpm() {
+    getBPM() {
         // rowLen is a number of samples when using 44100hz
         return Math.round((60 * 44100 / 4) / this.song.rowLen)
     }
 
     start(when: number = this.audioCtx.currentTime) {
         this.tracks.forEach((t) => t.start(when))
+    }
+    processBuffer() {
+        this.tracks.forEach((t) => t.processBuffer())
+    }
+    resetSource() {
+        this.tracks.forEach((t) => t.resetSource())
     }
 
     stop(when: number = this.audioCtx.currentTime) {
@@ -1689,7 +1734,7 @@ class MusicGenerator {
     }
 }
 
-function generateSound(instr: any, n: number, bpm = 120) {
+function generateSound(audioCtx: BaseAudioContext, instr: Track, n: number, bpm = 120, soundLength = 1) {
 
     const nInstr = Object.assign({}, instr)
     nInstr.p = [1, 0, 0, 0]
@@ -1698,23 +1743,12 @@ function generateSound(instr: any, n: number, bpm = 120) {
     }]
     nInstr.c[0].n[0] = n + 75
 
-    const audioCtx = new AudioContext()
 
-    const soundGen = new TrackGenerator(audioCtx, nInstr, bpm, 0)
+    const soundGen = new TrackGenerator(audioCtx, nInstr, bpm, 0, soundLength)
     soundGen.connect(audioCtx.destination)
     soundGen.start(0)
 
     return audioCtx
-}
-
-function generateSong(audioCtx: AudioContext, song: any) {
-
-
-    const soundGen = new MusicGenerator(audioCtx, song)
-    soundGen.connect(audioCtx.destination)
-    soundGen.start(0)
-    return soundGen;
-
 }
 
 let isPlaying = false;
@@ -1733,16 +1767,43 @@ export default class GoodAudio implements AudioClip {
         return this.context;
     }
     init() {
-        this.playOnce();
+        this.soundGen = new MusicGenerator(this.getContext(), audioData);
     }
     playOnce(): void {
-        if (!isPlaying) {
-            this.soundGen = generateSong(this.getContext(), audioData);
+        if (isPlaying) {
+            this.getSoundGen().stop();
+        } else {
+            this.getSoundGen().processBuffer();
+        }
+        this.getSoundGen().resetSource();
+        this.getSoundGen().connect(this.getContext().destination);
+        this.getSoundGen().start(0);
+
+        setTimeout(() => {
+
+            if (isPlaying) {
+                this.getSoundGen().stop();
+            } else {
+                this.getSoundGen().processBuffer();
+            }
+            this.getSoundGen().resetSource();
+            this.getSoundGen().connect(this.getContext().destination);
+            this.getSoundGen().start(0);
+        }, 8000);
+    }
+    getSoundGen() {
+        if (this.soundGen === undefined) {
+            throw new Error("soundGen not exist")
+        }
+        return this.soundGen;
+    }
+    private frames: number = 0;
+    update() {
+        if (this.frames > 60 * 2 && !isPlaying) {
+            this.playOnce();
             isPlaying = true;
         }
-    }
-
-    update() {
+        this.frames++;
     }
 
 }
