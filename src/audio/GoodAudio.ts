@@ -1568,9 +1568,9 @@ class SoundWriter {
 }
 
 
-const sourceCache = new Set() // Tips: cache source, prevent bufferSourceNode been gc, result in short sound play
 class TrackGenerator {
     private readonly chain: AudioNode[]
+    private readonly source: AudioBufferSourceNode; // Tips: cache source, prevent bufferSourceNode been gc, result in short sound play
     constructor(private readonly audioCtx: BaseAudioContext, instr: any, private readonly bpm: number, private readonly endPattern: number) {
         bpm = bpm || 118
         endPattern = endPattern || instr.p.length - 1
@@ -1580,7 +1580,7 @@ class TrackGenerator {
 
 
         const songLen = 123;
-        const source = this.audioCtx.createBufferSource()
+        this.source = this.audioCtx.createBufferSource()
 
         const audioBuffer = this.audioCtx.createBuffer(2, this.audioCtx.sampleRate * songLen, this.audioCtx.sampleRate);
 
@@ -1615,17 +1615,13 @@ class TrackGenerator {
             }
         }
         process()
-        source.buffer = audioBuffer
-        sourceCache.add(source);
-        source.onended = () => {
-            sourceCache.delete(source); // Tips: delete cache source
-        }
+        this.source.buffer = audioBuffer
         const delayTime = instr.fx_delay_time * ((1 / (this.bpm / 60)) / 8)
         const delayAmount = instr.fx_delay_amt / 255
 
         const delayGain = this.audioCtx.createGain()
         delayGain.gain.value = delayAmount
-        source.connect(delayGain)
+        this.source.connect(delayGain)
 
         const delay = this.audioCtx.createDelay(delayTime)
         delay.delayTime.value = delayTime
@@ -1634,10 +1630,10 @@ class TrackGenerator {
 
         const mixer = this.audioCtx.createGain()
         mixer.gain.value = 1
-        source.connect(mixer)
+        this.source.connect(mixer)
         delay.connect(mixer)
 
-        this.chain = [source, delayGain, delay, mixer]
+        this.chain = [this.source, delayGain, delay, mixer]
     }
     start(when: number) {
         (this.chain[0] as AudioBufferSourceNode).start(when)
@@ -1717,6 +1713,7 @@ function generateSong(audioCtx: AudioContext, song: any) {
     const soundGen = new MusicGenerator(audioCtx, song)
     soundGen.connect(audioCtx.destination)
     soundGen.start(0)
+    return soundGen;
 
 }
 
@@ -1725,6 +1722,7 @@ let isPlaying = false;
 
 export default class GoodAudio implements AudioClip {
     private context?: AudioContext;
+    private soundGen?: MusicGenerator;
     setContext(context: AudioContext) {
         this.context = context;
     }
@@ -1739,7 +1737,7 @@ export default class GoodAudio implements AudioClip {
     }
     playOnce(): void {
         if (!isPlaying) {
-            generateSong(this.getContext(), audioData);
+            this.soundGen = generateSong(this.getContext(), audioData);
             isPlaying = true;
         }
     }
