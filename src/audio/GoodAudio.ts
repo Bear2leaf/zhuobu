@@ -1574,43 +1574,47 @@ class TrackGenerator {
     constructor(private readonly audioCtx: BaseAudioContext, instr: any, private readonly bpm: number, private readonly endPattern: number) {
         bpm = bpm || 118
         endPattern = endPattern || instr.p.length - 1
-        let currentSample = 0
         let nextNote = 0
         let sounds: SoundWriter[] = []
-        const onaudioprocess = async (inputData: AudioBuffer) => {
-            const lchan = inputData.getChannelData(0)
-            const rchan = inputData.getChannelData(1)
 
-            sounds.slice().forEach((el) => {
-                const finished = el.write(lchan, rchan, 0)
-                if (finished) {
-                    sounds = sounds.filter((el2) => {
-                        return el2 !== el
-                    })
-                }
-            })
 
-            let nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
-            while (nextNoteSample >= currentSample &&
-                nextNoteSample < currentSample + inputData.length) {
-                const pattern = instr.p[Math.floor(nextNote / 32) % (this.endPattern + 1)] || 0
-                const note = pattern === 0 ? 0 : (instr.c[pattern - 1] || { n: [] }).n[nextNote % 32] || 0
-                if (note !== 0) {
-                    const sw = new SoundWriter(this.audioCtx, instr, note, this.bpm)
-                    sw.write(lchan, rchan, nextNoteSample - currentSample)
-                    sounds.push(sw)
-                }
-                nextNote += 1
-                nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
-            }
 
-            currentSample += inputData.length
-        }
         const songLen = 123;
         const source = this.audioCtx.createBufferSource()
 
         const audioBuffer = this.audioCtx.createBuffer(2, this.audioCtx.sampleRate * songLen, this.audioCtx.sampleRate);
-        onaudioprocess(audioBuffer);
+
+        const lchan = audioBuffer.getChannelData(0)
+        const rchan = audioBuffer.getChannelData(1)
+
+        sounds.slice().forEach((el) => {
+            const finished = el.write(lchan, rchan, 0)
+            if (finished) {
+                sounds = sounds.filter((el2) => {
+                    return el2 !== el
+                })
+            }
+        })
+
+        let nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
+        //replace while loop with requestAnimationFrame to avoid blocking
+        const process = () => {
+            const pattern = instr.p[Math.floor(nextNote / 32) % (this.endPattern + 1)] || 0
+            const note = pattern === 0 ? 0 : (instr.c[pattern - 1] || { n: [] }).n[nextNote % 32] || 0
+            if (note !== 0) {
+                const sw = new SoundWriter(this.audioCtx, instr, note, this.bpm)
+                sw.write(lchan, rchan, nextNoteSample)
+                sounds.push(sw)
+            }
+            nextNote += 1
+            nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
+            if (nextNoteSample < audioBuffer.length) {
+                requestAnimationFrame(() => process())
+            } else {
+                (this.audioCtx as AudioContext).resume();
+            }
+        }
+        process()
         source.buffer = audioBuffer
         sourceCache.add(source);
         source.onended = () => {
@@ -1716,6 +1720,7 @@ function generateSong(audioCtx: AudioContext, song: any) {
 
 }
 
+let isPlaying = false;
 
 
 export default class GoodAudio implements AudioClip {
@@ -1730,10 +1735,13 @@ export default class GoodAudio implements AudioClip {
         return this.context;
     }
     init() {
-        generateSong(this.getContext(), audioData);
-
+        this.playOnce();
     }
     playOnce(): void {
+        if (!isPlaying) {
+            generateSong(this.getContext(), audioData);
+            isPlaying = true;
+        }
     }
 
     update() {

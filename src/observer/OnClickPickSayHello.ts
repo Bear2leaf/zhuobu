@@ -1,6 +1,3 @@
-
-import { Vec2, Vec3 } from "../math/Vector.js";
-import GLContainer from "../component/GLContainer.js";
 import Observer from "./Observer.js";
 import DemoSubject from "../subject/DemoSubject.js";
 import Mesh from "../drawobject/Mesh.js";
