@@ -1656,8 +1656,7 @@ class TrackGenerator {
         })
         let nextNote = 0
         let nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
-        //replace while loop with requestAnimationFrame to avoid blocking
-        const process = () => {
+        while (nextNoteSample < this.audioBuffer.length) {
             const pattern = this.instr.p[Math.floor(nextNote / 32) % (this.endPattern + 1)] || 0
             const note = pattern === 0 ? 0 : (this.instr.c[pattern - 1] || { n: [] }).n[nextNote % 32] || 0
             if (note !== 0) {
@@ -1667,13 +1666,7 @@ class TrackGenerator {
             }
             nextNote += 1
             nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
-            if (nextNoteSample < this.audioBuffer.length) {
-                requestAnimationFrame(() => {
-                    process();
-                });
-            }
         }
-        process();
     }
     start(when: number) {
         this.getSource().start(when)
