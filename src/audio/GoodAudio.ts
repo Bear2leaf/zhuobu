@@ -1642,7 +1642,7 @@ class TrackGenerator {
         this.source.connect(this.mixer)
         this.source.connect(this.delay)
     }
-    processBuffer() {
+    async processBuffer() {
 
         const lchan = this.audioBuffer.getChannelData(0)
         const rchan = this.audioBuffer.getChannelData(1)
@@ -1664,6 +1664,7 @@ class TrackGenerator {
                 sw.write(lchan, rchan, nextNoteSample)
                 this.sounds.push(sw)
             }
+            await new Promise(resolve => requestAnimationFrame(resolve))
             nextNote += 1
             nextNoteSample = nextNote * effectiveRowLen(this.audioCtx, this.bpm)
         }
