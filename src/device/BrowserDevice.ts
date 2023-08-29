@@ -1,4 +1,4 @@
-import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
+import GLRenderingContext from "../contextobject/GLRenderingContext.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 

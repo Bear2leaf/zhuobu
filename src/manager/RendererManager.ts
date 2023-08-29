@@ -36,11 +36,11 @@ export default class RendererManager extends Manager<Renderer> {
 
     }
     init(): void {
-        this.getDevice().gl.init();
-        const { gl } = this.getDevice();
+        const rc = this.getDevice().getRenderingContext();
+        rc.init();
         for (const renderer of this.all()) {
-            renderer.initShader(gl, this.getCacheManager());
-            renderer.initPrimitive(gl);
+            renderer.initShader(rc, this.getCacheManager());
+            renderer.initPrimitive(rc);
         }
 
     }

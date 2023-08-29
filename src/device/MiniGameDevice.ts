@@ -1,4 +1,4 @@
-import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
+import GLRenderingContext from "../contextobject/GLRenderingContext.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 const wx = (globalThis as any).wx;

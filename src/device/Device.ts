@@ -1,4 +1,4 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -13,7 +13,7 @@ export default abstract class Device {
   constructor(renderingContext: RenderingContext) {
     this.renderingContext = renderingContext;
   }
-  get gl(): RenderingContext {
+  getRenderingContext(): RenderingContext {
     return this.renderingContext;
   }
   viewportTo(type: ViewPortType): void {
@@ -24,13 +24,13 @@ export default abstract class Device {
     const rightHeight = windowHeight * (1 / 3) * pixelRatio;
     switch (type) {
       case ViewPortType.TopRight:
-        this.gl.viewportTo(leftWidth, leftHeight, rightWidth, rightHeight);
-        this.gl.clear(0.3, 0.3, 0.3, 1)
+        this.getRenderingContext().viewportTo(leftWidth, leftHeight, rightWidth, rightHeight);
+        this.getRenderingContext().clear(0.3, 0.3, 0.3, 1)
         break;
 
       default:
-        this.gl.viewportTo(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
-        this.gl.clear(0.4, 0.4, 0.4, 1)
+        this.getRenderingContext().viewportTo(0, 0, windowWidth * pixelRatio, windowHeight * pixelRatio);
+        this.getRenderingContext().clear(0.4, 0.4, 0.4, 1)
         break;
     }
   }

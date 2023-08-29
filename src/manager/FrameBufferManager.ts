@@ -30,7 +30,7 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     }
     init(): void {
         this.all().forEach((fbo) => {
-            fbo.create(this.getDevice().gl);
+            fbo.create(this.getDevice().getRenderingContext());
         });
         if (this.depthOnly) {
             this.get(DepthFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));

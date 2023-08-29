@@ -1,10 +1,10 @@
 
-import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
-import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
-import GLElementBufferObject from "../contextobject/GLElementBufferObject.js";
-import GLPrimitive from "../contextobject/GLPrimitive.js";
-import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
-import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import ArrayBufferObject from "./ArrayBufferObject.js";
+import GLArrayBufferObject from "./GLArrayBufferObject.js";
+import GLElementBufferObject from "./GLElementBufferObject.js";
+import GLPrimitive from "./GLPrimitive.js";
+import GLVertexArrayObject from "./GLVertexArrayObject.js";
+import Primitive, { PrimitiveType } from "./Primitive.js";
 import { Vec4 } from "../math/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";

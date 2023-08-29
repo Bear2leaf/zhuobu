@@ -1,5 +1,5 @@
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import GLTF from "../gltf/GLTF.js";
 import Node from "../component/Node.js";
 

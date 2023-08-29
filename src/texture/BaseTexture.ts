@@ -1,13 +1,13 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 import Texture, { TextureIndex } from "./Texture.js";
 
 export default class BaseTexture implements Texture {
-  private gl?: RenderingContext;
+  private rc?: RenderingContext;
   private textureIndex?: number;
   private bindIndex: TextureIndex = TextureIndex.Default;
-  create(gl: RenderingContext) {
-    this.gl = gl;
-    this.textureIndex = this.gl.createTexture();
+  create(rc: RenderingContext) {
+    this.rc = rc;
+    this.textureIndex = this.rc.createTexture();
   }
   setBindIndex(bindIndex: TextureIndex) {
     this.bindIndex = bindIndex;
@@ -22,30 +22,30 @@ export default class BaseTexture implements Texture {
     return this.bindIndex;
   }
   getGL() {
-    if (this.gl === undefined) {
+    if (this.rc === undefined) {
       throw new Error("BaseTexture is not initialized.");
     }
-    return this.gl;
+    return this.rc;
   }
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
-    const gl = this.getGL();
-    gl.bindTexture(this.textureIndex);
+    const rc = this.getGL();
+    rc.bindTexture(this.textureIndex);
     if (data === undefined) {
       if (this.bindIndex === TextureIndex.Depth) {
-        gl.texImage2D_DEPTH24_UINT_NULL(width, height);
+        rc.texImage2D_DEPTH24_UINT_NULL(width, height);
       } else {
-        gl.texImage2D_RGBA_RGBA_NULL(width, height);
+        rc.texImage2D_RGBA_RGBA_NULL(width, height);
       }
     } else if (data instanceof Float32Array) {
-      gl.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
+      rc.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
     } else {
-      gl.texImage2D_RGBA_RGBA_Image(data);
+      rc.texImage2D_RGBA_RGBA_Image(data);
     }
-    gl.bindTexture();
+    rc.bindTexture();
   }
   bind() {
-    const gl = this.getGL();
-    gl.activeTexture(this.bindIndex)
-    gl.bindTexture(this.textureIndex);
+    const rc = this.getGL();
+    rc.activeTexture(this.bindIndex)
+    rc.bindTexture(this.textureIndex);
   }
 }

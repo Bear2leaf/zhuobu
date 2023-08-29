@@ -1,6 +1,6 @@
 import { Vec4, flatten } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import Quad from "../math/Quad.js";
 
 export default class WireQuad extends DrawObject {

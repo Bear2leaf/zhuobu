@@ -1,7 +1,7 @@
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import { Vec3, Vec4 } from "../math/Vector.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {
@@ -13,7 +13,7 @@ export default class GLTFSkinMeshRenderer extends Renderer {
         this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
         
     }
-    initPrimitive(gl: RenderingContext): void {
-        this.setPrimitive(gl.makePrimitive(PrimitiveType.TRIANGLES));
+    initPrimitive(rc: RenderingContext): void {
+        this.setPrimitive(rc.makePrimitive(PrimitiveType.TRIANGLES));
     }
 }

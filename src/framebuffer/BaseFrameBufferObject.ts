@@ -1,15 +1,15 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 import BaseTexture from "../texture/BaseTexture.js";
 import { TextureIndex } from "../texture/Texture.js";
 import FrameBufferObject from "./FrameBufferObject.js";
 
 export default class BaseFrameBufferObject implements FrameBufferObject {
-    private gl?: RenderingContext;
+    private rc?: RenderingContext;
     private fboIndex?: number;
 
-    create(gl: RenderingContext) {
-        this.gl = gl;
-        this.fboIndex = this.gl.createFramebuffer();
+    create(rc: RenderingContext) {
+        this.rc = rc;
+        this.fboIndex = this.rc.createFramebuffer();
     }
     bind(): void {
         this.getGL().bindFramebuffer(this.getFBOIndex());
@@ -28,10 +28,10 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
         }
     }
     getGL() {
-        if (this.gl === undefined) {
+        if (this.rc === undefined) {
             throw new Error("BaseFrameBufferObject is not initialized.");
         }
-        return this.gl;
+        return this.rc;
     }
     getFBOIndex() {
         if (this.fboIndex === undefined) {

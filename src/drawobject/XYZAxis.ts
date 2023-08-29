@@ -1,7 +1,7 @@
 import LineSegment from "../math/LineSegment.js";
 import { Vec4, flatten } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import Point from "../math/Point.js";
 
 export default class XYZAxis extends DrawObject {

@@ -1,6 +1,6 @@
 import { flatten, Vec2, Vec4 } from "../math/Vector.js";
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import TextureContainer from "../component/TextureContainer.js";
 import GLContainer from "../component/GLContainer.js";
 

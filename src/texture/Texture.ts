@@ -1,4 +1,4 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 
 export enum TextureIndex {
   Default = 0,
@@ -9,5 +9,5 @@ export enum TextureIndex {
 export default interface Texture {
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array): void;
   bind(): void;
-  create(gl: RenderingContext): void;
+  create(rc: RenderingContext): void;
 }

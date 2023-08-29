@@ -1,16 +1,16 @@
 
 import Component from "../component/Component.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 
 export default class GLContainer extends Component {
-    private gl?: RenderingContext;
-    setRenderingContext(gl: RenderingContext) {
-        this.gl = gl;
+    private rc?: RenderingContext;
+    setRenderingContext(rc: RenderingContext) {
+        this.rc = rc;
     }
     getRenderingContext(): RenderingContext {
-        if (this.gl === undefined) {
+        if (this.rc === undefined) {
             throw new Error("Rendering context is not set");
         }
-        return this.gl;
+        return this.rc;
     }
 }

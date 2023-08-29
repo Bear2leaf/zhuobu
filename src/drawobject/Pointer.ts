@@ -1,5 +1,5 @@
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
 import TRS from "../component/TRS.js";
 import GLContainer from "../component/GLContainer.js";

@@ -1,8 +1,8 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 
 export default interface FrameBufferObject {
-    create(gl: RenderingContext): void;
+    create(rc: RenderingContext): void;
     attach(texture: Texture): void;
     unbind(): void;
     bind(): void;

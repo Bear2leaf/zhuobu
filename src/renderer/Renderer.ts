@@ -3,7 +3,7 @@ import Component from "../component/Component.js";
 import Node from "../component/Node.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../contextobject/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
@@ -53,15 +53,15 @@ export default class Renderer extends Component {
         }
         await cacheManager.loadShaderTxtCache(this.shaderName);
     }
-    initShader(gl: RenderingContext, cacheManager: CacheManager) {
+    initShader(rc: RenderingContext, cacheManager: CacheManager) {
         if (!this.shaderName) {
             throw new Error("shader name not exist");
         }
         const vs = cacheManager.getVertShaderTxt(this.shaderName);
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
-        this.shader = gl.makeShader(vs, fs);
+        this.shader = rc.makeShader(vs, fs);
     }
-    initPrimitive(gl: RenderingContext): void {
+    initPrimitive(rc: RenderingContext): void {
         throw new Error("Method not implemented.");
     }
 

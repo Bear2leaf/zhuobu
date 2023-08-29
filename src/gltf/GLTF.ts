@@ -21,13 +21,13 @@ import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
 
 const glTypeToTypedArrayMap = {
-    '5120': Int8Array,    // device.gl.BYTE
-    '5121': Uint8Array,   // device.gl.UNSIGNED_BYTE
-    '5122': Int16Array,   // device.gl.SHORT
-    '5123': Uint16Array,  // device.gl.UNSIGNED_SHORT
-    '5124': Int32Array,   // device.gl.INT
-    '5125': Uint32Array,  // device.gl.UNSIGNED_INT
-    '5126': Float32Array, // device.gl.FLOAT
+    '5120': Int8Array,    // gl.BYTE
+    '5121': Uint8Array,   // gl.UNSIGNED_BYTE
+    '5122': Int16Array,   // gl.SHORT
+    '5123': Uint16Array,  // gl.UNSIGNED_SHORT
+    '5124': Int32Array,   // gl.INT
+    '5125': Uint32Array,  // gl.UNSIGNED_INT
+    '5126': Float32Array, // gl.FLOAT
 };
 
 export type GLType = keyof typeof glTypeToTypedArrayMap;
