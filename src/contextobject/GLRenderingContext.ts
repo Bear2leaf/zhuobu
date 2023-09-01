@@ -36,7 +36,13 @@ export default class GLRenderingContext implements RenderingContext {
     }
     framebufferPickTexture2D(textureIndex: number): void {
         const gl = this.gl;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT1, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1]);
+    }
+    framebufferRenderTexture2D(textureIndex: number): void {
+        const gl = this.gl;
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0]);
     }
     readSinglePixel(x: number, y: number): Vec4 {
         const gl = this.gl;
@@ -80,11 +86,12 @@ export default class GLRenderingContext implements RenderingContext {
 
         }
     }
-    bindReadFramebuffer(fboIndex?: number): void {
+    bindPickReadFramebuffer(fboIndex?: number): void {
         if (fboIndex === undefined) {
             this.gl.bindFramebuffer(this.gl.READ_FRAMEBUFFER, null);
         } else {
             this.gl.bindFramebuffer(this.gl.READ_FRAMEBUFFER, this.allWebGLFBOs[fboIndex]);
+            this.gl.readBuffer(this.gl.COLOR_ATTACHMENT1);
 
         }
     }

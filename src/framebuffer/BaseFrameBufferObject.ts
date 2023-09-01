@@ -14,14 +14,14 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
     bind(): void {
         this.getGL().bindFramebuffer(this.getFBOIndex());
     }
-    bindRead(): void {
-        this.getGL().bindReadFramebuffer(this.getFBOIndex());
+    bindPick(): void {
+        this.getGL().bindPickReadFramebuffer(this.getFBOIndex());
     }
     unbind(): void {
         this.getGL().bindFramebuffer();
     }
-    unbindRead(): void {
-        this.getGL().bindReadFramebuffer();
+    unbindPick(): void {
+        this.getGL().bindPickReadFramebuffer();
     }
     attach(texture: BaseTexture): void {
         this.bind();
@@ -29,6 +29,8 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
         } else if (texture.getBindIndex() === TextureIndex.Pick) {
             this.getGL().framebufferPickTexture2D(texture.getTextureIndex());
+        }  else if (texture.getBindIndex() === TextureIndex.Render) {
+            this.getGL().framebufferRenderTexture2D(texture.getTextureIndex());
         } else {
             throw new Error("attach Not implemented");
         }

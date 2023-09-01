@@ -12,6 +12,7 @@ import FlowerTexture from "../texture/FlowerTexture.js";
 import FontTexture from "../texture/FontTexture.js";
 import JointTexture from "../texture/JointTexture.js";
 import PickTexture from "../texture/PickTexture.js";
+import RenderTexture from "../texture/RenderTexture.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
@@ -29,6 +30,7 @@ export default class TextureManager extends Manager<Texture> {
             JointTexture,
             DepthTexture,
             PickTexture,
+            RenderTexture,
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -47,6 +49,7 @@ export default class TextureManager extends Manager<Texture> {
         const { windowWidth, windowHeight, pixelRatio } = this.getDevice().getWindowInfo()
         this.get(DepthTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(PickTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
+        this.get(RenderTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.getSceneManager().all().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(rc)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));

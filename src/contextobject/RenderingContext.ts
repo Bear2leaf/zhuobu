@@ -23,13 +23,14 @@ export default interface RenderingContext {
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;
+    framebufferRenderTexture2D(textureIndex: number): void;
     readSinglePixel(x: number, y: number): Vec4;
     createFramebuffer(): number;
     createTexture(): number;
     activeTexture(bindIndex: TextureIndex): void;
     bindTexture(textureIndex?: number): void;
     bindFramebuffer(fboIndex?: number): void;
-    bindReadFramebuffer(fboIndex?: number): void;
+    bindPickReadFramebuffer(fboIndex?: number): void;
     clear(r?: number, g?: number, b?: number, a?: number): void;
     init(): void;
     draw(mode: number, count: number): void;

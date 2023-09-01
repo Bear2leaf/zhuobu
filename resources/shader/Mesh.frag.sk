@@ -8,14 +8,12 @@ uniform vec3 u_lightDirection;
 uniform uvec3 u_pickColor;
 uniform sampler2D u_texture;
 
-out vec4 outColor;
+layout(location = 0) out vec4 o_color;
+layout(location = 1) out vec4 o_pickColor;
 
-void main () {
-  if (u_pickColor != uvec3(0)) {
-    outColor = vec4(vec3(u_pickColor) / 255.0, 1.0);
-    return;
-  }
+void main() {
   vec3 normal = normalize(v_normal);
-  float light = dot(u_lightDirection, normal) * .5 + .5;
-  outColor = vec4(u_diffuse.rgb * light, u_diffuse.a);
+  float light = dot(u_lightDirection, normal) * .5f + .5f;
+  o_color = vec4(u_diffuse.rgb * light, u_diffuse.a);
+  o_pickColor = vec4(vec3(u_pickColor) / 255.0f, 1.0f);
 }

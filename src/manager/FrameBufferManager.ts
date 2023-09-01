@@ -1,15 +1,17 @@
 import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
 import Manager from "./Manager.js";
-import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import DepthTexture from "../texture/DepthTexture.js";
 import TextureManager from "./TextureManager.js";
 import DemoScene from "../scene/DemoScene.js";
 import SceneManager from "./SceneManager.js";
 import Renderer from "../renderer/Renderer.js";
+import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
+import PickFrameBufferObject from "../framebuffer/PickFrameBufferObjectx.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import PickTexture from "../texture/PickTexture.js";
 import { ViewPortType } from "../device/Device.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
+import RenderTexture from "../texture/RenderTexture.js";
 
 
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
@@ -18,6 +20,7 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     addObjects(): void {
         [
             DepthFrameBufferObject,
+            PickFrameBufferObject,
             RenderFrameBufferObject,
         ].forEach((ctor) => {
             this.add(ctor);
@@ -30,14 +33,15 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
         this.all().forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
             fbo.attach(this.getTextureManager().get(DepthTexture));
+            fbo.attach(this.getTextureManager().get(RenderTexture));
+            fbo.attach(this.getTextureManager().get(PickTexture));
         });
-        this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
         this.getSceneManager()
             .all()
             .filter(scene => scene instanceof (DemoScene))
             .forEach(scene => scene.getComponents(OnClickPickSubject).forEach((subject, index) => {
                 subject.getColor().set(index + 1, 0, 0, 255)
-                subject.setFrameBufferObject(this.get(RenderFrameBufferObject));
+                subject.setFrameBufferObject(this.get(PickFrameBufferObject));
             }));
 
     }
