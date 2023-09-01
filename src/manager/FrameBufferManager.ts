@@ -15,8 +15,6 @@ import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
     private sceneManager?: SceneManager;
     private textureManager?: TextureManager;
-    private depthOnly: boolean = false
-    private pickOnly: boolean = false
     addObjects(): void {
         [
             DepthFrameBufferObject,
@@ -31,36 +29,30 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     init(): void {
         this.all().forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
+            fbo.attach(this.getTextureManager().get(DepthTexture));
         });
-        this.get(DepthFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
         this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
-        this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
-        if (this.pickOnly) {
-            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject, index) => {
+        this.getSceneManager()
+            .all()
+            .filter(scene => scene instanceof (DemoScene))
+            .forEach(scene => scene.getComponents(OnClickPickSubject).forEach((subject, index) => {
                 subject.getColor().set(index + 1, 0, 0, 255)
                 subject.setFrameBufferObject(this.get(RenderFrameBufferObject));
-            });
-        }
+            }));
+
     }
     update(): void {
         this.all().forEach(fbo => fbo.bind());
         this.getDevice().viewportTo(ViewPortType.Full)
-        if (this.depthOnly) {
-            this.getSceneManager().get(DemoScene).getComponents(Renderer).forEach((renderer) => renderer.render());
-        } else if (this.pickOnly) {
-            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((component) => {
-                component.activate()
-                component.getEntity().get(Renderer).render();
-                component.deactivate()
-            });
-        }
+        this.getSceneManager()
+            .all()
+            .filter(scene => scene instanceof (DemoScene))
+            .forEach(scene => scene.getComponents(OnClickPickSubject).forEach((subject) => {
+                subject.activate();
+                subject.getEntity().get(Renderer).render();
+                subject.deactivate();
+            }));
         this.all().forEach(fbo => fbo.unbind());
-    }
-    setDepthOnly(depthOnly: boolean) {
-        this.depthOnly = depthOnly;
-    }
-    setPickOnly(pickOnly: boolean) {
-        this.pickOnly = pickOnly;
     }
     getTextureManager() {
         if (this.textureManager === undefined) {
