@@ -29,6 +29,7 @@ export default interface RenderingContext {
     activeTexture(bindIndex: TextureIndex): void;
     bindTexture(textureIndex?: number): void;
     bindFramebuffer(fboIndex?: number): void;
+    bindReadFramebuffer(fboIndex?: number): void;
     clear(r?: number, g?: number, b?: number, a?: number): void;
     init(): void;
     draw(mode: number, count: number): void;

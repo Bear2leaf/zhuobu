@@ -32,14 +32,10 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
         this.all().forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
         });
-        if (this.depthOnly) {
-            this.get(DepthFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
-            this.get(DepthFrameBufferObject).unbind();
-        } else if (this.pickOnly) {
-            this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
-            this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
-            this.get(RenderFrameBufferObject).unbind();
-
+        this.get(DepthFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
+        this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(PickTexture));
+        this.get(RenderFrameBufferObject).attach(this.getTextureManager().get(DepthTexture));
+        if (this.pickOnly) {
             this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject, index) => {
                 subject.getColor().set(index + 1, 0, 0, 255)
                 subject.setFrameBufferObject(this.get(RenderFrameBufferObject));
@@ -47,21 +43,18 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
         }
     }
     update(): void {
+        this.all().forEach(fbo => fbo.bind());
+        this.getDevice().viewportTo(ViewPortType.Full)
         if (this.depthOnly) {
-            this.get(DepthFrameBufferObject).bind();
-            this.getDevice().viewportTo(ViewPortType.Full)
             this.getSceneManager().get(DemoScene).getComponents(Renderer).forEach((renderer) => renderer.render());
-            this.get(DepthFrameBufferObject).unbind();
         } else if (this.pickOnly) {
-            this.get(RenderFrameBufferObject).bind();
-            this.getDevice().viewportTo(ViewPortType.Full);
             this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((component) => {
                 component.activate()
                 component.getEntity().get(Renderer).render();
                 component.deactivate()
             });
-            this.get(RenderFrameBufferObject).unbind();
         }
+        this.all().forEach(fbo => fbo.unbind());
     }
     setDepthOnly(depthOnly: boolean) {
         this.depthOnly = depthOnly;

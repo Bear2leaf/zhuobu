@@ -80,6 +80,14 @@ export default class GLRenderingContext implements RenderingContext {
 
         }
     }
+    bindReadFramebuffer(fboIndex?: number): void {
+        if (fboIndex === undefined) {
+            this.gl.bindFramebuffer(this.gl.READ_FRAMEBUFFER, null);
+        } else {
+            this.gl.bindFramebuffer(this.gl.READ_FRAMEBUFFER, this.allWebGLFBOs[fboIndex]);
+
+        }
+    }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {
         return new GLElementBufferObject(this.gl, data);
     }

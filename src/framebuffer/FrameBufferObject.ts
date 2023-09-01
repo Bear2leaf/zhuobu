@@ -6,4 +6,6 @@ export default interface FrameBufferObject {
     attach(texture: Texture): void;
     unbind(): void;
     bind(): void;
+    bindRead(): void;
+    unbindRead(): void;
 }

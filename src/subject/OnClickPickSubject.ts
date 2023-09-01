@@ -23,7 +23,7 @@ export default class OnClickPickSubject extends DemoSubject {
     }
     checkIsPicked(): void {
         if (this.color.x === 0 && this.color.y === 0 && this.color.z === 0) return;
-        this.getFrameBufferObject().bind();
+        this.getFrameBufferObject().bindRead();
         const touch = this.getEntity().get(TouchEventContainer);
         const color = this.getEntity().get(GLContainer).getRenderingContext().readSinglePixel(touch.getScreenX(), touch.getScreenY());
         // console.log(...this.color.toFloatArray(), ...color.toFloatArray(), touch.getX(), touch.getY())
@@ -31,7 +31,7 @@ export default class OnClickPickSubject extends DemoSubject {
         if (this.color.x === color.x && this.color.y === color.y && this.color.z === color.z) {
             this.notify();
         }
-        this.getFrameBufferObject().unbind();
+        this.getFrameBufferObject().unbindRead();
     }
     getFrameBufferObject() {
         if (!this.frameBufferObject) throw new Error("frameBufferObject is not set!");
