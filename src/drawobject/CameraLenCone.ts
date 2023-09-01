@@ -1,7 +1,7 @@
 import Node from "../component/Node.js";
 import VisualizeCamera from "../component/VisualizeCamera.js";
-import Matrix from "../math/Matrix.js";
-import { Vec4 } from "../math/Vector.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec4 } from "../geometry/Vector.js";
 import WireCone from "./WireCone.js";
 
 export default class CameraLenCone extends WireCone {

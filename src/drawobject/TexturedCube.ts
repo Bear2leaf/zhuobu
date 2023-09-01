@@ -1,6 +1,6 @@
-import Cube from "../math/Cube.js";
-import Matrix from "../math/Matrix.js";
-import { Vec2, Vec3, Vec4, flatten } from "../math/Vector.js";
+import Cube from "../geometry/Cube.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec2, Vec3, Vec4, flatten } from "../geometry/Vector.js";
 import Node from "../component/Node.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";

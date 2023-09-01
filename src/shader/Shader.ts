@@ -1,4 +1,4 @@
-import { Vec3, Vec4 } from "../math/Vector.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
 
 export default interface Shader {
     setMatrix4fv(name: string, data: Float32Array): void;

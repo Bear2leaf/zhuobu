@@ -1,5 +1,5 @@
-import Cone from "../math/Cone.js";
-import { Vec4, flatten } from "../math/Vector.js";
+import Cone from "../geometry/Cone.js";
+import { Vec4, flatten } from "../geometry/Vector.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import DrawObject from "./DrawObject.js";
 

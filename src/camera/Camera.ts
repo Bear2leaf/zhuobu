@@ -1,4 +1,4 @@
-import Matrix from "../math/Matrix.js";
+import Matrix from "../geometry/Matrix.js";
 
 export default abstract class Camera {
     abstract init(): void;

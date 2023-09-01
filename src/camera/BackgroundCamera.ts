@@ -1,5 +1,5 @@
-import Matrix from "../math/Matrix.js";
-import { Vec3, Vec4 } from "../math/Vector.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
 import { OrthoCamera } from "./OrthoCamera.js";
 
 export class BackgroundCamera extends OrthoCamera {

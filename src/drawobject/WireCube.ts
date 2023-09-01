@@ -1,7 +1,7 @@
-import { Vec4, flatten } from "../math/Vector.js";
+import { Vec4, flatten } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
-import Cube from "../math/Cube.js";
+import Cube from "../geometry/Cube.js";
 
 export default class WireCube extends DrawObject {
     init(){

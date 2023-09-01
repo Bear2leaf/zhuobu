@@ -1,6 +1,6 @@
 
-import Matrix from "../math/Matrix.js";
-import { Vec3 } from "../math/Vector.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec3 } from "../geometry/Vector.js";
 import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 

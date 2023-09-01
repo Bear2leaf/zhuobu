@@ -1,6 +1,6 @@
 import Node from "../component/Node.js";
 import Mesh from "./Mesh.js";
-import Matrix from "../math/Matrix.js";
+import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import TextureContainer from "../component/TextureContainer.js";

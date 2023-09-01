@@ -2,7 +2,7 @@
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
-import { Vec4 } from "../math/Vector.js";
+import { Vec4 } from "../geometry/Vector.js";
 import Shader from "../shader/Shader.js";
 import { TextureIndex } from "../texture/Texture.js";
 

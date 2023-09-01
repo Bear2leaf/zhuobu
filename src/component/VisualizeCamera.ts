@@ -1,5 +1,5 @@
 import Camera from "../camera/Camera.js";
-import Matrix from "../math/Matrix.js";
+import Matrix from "../geometry/Matrix.js";
 import Component from "./Component.js";
 
 

@@ -1,7 +1,7 @@
 
 
 import TRS from "../component/TRS.js";
-import { Vec4 } from "../math/Vector.js";
+import { Vec4 } from "../geometry/Vector.js";
 import Text from "./Text.js";
 
 export default class HelloWorldText extends Text {

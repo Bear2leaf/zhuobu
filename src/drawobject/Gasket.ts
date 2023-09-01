@@ -1,9 +1,9 @@
-import LineSegment from "../math/LineSegment.js";
-import Point from "../math/Point.js";
-import Tetrahedron from "../math/Tetrahedron.js";
-import Triangle from "../math/Triangle.js";
-import Matrix from "../math/Matrix.js";
-import { Vec3, Vec4, flatten } from "../math/Vector.js";
+import LineSegment from "../geometry/LineSegment.js";
+import Point from "../geometry/Point.js";
+import Tetrahedron from "../geometry/Tetrahedron.js";
+import Triangle from "../geometry/Triangle.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec3, Vec4, flatten } from "../geometry/Vector.js";
 import Node from "../component/Node.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";

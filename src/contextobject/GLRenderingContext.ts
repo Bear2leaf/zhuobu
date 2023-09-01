@@ -5,7 +5,7 @@ import GLElementBufferObject from "./GLElementBufferObject.js";
 import GLPrimitive from "./GLPrimitive.js";
 import GLVertexArrayObject from "./GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "./Primitive.js";
-import { Vec4 } from "../math/Vector.js";
+import { Vec4 } from "../geometry/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { TextureIndex } from "../texture/Texture.js";

@@ -1,6 +1,6 @@
-import { flatten, Vec4 } from "../math/Vector.js";
+import { flatten, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
-import Quad from "../math/Quad.js";
+import Quad from "../geometry/Quad.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 
 export default class Sprite extends DrawObject {

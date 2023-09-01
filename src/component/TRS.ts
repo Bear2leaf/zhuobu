@@ -1,5 +1,5 @@
-import Matrix from "../math/Matrix.js";
-import { Vec3 } from "../math/Vector.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec3 } from "../geometry/Vector.js";
 import Component from "../component/Component.js";
 
 export default class TRS extends Component {

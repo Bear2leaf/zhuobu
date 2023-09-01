@@ -1,4 +1,4 @@
-import { flatten, Vec3, Vec4 } from "../math/Vector.js";
+import { flatten, Vec3, Vec4 } from "../geometry/Vector.js";
 import Shader from "./Shader.js";
 
 export default class GLShader implements Shader {

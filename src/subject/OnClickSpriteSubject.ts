@@ -1,7 +1,7 @@
 import TRS from "../component/TRS.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
-import Matrix from "../math/Matrix.js";
-import { Vec4 } from "../math/Vector.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec4 } from "../geometry/Vector.js";
 import DemoSubject from "./DemoSubject.js";
 
 export default class OnClickSpriteSubject extends DemoSubject {

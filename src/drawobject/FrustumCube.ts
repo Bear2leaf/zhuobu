@@ -1,6 +1,6 @@
 import Node from "../component/Node.js";
 import VisualizeCamera from "../component/VisualizeCamera.js";
-import Matrix from "../math/Matrix.js";
+import Matrix from "../geometry/Matrix.js";
 import WireCube from "./WireCube.js";
 
 export default class FrustumCube extends WireCube {

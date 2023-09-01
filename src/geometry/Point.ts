@@ -1,4 +1,4 @@
-import { Vec2, Vec4 } from "../math/Vector.js";
+import { Vec2, Vec4 } from "./Vector.js";
 import LineSegment from "./LineSegment.js";
 
 export default class Point {

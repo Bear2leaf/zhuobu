@@ -1,5 +1,5 @@
-import Quad from "../math/Quad.js";
-import { flatten, Vec4 } from "../math/Vector.js";
+import Quad from "../geometry/Quad.js";
+import { flatten, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import TRS from "../component/TRS.js";

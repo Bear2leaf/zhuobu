@@ -1,7 +1,7 @@
 import GLContainer from "../component/GLContainer.js";
 import TouchEventContainer from "../component/TouchEventContainer.js";
 import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
-import { Vec3 } from "../math/Vector.js";
+import { Vec3 } from "../geometry/Vector.js";
 import DemoSubject from "./DemoSubject.js";
 
 export default class OnClickPickSubject extends DemoSubject {
