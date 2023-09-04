@@ -54,7 +54,7 @@ export default class MiniGameDevice extends Device {
         const worker = wx.createWorker(path);
 
         worker.onMessage((data: any) => {
-            handlerCallback(worker, ...data);
+            handlerCallback(worker, data);
         })
     }
     onTouchStart(listener: TouchInfoFunction): void {

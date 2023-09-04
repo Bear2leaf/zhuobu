@@ -10,6 +10,7 @@ import TextureManager from "../manager/TextureManager.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import EventManager from "../manager/EventManager.js";
 import FrameBufferManager from "../manager/FrameBufferManager.js";
+import WorkerManager from "../manager/WorkerManager.js";
 
 
 export default abstract class Game extends Manager<unknown> {
@@ -26,7 +27,8 @@ export default abstract class Game extends Manager<unknown> {
             TimestepManager,
             AudioManager,
             FrameBufferManager,
-            RendererManager
+            RendererManager,
+            WorkerManager
         ];
     addObjects() {
         this.ctors.forEach(ctor => {

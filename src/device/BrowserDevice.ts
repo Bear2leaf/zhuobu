@@ -36,7 +36,7 @@ export default class BrowserDevice extends Device {
         const worker = new Worker(path);
         worker.onmessage =
             (e: MessageEvent) => {
-                handlerCallback(worker, ...e.data)
+                handlerCallback(worker, e.data)
             }
     }
     onTouchStart(listener: TouchInfoFunction): void {
