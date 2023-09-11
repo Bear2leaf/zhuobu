@@ -1,40 +1,26 @@
+import WorkerDecoder from "../decoder/WorkerDecoder.js";
+import InitDecoder from "../decoder/InitDecoder.js";
 import Manager from "./Manager.js";
+import ConsoleDecoder from "../decoder/ConsoleDecoder.js";
 
-interface WorkerCallback {
-    decode(...args: unknown[]): void;
-    execute(): void;
-}
 
-class ConsoleCallback implements WorkerCallback {
-    decode(...args: unknown[]): void {
-        console.log(...args);
-    }
-    execute(): void {
-    }
-}
-
-export default class WorkerManager extends Manager<WorkerCallback> {
+export default class WorkerManager extends Manager<WorkerDecoder> {
     addObjects(): void {
         [
-            ConsoleCallback
+            ConsoleDecoder,
+            InitDecoder
         ].forEach((ctor) => {
             this.add(ctor);
         });
     }
     async load(): Promise<void> {
     }
+
     init(): void {
-        this.getDevice().createWorker("workers/worker.js", (worker: Worker, ...args: unknown[]) => {
-            this.get(ConsoleCallback).decode(...args);
-            this.get(ConsoleCallback).execute();
+        this.getDevice().createWorker("worker/index.js", (worker: Worker, data: {type: string, args: unknown[]}) => {
+            this.all().forEach(cb => cb.decode(worker, data));
         });
     }
     update(): void {
-    }
-    private callbackNameToCtor(name: string): new () => WorkerCallback {
-        switch (name) {
-            default:
-                throw new Error(`callback ${name} not found`);
-        }
     }
 }

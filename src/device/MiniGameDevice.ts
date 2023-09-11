@@ -53,7 +53,8 @@ export default class MiniGameDevice extends Device {
     createWorker(path: string, handlerCallback: Function): void {
         const worker = wx.createWorker(path);
 
-        worker.onMessage((data: any) => {
+        worker.onMessage((data: { type: string, args: unknown[] }) => {
+            console.log(data)
             handlerCallback(worker, data);
         })
     }

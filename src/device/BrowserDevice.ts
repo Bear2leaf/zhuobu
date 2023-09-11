@@ -33,7 +33,7 @@ export default class BrowserDevice extends Device {
         return new AudioContext();
     }
     createWorker(path: string, handlerCallback: Function): void {
-        const worker = new Worker(path);
+        const worker = new Worker(path, { type: "module" });
         worker.onmessage =
             (e: MessageEvent) => {
                 handlerCallback(worker, e.data)
