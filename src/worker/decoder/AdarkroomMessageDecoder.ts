@@ -1,16 +1,18 @@
 import WorkerProcessor from "../WorkerProcessor.js";
 import MessageDecoder, { MessageDecoderDataType } from "./MessageDecoder.js";
+import '../adarkroom/worker.js'
 
-export default class ConsoleMessageDecoder extends MessageDecoder {
+export default class AdarkroomMessageDecoder extends MessageDecoder {
+    constructor() {
+        super();
+    }
     decode(data: MessageDecoderDataType): void {
-        super.decode(data);
         if (this.getValid()) {
-            this.setValid(data.subject === 'Console');
+            this.setValid(data.subject === 'Adarkroom');
         }
     }
     execute(processor: WorkerProcessor): void {
         if (this.getValid()) {
-            console.debug(this.getType(), this.getArgs())
         }
     }
 }

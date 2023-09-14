@@ -8,8 +8,8 @@ export default class BrowserAdarkroomGame extends Game {
     constructor(el: HTMLElement) {
         super();
         const canvas = document.createElement("canvas");
-        canvas.width = 645;
-        canvas.height = 645;
+        canvas.width = 800;
+        canvas.height = 600;
         this.setDevice(new BrowserDevice(el.appendChild(canvas)));
         this.addObjects();
         this.load().then(() => {

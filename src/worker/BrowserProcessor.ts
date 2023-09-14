@@ -1,5 +1,4 @@
 import WorkerProcessor from "./WorkerProcessor.js";
-
 export default class BrowserProcessor extends WorkerProcessor {
     constructor() {
         super();

@@ -9,5 +9,4 @@ export default class MiniGameProcessor extends WorkerProcessor {
     postMessage(data: WorkerDecoderDataType): void {
         this.worker.postMessage(data);
     }
-
 }
