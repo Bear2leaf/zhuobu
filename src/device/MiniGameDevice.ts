@@ -29,7 +29,7 @@ export default class MiniGameDevice extends Device {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: any) {
-                    console.log("load resources success", res)
+                    console.debug("load resources success", res)
                     resolve(null)
                 },
                 fail(res: any) {
@@ -38,9 +38,9 @@ export default class MiniGameDevice extends Device {
             })
 
             task.onProgressUpdate((res: any) => {
-                console.log(res.progress)
-                console.log(res.totalBytesWritten)
-                console.log(res.totalBytesExpectedToWrite)
+                console.debug(res.progress)
+                console.debug(res.totalBytesWritten)
+                console.debug(res.totalBytesExpectedToWrite)
             })
         });
     }
@@ -54,7 +54,7 @@ export default class MiniGameDevice extends Device {
         const worker = wx.createWorker(path);
 
         worker.onMessage((data: { type: string, args: unknown[] }) => {
-            console.log(data)
+            console.debug(data)
             handlerCallback(worker, data);
         })
     }

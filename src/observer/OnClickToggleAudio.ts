@@ -16,7 +16,7 @@ export default class OnClickToggleAudio extends Observer {
 
     init(): void {
         
-        console.log("OnClickToggleAudio", "is inited!");
+        console.debug("OnClickToggleAudio", "is inited!");
     }
 
     public notify(): void {

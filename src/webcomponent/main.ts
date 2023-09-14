@@ -9,6 +9,7 @@ import TestGLTFWebComponent from "./TestGLTFWebComponent.js";
 import WhaleGLTFWebComponent from "./WhaleGLTFWebComponent.js";
 import GamePickWebComponent from "./GamePickWebComponent.js";
 import GameDepthWebComponent from "./GameDepthWebComponent.js";
+import GameAdarkroomWebComponent from "./GameAdarkroomWebComponent.js";
 
 
 
@@ -25,3 +26,4 @@ customElements.define('test-gltf', TestGLTFWebComponent);
 customElements.define('whale-gltf', WhaleGLTFWebComponent);
 customElements.define('game-pick', GamePickWebComponent);
 customElements.define('game-depth', GameDepthWebComponent);
+customElements.define('game-adarkroom', GameAdarkroomWebComponent);

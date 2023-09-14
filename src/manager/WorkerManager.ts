@@ -1,14 +1,16 @@
-import WorkerDecoder from "../decoder/WorkerDecoder.js";
+import WorkerDecoder, { WorkerDecoderDataType } from "../decoder/WorkerDecoder.js";
 import InitDecoder from "../decoder/InitDecoder.js";
 import Manager from "./Manager.js";
 import ConsoleDecoder from "../decoder/ConsoleDecoder.js";
+import AdarkroomDecoder from "../decoder/AdarkroomDecoder.js";
 
 
 export default class WorkerManager extends Manager<WorkerDecoder> {
     addObjects(): void {
         [
             ConsoleDecoder,
-            InitDecoder
+            InitDecoder,
+            AdarkroomDecoder
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -17,8 +19,11 @@ export default class WorkerManager extends Manager<WorkerDecoder> {
     }
 
     init(): void {
-        this.getDevice().createWorker("worker/index.js", (worker: Worker, data: {type: string, args: unknown[]}) => {
-            this.all().forEach(cb => cb.decode(worker, data));
+        this.getDevice().createWorker("worker/index.js", (worker: Worker, data: WorkerDecoderDataType) => {
+            this.all().forEach(cb => {
+                cb.decode(data);
+                cb.execute(worker);
+            });
         });
     }
     update(): void {

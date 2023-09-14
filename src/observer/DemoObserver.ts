@@ -6,11 +6,11 @@ export default class DemoObserver extends Observer {
 
     init(): void {
         
-        console.log("DemoObserver", "is inited!");
+        console.debug("DemoObserver", "is inited!");
     }
 
     public notify(): void {
-        console.log("DemoObserver's notify method");
+        console.debug("DemoObserver's notify method");
     }
 
     getSubject(): DemoSubject {

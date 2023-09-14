@@ -1,19 +1,15 @@
-import AdarkroomEngine from "./AdarkroomEngine.js";
+import { WorkerDecoderDataType } from "../decoder/WorkerDecoder.js";
+import ConsoleMessageDecoder from "./decoder/ConsoleMessageDecoder.js";
 
 
 export default class WorkerProcessor {
-    private readonly adarkroomEngine: AdarkroomEngine;
+    private readonly consoleDecoder: ConsoleMessageDecoder;
     constructor() {
-        this.adarkroomEngine = new AdarkroomEngine(this);
+        this.consoleDecoder = new ConsoleMessageDecoder();
     }
-    getAdarkroomEngine(): AdarkroomEngine {
-        return this.adarkroomEngine;
+    onMessage(data: WorkerDecoderDataType): void {
+        this.consoleDecoder.decode(data)
+        this.consoleDecoder.execute(this);
     }
-    onMessage(data: {type: string, args: unknown[]}): void {
-        console.debug("worker.onMessage", data);
-        if (data.type === "Ping") {
-            this.postMessage({type: "Pong", args: [1, 2, 3]});
-        }
-    }
-    postMessage(data: {type: string, args: unknown[]}): void { throw new Error("Method not implemented.") };
+    postMessage(data: WorkerDecoderDataType): void { throw new Error("Method not implemented.") };
 }

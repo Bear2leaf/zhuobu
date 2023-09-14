@@ -7,7 +7,7 @@ export default class OnClickToggleAnim extends Observer {
 
     init(): void {
         
-        console.log("OnClickToggleAnim", "is inited!");
+        console.debug("OnClickToggleAnim", "is inited!");
     }
 
     public notify(): void {

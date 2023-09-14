@@ -8,7 +8,7 @@ export default class OnClickToggleScale extends Observer {
 
     init(): void {
         
-        console.log("OnClickToggleScale", "is inited!");
+        console.debug("OnClickToggleScale", "is inited!");
     }
 
     public notify(): void {

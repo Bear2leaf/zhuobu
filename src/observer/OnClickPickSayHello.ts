@@ -7,7 +7,7 @@ export default class OnClickPickSayHello extends Observer {
     private subject?: DemoSubject;
     private audioClip?: BleepAudio;
     public notify(): void {
-        console.log("Hello Pick! " + this.getEntity().get(Mesh).getGLTF().getName())
+        console.debug("Hello Pick! " + this.getEntity().get(Mesh).getGLTF().getName())
         this.getAudioClip().playOnce();
     }
     setAudioClip(audioClip: BleepAudio) {

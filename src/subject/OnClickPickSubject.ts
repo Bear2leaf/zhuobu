@@ -26,7 +26,7 @@ export default class OnClickPickSubject extends DemoSubject {
         this.getFrameBufferObject().bindPick();
         const touch = this.getEntity().get(TouchEventContainer);
         const color = this.getEntity().get(GLContainer).getRenderingContext().readSinglePixel(touch.getScreenX(), touch.getScreenY());
-        // console.log(...this.color.toFloatArray(), ...color.toFloatArray(), touch.getX(), touch.getY(), this.getFrameBufferObject())
+        // console.debug(...this.color.toFloatArray(), ...color.toFloatArray(), touch.getX(), touch.getY(), this.getFrameBufferObject())
         if (this.color.x === color.x && this.color.y === color.y && this.color.z === color.z) {
             this.notify();
         }

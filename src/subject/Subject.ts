@@ -5,18 +5,18 @@ export default class Subject extends Component {
     private listeners: Observer[] = [];
 
     public register(observer: Observer): void {
-        console.log(observer, "is pushed!");
+        console.debug(observer, "is pushed!");
         this.listeners.push(observer);
     }
 
     public unregister(observer: Observer): void {
         var n: number = this.listeners.indexOf(observer);
-        console.log(observer, "is removed");
+        console.debug(observer, "is removed");
         this.listeners.splice(n, 1);
     }
 
     public notify(): void {
-        console.log("notify all the observers", this.listeners);
+        console.debug("notify all the observers", this.listeners);
         var i: number
           , max: number;
 
