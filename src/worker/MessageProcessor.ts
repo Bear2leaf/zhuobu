@@ -1,17 +1,20 @@
-import WorkerProcessor from "../WorkerProcessor.js";
+import Worker from "./Worker.js";
 
-export type MessageDecoderDataType = { type: string; args: unknown[]; subject: "Console" | "Adarkroom" };
+export type WorkerResponseType = "Pong" | "WorkerInit";
+export type WorkerRequestType = "Ping";
+export type WorkerResponse = { type: WorkerResponseType; args: unknown[]; };
+export type WorkerRequest = { type: WorkerRequestType; args: unknown[]; };
 
-export default class MessageDecoder {
+export default class MessageProcessor {
     private valid = false;
     private args?: unknown[];
     private type?: string;
-    decode(data: MessageDecoderDataType): void {
+    decode(data: WorkerRequest): void {
         this.args = data.args;
         this.type = data.type;
         this.valid = true;
     }
-    execute(processor: WorkerProcessor): void {
+    execute(processor: Worker): void {
         throw new Error("Abstract Method.")
     }
     setValid(valid: boolean) {

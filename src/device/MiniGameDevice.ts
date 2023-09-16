@@ -1,4 +1,5 @@
 import GLRenderingContext from "../contextobject/GLRenderingContext.js";
+import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 const wx = (globalThis as any).wx;
@@ -52,9 +53,8 @@ export default class MiniGameDevice extends Device {
     }
     createWorker(path: string, handlerCallback: Function): void {
         const worker = wx.createWorker(path);
-
         worker.onMessage((data: { type: string, args: unknown[] }) => {
-            handlerCallback(worker, data);
+            handlerCallback((message: WorkerRequest) => worker.postMessage(message), data);
         })
     }
     onTouchStart(listener: TouchInfoFunction): void {

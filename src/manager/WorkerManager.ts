@@ -1,16 +1,35 @@
-import WorkerDecoder, { WorkerDecoderDataType } from "../decoder/WorkerDecoder.js";
-import InitDecoder from "../decoder/InitDecoder.js";
+import { WorkerRequest, WorkerResponse, WorkerResponseType } from "../worker/MessageProcessor.js";
 import Manager from "./Manager.js";
-import ConsoleDecoder from "../decoder/ConsoleDecoder.js";
-import AdarkroomDecoder from "../decoder/AdarkroomDecoder.js";
 
+export type postMessageCallback = (data: WorkerRequest) => void;
 
-export default class WorkerManager extends Manager<WorkerDecoder> {
+class MessageProcessor {
+    private callback: Function = () => { throw new Error("callback is not set") };
+    setCallback(callback: Function) {
+        this.callback = callback;
+    }
+    onMessage(data: WorkerResponse): void {
+        console.debug("Pong", data.args);
+        switch (data.type) {
+            case "Pong":
+                this.onPong(data);
+                break;
+            case "WorkerInit":
+                this.onWorkerInit(data);
+                break;
+        }
+    }
+    onPong(data: WorkerResponse): void {
+    }
+    onWorkerInit(data: WorkerResponse): void {
+        this.callback({ type: "Ping", args: ["Hello"] });
+    }
+}
+
+export default class WorkerManager extends Manager<MessageProcessor> {
     addObjects(): void {
         [
-            ConsoleDecoder,
-            InitDecoder,
-            AdarkroomDecoder
+            MessageProcessor
         ].forEach((ctor) => {
             this.add(ctor);
         });
@@ -19,10 +38,10 @@ export default class WorkerManager extends Manager<WorkerDecoder> {
     }
 
     init(): void {
-        this.getDevice().createWorker("worker/index.js", (worker: Worker, data: WorkerDecoderDataType) => {
-            this.all().forEach(cb => {
-                cb.decode(data);
-                cb.execute(worker);
+        this.getDevice().createWorker("worker/main.js", (postMessage: postMessageCallback, data: WorkerResponse) => {
+            this.all().forEach(processor => {
+                processor.setCallback(postMessage);
+                processor.onMessage(data);
             });
         });
     }

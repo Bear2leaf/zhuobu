@@ -1,5 +1,5 @@
-import WorkerProcessor from "./WorkerProcessor.js";
-export default class BrowserProcessor extends WorkerProcessor {
+import Worker from "./Worker.js";
+export default class BrowserWorker extends Worker {
     constructor() {
         super();
         self.addEventListener("message", (event) => {

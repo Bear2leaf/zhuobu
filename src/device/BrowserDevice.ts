@@ -1,4 +1,5 @@
 import GLRenderingContext from "../contextobject/GLRenderingContext.js";
+import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 
@@ -36,7 +37,7 @@ export default class BrowserDevice extends Device {
         const worker = new Worker(path, { type: "module" });
         worker.onmessage =
             (e: MessageEvent) => {
-                handlerCallback(worker, e.data)
+                handlerCallback((message: WorkerRequest) => worker.postMessage(message), e.data)
             }
     }
     onTouchStart(listener: TouchInfoFunction): void {
