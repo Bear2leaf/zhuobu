@@ -1,4 +1,4 @@
-import MessageProcessor, { WorkerRequest } from "./MessageProcessor.js";
+import MessageProcessor from "./MessageProcessor.js";
 import Worker from "./Worker.js";
 
 export default class ConsoleProcessor extends MessageProcessor {

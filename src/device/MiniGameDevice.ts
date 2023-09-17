@@ -3,6 +3,7 @@ import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
 const wx = (globalThis as any).wx;
+type MiniGameTouchInfo = { touches: { clientX: number, clientY: number }[] }
 
 export default class MiniGameDevice extends Device {
     private readonly divideTimeBy: number;
@@ -29,19 +30,17 @@ export default class MiniGameDevice extends Device {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "resources",
-                success(res: any) {
+                success(res: {errMsg: string}) {
                     console.debug("load resources success", res)
                     resolve(null)
                 },
-                fail(res: any) {
+                fail(res: {errMsg: string}) {
                     console.error("load resources fail", res)
                 }
             })
 
-            task.onProgressUpdate((res: any) => {
-                console.debug(res.progress)
-                console.debug(res.totalBytesWritten)
-                console.debug(res.totalBytesExpectedToWrite)
+            task.onProgressUpdate((res: {[key: string]: number}) => {
+                console.debug(`onProgressUpdate: ${Object.keys(res).map(key => `${key}: ${res[key]}`).join(", ")}`)
             })
         });
     }
@@ -58,7 +57,7 @@ export default class MiniGameDevice extends Device {
         })
     }
     onTouchStart(listener: TouchInfoFunction): void {
-        wx.onTouchStart((e: any) => {
+        wx.onTouchStart((e: MiniGameTouchInfo) => {
             const touch = e.touches[0];
             if (!touch) {
                 throw new Error("touch not exist")
@@ -67,7 +66,7 @@ export default class MiniGameDevice extends Device {
         });
     }
     onTouchMove(listener: TouchInfoFunction): void {
-        wx.onTouchMove((e: any) => {
+        wx.onTouchMove((e: MiniGameTouchInfo) => {
             const touch = e.touches[0];
             if (!touch) {
                 throw new Error("touch not exist")
@@ -76,12 +75,12 @@ export default class MiniGameDevice extends Device {
         });
     }
     onTouchEnd(listener: TouchInfoFunction): void {
-        wx.onTouchEnd((e: any) => {
+        wx.onTouchEnd((e: MiniGameTouchInfo) => {
             listener();
         });
     }
     onTouchCancel(listener: TouchInfoFunction): void {
-        wx.onTouchCancel((e: any) => {
+        wx.onTouchCancel((e: MiniGameTouchInfo) => {
             listener();
         });
     }

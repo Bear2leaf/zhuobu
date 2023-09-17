@@ -6,7 +6,7 @@ export default class GLTFMesh {
     private readonly primitives: readonly GLTFPrimitive[];
     private readonly weights: number[];
     private readonly extras: GLTFExtra[];
-    private readonly extensions: any;
+    private readonly extensions: Object;
     constructor(mesh: GLTFMesh) {
         this.name = mesh.name;
         this.primitives = mesh.primitives.map((primitive) => new GLTFPrimitive(primitive));
