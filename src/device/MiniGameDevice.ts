@@ -2,7 +2,23 @@ import GLRenderingContext from "../contextobject/GLRenderingContext.js";
 import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
-const wx = (globalThis as any).wx;
+type MiniGameType = {
+    createCanvas: Function,
+    getSystemInfoSync: Function,
+    getWindowInfo: Function,
+    getPerformance: Function,
+    createImage: Function,
+    createWebAudioContext: Function,
+    createWorker: Function,
+    onTouchStart: Function,
+    onTouchMove: Function,
+    onTouchEnd: Function,
+    onTouchCancel: Function,
+    getFileSystemManager: Function
+    loadSubpackage: Function
+}
+
+const wx = (globalThis as unknown as {wx: MiniGameType}).wx;
 type MiniGameTouchInfo = { touches: { clientX: number, clientY: number }[] }
 
 export default class MiniGameDevice extends Device {
