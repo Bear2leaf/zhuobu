@@ -6,6 +6,7 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
+import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
@@ -21,6 +22,7 @@ export default class RendererManager extends Manager<Renderer> {
             , VertexColorTriangleRenderer
             , LineRenderer
             , GLTFMeshRenderer
+            , WireframeRenderer
             , GLTFSkinMeshRenderer
         ]
     addObjects(): void {

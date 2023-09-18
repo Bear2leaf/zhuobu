@@ -8,7 +8,7 @@ import HelloWorldTextObject from "../entity/HelloWorldTextObject.js";
 import Scene from "./Scene.js";
 import GasketObject from "../entity/GasketObject.js";
 import TexturedCubeObject from "../entity/TexturedCubeObject.js";
-import HelloMeshObject from "../entity/HelloMeshObject.js";
+import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import FlowersObject from "../entity/FlowersObject.js";
 import AudioBGMObject from "../entity/AudioBGMObject.js";
@@ -22,7 +22,7 @@ export default class DemoScene extends Scene {
             , new TexturedCubeObject()
             , new MeshObject()
             , new SkinMeshObject()
-            , new HelloMeshObject()
+            , new HelloWireframeObject()
             , new HelloMultiMeshObject()
             , new HelloWorldTextObject()
             , new PointerObject()

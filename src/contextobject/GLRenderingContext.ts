@@ -139,6 +139,13 @@ export default class GLRenderingContext implements RenderingContext {
             this.gl.disable(this.gl.BLEND);
         }
     }
+    switchCulling(enable: boolean): void {
+        if (enable) {
+            this.gl.enable(this.gl.CULL_FACE);
+        } else {
+            this.gl.disable(this.gl.CULL_FACE);
+        }
+    }
     switchUnpackPremultiplyAlpha(enable: boolean): void {
         this.gl.pixelStorei(this.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, enable);
     }

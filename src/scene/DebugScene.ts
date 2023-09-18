@@ -12,7 +12,7 @@ import UIFrameObject from "../entity/UIFrameObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
 import GasketObject from "../entity/GasketObject.js";
 import TexturedCubeObject from "../entity/TexturedCubeObject.js";
-import HelloMeshObject from "../entity/HelloMeshObject.js";
+import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import FlowersObject from "../entity/FlowersObject.js";
 
@@ -31,7 +31,7 @@ export default class DebugScene extends Scene {
             , new MeshObject()
             , new GasketObject()
             , new TexturedCubeObject()
-            , new HelloMeshObject()
+            , new HelloWireframeObject()
             , new HelloMultiMeshObject()
             , new FlowersObject()
         ];

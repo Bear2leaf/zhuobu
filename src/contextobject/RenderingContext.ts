@@ -13,6 +13,7 @@ export enum ArrayBufferIndex {
     Normal = 3,
     Weights = 4,
     Joints = 5,
+    Barycentric = 6,
 }
 
 
@@ -41,6 +42,7 @@ export default interface RenderingContext {
     switchDepthTest(enable: boolean): void;
     switchDepthWrite(enable: boolean): void;
     switchBlend(enable: boolean): void;
+    switchCulling(enable: boolean): void;
     switchUnpackPremultiplyAlpha(enable: boolean): void;
     useBlendFuncOneAndOneMinusSrcAlpha(): void;
     makePrimitive(type: PrimitiveType): Primitive;

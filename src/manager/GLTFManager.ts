@@ -8,7 +8,7 @@ import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
-import HelloMesh from "../drawobject/HelloMesh.js";
+import HelloWireframe from "../drawobject/HelloWireframe.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import Mesh from "../drawobject/Mesh.js";
 import Node from "../component/Node.js";
@@ -39,7 +39,7 @@ export default class GLTFManager extends Manager<GLTF> {
             gltf.init();
         });
         this.getSceneManager().all().forEach(scene => scene.getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.get(WhaleGLTF).clone())));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(HelloMesh).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone())));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(HelloWireframe).forEach(mesh => mesh.setGLTF(this.get(HelloGLTF).clone())));
         this.getSceneManager().all().forEach(scene => scene.getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.get(HelloMultiGLTF).clone())));
     }
     update(): void { }

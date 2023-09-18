@@ -164,7 +164,7 @@ export default class GLTF {
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
         } else {
-            entity.get(Mesh).setMeshData(
+            entity.get(Mesh).setWireframeMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
