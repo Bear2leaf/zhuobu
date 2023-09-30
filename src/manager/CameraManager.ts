@@ -23,9 +23,12 @@ import Text from "../drawobject/Text.js";
 import DepthMap from "../component/DepthMap.js";
 import Sprite from "../drawobject/Sprite.js";
 import PickMap from "../component/PickMap.js";
+import TimestepManager from "./TimestepManager.js";
+import CameraController from "../component/CameraController.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
+    private timestepManager?: TimestepManager;
     addObjects(): void {
         const deviceInfo = this.getDevice().getWindowInfo()
         const windowWidth = deviceInfo.windowWidth;
@@ -43,10 +46,14 @@ export default class CameraManager extends Manager<Camera> {
         });
     }
     async load(): Promise<void> { }
-    update(): void { }
+    update(): void {
+
+        this.get(MainCamera).rotateViewPerFrame(this.getTimestepManager().getFrames());
+        this.getSceneManager().all().forEach(scene => scene.getComponents(CameraController).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEye())));
+    }
     init(): void {
         const windowInfo = this.getDevice().getWindowInfo();
-        if (this.getSceneManager().all().some(scene => scene.getComponents(FrustumCube).length > 0) ){
+        if (this.getSceneManager().all().some(scene => scene.getComponents(FrustumCube).length > 0)) {
             this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(renderer => renderer.setCamera(this.get(DebugCamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).forEach(component => component.setCamera(this.get(MainCamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(FrontgroundFrame)).forEach(component => component.setCamera(this.get(FrontgroundCamera))));
@@ -93,6 +100,15 @@ export default class CameraManager extends Manager<Camera> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
+    }
+    getTimestepManager(): TimestepManager {
+        if (this.timestepManager === undefined) {
+            throw new Error("timestepManager is undefined");
+        }
+        return this.timestepManager;
+    }
+    setTimestepManager(timestepManager: TimestepManager) {
+        this.timestepManager = timestepManager;
     }
     getScene(): Scene {
         return this.getSceneManager().first();

@@ -9,11 +9,13 @@ import TestGLTFWebComponent from "./TestGLTFWebComponent.js";
 import WhaleGLTFWebComponent from "./WhaleGLTFWebComponent.js";
 import GamePickWebComponent from "./GamePickWebComponent.js";
 import GameDepthWebComponent from "./GameDepthWebComponent.js";
+import GameCameraControlWebComponent from "./GameCameraControlWebComponent.js";
 
 
 
 
 
+customElements.define('game-camera-control', GameCameraControlWebComponent);
 customElements.define('hello-world', Hello);
 customElements.define('test-skin-mesh', TestSkinMeshWebComponent);
 customElements.define('test-mesh', TestMeshWebComponent);

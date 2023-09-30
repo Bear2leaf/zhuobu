@@ -107,7 +107,7 @@ export class Vec4 {
         this.w *= scalar;
         return this;
     }
-    set(x: number, y: number, z: number, w: number): void {
+    set(x: number, y: number, z: number, w: number = 1): void {
         this.x = x;
         this.y = y;
         this.z = z;
