@@ -7,6 +7,6 @@ export default class FramesText extends Text {
 
         const scale = 2;
         this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);
-        this.getEntity().get(TRS).getPosition().set(0, scale * 8 + 80, 0, 0);
+        this.getEntity().get(TRS).getPosition().set(0, scale * 8 + 120, 0, 0);
     }
 }

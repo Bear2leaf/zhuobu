@@ -14,14 +14,14 @@ export default class TimestepManager extends Manager<unknown> {
     addObjects(): void {
     }
     async load(): Promise<void> {
-        
+
     }
     init(): void {
         this.currentFrame = 0;
         this.lastFrame = this.currentFrame;
         this.lastFrameTime = this.now();
         this.fps = 0;
-        
+
     }
     now(): number {
         return this.getDevice().now();
@@ -56,7 +56,7 @@ export default class TimestepManager extends Manager<unknown> {
             this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
             this.getScene().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
         }
-        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}`));
+        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}\nDelta: ${this.getDelta()}`));
     }
 
 }

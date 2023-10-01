@@ -20,7 +20,7 @@ export default class GLTFAnimationController extends Component {
         return this.animationData;
     }
     animate(time: number): void {
-        this.animSkin(Math.sin(time / 10) * 0.5);
+        this.animSkin(Math.sin(time) * 0.5);
         // const channels = this.getAnimationData().getChannels();
         // channels.forEach((channel) => {
         //     const sampler = this.getSamplerByIndex(channel.getSampler());

@@ -23,9 +23,8 @@ export default class AnimationManager extends Manager<Animator> {
     }
 
     update(): void {
-
+        this.all().forEach(clip => clip.updateTime(this.getTimestepManager().now()))
         this.all().forEach(clip => {
-            clip.updateDelta(this.getTimestepManager().getDelta())
             this.getSceneManager().all().map(scene => {
                 scene.getComponents(GLTFAnimationController).forEach(controller => clip.animate(controller));
             })
