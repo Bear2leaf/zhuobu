@@ -1,5 +1,6 @@
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
+import GLTFAnimationController from "../component/GLTFAnimationController.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
@@ -18,6 +19,7 @@ export default class SkinMeshObject extends Entity {
             TRS,
             Node,
             WhaleMesh,
+            GLTFAnimationController,
             OnClickPickSubject,
             OnClickPickSayHello,
             TouchEventContainer,

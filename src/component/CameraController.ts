@@ -13,6 +13,6 @@ export default class CameraController extends Component {
     update(): void {
         super.update();
         this.frames++;        
-        this.getEye().set(2, 5, 10 * Math.sin(this.frames / 100));
+        // this.getEye().set(2, 5, 10 * Math.sin(this.frames / 100));
     }
 }

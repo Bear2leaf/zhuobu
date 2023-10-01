@@ -4,6 +4,7 @@ import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import TextureContainer from "../component/TextureContainer.js";
+import { Vec4 } from "../geometry/Vector.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
@@ -27,7 +28,7 @@ export default class SkinMesh extends Mesh {
         this.createABO(ArrayBufferIndex.Weights, weights, 4);
         this.createABO(ArrayBufferIndex.Joints, joints, 4);
     }
-     update() {
+    update() {
         super.update();
         const globalWorldInverse = this.getEntity().get(Node).getWorldMatrix().inverse();
         // go through each joint and get its current worldMatrix
@@ -42,34 +43,15 @@ export default class SkinMesh extends Mesh {
         const jointData = Matrix.flatten(this.jointMatrices);
         this.getEntity().get(TextureContainer).getTexture(TextureIndex.Joint).generate(4, this.jointNodes.length, jointData);
     }
-    private frames = 0;
     draw(mode: number): void {
-        this.animSkin(Math.sin(this.frames++ / 100) * 0.5);
         this.update();
         super.draw(mode);
     }
-    animSkin(a: number) {
-        for (let i = 0; i < this.jointNodes.length; ++i) {
-            const joint = this.jointNodes[i];
-            // if there is no matrix saved for this joint
-            const jointSource = joint.getSource();
-            if (!jointSource) {
-                throw new Error("jointSource is undefined");
-            }
-            if (!this.origMatrices.has(joint)) {
-                // save a matrix for joint
-                this.origMatrices.set(joint, jointSource.getMatrix());
-            }
-            // get the original matrix
-            const origMatrix = this.origMatrices.get(joint);
-            if (!origMatrix) {
-                throw new Error("origMatrix is undefined");
-            }
-            // rotate it
-            const m = Matrix.identity().multiply(origMatrix).rotateX(a);
-            // decompose it back into position, rotation, scale
-            // into the joint
-            Matrix.decompose(m, jointSource.getPosition(), jointSource.getRotation(), jointSource.getScale());
-        }
+    getJointNodes(): Node[] {
+        return this.jointNodes;
+    }
+
+    getOrigMatrices(): Map<Node, Matrix> {
+        return this.origMatrices;
     }
 }

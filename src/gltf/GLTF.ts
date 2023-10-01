@@ -1,5 +1,6 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import JSONCache from "../cache/FontInfoCache.js";
+import GLTFAnimationController from "../component/GLTFAnimationController.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import Mesh from "../drawobject/Mesh.js";
@@ -96,7 +97,7 @@ export default class GLTF {
         this.materials = data.materials;
         this.meshes = data.meshes?.map((mesh) => new GLTFMesh(mesh));
         this.cameras = data.cameras;
-        this.animations = data.animations;
+        this.animations = data.animations?.map((animation) => new GLTFAnimation(animation));
         this.skins = data.skins?.map((skin) => new GLTFSkin(skin));
         this.extensionsUsed = data.extensionsUsed;
         this.extensionsRequired = data.extensionsRequired;
@@ -163,6 +164,11 @@ export default class GLTF {
                 , jointNodes
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
+            const animation = this.getAnimationByIndex(0);
+            animation.createBuffers(this);
+            entity.get(GLTFAnimationController).setAnimationData(
+                animation
+            );
         } else {
             entity.get(Mesh).setWireframeMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
@@ -188,6 +194,13 @@ export default class GLTF {
             throw new Error(`mesh not found: ${index}`);
         }
         return mesh;
+    }
+    getAnimationByIndex(index: number) {
+        const animation = this.animations && this.animations[index];
+        if (!animation) {
+            throw new Error(`animation not found: ${index}`);
+        }
+        return animation;
     }
     getNodeByIndex(index: number) {
         const node = this.nodes && this.nodes[index];
