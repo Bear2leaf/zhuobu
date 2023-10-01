@@ -4,13 +4,11 @@ import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import TextureContainer from "../component/TextureContainer.js";
-import { Vec4 } from "../geometry/Vector.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
     private readonly jointMatrices: Matrix[] = [];
     private readonly inverseBindMatrices: Matrix[] = [];
-    private readonly origMatrices: Map<Node, Matrix> = new Map();
     setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal);
         this.jointNodes.splice(0, this.jointNodes.length, ...jointNodes);
@@ -47,11 +45,5 @@ export default class SkinMesh extends Mesh {
         this.update();
         super.draw(mode);
     }
-    getJointNodes(): Node[] {
-        return this.jointNodes;
-    }
 
-    getOrigMatrices(): Map<Node, Matrix> {
-        return this.origMatrices;
-    }
 }

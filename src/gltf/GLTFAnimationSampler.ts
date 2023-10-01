@@ -39,19 +39,16 @@ export default class GLTFAnimationSampler {
         return this.outputBuffer;
     }
     getNearestIndexFromTime(time: number): number {
+        const localTime = time % this.getInputBuffer()[this.getInputBuffer().length - 1];
         const input = this.getInputBuffer();
-        if (input.length >= 2) {
+        if (input.length > 1) {
             for (let i = 0; i < input.length - 1; ++i) {
-                if (time < input[i]) {
-                    return -1;
-                } else {
-                    if (time < input[i + 1]) {
-                        return i;
-                    }
+                if (localTime >= input[i] && localTime < input[i + 1]) {
+                    return i;
                 }
             }
         }
-        return -1;
+        throw new Error("index not found");
     }
 
 

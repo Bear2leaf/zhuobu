@@ -171,19 +171,19 @@ export default class Matrix {
         var m31 = m[3 * 4 + 1];
         var m32 = m[3 * 4 + 2];
         var m33 = m[3 * 4 + 3];
-        var tmp_0  = m22 * m33;
-        var tmp_1  = m32 * m23;
-        var tmp_2  = m12 * m33;
-        var tmp_3  = m32 * m13;
-        var tmp_4  = m12 * m23;
-        var tmp_5  = m22 * m13;
-        var tmp_6  = m02 * m33;
-        var tmp_7  = m32 * m03;
-        var tmp_8  = m02 * m23;
-        var tmp_9  = m22 * m03;
+        var tmp_0 = m22 * m33;
+        var tmp_1 = m32 * m23;
+        var tmp_2 = m12 * m33;
+        var tmp_3 = m32 * m13;
+        var tmp_4 = m12 * m23;
+        var tmp_5 = m22 * m13;
+        var tmp_6 = m02 * m33;
+        var tmp_7 = m32 * m03;
+        var tmp_8 = m02 * m23;
+        var tmp_9 = m22 * m03;
         var tmp_10 = m02 * m13;
         var tmp_11 = m12 * m03;
-    
+
         var t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
             (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
         var t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
@@ -192,56 +192,92 @@ export default class Matrix {
             (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
         var t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
             (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
-    
+
         return 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
-      }
+    }
     static decompose(mat: Matrix, translation: Vec3, quaternion: Vec3, scale: Vec3) {
 
         let sx = length(mat.columns[0]);
-    const sy = length(mat.columns[1]);
-    const sz = length(mat.columns[2]);
+        const sy = length(mat.columns[1]);
+        const sz = length(mat.columns[2]);
 
-    // if determinate is negative, we need to invert one scale
-    const det = Matrix.determinate(mat);
-    if (det < 0) {
-      sx = -sx;
+        // if determinate is negative, we need to invert one scale
+        const det = Matrix.determinate(mat);
+        if (det < 0) {
+            sx = -sx;
+        }
+
+        translation.x = mat.columns[3].x;
+        translation.y = mat.columns[3].y;
+        translation.z = mat.columns[3].z;
+
+        // scale the rotation part
+        const matrix = Matrix.copy(mat);
+
+        const invSX = 1 / sx;
+        const invSY = 1 / sy;
+        const invSZ = 1 / sz;
+
+        matrix.columns[0].x *= invSX;
+        matrix.columns[0].y *= invSX;
+        matrix.columns[0].z *= invSX;
+
+        matrix.columns[1].x *= invSY;
+        matrix.columns[1].y *= invSY;
+        matrix.columns[1].z *= invSY;
+
+        matrix.columns[2].x *= invSZ;
+        matrix.columns[2].y *= invSZ;
+        matrix.columns[2].z *= invSZ;
+
+        Matrix.quatFromRotationMatrix(matrix, quaternion);
+
+        scale.x = sx;
+        scale.y = sy;
+        scale.z = sz;
+
+
     }
-
-    translation.x = mat.columns[3].x;
-    translation.y = mat.columns[3].y;
-    translation.z = mat.columns[3].z;
-
-    // scale the rotation part
-    const matrix = Matrix.copy(mat);
-
-    const invSX = 1 / sx;
-    const invSY = 1 / sy;
-    const invSZ = 1 / sz;
-
-    matrix.columns[0].x *= invSX;
-    matrix.columns[0].y *= invSX;
-    matrix.columns[0].z *= invSX;
-
-    matrix.columns[1].x *= invSY;
-    matrix.columns[1].y *= invSY;
-    matrix.columns[1].z *= invSY;
-
-    matrix.columns[2].x *= invSZ;
-    matrix.columns[2].y *= invSZ;
-    matrix.columns[2].z *= invSZ;
-
-    Matrix.quatFromRotationMatrix(matrix, quaternion);
-
-    scale.x = sx;
-    scale.y = sy;
-    scale.z = sz;
-
-
-    }
-
+    static axisRotation(axis: Vec3, angleInRadians: number, dst?: Matrix) {
+        dst = dst || new Matrix();
+      
+        let x = axis.x;
+        let y = axis.y;
+        let z = axis.z;
+        const n = Math.sqrt(x * x + y * y + z * z);
+        x /= n;
+        y /= n;
+        z /= n;
+        const xx = x * x;
+        const yy = y * y;
+        const zz = z * z;
+        const c = Math.cos(angleInRadians);
+        const s = Math.sin(angleInRadians);
+        const oneMinusCosine = 1 - c;
+      
+        dst.columns[0].x = xx + (1 - xx) * c;
+        dst.columns[0].y = x * y * oneMinusCosine + z * s;
+        dst.columns[0].z = x * z * oneMinusCosine - y * s;
+        dst.columns[0].w = 0;
+        dst.columns[1].x = x * y * oneMinusCosine - z * s;
+        dst.columns[1].y = yy + (1 - yy) * c;
+        dst.columns[1].z = y * z * oneMinusCosine + x * s;
+        dst.columns[1].w = 0;
+        dst.columns[2].x = x * z * oneMinusCosine + y * s;
+        dst.columns[2].y = y * z * oneMinusCosine - x * s;
+        dst.columns[2].z = zz + (1 - zz) * c;
+        dst.columns[2].w = 0;
+        dst.columns[3].x = 0;
+        dst.columns[3].y = 0;
+        dst.columns[3].z = 0;
+        dst.columns[3].w = 1;
+      
+        return dst;
+      }
+      
     static quatFromRotationMatrix(m: Matrix, dst: Vec4) {
         // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
-    
+
         // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
         const m11 = m.columns[0].x;
         const m12 = m.columns[1].x;
@@ -252,35 +288,35 @@ export default class Matrix {
         const m31 = m.columns[0].z;
         const m32 = m.columns[1].z;
         const m33 = m.columns[2].z;
-    
+
         const trace = m11 + m22 + m33;
-    
+
         if (trace > 0) {
-          const s = 0.5 / Math.sqrt(trace + 1);
-          dst.w = 0.25 / s;
-          dst.x = (m32 - m23) * s;
-          dst.y = (m13 - m31) * s;
-          dst.z = (m21 - m12) * s;
+            const s = 0.5 / Math.sqrt(trace + 1);
+            dst.w = 0.25 / s;
+            dst.x = (m32 - m23) * s;
+            dst.y = (m13 - m31) * s;
+            dst.z = (m21 - m12) * s;
         } else if (m11 > m22 && m11 > m33) {
-          const s = 2 * Math.sqrt(1 + m11 - m22 - m33);
-          dst.w = (m32 - m23) / s;
-          dst.x = 0.25 * s;
-          dst.y = (m12 + m21) / s;
-          dst.z = (m13 + m31) / s;
+            const s = 2 * Math.sqrt(1 + m11 - m22 - m33);
+            dst.w = (m32 - m23) / s;
+            dst.x = 0.25 * s;
+            dst.y = (m12 + m21) / s;
+            dst.z = (m13 + m31) / s;
         } else if (m22 > m33) {
-          const s = 2 * Math.sqrt(1 + m22 - m11 - m33);
-          dst.w = (m13 - m31) / s;
-          dst.x = (m12 + m21) / s;
-          dst.y = 0.25 * s;
-          dst.z = (m23 + m32) / s;
+            const s = 2 * Math.sqrt(1 + m22 - m11 - m33);
+            dst.w = (m13 - m31) / s;
+            dst.x = (m12 + m21) / s;
+            dst.y = 0.25 * s;
+            dst.z = (m23 + m32) / s;
         } else {
-          const s = 2 * Math.sqrt(1 + m33 - m11 - m22);
-          dst.w = (m21 - m12) / s;
-          dst.x = (m13 + m31) / s;
-          dst.y = (m23 + m32) / s;
-          dst.z = 0.25 * s;
+            const s = 2 * Math.sqrt(1 + m33 - m11 - m22);
+            dst.w = (m21 - m12) / s;
+            dst.x = (m13 + m31) / s;
+            dst.y = (m23 + m32) / s;
+            dst.z = 0.25 * s;
         }
-      }
+    }
     static copy(src: Matrix, dst?: Matrix) {
         dst = dst || new Matrix();
         dst.columns[0].x = src.columns[0].x;
