@@ -5,9 +5,6 @@ import { Vec4 } from "../geometry/Vector.js";
 import Mesh from "./Mesh.js";
 
 export default class HelloWireframe extends Mesh {
-    init(): void {
-        super.init();
-    }
     draw(mode: number): void {
         this.updateRootTRSFromFirstChild();
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
@@ -19,7 +16,7 @@ export default class HelloWireframe extends Mesh {
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
     }
     updateRootTRSFromFirstChild() {
-        this.getEntity().get(TRS).getPosition().from(this.getEntity().get(Node).getChildByIndex(0).getSource()!.getPosition()).add(new Vec4(0, 0, -10, 0));
+        this.getEntity().get(TRS).getPosition().from(this.getEntity().get(Node).getChildByIndex(0).getSource()!.getPosition());
         this.getEntity().get(TRS).getRotation().from(this.getEntity().get(Node).getChildByIndex(0).getSource()!.getRotation());
 
     }
