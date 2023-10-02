@@ -1,5 +1,3 @@
-import SkinMesh from "../drawobject/SkinMesh.js";
-import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";
@@ -21,16 +19,16 @@ export default class GLTFAnimationController extends Component {
     }
     animate(time: number): void {
         // this.animSkin(Math.sin(time) * 0.5);
-        this.animSkinGLTF(time);
+        this.animGLTF(time);
 
     }
-    animSkinGLTF(time: number) {
+    animGLTF(time: number) {
 
         const channels = this.getAnimationData().getChannels();
         channels.forEach((channel) => {
             const sampler = this.getSamplerByIndex(channel.getSampler());
             const target = channel.getTarget();
-            const joint = target.getAnimationNode();
+            const node = target.getAnimationNode();
             const path = target.getPath();
             const inputBuffer = sampler.getInputBuffer();
             const outputBuffer = sampler.getOutputBuffer();
@@ -42,8 +40,8 @@ export default class GLTFAnimationController extends Component {
             const nextTime = inputBuffer[bufferIndex + 1];
             const interpolationValue = (localTime - previousTime) / (nextTime - previousTime);
             // if there is no matrix saved for this joint
-            const jointSource = joint.getSource();
-            if (!jointSource) {
+            const trs = node.getSource();
+            if (!trs) {
                 throw new Error("jointSource is undefined");
             }
             if (path === "translation") {
@@ -51,13 +49,13 @@ export default class GLTFAnimationController extends Component {
                 const previousTranslation = new Vec3(...currentBuffer.slice(0, 3));
                 const nextTranslation = new Vec3(...currentBuffer.slice(3, 6));
                 const currentTranslation = nextTranslation.subtract(previousTranslation).multiply(interpolationValue).add(previousTranslation);
-                jointSource.getPosition().from(currentTranslation);
+                trs.getPosition().from(currentTranslation);
             } else if (path === "rotation") {
                 const currentBuffer = [...outputBuffer.slice(bufferIndex * 4, bufferIndex * 4 + 8)]
                 const previousRotation = new Vec4(...currentBuffer.slice(0, 4));
                 const nextRotation = new Vec4(...currentBuffer.slice(4, 8));
                 const currentRotation = this.slerp(previousRotation, nextRotation, interpolationValue);
-                jointSource.getRotation().from(currentRotation);
+                trs.getRotation().from(currentRotation);
             } else {
                 throw new Error("path not found");
             }

@@ -40,7 +40,6 @@ export default class Mesh extends DrawObject {
                 indexMax = newIndices[j];
             }
         });
-        console.log(indexMax, aPosition.length, aNormal.length, aBarycentrics.length, newIndices.length)
         this.updateEBO(newIndices);
         this.createABO(ArrayBufferIndex.Position, flatten(aPosition), 3);
         this.createABO(ArrayBufferIndex.Normal, flatten(aNormal), 3);

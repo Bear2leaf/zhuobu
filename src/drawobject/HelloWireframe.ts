@@ -1,13 +1,15 @@
 import GLContainer from "../component/GLContainer.js";
+import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
+import { Vec4 } from "../geometry/Vector.js";
 import Mesh from "./Mesh.js";
 
 export default class HelloWireframe extends Mesh {
     init(): void {
         super.init();
-        this.getEntity().get(TRS).getPosition().set(0, 4, -10, 1);
     }
     draw(mode: number): void {
+        this.updateRootTRSFromFirstChild();
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
         this.getEntity().get(GLContainer).getRenderingContext().switchCulling(false);
@@ -15,5 +17,10 @@ export default class HelloWireframe extends Mesh {
         this.getEntity().get(GLContainer).getRenderingContext().switchCulling(true);
         this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
+    }
+    updateRootTRSFromFirstChild() {
+        this.getEntity().get(TRS).getPosition().from(this.getEntity().get(Node).getChildByIndex(0).getSource()!.getPosition()).add(new Vec4(0, 0, -10, 0));
+        this.getEntity().get(TRS).getRotation().from(this.getEntity().get(Node).getChildByIndex(0).getSource()!.getRotation());
+
     }
 }

@@ -164,16 +164,19 @@ export default class GLTF {
                 , jointNodes
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
-            const animation = this.getAnimationByIndex(0);
-            animation.createBuffers(this);
-            entity.get(GLTFAnimationController).setAnimationData(
-                animation
-            );
         } else {
             entity.get(Mesh).setWireframeMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
+            );
+        }
+        if (entity.has(GLTFAnimationController)) {
+
+            const animation = this.getAnimationByIndex(0);
+            animation.createBuffers(this);
+            entity.get(GLTFAnimationController).setAnimationData(
+                animation
             );
         }
         node.getNode().setParent(entity.get(Node));

@@ -1,5 +1,6 @@
 import Component from "../component/Component.js";
 import GLContainer from "../component/GLContainer.js";
+import GLTFAnimationController from "../component/GLTFAnimationController.js";
 import Node from "../component/Node.js";
 import TRS from "../component/TRS.js";
 import TextureContainer from "../component/TextureContainer.js";
@@ -15,7 +16,8 @@ export default class HelloWireframeObject extends Entity {
             TRS,
             Node,
             HelloWireframe,
-            WireframeRenderer
+            WireframeRenderer,
+            GLTFAnimationController
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
