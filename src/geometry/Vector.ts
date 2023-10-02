@@ -120,6 +120,9 @@ export class Vec4 {
         this.w += vec4.w;
         return this;
     }
+    dot(vec4: Vec4) {
+        return this.x * vec4.x + this.y * vec4.y + this.z * vec4.z + this.w * vec4.w;
+    }
     subtract(vec4: Vec4) {
         this.x -= vec4.x;
         this.y -= vec4.y;

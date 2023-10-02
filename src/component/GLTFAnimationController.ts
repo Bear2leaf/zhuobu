@@ -34,7 +34,7 @@ export default class GLTFAnimationController extends Component {
             const path = target.getPath();
             const inputBuffer = sampler.getInputBuffer();
             const outputBuffer = sampler.getOutputBuffer();
-            const localTime = time % inputBuffer[inputBuffer.length - 1];
+            const localTime = (time) % inputBuffer[inputBuffer.length - 1];
             // find the nearest index
             const bufferIndex = sampler.getNearestIndexFromTime(localTime);
             // get the value from the output buffer
@@ -50,18 +50,43 @@ export default class GLTFAnimationController extends Component {
                 const currentBuffer = [...outputBuffer.slice(bufferIndex * 3, bufferIndex * 3 + 6)]
                 const previousTranslation = new Vec3(...currentBuffer.slice(0, 3));
                 const nextTranslation = new Vec3(...currentBuffer.slice(3, 6));
-                nextTranslation.subtract(previousTranslation).multiply(interpolationValue).add(previousTranslation);
-                jointSource.getPosition().from(nextTranslation);
+                const currentTranslation = nextTranslation.subtract(previousTranslation).multiply(interpolationValue).add(previousTranslation);
+                jointSource.getPosition().from(currentTranslation);
             } else if (path === "rotation") {
                 const currentBuffer = [...outputBuffer.slice(bufferIndex * 4, bufferIndex * 4 + 8)]
                 const previousRotation = new Vec4(...currentBuffer.slice(0, 4));
                 const nextRotation = new Vec4(...currentBuffer.slice(4, 8));
-                nextRotation.subtract(previousRotation).multiply(interpolationValue).add(previousRotation);
-                jointSource.getRotation().from(nextRotation);
+                const currentRotation = this.slerp(previousRotation, nextRotation, interpolationValue);
+                jointSource.getRotation().from(currentRotation);
             } else {
                 throw new Error("path not found");
             }
         });
+    }
+    slerp(a: Vec4, b: Vec4, t: number): Vec4 {
+        let dot = a.clone().dot(b);
+        if (dot < 0.0) {
+            b.multiply(-1);
+            dot = -dot;
+        }
+        if (dot > 1.000000) {
+            return a.clone().add((b.clone().subtract(a.clone()).multiply(t)).normalize());
+        }
+        const theta = Math.acos(dot);
+        const sinTheta = Math.sin(theta);
+        const sinThetaInv = 1.0 / sinTheta;
+        const c0 = Math.sin((1 - t) * theta) * sinThetaInv;
+        const c1 = Math.sin(t * theta) * sinThetaInv;
+        const result = new Vec4();
+        result.x = a.x * c0 + b.x * c1;
+        result.y = a.y * c0 + b.y * c1;
+        result.z = a.z * c0 + b.z * c1;
+        result.w = a.w * c0 + b.w * c1;
+        if (isNaN(result.x)) {
+            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
+            throw new Error("result.x is NaN");
+        }
+        return result;
     }
     getSamplerByIndex(index: number): GLTFAnimationSampler {
         const sampler = this.getAnimationData().getSamplers()[index];
