@@ -1,6 +1,7 @@
 import AudioClip from "../audio/AudioClip.js";
 import BleepAudio from "../audio/BleepAudio.js";
 import DemoAudio from "../audio/DemoAudio.js";
+import GoodAudio from "../audio/GoodAudio.js";
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
@@ -16,6 +17,7 @@ export default class AudioManager extends Manager<AudioClip> {
         [
             DemoAudio,
             BleepAudio,
+            GoodAudio
         ].forEach(ctor => {
             this.add<AudioClip>(ctor);
         });
@@ -32,6 +34,7 @@ export default class AudioManager extends Manager<AudioClip> {
         });
         this.getScene().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
         this.getScene().getComponents(OnClickPickSayHello).forEach(comp => comp.setAudioClip(this.get(BleepAudio)));
+
     }
 
     update(): void {
