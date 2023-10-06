@@ -489,7 +489,7 @@ export default class WebAudioFontLoader {
 			];
 		}
 		for (let i = 0; i < this.instrumentKeys().length; i++) {
-			if (program == 1 * parseInt(this.instrumentKeys()[i].substring(0, 3))) {
+			if (program == 1 * parseInt(this.instrumentKeys()[i].substring(0, 3)) && this.instrumentKeys()[i].includes("GeneralUserGS")) {
 				return i;
 			}
 		}
