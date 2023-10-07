@@ -34,8 +34,8 @@ export default class AudioManager extends Manager<AudioClip> {
     async load(): Promise<void> {
         await this.getCacheManager().get(ArrayBufferCache).load("resources/audio/bleep.wav");
         this.get(BleepAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/audio/bleep.wav"));
-        await this.getCacheManager().get(ArrayBufferCache).load("resources/midi/lame.bin");
-        this.get(MidiAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/midi/lame.bin"));
+        await this.getCacheManager().get(ArrayBufferCache).load("resources/midi/town_theme.bin");
+        this.get(MidiAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/midi/town_theme.bin"));
         await this.get(MidiAudio).loadBuffer();
     }
     init() {

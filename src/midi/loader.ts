@@ -489,12 +489,11 @@ export default class WebAudioFontLoader {
 			];
 		}
 		for (let i = 0; i < this.instrumentKeys().length; i++) {
-			if (program == 1 * parseInt(this.instrumentKeys()[i].substring(0, 3)) && this.instrumentKeys()[i].includes("GeneralUserGS")) {
+			if (program === 1 * parseInt(this.instrumentKeys()[i].substring(0, 3)) && this.instrumentKeys()[i].includes("GeneralUserGS")) {
 				return i;
 			}
 		}
-		console.log('program', program, 'not found');
-		return 0;
+		throw new Error('program ' + program + ' not found');
 	};
 	drumTitles(): string[] {
 		if (this.drumNamesArray.length == 0) {

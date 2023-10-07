@@ -7,15 +7,15 @@ export default class WebAudioFontPlayer {
 	readonly loader = new WebAudioFontLoader(this);
 	private readonly afterTime = 0.05;
 	private readonly nearZero = 0.000001;
-	limitVolume(volume: number | undefined): number {
-		if (volume) {
-			volume = 1.0 * volume;
-		} else {
-			volume = 0.5;
-		}
+	limitVolume(volume: number): number {
+		// if (volume) {
+		// 	volume = 1.0 * volume;
+		// } else {
+		// 	volume = 0.5;
+		// }
 		return volume;
 	};
-	queueChord(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume?: number, slides?: WaveSlide[][]): WaveEnvelope[] {
+	queueChord(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
 		volume = this.limitVolume(volume);
 		const envelopes: WaveEnvelope[] = [];
 		for (let i = 0; i < pitches.length; i++) {
@@ -28,19 +28,19 @@ export default class WebAudioFontPlayer {
 		}
 		return envelopes;
 	};
-	queueStrumUp(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume?: number, slides?: WaveSlide[][]): WaveEnvelope[] {
+	queueStrumUp(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
 		pitches.sort(function (a, b) {
 			return b - a;
 		});
 		return this.queueStrum(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
-	queueStrumDown(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume?: number, slides?: WaveSlide[][]): WaveEnvelope[] {
+	queueStrumDown(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
 		pitches.sort(function (a, b) {
 			return a - b;
 		});
 		return this.queueStrum(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
-	queueStrum(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume?: number, slides?: WaveSlide[][]): WaveEnvelope[] {
+	queueStrum(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
 		volume = this.limitVolume(volume);
 		if (when < audioContext.currentTime) {
 			when = audioContext.currentTime;
@@ -57,13 +57,13 @@ export default class WebAudioFontPlayer {
 		}
 		return envelopes;
 	};
-	queueSnap(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume?: number, slides?: WaveSlide[][]): WaveEnvelope[] {
+	queueSnap(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
 		volume = this.limitVolume(volume);
 		volume = 1.5 * (volume || 1.0);
 		duration = 0.05;
 		return this.queueChord(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
-	queueWaveTable(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitch: number, duration: number, volume?: number, slides?: WaveSlide[]): WaveEnvelope {
+	queueWaveTable(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitch: number, duration: number, volume: number, slides?: WaveSlide[]): WaveEnvelope {
 		volume = this.limitVolume(volume);
 		const zone: WaveZone = this.findZone(this.loader.getPresetByInstr(instr), pitch);
 		if (zone) {

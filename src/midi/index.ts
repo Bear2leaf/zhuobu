@@ -2,7 +2,6 @@ import { SongType } from "../audiofont/index.js";
 import { MIDIFile } from "./midi.js";
 import WebAudioFontPlayer from "./player.js";
 
-console.log('start');
 
 export default class MidiInstance {
 
@@ -58,7 +57,7 @@ export default class MidiInstance {
                         duration = 3;
                     }
                     const instr: string = track.info.variable;
-                    const v = track.volume / 7;
+                    const v = track.notes[i].velocity / 127;
                     player.queueWaveTable(this.audioContext, input, instr, when, track.notes[i].pitch, duration, v, track.notes[i].slides);
                 }
             }
@@ -99,14 +98,10 @@ export default class MidiInstance {
     }
     handleFileSelect(event: Event) {
         this.stop = true;
-        console.log(event);
         const file = (event.target as HTMLInputElement).files![0];
-        console.log(file);
         const fileReader = new FileReader();
         fileReader.onload = (progressEvent) => {
-            console.log(progressEvent);
             const arrayBuffer = progressEvent.target?.result as ArrayBuffer;
-            console.log(arrayBuffer);
             const midiFile = new MIDIFile(arrayBuffer);
             const song = midiFile.parseSong();
             this.startLoad(song);
