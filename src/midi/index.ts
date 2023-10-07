@@ -78,8 +78,6 @@ export default class MidiInstance {
     async startLoad(song: Record<string, any>) {
 
         this.output.connect(this.audioContext.destination);
-        // this.equalizer.output.connect(this.reverberator.input);
-        // this.reverberator.output.connect(this.audioContext.destination);
 
         for (let i = 0; i < song.tracks.length; i++) {
             const nn = this.player.loader.findInstrument(song.tracks[i].program);

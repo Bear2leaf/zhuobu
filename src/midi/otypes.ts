@@ -51,6 +51,6 @@ type ChordQueue = {
 	, preset: WavePreset
 	, pitch: number
 	, duration: number
-	, volume?: number
+	, volume: number
 	, slides?: WaveSlide[]
 };

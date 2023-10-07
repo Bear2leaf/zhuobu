@@ -7,16 +7,7 @@ export default class WebAudioFontPlayer {
 	readonly loader = new WebAudioFontLoader(this);
 	private readonly afterTime = 0.05;
 	private readonly nearZero = 0.000001;
-	limitVolume(volume: number): number {
-		// if (volume) {
-		// 	volume = 1.0 * volume;
-		// } else {
-		// 	volume = 0.5;
-		// }
-		return volume;
-	};
 	queueChord(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
-		volume = this.limitVolume(volume);
 		const envelopes: WaveEnvelope[] = [];
 		for (let i = 0; i < pitches.length; i++) {
 			let singleSlide: undefined | WaveSlide[] = undefined;
@@ -41,7 +32,6 @@ export default class WebAudioFontPlayer {
 		return this.queueStrum(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
 	queueStrum(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
-		volume = this.limitVolume(volume);
 		if (when < audioContext.currentTime) {
 			when = audioContext.currentTime;
 		}
@@ -58,14 +48,13 @@ export default class WebAudioFontPlayer {
 		return envelopes;
 	};
 	queueSnap(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
-		volume = this.limitVolume(volume);
 		volume = 1.5 * (volume || 1.0);
 		duration = 0.05;
 		return this.queueChord(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
-	queueWaveTable(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitch: number, duration: number, volume: number, slides?: WaveSlide[]): WaveEnvelope {
-		volume = this.limitVolume(volume);
-		const zone: WaveZone = this.findZone(this.loader.getPresetByInstr(instr), pitch);
+	queueWaveTable(audioContext: AudioContext, target: AudioNode, instr: string | WavePreset, when: number, pitch: number, duration: number, volume: number, slides?: WaveSlide[]): WaveEnvelope {
+		const preset = typeof instr === 'string' ? this.loader.getPresetByInstr(instr): instr;
+		const zone: WaveZone = this.findZone(preset, pitch);
 		if (zone) {
 			if (!(zone.buffer)) {
 				throw new Error("empty buffer");
@@ -115,7 +104,7 @@ export default class WebAudioFontPlayer {
 			envelope.when = startWhen;
 			envelope.duration = waveDuration;
 			envelope.pitch = pitch;
-			envelope.preset = this.loader.getPresetByInstr(instr);
+			envelope.preset = preset;
 			return envelope;
 		} else {
 			throw new Error("cannot find zone for pitch " + pitch);
