@@ -54,7 +54,7 @@ export default class MIDIPlayer {
 		return this.queueChord(audioContext, target, instr, when, pitches, duration, volume, slides);
 	};
 	queueWaveTable(audioContext: AudioContext, target: AudioNode, instr: string | WavePreset, when: number, pitch: number, duration: number, volume: number, slides?: WaveSlide[]): WaveEnvelope {
-		const preset = typeof instr === 'string' ? this.loader.getPresetByInstr(instr): instr;
+		const preset = typeof instr === 'string' ? this.loader.getPresetByInstr(instr) : instr;
 		const zone: WaveZone = this.findZone(preset, pitch);
 		if (zone) {
 			if (!(zone.buffer)) {
@@ -76,10 +76,8 @@ export default class MIDIPlayer {
 					waveDuration = zone.buffer.duration / playbackRate;
 				}
 			}
-			const envelope: WaveEnvelope = this.findEnvelope(audioContext, target);
-			this.setupEnvelope(audioContext, envelope, zone, volume, startWhen, waveDuration, duration);
-			envelope.audioBufferSourceNode = audioContext.createBufferSource();
-			envelope.audioBufferSourceNode.playbackRate.setValueAtTime(playbackRate, 0);
+			const envelope: WaveEnvelope = this.createEnvelope(audioContext, target);
+			this.setupEnvelope(audioContext, envelope, zone, volume, startWhen, waveDuration, duration, playbackRate);
 			if (slides) {
 				if (slides.length > 0) {
 					envelope.audioBufferSourceNode.playbackRate.setValueAtTime(playbackRate, when);
@@ -99,7 +97,7 @@ export default class MIDIPlayer {
 			} else {
 				envelope.audioBufferSourceNode.loop = false;
 			}
-			envelope.audioBufferSourceNode.connect((envelope as unknown) as GainNode);
+			envelope.audioBufferSourceNode.connect(envelope.gainNode);
 			envelope.audioBufferSourceNode.start(startWhen, zone.delay);
 			envelope.audioBufferSourceNode.stop(startWhen + waveDuration);
 			envelope.when = startWhen;
@@ -118,12 +116,14 @@ export default class MIDIPlayer {
 			return this.nearZero;
 		}
 	};
-	setupEnvelope(audioContext: AudioContext, envelope: WaveEnvelope, zone: WaveZone, volume: number, when: number, sampleDuration: number, noteDuration: number) {
-		((envelope as unknown) as GainNode).gain.setValueAtTime(this.noZeroVolume(0), audioContext.currentTime);
+	setupEnvelope(audioContext: AudioContext, envelope: WaveEnvelope, zone: WaveZone, volume: number, when: number, sampleDuration: number, noteDuration: number, playbackRate: number) {
+
+		envelope.audioBufferSourceNode.playbackRate.setValueAtTime(playbackRate, 0);
+		envelope.gainNode.gain.setValueAtTime(this.noZeroVolume(0), audioContext.currentTime);
 		let lastTime = 0;
 		let lastVolume = 0;
 		let duration = noteDuration;
-		let zoneahdsr: undefined | boolean | WaveAHDSR[] = zone.ahdsr;
+		let zoneahdsr = zone.ahdsr;
 		if (sampleDuration < duration + this.afterTime) {
 			duration = sampleDuration - this.afterTime;
 		}
@@ -155,22 +155,22 @@ export default class MIDIPlayer {
 			];
 		}
 		const ahdsr: WaveAHDSR[] = zoneahdsr as WaveAHDSR[];
-		((envelope as unknown) as GainNode).gain.cancelScheduledValues(when);
-		((envelope as unknown) as GainNode).gain.setValueAtTime(this.noZeroVolume(ahdsr[0].volume * volume), when);
+		envelope.gainNode.gain.cancelScheduledValues(when);
+		envelope.gainNode.gain.setValueAtTime(this.noZeroVolume(ahdsr[0].volume * volume), when);
 		for (let i = 0; i < ahdsr.length; i++) {
 			if (ahdsr[i].duration > 0) {
 				if (ahdsr[i].duration + lastTime > duration) {
 					const r = 1 - (ahdsr[i].duration + lastTime - duration) / ahdsr[i].duration;
 					const n = lastVolume - r * (lastVolume - ahdsr[i].volume);
-					((envelope as unknown) as GainNode).gain.linearRampToValueAtTime(this.noZeroVolume(volume * n), when + duration);
+					envelope.gainNode.gain.linearRampToValueAtTime(this.noZeroVolume(volume * n), when + duration);
 					break;
 				}
 				lastTime = lastTime + ahdsr[i].duration;
 				lastVolume = ahdsr[i].volume;
-				((envelope as unknown) as GainNode).gain.linearRampToValueAtTime(this.noZeroVolume(volume * lastVolume), when + lastTime);
+				envelope.gainNode.gain.linearRampToValueAtTime(this.noZeroVolume(volume * lastVolume), when + lastTime);
 			}
 		}
-		((envelope as unknown) as GainNode).gain.linearRampToValueAtTime(this.noZeroVolume(0), when + duration + this.afterTime);
+		envelope.gainNode.gain.linearRampToValueAtTime(this.noZeroVolume(0), when + duration + this.afterTime);
 	};
 	numValue(aValue: any, defValue: number): number {
 		if (typeof aValue === "number") {
@@ -179,34 +179,21 @@ export default class MIDIPlayer {
 			return defValue;
 		}
 	};
-	findEnvelope(audioContext: AudioContext, target: AudioNode): WaveEnvelope {
-		let envelope: WaveEnvelope | null = null;
-		for (let i = 0; i < this.envelopes.length; i++) {
-			const e = this.envelopes[i];
-			if (e.target == target && audioContext.currentTime > e.when + e.duration + 0.001) {
-				if (e.audioBufferSourceNode) {
-					e.audioBufferSourceNode.disconnect();
-					e.audioBufferSourceNode.stop(0);
-					e.audioBufferSourceNode = null;
-				}
-				envelope = e;
-				break;
+	createEnvelope(audioContext: AudioContext, target: AudioNode): WaveEnvelope {
+		const gainNode = audioContext.createGain();
+		const audioBufferSourceNode = audioContext.createBufferSource();
+		const envelope: WaveEnvelope = {
+			gainNode,
+			audioBufferSourceNode,
+			when: 0,
+			duration: 0,
+			pitch: 0,
+			preset: {
+				zones: []
 			}
-		}
-		if (!(envelope)) {
-			envelope = (audioContext.createGain() as unknown) as WaveEnvelope;
-			envelope.target = target;
-			((envelope as unknown) as GainNode).connect(target);
-			envelope.cancel = function () {
-				if (envelope && (envelope.when + envelope.duration > audioContext.currentTime)) {
-					((envelope as unknown) as GainNode).gain.cancelScheduledValues(0);
-					((envelope as unknown) as GainNode).gain.setTargetAtTime(0.00001, audioContext.currentTime, 0.1);
-					envelope.when = audioContext.currentTime + 0.00001;
-					envelope.duration = 0;
-				}
-			};
-			this.envelopes.push(envelope);
-		}
+		};
+		gainNode.connect(target);
+		this.envelopes.push(envelope);
 		return envelope;
 	};
 	async adjustPreset(audioContext: AudioContext, preset: WavePreset) {

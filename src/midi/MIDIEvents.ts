@@ -2,9 +2,6 @@ import { EventType } from "./MIDIType.js";
 
 // MIDIEvents : Read and edit events from various sources (ArrayBuffer, Stream)
 export class MIDIEvents {
-    constructor() {
-        throw new Error('MIDIEvents function not intended to be run.');
-    }
     // Static constants
     // Event types
     static readonly EVENT_META = 255;
@@ -47,6 +44,9 @@ export class MIDIEvents {
         MIDIEvents.EVENT_MIDI_CONTROLLER,
         MIDIEvents.EVENT_MIDI_PITCH_BEND,
     ];
+    constructor() {
+        throw new Error('MIDIEvents function not intended to be run.');
+    }
     // Create an event stream parser
     static createParser(stream: DataView, startAt: number, strictMode: boolean) {
         // Private vars

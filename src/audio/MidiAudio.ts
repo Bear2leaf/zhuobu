@@ -39,6 +39,7 @@ export default class MidiAudio implements AudioClip {
     }
 
     update(): void {
+        this.getInstance().loop();
         this.getInstance().tick();
     }
 

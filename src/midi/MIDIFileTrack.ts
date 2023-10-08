@@ -1,6 +1,8 @@
 ///...........................................
 // MIDIFileTrack : Read and edit a MIDI track chunk in a given ArrayBuffer
 export class MIDIFileTrack {
+    // Static constants
+    static readonly HDR_LENGTH = 8;
     datas: DataView;
     constructor(buffer?: ArrayBuffer, start = 0, strictMode = false) {
         let a;
@@ -67,8 +69,6 @@ export class MIDIFileTrack {
         }
     }
 
-    // Static constants
-    static readonly HDR_LENGTH = 8;
 
     // Track length
     getTrackLength() {

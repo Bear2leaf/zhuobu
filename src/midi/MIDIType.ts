@@ -1,9 +1,8 @@
 export type WaveEnvelope = {
-	audioBufferSourceNode?: AudioBufferSourceNode | null
-	, target: AudioNode
+	audioBufferSourceNode: AudioBufferSourceNode
+	, gainNode: GainNode
 	, when: number
 	, duration: number
-	, cancel: () => void
 	, pitch: number
 	, preset: WavePreset
 };

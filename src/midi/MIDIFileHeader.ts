@@ -1,6 +1,10 @@
 ///...........................................
 // MIDIFileHeader : Read and edit a MIDI header chunk in a given ArrayBuffer
 export class MIDIFileHeader {
+    // Static constants
+    static readonly HEADER_LENGTH = 14;
+    static readonly FRAMES_PER_SECONDS = 1;
+    static readonly TICKS_PER_BEAT = 2;
     datas: DataView;
 
     constructor(buffer?: ArrayBuffer, strictMode?: boolean) {
@@ -50,10 +54,6 @@ export class MIDIFileHeader {
         }
     }
 
-    // Static constants
-    static readonly HEADER_LENGTH = 14;
-    static readonly FRAMES_PER_SECONDS = 1;
-    static readonly TICKS_PER_BEAT = 2;
 
     // MIDI file format
     getFormat() {

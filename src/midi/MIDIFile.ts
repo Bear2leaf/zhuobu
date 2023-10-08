@@ -173,7 +173,7 @@ export default class MIDIFile {
         track.notes.push({
             when: event.playTime / 1000,
             pitch: event.param1,
-            velocity: event.param2 / 127,
+            velocity: Math.pow(event.param2 / 127, 2),
             duration: 0.0000001,
             slides: []
         });
