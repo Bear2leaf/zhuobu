@@ -25,4 +25,4 @@ export {
     _tone_0460_GeneralUserGS_sf2_file,
     _tone_0730_GeneralUserGS_sf2_file,
 }
-export type SongType = Record<string, any>;
+export type SoundFontType = Record<string, any>;

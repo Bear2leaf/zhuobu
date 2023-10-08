@@ -1,15 +1,16 @@
-import WebAudioFontPlayer from "./player.js";
-import * as sounds from "../audiofont/index.js";
-export default class WebAudioFontLoader {
+import MIDIPlayer from "./MIDIPlayer.js";
+import * as sounds from "../soundfont/index.js";
+import { CachedPreset, NumPair, WavePreset, PresetInfo } from "./MIDIType.js";
+export default class SoundFontLoader {
 	cached: CachedPreset[] = [];
-	player: WebAudioFontPlayer;
+	player: MIDIPlayer;
 	instrumentKeyArray: string[] = [];
 	instrumentNamesArray: string[] = [];
 	choosenInfos: NumPair[] = [];
 	drumNamesArray: string[] = [];
 	drumKeyArray: string[] = [];
-	private readonly soundCache: Record<string, any> = {};
-	constructor(player: WebAudioFontPlayer) {
+	private readonly soundCache: sounds.SoundFontType = {};
+	constructor(player: MIDIPlayer) {
 		this.player = player;
 	}
 	getPresetByInstr(instr: string): WavePreset {
@@ -28,10 +29,10 @@ export default class WebAudioFontLoader {
 			filePath: filePath,
 			variableName: variableName
 		});
-		if (!(sounds as sounds.SongType)[variableName]) {
+		if (!(sounds as sounds.SoundFontType)[variableName]) {
 			throw new Error("ERROR: missing file " + filePath);
 		}
-		this.soundCache[variableName] = (sounds as sounds.SongType)[variableName];
+		this.soundCache[variableName] = (sounds as sounds.SoundFontType)[variableName];
 		await this.player.adjustPreset(audioContext, this.soundCache[variableName]);
 	};
 	loaded(variableName: string): boolean {

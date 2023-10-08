@@ -1,12 +1,12 @@
-import { SongType } from "../audiofont/index.js";
-import { MIDIFile } from "./midi.js";
-import WebAudioFontPlayer from "./player.js";
+import { SoundFontType } from "../soundfont/index.js";
+import MIDIFile from "./MIDIFile.js";
+import MIDIPlayer from "./MIDIPlayer.js";
 
 
 export default class MidiInstance {
 
     private readonly audioContext: AudioContext;
-    private readonly player: WebAudioFontPlayer = new WebAudioFontPlayer();
+    private readonly player: MIDIPlayer = new MIDIPlayer();
     private songStart = 0;
     private currentSongTime = 0;
     private nextStepTime = 0;
@@ -46,7 +46,7 @@ export default class MidiInstance {
             this.nextPositionTime = this.audioContext.currentTime + 3;
         }
     }
-    sendNotes(song: SongType, songStart: number, start: number, end: number, audioContext: AudioContext, input: AudioNode, player: WebAudioFontPlayer) {
+    sendNotes(song: SoundFontType, songStart: number, start: number, end: number, audioContext: AudioContext, input: AudioNode, player: MIDIPlayer) {
         for (let t = 0; t < song.tracks.length; t++) {
             const track = song.tracks[t];
             for (let i = 0; i < track.notes.length; i++) {
@@ -57,7 +57,7 @@ export default class MidiInstance {
                         duration = 3;
                     }
                     const instr: string = track.info.variable;
-                    const v = track.notes[i].velocity / 127;
+                    const v = track.notes[i].velocity;
                     player.queueWaveTable(this.audioContext, input, instr, when, track.notes[i].pitch, duration, v, track.notes[i].slides);
                 }
             }

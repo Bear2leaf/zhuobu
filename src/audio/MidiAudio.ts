@@ -1,4 +1,4 @@
-import MidiInstance from "../midi/index.js";
+import MidiInstance from "../midi/MIDIInstance.js";
 import AudioClip from "./AudioClip.js";
 export default class MidiAudio implements AudioClip {
     private context?: AudioContext;

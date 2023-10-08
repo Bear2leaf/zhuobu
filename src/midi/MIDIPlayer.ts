@@ -1,10 +1,11 @@
-import WebAudioFontLoader from "./loader.js";
-import { atob } from "./midi.js";
+import SoundFontLoader from "./SoundFontLoader.js";
+import { atob } from "./MIDIFile.js";
+import { WaveEnvelope, WaveSlide, WavePreset, WaveZone, WaveAHDSR } from "./MIDIType.js";
 
 
-export default class WebAudioFontPlayer {
+export default class MIDIPlayer {
 	private readonly envelopes: WaveEnvelope[] = [];
-	readonly loader = new WebAudioFontLoader(this);
+	readonly loader = new SoundFontLoader(this);
 	private readonly afterTime = 0.05;
 	private readonly nearZero = 0.000001;
 	queueChord(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {
