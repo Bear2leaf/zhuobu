@@ -1,10 +1,10 @@
 import Component from "../component/Component.js";
-import GLContainer from "../component/GLContainer.js";
-import GLTFAnimationController from "../component/GLTFAnimationController.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
-import TextureContainer from "../component/TextureContainer.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import GLContainer from "../container/GLContainer.js";
+import GLTFSkeletonAnimator from "../animator/GLTFSkeletonAnimator.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
+import TextureContainer from "../container/TextureContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
@@ -19,7 +19,7 @@ export default class SkinMeshObject extends Entity {
             TRS,
             Node,
             WhaleMesh,
-            GLTFAnimationController,
+            GLTFSkeletonAnimator,
             OnClickPickSubject,
             OnClickPickSayHello,
             TouchEventContainer,

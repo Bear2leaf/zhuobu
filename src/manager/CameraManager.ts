@@ -2,7 +2,7 @@ import Camera from "../camera/Camera.js";
 import { MainCamera } from "../camera/MainCamera.js";
 import { FrontgroundCamera } from "../camera/FrontgroundCamera.js";
 import { DebugCamera } from "../camera/DebugCamera.js";
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 import FrustumCube from "../drawobject/FrustumCube.js";
 import Renderer from "../renderer/Renderer.js";
 import Scene from "../scene/Scene.js";
@@ -10,21 +10,21 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import WireQuad from "../drawobject/WireQuad.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
-import FrontgroundFrame from "../component/FrontgroundFrame.js";
+import FrontgroundFrame from "../wireframe/FrontgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import VisualizeCamera from "../component/VisualizeCamera.js";
+import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 import Histogram from "../drawobject/Histogram.js";
 import Flowers from "../component/Flowers.js";
-import BackgroundFrame from "../component/BackgroundFrame.js";
+import BackgroundFrame from "../wireframe/BackgroundFrame.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
-import UIFrame from "../component/UIFrame.js";
+import UIFrame from "../wireframe/UIFrame.js";
 import Text from "../drawobject/Text.js";
-import DepthMap from "../component/DepthMap.js";
+import DepthMap from "../texturemap/DepthMap.js";
 import Sprite from "../drawobject/Sprite.js";
-import PickMap from "../component/PickMap.js";
+import PickMap from "../texturemap/PickMap.js";
 import TimestepManager from "./TimestepManager.js";
-import CameraController from "../component/CameraController.js";
+import CameraAnimator from "../animator/CameraAnimator.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -49,7 +49,7 @@ export default class CameraManager extends Manager<Camera> {
     update(): void {
 
         this.get(MainCamera).rotateViewPerFrame(this.getTimestepManager().getFrames());
-        this.getSceneManager().all().forEach(scene => scene.getComponents(CameraController).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEye())));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(CameraAnimator).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEye())));
     }
     init(): void {
         const windowInfo = this.getDevice().getWindowInfo();

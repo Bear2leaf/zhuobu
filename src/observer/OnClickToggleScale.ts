@@ -1,5 +1,5 @@
-import TRS from "../component/TRS.js";
 import DemoSubject from "../subject/OnClickSubject.js";
+import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {

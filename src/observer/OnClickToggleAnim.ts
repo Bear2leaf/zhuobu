@@ -1,4 +1,4 @@
-import SinAnimation from "../component/SinAnimation.js";
+import CircleAnimator from "../animator/CircleAnimator.js";
 import DemoSubject from "../subject/OnClickSubject.js";
 import Observer from "./Observer.js";
 
@@ -11,7 +11,7 @@ export default class OnClickToggleAnim extends Observer {
     }
 
     public notify(): void {
-        this.getEntity().get(SinAnimation).toggle();
+        this.getEntity().get(CircleAnimator).toggle();
     }
 
     getSubject(): DemoSubject {

@@ -1,4 +1,4 @@
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import RenderingContext from "../contextobject/RenderingContext.js";

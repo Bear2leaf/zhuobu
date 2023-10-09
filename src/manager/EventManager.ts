@@ -11,7 +11,7 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
 
-export default class EventManager extends Manager<unknown> {
+export default class EventManager extends Manager<Object> {
     private sceneManager?: SceneManager;
     addObjects(): void {
         [

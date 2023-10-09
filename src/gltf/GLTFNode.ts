@@ -1,5 +1,5 @@
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import GLTF from "./GLTF.js";
 
 export default class GLTFNode {

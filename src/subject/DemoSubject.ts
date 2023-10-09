@@ -1,4 +1,4 @@
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import Subject from "./Subject.js";
 
 export default class DemoSubject extends Subject {

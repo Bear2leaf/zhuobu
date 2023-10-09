@@ -1,6 +1,6 @@
-import GLContainer from "../component/GLContainer.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
+import GLContainer from "../container/GLContainer.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import { Vec4 } from "../geometry/Vector.js";
 import Mesh from "./Mesh.js";
 

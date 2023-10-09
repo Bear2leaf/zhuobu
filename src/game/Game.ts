@@ -14,10 +14,11 @@ import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 
 
-export default abstract class Game extends Manager<unknown> {
+export default abstract class Game extends Manager<Object> {
     private rafId: number = 0;
-    private readonly ctors: (new() => Manager<unknown>)[] =
-        [
+    addObjects() {
+        
+        const ctors: (new () => Manager<Object>)[] = [
             CacheManager,
             GLTFManager,
             CameraManager,
@@ -32,8 +33,7 @@ export default abstract class Game extends Manager<unknown> {
             RendererManager,
             WorkerManager
         ];
-    addObjects() {
-        this.ctors.forEach(ctor => {
+        ctors.forEach(ctor => {
             this.add(ctor);
             this.get(ctor).setDevice(this.getDevice());
             this.get(ctor).addObjects();
@@ -42,13 +42,13 @@ export default abstract class Game extends Manager<unknown> {
     }
     async load(): Promise<void> {
         await this.getDevice().loadSubpackage();
-        for await (const iterator of this.ctors) {
-            await this.get(iterator).load();
+        for await (const iterator of this.ctors<Manager<Object>>()) {
+            await this.get<Manager<Object>>(iterator).load();
         }
     }
     init(): void {
 
-        this.ctors.forEach(ctor => this.get(ctor).init());
+        this.ctors<Manager<Object>>().forEach(ctor => this.get<Manager<Object>>(ctor).init());
         this.get(RendererManager).bindEntityRenderer();
     }
     buildDependency() {
@@ -72,7 +72,7 @@ export default abstract class Game extends Manager<unknown> {
         this.get(AnimationManager).setTimestepManager(this.get(TimestepManager));
     }
     update() {
-        this.ctors.forEach(ctor => this.get(ctor).update());
+        this.ctors<Manager<Object>>().forEach(ctor => this.get<Manager<Object>>(ctor).update());
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {

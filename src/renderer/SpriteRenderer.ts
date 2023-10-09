@@ -1,6 +1,6 @@
 
-import DepthMap from "../component/DepthMap.js";
-import PickMap from "../component/PickMap.js";
+import DepthMap from "../texturemap/DepthMap.js";
+import PickMap from "../texturemap/PickMap.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import RenderingContext from "../contextobject/RenderingContext.js";

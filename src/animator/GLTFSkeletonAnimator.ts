@@ -1,10 +1,10 @@
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";
-import Component from "./Component.js";
+import Animator from "./Animator.js";
 
 
-export default class GLTFAnimationController extends Component {
+export default class GLTFSkeletonAnimator extends Animator {
     private animationData?: GLTFAnimation;
     init(): void {
     }
@@ -17,10 +17,8 @@ export default class GLTFAnimationController extends Component {
         }
         return this.animationData;
     }
-    animate(time: number): void {
-        // this.animSkin(Math.sin(time) * 0.5);
-        this.animGLTF(time);
-
+    animate(): void {
+        this.animGLTF(this.getTime());
     }
     animGLTF(time: number) {
 
@@ -32,7 +30,7 @@ export default class GLTFAnimationController extends Component {
             const path = target.getPath();
             const inputBuffer = sampler.getInputBuffer();
             const outputBuffer = sampler.getOutputBuffer();
-            const localTime = (time) % inputBuffer[inputBuffer.length - 1];
+            const localTime = (time / 1000) % inputBuffer[inputBuffer.length - 1];
             // find the nearest index
             const bufferIndex = sampler.getNearestIndexFromTime(localTime);
             // get the value from the output buffer

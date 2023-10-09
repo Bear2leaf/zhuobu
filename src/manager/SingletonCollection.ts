@@ -1,5 +1,5 @@
 
-export default abstract class SingletonCollection<BaseType> {
+export default abstract class SingletonCollection<BaseType extends Object> {
     private readonly objects: BaseType[] = [];
     add<T extends BaseType>(ctor: new () => T): void {
         const object = this.objects.filter(m => m instanceof ctor);
@@ -25,6 +25,9 @@ export default abstract class SingletonCollection<BaseType> {
         } else {
             return object[0] as T;
         }
+    }
+    ctors<T extends BaseType>() {
+        return this.objects.map<new () => T>(m => m.constructor as new () => T);
     }
     set<T extends BaseType>(ctor: new () => T, object: T): void {
         const index = this.objects.findIndex(m => m instanceof ctor);

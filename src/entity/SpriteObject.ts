@@ -1,10 +1,10 @@
 import Component from "../component/Component.js";
-import GLContainer from "../component/GLContainer.js";
-import Node from "../component/Node.js";
-import SinAnimation from "../component/SinAnimation.js";
-import TRS from "../component/TRS.js";
-import TextureContainer from "../component/TextureContainer.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import GLContainer from "../container/GLContainer.js";
+import Node from "../transform/Node.js";
+import CircleAnimator from "../animator/CircleAnimator.js";
+import TRS from "../transform/TRS.js";
+import TextureContainer from "../container/TextureContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import Sprite from "../drawobject/Sprite.js";
 import OnClickToggleAnim from "../observer/OnClickToggleAnim.js";
 import OnClickToggleScale from "../observer/OnClickToggleScale.js";
@@ -25,7 +25,7 @@ export default class SpriteObject extends Entity {
             OnClickToggleAnim,
             OnClickToggleScale,
             TouchEventContainer,
-            SinAnimation
+            CircleAnimator
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

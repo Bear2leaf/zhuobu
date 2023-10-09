@@ -15,7 +15,8 @@ import SceneManager from "./SceneManager.js";
 export default class RendererManager extends Manager<Renderer> {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
-    private readonly ctors =
+    addObjects(): void {
+        
         [
             SpriteRenderer
             , PointRenderer
@@ -24,9 +25,7 @@ export default class RendererManager extends Manager<Renderer> {
             , GLTFMeshRenderer
             , WireframeRenderer
             , GLTFSkinMeshRenderer
-        ]
-    addObjects(): void {
-        this.ctors.forEach(ctor => {
+        ].forEach(ctor => {
         this.add(ctor);
         this.get(ctor).setShaderName(ctor.name.replace("Renderer", "").replace("GLTF", ""));
     });
@@ -52,7 +51,7 @@ export default class RendererManager extends Manager<Renderer> {
     }
     bindEntityRenderer() {
         this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(entityRenderer => {
-            for (const ctor of this.ctors) {
+            for (const ctor of this.ctors()) {
                 if (entityRenderer instanceof ctor) {
                     entityRenderer.setShader(this.get(ctor).getShader());
                     entityRenderer.setPrimitive(this.get(ctor).getPrimitive());

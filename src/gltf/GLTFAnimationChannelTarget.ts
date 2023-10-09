@@ -1,4 +1,4 @@
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 
 export default class GLTFAnimationChannelTarget {
     private readonly node: number;

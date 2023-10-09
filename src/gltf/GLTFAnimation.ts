@@ -1,4 +1,4 @@
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 import GLTF from "./GLTF.js";
 import GLTFAnimationChannel from "./GLTFAnimationChannel.js";
 import GLTFAnimationSampler from "./GLTFAnimationSampler.js";

@@ -1,6 +1,6 @@
 import Component from "../component/Component.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
 import Entity from "./Entity.js";
 

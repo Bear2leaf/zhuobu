@@ -11,7 +11,7 @@ import SceneManager from "./SceneManager.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import Mesh from "../drawobject/Mesh.js";
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 
 
 export default class GLTFManager extends Manager<GLTF> {

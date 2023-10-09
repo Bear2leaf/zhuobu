@@ -1,11 +1,25 @@
-import GLTFAnimationController from "../component/GLTFAnimationController.js";
+import Component from "../component/Component.js";
 
-export default class Animator {
+export default class Animator extends Component {
     private time: number = 0;
-    updateTime(time: number): void {
+    private paused: boolean = false;
+
+    setTime(time: number): void {
         this.time = time;
     }
-    animate(controller: GLTFAnimationController): void {
-        controller.animate(this.time / 1000)
+    getTime(): number {
+        return this.time;
+    }
+    animate(): void {
+        throw new Error("Method not implemented.");
+    }
+    update(): void {
+        this.animate();
+    }
+    isPaused(): boolean {
+        return this.paused;
+    }
+    toggle(): void {
+        this.paused = !this.paused;
     }
 }

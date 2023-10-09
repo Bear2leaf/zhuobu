@@ -1,7 +1,7 @@
 import Device from "../device/Device.js";
 import SingletonCollection from "./SingletonCollection.js";
 
-export default abstract class Manager<T> extends SingletonCollection<T> {
+export default abstract class Manager<T extends Object> extends SingletonCollection<T> {
     private device?: Device;
     setDevice(device: Device) {
         this.device = device;

@@ -1,9 +1,9 @@
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
-export default class InputManager extends Manager<unknown> {
+export default class InputManager extends Manager<Object> {
     private sceneManager?: SceneManager;
     private isTouching: boolean = false;
     private isTouchingStart: boolean = false;

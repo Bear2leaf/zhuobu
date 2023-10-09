@@ -1,8 +1,6 @@
-import DepthMap from "../component/DepthMap.js";
+import DepthMap from "../texturemap/DepthMap.js";
 import Flowers from "../component/Flowers.js";
-import GLContainer from "../component/GLContainer.js";
-import PickMap from "../component/PickMap.js";
-import TextureContainer from "../component/TextureContainer.js";
+import GLContainer from "../container/GLContainer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";
 import Scene from "../scene/Scene.js";
@@ -17,6 +15,8 @@ import Texture, { TextureIndex } from "../texture/Texture.js";
 import CacheManager from "./CacheManager.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
+import PickMap from "../texturemap/PickMap.js";
+import TextureContainer from "../container/TextureContainer.js";
 
 
 export default class TextureManager extends Manager<Texture> {

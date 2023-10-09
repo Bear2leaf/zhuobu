@@ -1,9 +1,9 @@
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
-import TextureContainer from "../component/TextureContainer.js";
+import TextureContainer from "../container/TextureContainer.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];

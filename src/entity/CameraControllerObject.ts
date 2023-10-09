@@ -1,7 +1,7 @@
-import CameraController from "../component/CameraController.js";
+import CameraAnimator from "../animator/CameraAnimator.js";
 import Component from "../component/Component.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
 
 export default class CameraControllerObject extends Entity {
@@ -9,7 +9,7 @@ export default class CameraControllerObject extends Entity {
         [
             TRS,
             Node,
-            CameraController,
+            CameraAnimator,
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

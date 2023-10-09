@@ -1,13 +1,12 @@
 import Matrix from "../geometry/Matrix.js";
-import Component from "./Component.js";
-import Node from "./Node.js";
-import TRS from "./TRS.js";
+import Component from "../component/Component.js";
+import Node from "../transform/Node.js";
 import VisualizeCamera from "./VisualizeCamera.js";
+import TRS from "../transform/TRS.js";
 
 
-export default class UIFrame extends Component {
+export default class BackgroundFrame extends Component {
     init(): void {
-
         const trs = this.getEntity().get(TRS);
         this.getEntity().get(TRS).getScale().set(0.01, 0.01, 1, 1);
         const localMatrix = Matrix.copy(this.getEntity().get(VisualizeCamera).getViewInverse());

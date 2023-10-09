@@ -1,6 +1,6 @@
 import Camera from "../camera/Camera.js";
+import Component from "../component/Component.js";
 import Matrix from "../geometry/Matrix.js";
-import Component from "./Component.js";
 
 
 export default class VisualizeCamera extends Component {

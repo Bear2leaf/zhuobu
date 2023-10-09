@@ -1,4 +1,4 @@
-import TRS from "../component/TRS.js";
+import TRS from "../transform/TRS.js";
 import Mesh from "./Mesh.js";
 
 export default class HelloMultiMesh extends Mesh {

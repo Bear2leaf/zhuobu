@@ -1,4 +1,4 @@
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import DemoSubject from "./DemoSubject.js";
 
 export default class OnClickBottomLeftSubject extends DemoSubject {

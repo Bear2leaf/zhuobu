@@ -1,8 +1,8 @@
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
-import TRS from "../component/TRS.js";
-import GLContainer from "../component/GLContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
+import TRS from "../transform/TRS.js";
+import GLContainer from "../container/GLContainer.js";
 
 export default class Pointer extends DrawObject {
     init() {

@@ -1,8 +1,8 @@
 import Component from "../component/Component.js";
-import GLContainer from "../component/GLContainer.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
-import TextureContainer from "../component/TextureContainer.js";
+import GLContainer from "../container/GLContainer.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
+import TextureContainer from "../container/TextureContainer.js";
 import TexturedCube from "../drawobject/TexturedCube.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import Entity from "./Entity.js";

@@ -1,5 +1,5 @@
-import GLContainer from "../component/GLContainer.js";
-import TouchEventContainer from "../component/TouchEventContainer.js";
+import GLContainer from "../container/GLContainer.js";
+import TouchEventContainer from "../container/TouchEventContainer.js";
 import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
 import { Vec3 } from "../geometry/Vector.js";
 import DemoSubject from "./DemoSubject.js";
@@ -26,7 +26,6 @@ export default class OnClickPickSubject extends DemoSubject {
         this.getFrameBufferObject().bindPick();
         const touch = this.getEntity().get(TouchEventContainer);
         const color = this.getEntity().get(GLContainer).getRenderingContext().readSinglePixel(touch.getScreenX(), touch.getScreenY());
-        // console.debug(...this.color.toFloatArray(), ...color.toFloatArray(), touch.getX(), touch.getY(), this.getFrameBufferObject())
         if (this.color.x === color.x && this.color.y === color.y && this.color.z === color.z) {
             this.notify();
         }

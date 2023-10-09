@@ -1,4 +1,4 @@
-import TRS from "../component/TRS.js";
+import TRS from "../transform/TRS.js";
 import Text from "./Text.js";
 
 export default class FpsText extends Text {

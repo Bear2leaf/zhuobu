@@ -1,6 +1,8 @@
 import Animator from "../animator/Animator.js";
+import CameraAnimator from "../animator/CameraAnimator.js";
+import CircleAnimator from "../animator/CircleAnimator.js";
+import GLTFSkeletonAnimator from "../animator/GLTFSkeletonAnimator.js";
 import LinearAnimator from "../animator/LinearAnimator.js";
-import GLTFAnimationController from "../component/GLTFAnimationController.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
@@ -10,7 +12,10 @@ export default class AnimationManager extends Manager<Animator> {
     private timestepManager?: TimestepManager;
     addObjects(): void {
         [
-            LinearAnimator
+            LinearAnimator,
+            CameraAnimator,
+            CircleAnimator,
+            GLTFSkeletonAnimator
         ].forEach(ctor => {
             this.add<Animator>(ctor);
         });
@@ -23,12 +28,13 @@ export default class AnimationManager extends Manager<Animator> {
     }
 
     update(): void {
-        this.all().forEach(clip => clip.updateTime(this.getTimestepManager().now()))
-        this.all().forEach(clip => {
-            this.getSceneManager().all().map(scene => {
-                scene.getComponents(GLTFAnimationController).forEach(controller => clip.animate(controller));
-            })
-        });
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Animator).forEach(animator => {
+            this.ctors().forEach(animatorCtor => {
+                if (animator instanceof animatorCtor) {
+                    animator.setTime(this.getTimestepManager().now());
+                }
+            });
+        }));
     }
 
     getSceneManager(): SceneManager {

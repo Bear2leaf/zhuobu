@@ -1,5 +1,5 @@
-import Node from "../component/Node.js";
-import VisualizeCamera from "../component/VisualizeCamera.js";
+import Node from "../transform/Node.js";
+import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 import Matrix from "../geometry/Matrix.js";
 import WireCube from "./WireCube.js";
 

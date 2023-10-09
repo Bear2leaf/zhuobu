@@ -1,6 +1,6 @@
 import Component from "../component/Component.js";
-import Node from "../component/Node.js";
-import TRS from "../component/TRS.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
 
 export default class NodeObject extends Entity {

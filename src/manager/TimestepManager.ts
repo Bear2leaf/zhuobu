@@ -5,7 +5,7 @@ import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
-export default class TimestepManager extends Manager<unknown> {
+export default class TimestepManager extends Manager<Object> {
     private sceneManager?: SceneManager;
     private currentFrame: number = 0;
     private lastFrame: number = this.currentFrame;

@@ -1,10 +1,10 @@
 import Cube from "../geometry/Cube.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec2, Vec3, Vec4, flatten } from "../geometry/Vector.js";
-import Node from "../component/Node.js";
+import Node from "../transform/Node.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
-import TRS from "../component/TRS.js";
+import TRS from "../transform/TRS.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
