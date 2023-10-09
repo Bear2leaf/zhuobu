@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "./Component.js";
 import GLContainer from "../container/GLContainer.js";
 import GLTFSkeletonAnimator from "../animator/GLTFSkeletonAnimator.js";
 import Node from "../transform/Node.js";

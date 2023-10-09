@@ -1,5 +1,5 @@
 
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import RenderingContext from "../contextobject/RenderingContext.js";
 
 export default class GLContainer extends Component {

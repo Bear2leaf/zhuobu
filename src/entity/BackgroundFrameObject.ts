@@ -1,5 +1,5 @@
 import BackgroundFrame from "../wireframe/BackgroundFrame.js";
-import Component from "../component/Component.js";
+import Component from "./Component.js";
 import GLContainer from "../container/GLContainer.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

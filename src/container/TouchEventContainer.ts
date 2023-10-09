@@ -1,5 +1,5 @@
 
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 
 export default class TouchEventContainer extends Component {
     private x: number = 0;

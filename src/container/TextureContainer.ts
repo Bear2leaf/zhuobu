@@ -1,5 +1,5 @@
 
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import Texture, { TextureIndex } from "../texture/Texture.js";
 
 export default class TextureContainer extends Component {

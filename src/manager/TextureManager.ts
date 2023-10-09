@@ -1,5 +1,5 @@
 import DepthMap from "../texturemap/DepthMap.js";
-import Flowers from "../component/Flowers.js";
+import Flowers from "../texturemap/Flowers.js";
 import GLContainer from "../container/GLContainer.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Text from "../drawobject/Text.js";

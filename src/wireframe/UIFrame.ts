@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import Matrix from "../geometry/Matrix.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

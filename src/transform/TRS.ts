@@ -1,6 +1,6 @@
 import Matrix from "../geometry/Matrix.js";
 import { Vec3 } from "../geometry/Vector.js";
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 
 export default class TRS extends Component {
     private readonly position: Vec3 = new Vec3();

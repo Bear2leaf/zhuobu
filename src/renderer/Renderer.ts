@@ -1,5 +1,5 @@
 import Camera from "../camera/Camera.js";
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import Node from "../transform/Node.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";

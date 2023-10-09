@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import Entity from "../entity/Entity.js";
 
 export default abstract class Scene {

@@ -1,5 +1,5 @@
-import Component from "../component/Component.js";
-import Flowers from "../component/Flowers.js";
+import Component from "./Component.js";
+import Flowers from "../texturemap/Flowers.js";
 import GLContainer from "../container/GLContainer.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

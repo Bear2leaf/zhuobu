@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";

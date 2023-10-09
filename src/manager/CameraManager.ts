@@ -14,7 +14,7 @@ import FrontgroundFrame from "../wireframe/FrontgroundFrame.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 import Histogram from "../drawobject/Histogram.js";
-import Flowers from "../component/Flowers.js";
+import Flowers from "../texturemap/Flowers.js";
 import BackgroundFrame from "../wireframe/BackgroundFrame.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";

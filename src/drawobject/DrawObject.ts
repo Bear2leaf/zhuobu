@@ -1,7 +1,7 @@
 import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import GLContainer from "../container/GLContainer.js";
 import TextureContainer from "../container/TextureContainer.js";
 

@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "../entity/Component.js";
 import Observer from "../observer/Observer.js";
 
 export default class Subject extends Component {

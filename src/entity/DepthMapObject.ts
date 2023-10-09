@@ -1,4 +1,4 @@
-import Component from "../component/Component.js";
+import Component from "./Component.js";
 import DepthMap from "../texturemap/DepthMap.js";
 import GLContainer from "../container/GLContainer.js";
 import Node from "../transform/Node.js";
