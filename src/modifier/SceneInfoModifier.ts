@@ -1,20 +1,32 @@
-import Scene from "../scene/Scene.js";
+import SceneManager from "../manager/SceneManager.js";
 import Node from "../transform/Node.js";
 import Modifier from "./Modifier.js";
 
 export default class SceneInfoModifier implements Modifier {
-    private scene?: Scene;
+    private sceneManager?: SceneManager;
     private sceneNumber: number = 0;
     private firstSceneEntityNumber: number = 0;
     private secondNodeWorldMatrix: Float32Array = new Float32Array(12);
-    updateSceneNumber(length: number) {
-        this.sceneNumber = length;
+    private updateSceneNumber() {
+        this.sceneNumber = this.getSceneManager().all().length;
     }
-    updateFirstSceneEntityNumber(length: number) {
-        this.firstSceneEntityNumber = length;
+    private updateFirstSceneEntityNumber() {
+        this.firstSceneEntityNumber = this.getSceneManager().first().getDefaultEntities().length;
     }
-    updateSecondNodeWorldMatrix(matrix: Float32Array) {
-        this.secondNodeWorldMatrix = matrix;
+    private updateSecondNodeWorldMatrix() {
+        this.secondNodeWorldMatrix = this.getSceneManager().first().getComponents(Node)[1].getWorldMatrix().getVertics();
+    }
+    update(): void {
+        this.updateSceneNumber();
+        this.updateFirstSceneEntityNumber();
+        this.updateSecondNodeWorldMatrix();
+    }
+    toggleSecondNodeScale(checked: boolean) {
+        if (checked) {
+            this.getSceneManager().first().getComponents(Node)[1].getSource()?.getScale().set(20, 20, 20);
+        } else {
+            this.getSceneManager().first().getComponents(Node)[1].getSource()?.getScale().set(10, 10, 10);
+        }
     }
     getSceneNumber() {
         return this.sceneNumber;
@@ -25,16 +37,14 @@ export default class SceneInfoModifier implements Modifier {
     getSecondNodeWorldMatrix() {
         return this.secondNodeWorldMatrix;
     }
-    setScene(scene: Scene) {
-        this.scene = scene;
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
     }
-    toggleSecondNodeScale(checked: boolean) {
-
-        if (checked) {
-            this.scene?.getComponents(Node)[1].getSource()?.getScale().set(20, 20, 20);
-        } else {
-            this.scene?.getComponents(Node)[1].getSource()?.getScale().set(10, 10, 10);
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
         }
+        return this.sceneManager;
     }
 
 }
