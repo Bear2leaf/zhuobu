@@ -5,7 +5,7 @@ export default class TimestepModifier implements Modifier {
     private timestepManager?: TimestepManager;
     private info = "";
     private updateTimestepInfo() {
-        this.info = `Fps: ${this.getTimestepManager().getFPS()}, Frames: ${this.getTimestepManager().getFrames()}, Delta: ${this.getTimestepManager().getDelta()}`;
+        this.info = `Fps: ${this.getTimestepManager().getFPS()}, Frames: ${this.getTimestepManager().getFrames()}, Delta: ${this.getTimestepManager().getDeltaTime()}`;
     }
     update(): void {
         this.updateTimestepInfo();

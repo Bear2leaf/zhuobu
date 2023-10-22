@@ -1,3 +1,5 @@
+import Game from "../game/Game.js";
+import GameUpdateModifier from "../modifier/GameUpdateModifier.js";
 import Modifier from "../modifier/Modifier.js";
 import SceneInfoModifier from "../modifier/SceneInfoModifier.js";
 import TimestepModifier from "../modifier/TimestepModifier.js";
@@ -12,7 +14,8 @@ export default class ModifierManager extends Manager<Modifier> {
     addObjects(): void {
         [
             SceneInfoModifier,
-            TimestepModifier
+            TimestepModifier,
+            GameUpdateModifier
         ].forEach(ctor => {
             this.add<Modifier>(ctor);
         });
@@ -23,6 +26,9 @@ export default class ModifierManager extends Manager<Modifier> {
     init(): void {
         this.get(SceneInfoModifier).setSceneManager(this.getSceneManager());
         this.get(TimestepModifier).setTimestepManager(this.getTimestepManager());
+    }
+    setGame(game: Game) {
+        this.get(GameUpdateModifier).setGame(game);
     }
     update(): void {
         this.all().forEach(modifier => modifier.update());

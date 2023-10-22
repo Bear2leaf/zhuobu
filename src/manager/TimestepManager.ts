@@ -7,9 +7,10 @@ import SceneManager from "./SceneManager.js";
 
 export default class TimestepManager extends Manager<Object> {
     private sceneManager?: SceneManager;
-    private currentFrame: number = 0;
-    private lastFrame: number = this.currentFrame;
+    private frames: number = 0;
+    private currentFrameTime: number = 0;
     private lastFrameTime: number = 0;
+    private deltaTime: number = 0;
     private fps: number = 0;
     addObjects(): void {
     }
@@ -17,20 +18,16 @@ export default class TimestepManager extends Manager<Object> {
 
     }
     init(): void {
-        this.currentFrame = 0;
-        this.lastFrame = this.currentFrame;
-        this.lastFrameTime = this.now();
-        this.fps = 0;
 
     }
     now(): number {
         return this.getDevice().now();
     }
     getFrames(): number {
-        return this.currentFrame;
+        return this.frames;
     }
-    getDelta(): number {
-        return this.currentFrame - this.lastFrame;
+    getDeltaTime(): number {
+        return this.deltaTime;
     }
     getFPS(): number {
         return this.fps;
@@ -48,15 +45,14 @@ export default class TimestepManager extends Manager<Object> {
         return this.getSceneManager().first();
     }
     update(): void {
-        this.currentFrame++;
-        if (this.now() - this.lastFrameTime >= 1000) {
-            this.fps = this.currentFrame - this.lastFrame;
-            this.lastFrameTime = this.now();
-            this.lastFrame = this.currentFrame;
-            this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
-            this.getScene().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
-        }
-        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}\nDelta: ${this.getDelta()}`));
+        this.frames++;
+        this.currentFrameTime = this.now();
+        this.deltaTime = this.currentFrameTime - this.lastFrameTime;
+        this.fps = 1000 / this.deltaTime;
+        this.lastFrameTime = this.currentFrameTime;
+        this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
+        this.getScene().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
+        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}\nDeltaTime: ${this.deltaTime}`));
     }
 
 }

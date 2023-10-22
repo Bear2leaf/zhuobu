@@ -4,8 +4,11 @@ export default class Animator extends Component {
     private time: number = 0;
     private paused: boolean = false;
 
-    setTime(time: number): void {
-        this.time = time;
+    tick(): void {
+        if (this.paused) {
+            return;
+        }
+        this.time += 10;
     }
     getTime(): number {
         return this.time;
@@ -14,6 +17,9 @@ export default class Animator extends Component {
         throw new Error("Method not implemented.");
     }
     update(): void {
+        if (this.paused) {
+            return;
+        }
         this.animate();
     }
     isPaused(): boolean {

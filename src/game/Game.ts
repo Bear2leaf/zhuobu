@@ -13,6 +13,7 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import ModifierManager from "../manager/ModifierManager.js";
+import GameUpdateModifier from "../modifier/GameUpdateModifier.js";
 
 
 export default abstract class Game extends Manager<Object> {
@@ -74,6 +75,7 @@ export default abstract class Game extends Manager<Object> {
         this.get(AnimationManager).setTimestepManager(this.get(TimestepManager));
         this.get(ModifierManager).setSceneManager(this.get(SceneManager));
         this.get(ModifierManager).setTimestepManager(this.get(TimestepManager));
+        this.get(ModifierManager).setGame(this);
     }
     update() {
         this.ctors<Manager<Object>>().forEach(ctor => this.get<Manager<Object>>(ctor).update());

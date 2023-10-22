@@ -9,10 +9,8 @@ export default class BeartalkGame extends Game {
         this.canvas = document.createElement("canvas");
         this.canvas.width = 320;
         this.canvas.height = 568;
+        el.appendChild(this.canvas);
         this.setDevice(new BrowserDevice(this.canvas));
         this.addObjects();
-    }
-    getCanvas() {
-        return this.canvas;
     }
 }

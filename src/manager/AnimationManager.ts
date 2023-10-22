@@ -11,12 +11,13 @@ export default class AnimationManager extends Manager<Animator> {
     private sceneManager?: SceneManager;
     private timestepManager?: TimestepManager;
     addObjects(): void {
-        [
+        const ctors: (new () => Animator)[] =[
             LinearAnimator,
             CameraAnimator,
             CircleAnimator,
             GLTFSkeletonAnimator
-        ].forEach(ctor => {
+        ];
+        ctors.forEach(ctor => {
             this.add<Animator>(ctor);
         });
     }
@@ -31,7 +32,7 @@ export default class AnimationManager extends Manager<Animator> {
         this.getSceneManager().all().forEach(scene => scene.getComponents(Animator).forEach(animator => {
             this.ctors().forEach(animatorCtor => {
                 if (animator instanceof animatorCtor) {
-                    animator.setTime(this.getTimestepManager().now());
+                    animator.tick();
                 }
             });
         }));
