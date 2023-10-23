@@ -13,7 +13,6 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import ModifierManager from "../manager/ModifierManager.js";
-import GameUpdateModifier from "../modifier/GameUpdateModifier.js";
 
 
 export default abstract class Game extends Manager<Object> {
