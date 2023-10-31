@@ -2,7 +2,7 @@ import SceneManager from "../manager/SceneManager.js";
 import Node from "../transform/Node.js";
 import Modifier from "./Modifier.js";
 
-export default class SceneInfoModifier implements Modifier {
+export default class SceneInfoModifier extends Modifier {
     private sceneManager?: SceneManager;
     private sceneNumber: number = 0;
     private firstSceneEntityNumber: number = 0;
@@ -20,6 +20,7 @@ export default class SceneInfoModifier implements Modifier {
         this.updateSceneNumber();
         this.updateFirstSceneEntityNumber();
         this.updateSecondNodeWorldMatrix();
+        super.update();
     }
     toggleSecondNodeScale(checked: boolean) {
         if (checked) {

@@ -1,7 +1,7 @@
 import TimestepManager from "../manager/TimestepManager.js";
 import Modifier from "./Modifier.js";
 
-export default class TimestepModifier implements Modifier {
+export default class TimestepModifier extends Modifier {
     private timestepManager?: TimestepManager;
     private info = "";
     private updateTimestepInfo() {
@@ -9,6 +9,7 @@ export default class TimestepModifier implements Modifier {
     }
     update(): void {
         this.updateTimestepInfo();
+        super.update();
     }
     getTimestepInfo() {
         return this.info;

@@ -1,7 +1,7 @@
 import Game from "../game/Game.js";
 import Modifier from "./Modifier.js";
 
-export default class GameUpdateModifier implements Modifier {
+export default class GameUpdateModifier extends Modifier {
     private game?: Game;
     setGame(game: Game) {
         this.game = game;
@@ -17,8 +17,6 @@ export default class GameUpdateModifier implements Modifier {
     }
     resume(): void {
         this.getGame().update();
-    }
-    update(): void {
     }
 
 }
