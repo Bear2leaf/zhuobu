@@ -1,4 +1,5 @@
-import GLRenderingContext from "../contextobject/GLRenderingContext.js";
+import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
+import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
@@ -6,8 +7,8 @@ export type Rectangle = { left: number, top: number, width: number, height: numb
 export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
     private readonly canvas: HTMLCanvasElement;
-    constructor(canvas: HTMLCanvasElement) {
-        super(new GLRenderingContext(canvas));
+    constructor(canvas: HTMLCanvasElement, offscreencanvas: HTMLCanvasElement) {
+        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreencanvas));
         this.canvas = canvas;
         this.isMouseDown = false;
     }

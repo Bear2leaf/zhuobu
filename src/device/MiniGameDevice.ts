@@ -1,4 +1,5 @@
-import GLRenderingContext from "../contextobject/GLRenderingContext.js";
+import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
+import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import { WorkerRequest } from "../worker/MessageProcessor.js";
 import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
 
@@ -25,11 +26,12 @@ export default class MiniGameDevice extends Device {
     private readonly divideTimeBy: number;
     constructor() {
         const canvas = wx.createCanvas()
+        const offscreenCanvas = wx.createCanvas()
         const isDevTool = wx.getSystemInfoSync().platform === "devtools";
         const { windowWidth, windowHeight, pixelRatio } = wx.getWindowInfo();
         (canvas.width) = windowWidth * pixelRatio;
         (canvas.height) = windowHeight * pixelRatio;
-        super(new GLRenderingContext(canvas));
+        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreenCanvas));
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 

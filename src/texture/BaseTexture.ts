@@ -1,4 +1,4 @@
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Texture, { TextureIndex } from "./Texture.js";
 
 export default class BaseTexture implements Texture {

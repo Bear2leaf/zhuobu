@@ -6,7 +6,7 @@ import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4, flatten } from "../geometry/Vector.js";
 import Node from "../transform/Node.js";
 import DrawObject from "./DrawObject.js";
-import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TRS from "../transform/TRS.js";
 
 export default class Gasket extends DrawObject {

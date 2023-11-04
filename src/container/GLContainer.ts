@@ -1,6 +1,6 @@
 
 import Component from "../entity/Component.js";
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export default class GLContainer extends Component {
     private rc?: RenderingContext;

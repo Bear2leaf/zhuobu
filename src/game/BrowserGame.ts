@@ -10,7 +10,10 @@ export default class BrowserGame extends Game {
         const canvas = document.createElement("canvas");
         canvas.width = 320;
         canvas.height = 568;
-        this.setDevice(new BrowserDevice(el.appendChild(canvas)));
+        const offscreenCanvas = document.createElement("canvas");
+        el.appendChild(offscreenCanvas);
+        offscreenCanvas.style.display = "none";
+        this.setDevice(new BrowserDevice(el.appendChild(canvas), offscreenCanvas));
         this.addObjects();
         this.load().then(() => {
             this.get(SceneManager).add(DemoScene);

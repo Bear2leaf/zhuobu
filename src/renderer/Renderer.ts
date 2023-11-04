@@ -3,7 +3,7 @@ import Component from "../entity/Component.js";
 import Node from "../transform/Node.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";

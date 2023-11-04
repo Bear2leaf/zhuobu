@@ -1,4 +1,4 @@
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import BaseTexture from "../texture/BaseTexture.js";
 import { TextureIndex } from "../texture/Texture.js";
 import FrameBufferObject from "./FrameBufferObject.js";

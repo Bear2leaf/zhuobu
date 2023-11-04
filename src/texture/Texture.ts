@@ -1,4 +1,4 @@
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export enum TextureIndex {
   Default = 0,

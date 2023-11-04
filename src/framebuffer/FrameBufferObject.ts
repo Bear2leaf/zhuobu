@@ -1,4 +1,4 @@
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 
 export default interface FrameBufferObject {

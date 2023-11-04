@@ -3,7 +3,7 @@ import DepthMap from "../texturemap/DepthMap.js";
 import PickMap from "../texturemap/PickMap.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import { TextureIndex } from "../texture/Texture.js";
 import Renderer from "./Renderer.js";
 

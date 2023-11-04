@@ -1,7 +1,7 @@
 import Node from "../transform/Node.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Renderer from "./Renderer.js";
 
 export class VertexColorTriangleRenderer extends Renderer {

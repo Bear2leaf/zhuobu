@@ -1,4 +1,4 @@
-import RenderingContext from "../contextobject/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -10,11 +10,16 @@ export enum ViewPortType {
 }
 export default abstract class Device {
   private readonly renderingContext: RenderingContext;
-  constructor(renderingContext: RenderingContext) {
+  private readonly offscreenCanvasRenderingContext: RenderingContext;
+  constructor(renderingContext: RenderingContext, offscreenCanvasRenderingContext: RenderingContext) {
     this.renderingContext = renderingContext;
+    this.offscreenCanvasRenderingContext = offscreenCanvasRenderingContext;
   }
   getRenderingContext(): RenderingContext {
     return this.renderingContext;
+  }
+  getOffscreenCanvasRenderingContext(): RenderingContext {
+    return this.offscreenCanvasRenderingContext;
   }
   viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();

@@ -1,6 +1,6 @@
 import Cone from "../geometry/Cone.js";
 import { Vec4, flatten } from "../geometry/Vector.js";
-import { ArrayBufferIndex } from "../contextobject/RenderingContext.js";
+import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import DrawObject from "./DrawObject.js";
 
 export default class WireCone extends DrawObject {
