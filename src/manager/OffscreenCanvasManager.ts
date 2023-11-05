@@ -4,12 +4,21 @@ import SceneManager from "./SceneManager.js";
 import OffscreenCanvas from "../canvas2d/OffscreenCanvas.js";
 import SingleColorCanvas from "../canvas2d/SingleColorCanvas.js";
 import { Vec4 } from "../geometry/Vector.js";
-import SingleColorTexture from "../texture/SingleColorTexture.js";
+import TimestepManager from "./TimestepManager.js";
 
 
 export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
     private sceneManager?: SceneManager;
-    private textureManager?: TextureManager;
+    private timestepManager?: TimestepManager;
+    setTimestepManager(timestepManager: TimestepManager) {
+        this.timestepManager = timestepManager;
+    }
+    getTimestepManager(): TimestepManager {
+        if (this.timestepManager === undefined) {
+            throw new Error("timestepManager is undefined");
+        }
+        return this.timestepManager;
+    }
     addObjects(): void {
         [
             SingleColorCanvas
@@ -26,18 +35,8 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
         });
     }
     update(): void {
-        this.get(SingleColorCanvas).fillWithColor(new Vec4(0.5, 0.0, 0.0, 1.0))
-        const imageData = this.getTextureManager().get(SingleColorTexture).getImageData(450, 1);
-        console.log(...imageData.toFloatArray())
-    }
-    getTextureManager() {
-        if (this.textureManager === undefined) {
-            throw new Error("textureManager is undefined");
-        }
-        return this.textureManager;
-    }
-    setTextureManager(textureManager: TextureManager) {
-        this.textureManager = textureManager;
+        const r = (Math.sin(this.getTimestepManager().getFrames() / 100) + 1.0) / 2.0;
+        this.get(SingleColorCanvas).fillWithColor(new Vec4(r, 1 - r, r / 2.0, 1.0))
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

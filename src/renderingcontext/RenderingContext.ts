@@ -20,13 +20,14 @@ export enum ArrayBufferIndex {
 export default interface RenderingContext {
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void;
-    texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
+    texImage2D_RGBA_RGBA_Image(data: ImageBitmapSource): void;
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;
     framebufferRenderTexture2D(textureIndex: number): void;
     readSinglePixel(x: number, y: number): Vec4;
     createFramebuffer(): number;
+    getImageData(): ImageBitmapSource;
     createTexture(): number;
     activeTexture(bindIndex: TextureIndex): void;
     bindTexture(textureIndex?: number): void;

@@ -18,6 +18,7 @@ import SceneManager from "./SceneManager.js";
 import PickMap from "../texturemap/PickMap.js";
 import TextureContainer from "../container/TextureContainer.js";
 import SingleColorTexture from "../texture/SingleColorTexture.js";
+import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
 
 
 export default class TextureManager extends Manager<Texture> {
@@ -48,12 +49,13 @@ export default class TextureManager extends Manager<Texture> {
         const offscreenCanvasRC = this.getDevice().getOffscreenCanvasRenderingContext();
         this.get(FontTexture).setFontImage(this.getCacheManager().getImage("boxy_bold_font"));
         this.get(FlowerTexture).setImage(this.getCacheManager().getImage("flowers"));
-        this.all().filter(o => !(o instanceof SingleColorTexture)).forEach(texture => texture.create(rc));
-        this.all().filter(o => o instanceof SingleColorTexture).forEach(texture => texture.create(offscreenCanvasRC));
+        this.all().forEach(texture => texture.create(rc));
+        this.get(SingleColorTexture).setCanvasContext(offscreenCanvasRC);
         const { windowWidth, windowHeight, pixelRatio } = this.getDevice().getWindowInfo()
         this.get(DepthTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(PickTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(RenderTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
+        this.get(SingleColorTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.getSceneManager().all().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(rc)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));
@@ -61,10 +63,11 @@ export default class TextureManager extends Manager<Texture> {
         this.getSceneManager().all().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(FlowerTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(DepthTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(PickTexture))));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SingleColorTexture))));
         
     }
     update(): void {
-
+        this.get(SingleColorTexture).generate(0, 0)
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

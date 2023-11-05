@@ -9,10 +9,12 @@ import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
-    private readonly imageDataList: ImageData[];
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        this.imageDataList = [];
+    }
+    getImageData(): ImageBitmapSource {
+        const imageData = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
+        return imageData;
     }
     bindFramebuffer(fboIndex?: number | undefined): void {
         throw new Error("Method not implemented.");

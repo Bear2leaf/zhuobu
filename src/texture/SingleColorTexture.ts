@@ -8,4 +8,5 @@ export default class SingleColorTexture extends OffscreenCanvasTexture {
         this.setBindIndex(TextureIndex.OffscreenCanvas);
     }
     
+    
 }

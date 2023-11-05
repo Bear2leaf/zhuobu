@@ -18,6 +18,9 @@ export default class GLRenderingContext implements RenderingContext {
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
     }
+    getImageData(): ImageBitmapSource {
+        throw new Error("Method not implemented.");
+    }
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT24, width, height, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null)
     }

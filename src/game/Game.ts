@@ -34,8 +34,8 @@ export default abstract class Game extends Manager<Object> {
             FrameBufferManager,
             RendererManager,
             WorkerManager,
-            ModifierManager,
-            OffscreenCanvasManager
+            OffscreenCanvasManager,
+            ModifierManager
         ];
         ctors.forEach(ctor => {
             this.add(ctor);
@@ -65,7 +65,7 @@ export default abstract class Game extends Manager<Object> {
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
         this.get(FrameBufferManager).setTextureManager(this.get(TextureManager));
         this.get(FrameBufferManager).setSceneManager(this.get(SceneManager));
-        this.get(OffscreenCanvasManager).setTextureManager(this.get(TextureManager));
+        this.get(OffscreenCanvasManager).setTimestepManager(this.get(TimestepManager));
         this.get(OffscreenCanvasManager).setSceneManager(this.get(SceneManager));
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
