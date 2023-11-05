@@ -1,5 +1,5 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import BaseTexture from "../texture/BaseTexture.js";
+import GLTexture from "../texture/GLTexture.js";
 import { TextureIndex } from "../texture/Texture.js";
 import FrameBufferObject from "./FrameBufferObject.js";
 
@@ -23,7 +23,7 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
     unbindPick(): void {
         this.getGL().bindPickReadFramebuffer();
     }
-    attach(texture: BaseTexture): void {
+    attach(texture: GLTexture): void {
         this.bind();
         if (texture.getBindIndex() === TextureIndex.Depth) {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());

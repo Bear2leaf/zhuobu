@@ -1,4 +1,4 @@
-console.log('load _tone_0460_GeneralUserGS_sf2_file');
+console.debug('load _tone_0460_GeneralUserGS_sf2_file');
 export const _tone_0460_GeneralUserGS_sf2_file={
 	zones:[
 		{

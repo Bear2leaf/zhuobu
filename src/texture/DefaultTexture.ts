@@ -1,7 +1,7 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import BaseTexture from "./BaseTexture.js";
+import GLTexture from "./GLTexture.js";
 
-export default class DefaultTexture extends BaseTexture {
+export default class DefaultTexture extends GLTexture {
     create(rc: RenderingContext): void {
         super.create(rc);
         this.generate(2, 2, new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]));

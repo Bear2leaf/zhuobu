@@ -9,9 +9,10 @@ import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
+    private readonly imageDataList: ImageData[];
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        console.log(this)
+        this.imageDataList = [];
     }
     bindFramebuffer(fboIndex?: number | undefined): void {
         throw new Error("Method not implemented.");
@@ -53,13 +54,15 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
         throw  new Error("Method not implemented.");
     }
     readSinglePixel(x: number, y: number): Vec4 {
-        throw  new Error("Method not implemented.");
+        const imageData = this.context.getImageData(x, y, 1, 1);
+        return new Vec4(...imageData.data);
+        
     }
     createFramebuffer(): number {
         throw  new Error("Method not implemented.");
     }
     createTexture(): number {
-        throw  new Error("Method not implemented.");
+        return -1;
     }
     activeTexture(bindIndex: TextureIndex): void {
         throw  new Error("Method not implemented.");
@@ -72,7 +75,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
         throw  new Error("Method not implemented.");
     }
     clear(r: number = 0, g: number = 0, b: number = 0, a: number = 1): void {
-        throw  new Error("Method not implemented.");
+        this.context.fillStyle = `rgba(${r * 255}, ${g * 255}, ${b * 255}, ${a})`;
+        this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+
     }
     init(): void {
         throw  new Error("Method not implemented.");

@@ -1,7 +1,7 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import BaseTexture from "./BaseTexture.js";
+import GLTexture from "./GLTexture.js";
 
-export default class FlowerTexture extends BaseTexture {
+export default class FlowerTexture extends GLTexture {
     private image?: HTMLImageElement;
     setImage(fontImage: HTMLImageElement) {
         this.image = fontImage;

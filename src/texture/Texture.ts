@@ -6,6 +6,7 @@ export enum TextureIndex {
   Depth = 2,
   Pick = 3,
   Render = 4,
+  OffscreenCanvas = 5,
 }
 export default interface Texture {
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array): void;

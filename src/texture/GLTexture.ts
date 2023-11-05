@@ -1,7 +1,7 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Texture, { TextureIndex } from "./Texture.js";
 
-export default class BaseTexture implements Texture {
+export default class GLTexture implements Texture {
   private rc?: RenderingContext;
   private textureIndex?: number;
   private bindIndex: TextureIndex = TextureIndex.Default;

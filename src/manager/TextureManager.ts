@@ -17,6 +17,7 @@ import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import PickMap from "../texturemap/PickMap.js";
 import TextureContainer from "../container/TextureContainer.js";
+import SingleColorTexture from "../texture/SingleColorTexture.js";
 
 
 export default class TextureManager extends Manager<Texture> {
@@ -31,8 +32,9 @@ export default class TextureManager extends Manager<Texture> {
             DepthTexture,
             PickTexture,
             RenderTexture,
+            SingleColorTexture,
         ].forEach((ctor) => {
-            this.add(ctor);
+            this.add<Texture>(ctor);
         });
     }
     async load(): Promise<void> {
@@ -43,9 +45,11 @@ export default class TextureManager extends Manager<Texture> {
     init(): void {
         
         const rc = this.getDevice().getRenderingContext();
+        const offscreenCanvasRC = this.getDevice().getOffscreenCanvasRenderingContext();
         this.get(FontTexture).setFontImage(this.getCacheManager().getImage("boxy_bold_font"));
         this.get(FlowerTexture).setImage(this.getCacheManager().getImage("flowers"));
-        this.all().forEach(texture => texture.create(rc));
+        this.all().filter(o => !(o instanceof SingleColorTexture)).forEach(texture => texture.create(rc));
+        this.all().filter(o => o instanceof SingleColorTexture).forEach(texture => texture.create(offscreenCanvasRC));
         const { windowWidth, windowHeight, pixelRatio } = this.getDevice().getWindowInfo()
         this.get(DepthTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(PickTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)

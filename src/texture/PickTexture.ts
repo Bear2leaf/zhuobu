@@ -1,8 +1,8 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import BaseTexture from "./BaseTexture.js";
+import GLTexture from "./GLTexture.js";
 import { TextureIndex } from "./Texture.js";
 
-export default class PickTexture extends BaseTexture {
+export default class PickTexture extends GLTexture {
     create(rc: RenderingContext): void {
         super.create(rc);
         this.setBindIndex(TextureIndex.Pick);
