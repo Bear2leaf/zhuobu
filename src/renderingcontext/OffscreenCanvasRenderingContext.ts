@@ -18,7 +18,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
         this.context.font = "48px sans-serif";
         this.context.textAlign = "center";
         this.context.textBaseline = "middle";
-        this.context.fillStyle = "white";
+        this.context.fillStyle = "yellow";
         this.context.fillText(text, this.context.canvas.width / 2, this.context.canvas.height / 2);
     }
     getImageData(): ImageBitmapSource {

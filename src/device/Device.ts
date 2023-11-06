@@ -41,6 +41,7 @@ export default abstract class Device {
   }
   abstract getPerformance(): Performance;
   abstract getWindowInfo(): DeviceInfo;
+  abstract getCanvasInfo(): DeviceInfo;
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;

@@ -37,7 +37,7 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
     update(): void {
         const r = (Math.sin(this.getTimestepManager().getFrames() / 100) + 1.0) / 2.0;
         this.get(SingleColorCanvas).fillWithColor(r, 1 - r, r * r * r);
-        const windowInfo = this.getDevice().getWindowInfo();
+        const windowInfo = this.getDevice().getCanvasInfo();
         this.get(SingleColorCanvas).clearRect(0, windowInfo.windowHeight / 2 - 48, windowInfo.windowWidth, 96);
         this.get(SingleColorCanvas).fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
     }

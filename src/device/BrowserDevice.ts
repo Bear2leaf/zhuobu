@@ -7,15 +7,24 @@ export type Rectangle = { left: number, top: number, width: number, height: numb
 export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
     private readonly canvas: HTMLCanvasElement;
+    private readonly offscreenCanvas: HTMLCanvasElement
     constructor(canvas: HTMLCanvasElement, offscreencanvas: HTMLCanvasElement) {
         super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreencanvas));
         this.canvas = canvas;
+        this.offscreenCanvas = offscreencanvas;
         this.isMouseDown = false;
     }
     getWindowInfo(): DeviceInfo {
         return {
             windowWidth: this.canvas.width,
             windowHeight: this.canvas.height,
+            pixelRatio: 1
+        }
+    }
+    getCanvasInfo(): DeviceInfo {
+        return {
+            windowWidth: this.offscreenCanvas.width,
+            windowHeight: this.offscreenCanvas.height,
             pixelRatio: 1
         }
     }
