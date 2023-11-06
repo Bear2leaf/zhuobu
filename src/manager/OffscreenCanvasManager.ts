@@ -3,7 +3,7 @@ import TextureManager from "./TextureManager.js";
 import SceneManager from "./SceneManager.js";
 import OffscreenCanvas from "../canvas2d/OffscreenCanvas.js";
 import SingleColorCanvas from "../canvas2d/SingleColorCanvas.js";
-import { Vec4 } from "../geometry/Vector.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
 import TimestepManager from "./TimestepManager.js";
 
 
@@ -36,7 +36,10 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
     }
     update(): void {
         const r = (Math.sin(this.getTimestepManager().getFrames() / 100) + 1.0) / 2.0;
-        this.get(SingleColorCanvas).fillWithColor(new Vec4(r, 1 - r, r / 2.0, 1.0))
+        this.get(SingleColorCanvas).fillWithColor(r, 1 - r, r * r * r);
+        const windowInfo = this.getDevice().getWindowInfo();
+        this.get(SingleColorCanvas).clearRect(0, windowInfo.windowHeight / 2 - 48, windowInfo.windowWidth, 96);
+        this.get(SingleColorCanvas).fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {

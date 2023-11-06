@@ -13,9 +13,20 @@ export default class SingleColorCanvas implements OffscreenCanvas {
         }
         return this.context;
     }
-    fillWithColor(color: Vec4) {
+    readOnePixel(x: number, y: number) {
+        this.getContext().readSinglePixel(x, y)
+    }
+    fillWithColor(r: number, g: number, b: number) {
         const context = this.getContext();
-        context.clear(...color.toFloatArray());
+        context.clear(r, g, b);
+    }
+    clearRect(x: number, y: number, width: number, height: number) {
+        const context = this.getContext();
+        context.clearRect(x, y, width, height);
+    }
+    fillWithText(text: string) {
+        const context = this.getContext();
+        context.putText(text);
     }
 
 }
