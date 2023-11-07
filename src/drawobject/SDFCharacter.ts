@@ -4,11 +4,11 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLContainer from "../container/GLContainer.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
-export default class Text extends DrawObject {
+export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 1, 1, 1];
-    private spacing: number = 1;
+    private spacing: number = 0;
     private chars: string[] = [];
-    private readonly texSize: Vec2 = new Vec2(111, 80);
+    private readonly texSize: Vec2 = new Vec2(36, 36);
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
@@ -83,7 +83,11 @@ export default class Text extends DrawObject {
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));
         this.updateEBO(new Uint16Array(this.indices));
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(true);
+        this.getEntity().get(GLContainer).getRenderingContext().switchNearestFilter(false);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(false);
         super.draw(mode);
+        this.getEntity().get(GLContainer).getRenderingContext().switchDepthWrite(true);
+        this.getEntity().get(GLContainer).getRenderingContext().switchNearestFilter(true);
         this.getEntity().get(GLContainer).getRenderingContext().switchBlend(false);
     }
 }

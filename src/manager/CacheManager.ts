@@ -3,6 +3,7 @@ import Cache from "../cache/Cache.js";
 import JSONCache from "../cache/FontInfoCache.js";
 import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 import Text, { FontInfo } from "../drawobject/Text.js";
 import GLTF from "../gltf/GLTF.js";
 import Scene from "../scene/Scene.js";
@@ -32,6 +33,14 @@ export default class CacheManager extends Manager<Cache<Object>> {
 
         const fontInfo = this.getFontInfo("boxy_bold_font");
         this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => text.setFontInfo(fontInfo)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCharacter).forEach(text => text.setFontInfo({
+            '和': {
+                x: 0,
+                y: 0,
+                width: 36,
+                height: 36,
+            }
+        })));
     }
 
     update(): void {

@@ -1,9 +1,9 @@
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
-import OffscreenCanvas from "../canvas2d/OffscreenCanvas.js";
-import SingleColorCanvas from "../canvas2d/SingleColorCanvas.js";
+import OffscreenCanvas from "../canvas/OffscreenCanvas.js";
+import SingleColorCanvas from "../canvas/SingleColorCanvas.js";
 import TimestepManager from "./TimestepManager.js";
-import SDFCanvas from "../canvas2d/SDFCanvas.js";
+import SDFCanvas from "../canvas/SDFCanvas.js";
 
 
 export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
@@ -30,17 +30,16 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
 
     }
     init(): void {
-            this.get(SingleColorCanvas).setContext(this.getDevice().getOffscreenCanvasRenderingContext())
-            this.get(SDFCanvas).setContext(this.getDevice().getSDFCanvasRenderingContext())
+        this.get(SingleColorCanvas).setContext(this.getDevice().getOffscreenCanvasRenderingContext())
+        this.get(SDFCanvas).setContext(this.getDevice().getSDFCanvasRenderingContext())
     }
     update(): void {
         const r = (Math.sin(this.getTimestepManager().getFrames() / 100) + 1.0) / 2.0;
         const windowInfo = this.getDevice().getCanvasInfo();
         this.all().forEach((canvas) => {
-
-            (canvas as SingleColorCanvas).fillWithColor(r, 1 - r, r * r * r);
-            (canvas as SingleColorCanvas).clearRect(0, 0, windowInfo.windowWidth, 96);
-            (canvas as SingleColorCanvas).fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
+            canvas.fillWithColor(r, 1 - r, r * r * r);
+            canvas.clearRect(0, 0, windowInfo.windowWidth, 96);
+            canvas.fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
         });
     }
     getSceneManager(): SceneManager {

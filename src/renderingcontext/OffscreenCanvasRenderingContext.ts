@@ -11,6 +11,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
     }
+    switchNearestFilter(enable: boolean): void {
+        throw new Error("Method not implemented.");
+    }
     putImageData(data: ImageData, dx: number, dy: number): void {
         this.context.putImageData(data, dx, dy)
     }

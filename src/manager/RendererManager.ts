@@ -4,6 +4,7 @@ import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import Renderer from "../renderer/Renderer.js";
+import SDFRenderer from "../renderer/SDFRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
@@ -19,6 +20,7 @@ export default class RendererManager extends Manager<Renderer> {
         
         [
             SpriteRenderer
+            , SDFRenderer
             , PointRenderer
             , VertexColorTriangleRenderer
             , LineRenderer

@@ -21,6 +21,7 @@ import SingleColorTexture from "../texture/SingleColorTexture.js";
 import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
 import SDFCanvasMap from "../texturemap/SDFCanvasMap.js";
 import SDFTexture from "../texture/SDFTexture.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 
 
 export default class TextureManager extends Manager<Texture> {
@@ -71,11 +72,12 @@ export default class TextureManager extends Manager<Texture> {
         this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(PickTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SingleColorTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCanvasMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SDFTexture))));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCharacter).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SDFTexture))));
         
     }
     update(): void {
         this.get(SingleColorTexture).generate(300, 150)
-        this.get(SDFTexture).generate(300, 150)
+        this.get(SDFTexture).generate(36, 36)
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

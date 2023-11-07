@@ -189,7 +189,7 @@ export default class SDFCanvas implements OffscreenCanvas {
         return this.context;
     }
     readOnePixel(x: number, y: number) {
-        this.getContext().readSinglePixel(x, y)
+        return this.getContext().readSinglePixel(x, y)
     }
     fillWithColor(r: number, g: number, b: number) {
         // const context = this.getContext();

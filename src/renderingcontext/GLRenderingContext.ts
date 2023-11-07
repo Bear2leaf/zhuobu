@@ -166,6 +166,15 @@ export default class GLRenderingContext implements RenderingContext {
             this.gl.disable(this.gl.BLEND);
         }
     }
+    switchNearestFilter(enable: boolean): void {
+        if (enable) {
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+        } else {
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+        }
+    }
     switchCulling(enable: boolean): void {
         if (enable) {
             this.gl.enable(this.gl.CULL_FACE);
@@ -178,6 +187,7 @@ export default class GLRenderingContext implements RenderingContext {
     }
     useBlendFuncOneAndOneMinusSrcAlpha(): void {
         this.gl.blendFunc(this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
+        this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
     }
     makePrimitive(type: PrimitiveType): Primitive {
         return new GLPrimitive(this.gl, type);

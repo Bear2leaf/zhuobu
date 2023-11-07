@@ -6,6 +6,7 @@ export default interface Shader {
     setVector3f(name: string, data: Vec3): void;
     setVector3u(name: string, data: Vec3): void;
     setInteger(name: string, data: number): void;
+    setFloat(name: string, data: number): void;
     use(): void;
 }
 

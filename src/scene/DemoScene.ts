@@ -15,6 +15,7 @@ import AudioBGMObject from "../entity/AudioBGMObject.js";
 import CameraControllerObject from "../entity/CameraControllerObject.js";
 import CanvasObject from "../entity/CanvasObject.js";
 import SDFObject from "../entity/SDFObject.js";
+import HeTextObject from "../entity/HeTextObject.js";
 
 export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -30,6 +31,7 @@ export default class DemoScene extends Scene {
             , new HelloWireframeObject()
             , new HelloMultiMeshObject()
             , new HelloWorldTextObject()
+            , new HeTextObject()
             , new PointerObject()
             , new AudioBGMObject()
             , new CameraControllerObject()

@@ -5,9 +5,8 @@ import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
-import { Vec3, Vec4 } from "../geometry/Vector.js";
+import { Vec3 } from "../geometry/Vector.js";
 
 
 export default class Renderer extends Component {
