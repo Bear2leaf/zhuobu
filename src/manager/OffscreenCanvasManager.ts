@@ -39,7 +39,7 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
         this.all().forEach((canvas) => {
 
             (canvas as SingleColorCanvas).fillWithColor(r, 1 - r, r * r * r);
-            (canvas as SingleColorCanvas).clearRect(0, windowInfo.windowHeight / 2 - 48, windowInfo.windowWidth, 96);
+            (canvas as SingleColorCanvas).clearRect(0, 0, windowInfo.windowWidth, 96);
             (canvas as SingleColorCanvas).fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
         });
     }

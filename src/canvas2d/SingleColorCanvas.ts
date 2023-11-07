@@ -25,7 +25,7 @@ export default class SingleColorCanvas implements OffscreenCanvas {
     }
     fillWithText(text: string) {
         const context = this.getContext();
-        context.updateFont("48px serif", "middle", "center", "chocolate");
+        context.updateFont("48px serif", "alphabetic", "left", "chocolate");
         context.putText(text);
     }
 

@@ -37,7 +37,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
         this.context.clearRect(x, y, width, height);
     }
     putText(text: string): void {
-        this.context.fillText(text, this.context.canvas.width / 2, this.context.canvas.height / 2);
+        this.context.fillText(text, 0, this.measureText(text).actualBoundingBoxAscent);
     }
     getImageData(x: number, y: number, width: number, height: number): ImageBitmapSource {
         const imageData = this.context.getImageData(x, y, width, height);
