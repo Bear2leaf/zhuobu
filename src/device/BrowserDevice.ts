@@ -8,8 +8,8 @@ export default class BrowserDevice extends Device {
     private isMouseDown: boolean;
     private readonly canvas: HTMLCanvasElement;
     private readonly offscreenCanvas: HTMLCanvasElement
-    constructor(canvas: HTMLCanvasElement, offscreencanvas: HTMLCanvasElement) {
-        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreencanvas));
+    constructor(canvas: HTMLCanvasElement, offscreencanvas: HTMLCanvasElement, sdfcanvas: HTMLCanvasElement) {
+        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreencanvas), new OffscreenCanvasRenderingContext(sdfcanvas));
         this.canvas = canvas;
         this.offscreenCanvas = offscreencanvas;
         this.isMouseDown = false;

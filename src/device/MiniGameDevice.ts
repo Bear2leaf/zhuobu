@@ -27,11 +27,12 @@ export default class MiniGameDevice extends Device {
     constructor() {
         const canvas = wx.createCanvas()
         const offscreenCanvas = wx.createCanvas()
+        const sdfcanvas = wx.createCanvas()
         const isDevTool = wx.getSystemInfoSync().platform === "devtools";
         const { windowWidth, windowHeight, pixelRatio } = wx.getWindowInfo();
         (canvas.width) = windowWidth * pixelRatio;
         (canvas.height) = windowHeight * pixelRatio;
-        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreenCanvas));
+        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreenCanvas), new OffscreenCanvasRenderingContext(sdfcanvas));
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 

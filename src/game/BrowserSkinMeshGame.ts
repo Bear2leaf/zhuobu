@@ -14,7 +14,10 @@ export default class BrowserSkinMeshGame extends Game {
         el.appendChild(offscreenCanvas);
         offscreenCanvas.style.display = "none";
         canvas.width = 320;
-        this.setDevice(new BrowserDevice(el.appendChild(canvas), offscreenCanvas));
+        const sdfCanvas = document.createElement("canvas");
+        el.appendChild(sdfCanvas);
+        sdfCanvas.style.display = "none";
+        this.setDevice(new BrowserDevice(el.appendChild(canvas), offscreenCanvas, sdfCanvas));
         this.addObjects();
         this.load().then(() => {
             this.get(SceneManager).add(SkinMeshScene);

@@ -18,6 +18,24 @@ export default class GLRenderingContext implements RenderingContext {
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
     }
+    putImageData(data: ImageData, x: number, y: number): void {
+        throw new Error("Method not implemented.");
+    }
+    createImageData(width: number, height: number): ImageData {
+        throw new Error("Method not implemented.");
+    }
+    updateSize(width: number, height: number): void {
+        throw new Error("Method not implemented.");
+    }
+    updateFont(font: string, textBaseline: CanvasTextBaseline, textAlign: CanvasTextAlign, fillStyle: string): void {
+        throw new Error("Method not implemented.");
+    }
+    measureText(char: string): TextMetrics {
+        throw new Error("Method not implemented.");
+    }
+    fillText(char: string, x: number, y: number): void {
+        throw new Error("Method not implemented.");
+    }
     clearRect(x: number, y: number, width: number, height: number): void {
         throw new Error("Method not implemented.");
     }

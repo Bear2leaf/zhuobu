@@ -1,3 +1,4 @@
+import CircleAnimator from "../animator/CircleAnimator.js";
 import SceneManager from "../manager/SceneManager.js";
 import Node from "../transform/Node.js";
 import Modifier from "./Modifier.js";
@@ -13,20 +14,20 @@ export default class SceneInfoModifier extends Modifier {
     private updateFirstSceneEntityNumber() {
         this.firstSceneEntityNumber = this.getSceneManager().first().getDefaultEntities().length;
     }
-    private updateSecondNodeWorldMatrix() {
-        this.secondNodeWorldMatrix = this.getSceneManager().first().getComponents(Node)[1].getWorldMatrix().getVertics();
+    private updateSpriteNodeWorldMatrix() {
+        this.secondNodeWorldMatrix = this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getWorldMatrix().getVertics();
     }
     update(): void {
         this.updateSceneNumber();
         this.updateFirstSceneEntityNumber();
-        this.updateSecondNodeWorldMatrix();
+        this.updateSpriteNodeWorldMatrix();
         super.update();
     }
     toggleSecondNodeScale(checked: boolean) {
         if (checked) {
-            this.getSceneManager().first().getComponents(Node)[1].getSource()?.getScale().set(20, 20, 20);
+            this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getSource()?.getScale().set(20, 20, 20);
         } else {
-            this.getSceneManager().first().getComponents(Node)[1].getSource()?.getScale().set(10, 10, 10);
+            this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getSource()?.getScale().set(10, 10, 10);
         }
     }
     getSceneNumber() {
@@ -35,7 +36,7 @@ export default class SceneInfoModifier extends Modifier {
     getFirstSceneEntityNumber() {
         return this.firstSceneEntityNumber;
     }
-    getSecondNodeWorldMatrix() {
+    getSpriteNodeWorldMatrix() {
         return this.secondNodeWorldMatrix;
     }
     setSceneManager(sceneManager: SceneManager) {

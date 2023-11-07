@@ -42,8 +42,10 @@ export default class OffscreenCanvasTexture implements Texture {
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
     const glRC = this.getGLRenderingContext();
     const canvasRC = this.getCanvasRenderingContext();
+    // todo update size
+    // canvasRC.updateSize(width, height);
     glRC.bindTexture(this.textureIndex);
-    glRC.texImage2D_RGBA_RGBA_Image(canvasRC.getImageData());
+    glRC.texImage2D_RGBA_RGBA_Image(canvasRC.getImageData(0, 0, width, height));
     glRC.bindTexture();
   }
   

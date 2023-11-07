@@ -19,6 +19,8 @@ import PickMap from "../texturemap/PickMap.js";
 import TextureContainer from "../container/TextureContainer.js";
 import SingleColorTexture from "../texture/SingleColorTexture.js";
 import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
+import SDFCanvasMap from "../texturemap/SDFCanvasMap.js";
+import SDFTexture from "../texture/SDFTexture.js";
 
 
 export default class TextureManager extends Manager<Texture> {
@@ -34,6 +36,7 @@ export default class TextureManager extends Manager<Texture> {
             PickTexture,
             RenderTexture,
             SingleColorTexture,
+            SDFTexture,
         ].forEach((ctor) => {
             this.add<Texture>(ctor);
         });
@@ -45,18 +48,21 @@ export default class TextureManager extends Manager<Texture> {
     }
     init(): void {
         
-        const rc = this.getDevice().getRenderingContext();
-        const offscreenCanvasRC = this.getDevice().getOffscreenCanvasRenderingContext();
+        const context = this.getDevice().getRenderingContext();
+        const offscreenCanvasContext = this.getDevice().getOffscreenCanvasRenderingContext();
+        const sdfCanvasContext = this.getDevice().getSDFCanvasRenderingContext();
         this.get(FontTexture).setFontImage(this.getCacheManager().getImage("boxy_bold_font"));
         this.get(FlowerTexture).setImage(this.getCacheManager().getImage("flowers"));
-        this.all().forEach(texture => texture.create(rc));
-        this.get(SingleColorTexture).setCanvasContext(offscreenCanvasRC);
+        this.all().forEach(texture => texture.create(context));
+        this.get(SingleColorTexture).setCanvasContext(offscreenCanvasContext);
+        this.get(SDFTexture).setCanvasContext(sdfCanvasContext);
         const { windowWidth, windowHeight, pixelRatio } = this.getDevice().getWindowInfo()
         this.get(DepthTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(PickTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(RenderTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
         this.get(SingleColorTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
-        this.getSceneManager().all().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(rc)));
+        this.get(SDFTexture).generate(windowWidth * pixelRatio, windowHeight * pixelRatio)
+        this.getSceneManager().all().forEach(scene => scene.getComponents(GLContainer).forEach(container => container.setRenderingContext(context)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(TextureContainer).forEach(container => container.setTexture(this.get(DefaultTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SkinMesh).forEach(skinMesh => skinMesh.getEntity().get(TextureContainer).setTexture(this.get(JointTexture), TextureIndex.Joint)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => text.getEntity().get(TextureContainer).setTexture(this.get(FontTexture))));
@@ -64,10 +70,12 @@ export default class TextureManager extends Manager<Texture> {
         this.getSceneManager().all().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(DepthTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(PickTexture))));
         this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SingleColorTexture))));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCanvasMap).forEach(comp => comp.getEntity().get(TextureContainer).setTexture(this.get(SDFTexture))));
         
     }
     update(): void {
-        this.get(SingleColorTexture).generate(0, 0)
+        this.get(SingleColorTexture).generate(300, 150)
+        this.get(SDFTexture).generate(300, 150)
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

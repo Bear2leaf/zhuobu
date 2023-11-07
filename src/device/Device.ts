@@ -11,15 +11,20 @@ export enum ViewPortType {
 export default abstract class Device {
   private readonly renderingContext: RenderingContext;
   private readonly offscreenCanvasRenderingContext: RenderingContext;
-  constructor(renderingContext: RenderingContext, offscreenCanvasRenderingContext: RenderingContext) {
+  private readonly sdfCanvasRenderingContext: RenderingContext;
+  constructor(renderingContext: RenderingContext, offscreenCanvasRenderingContext: RenderingContext, sdfCanvasRenderingContext: RenderingContext) {
     this.renderingContext = renderingContext;
     this.offscreenCanvasRenderingContext = offscreenCanvasRenderingContext;
+    this.sdfCanvasRenderingContext = sdfCanvasRenderingContext;
   }
   getRenderingContext(): RenderingContext {
     return this.renderingContext;
   }
   getOffscreenCanvasRenderingContext(): RenderingContext {
     return this.offscreenCanvasRenderingContext;
+  }
+  getSDFCanvasRenderingContext(): RenderingContext {
+    return this.sdfCanvasRenderingContext;
   }
   viewportTo(type: ViewPortType): void {
     const { windowWidth, windowHeight, pixelRatio } = this.getWindowInfo();

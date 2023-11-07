@@ -13,11 +13,15 @@ import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import FlowersObject from "../entity/FlowersObject.js";
 import AudioBGMObject from "../entity/AudioBGMObject.js";
 import CameraControllerObject from "../entity/CameraControllerObject.js";
+import CanvasObject from "../entity/CanvasObject.js";
+import SDFObject from "../entity/SDFObject.js";
 
 export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new FlowersObject()
+            , new CanvasObject()
+            , new SDFObject()
             , new SpriteObject()
             , new GasketObject()
             , new TexturedCubeObject()

@@ -26,6 +26,7 @@ import PickMap from "../texturemap/PickMap.js";
 import TimestepManager from "./TimestepManager.js";
 import CameraAnimator from "../animator/CameraAnimator.js";
 import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
+import SDFCanvasMap from "../texturemap/SDFCanvasMap.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -61,12 +62,12 @@ export default class CameraManager extends Manager<Camera> {
             this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(BackgroundFrame)).forEach(component => component.setCamera(this.get(BackgroundCamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(VisualizeCamera).filter(comp => comp.getEntity().has(UIFrame)).forEach(component => component.setCamera(this.get(UICamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(FrontgroundFrame).forEach((obj) => {
-                scene.getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(SingleColorCanvasMap) || !comp.getEntity().has(Flowers)).forEach(renderer => {
+                scene.getComponents(SpriteRenderer).filter(comp => !comp.getEntity().has(SingleColorCanvasMap) || !comp.getEntity().has(SDFCanvasMap) || !comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
             }));
             this.getSceneManager().all().forEach(scene => scene.getComponents(BackgroundFrame).forEach((obj) => {
-                scene.getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(SingleColorCanvasMap) || comp.getEntity().has(Flowers)).forEach(renderer => {
+                scene.getComponents(SpriteRenderer).filter(comp => comp.getEntity().has(SingleColorCanvasMap) || comp.getEntity().has(SDFCanvasMap) || comp.getEntity().has(Flowers)).forEach(renderer => {
                     renderer.getEntity().get(Node).setParent(obj.getEntity().get(Node));
                 });
             }));
@@ -78,7 +79,7 @@ export default class CameraManager extends Manager<Camera> {
             this.getSceneManager().all().forEach(scene => scene.getComponents(Histogram).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(PointRenderer).forEach(comp => comp.getEntity().get(Renderer).setCamera(this.get(UICamera))));
             this.getSceneManager().all().forEach(scene => scene.getComponents(SpriteRenderer).forEach(comp => {
-                if (comp.getEntity().has(SingleColorCanvasMap) || comp.getEntity().has(Flowers)) {
+                if (comp.getEntity().has(SingleColorCanvasMap) || comp.getEntity().has(SDFCanvasMap) || comp.getEntity().has(Flowers)) {
                     comp.getEntity().get(Renderer).setCamera(this.get(BackgroundCamera));
                 } else if (comp.getEntity().has(Text)) {
                     comp.getEntity().get(Renderer).setCamera(this.get(UICamera));
@@ -90,8 +91,9 @@ export default class CameraManager extends Manager<Camera> {
         }
         this.getSceneManager().all().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
         this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, 300, 150)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCanvasMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 150, 300, 150)));
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 300, windowInfo.windowWidth, windowInfo.windowHeight - 300)));
 
     }
     getSceneManager(): SceneManager {

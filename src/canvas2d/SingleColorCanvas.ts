@@ -1,4 +1,3 @@
-import { Vec4 } from "../geometry/Vector.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 
@@ -26,6 +25,7 @@ export default class SingleColorCanvas implements OffscreenCanvas {
     }
     fillWithText(text: string) {
         const context = this.getContext();
+        context.updateFont("48px serif", "middle", "center", "chocolate");
         context.putText(text);
     }
 

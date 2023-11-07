@@ -18,6 +18,12 @@ export enum ArrayBufferIndex {
 
 
 export default interface RenderingContext {
+    putImageData(data: ImageData, dx: number, dy: number): void;
+    createImageData(width: number, height: number): ImageData;
+    updateSize(width: number, height: number): void;
+    updateFont(font: string, textBaseline: CanvasTextBaseline, textAlign: CanvasTextAlign, fillStyle: string): void;
+    measureText(char: string): TextMetrics;
+    fillText(char: string, x: number, y: number): void;
     clearRect(x: number, y: number, width: number, height: number): void;
     putText(text: string): void;
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
@@ -29,7 +35,7 @@ export default interface RenderingContext {
     framebufferRenderTexture2D(textureIndex: number): void;
     readSinglePixel(x: number, y: number): Vec4;
     createFramebuffer(): number;
-    getImageData(): ImageBitmapSource;
+    getImageData(x: number, y: number, width: number, height: number): ImageBitmapSource;
     createTexture(): number;
     activeTexture(bindIndex: TextureIndex): void;
     bindTexture(textureIndex?: number): void;
