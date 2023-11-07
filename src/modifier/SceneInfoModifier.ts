@@ -15,7 +15,11 @@ export default class SceneInfoModifier extends Modifier {
         this.firstSceneEntityNumber = this.getSceneManager().first().getDefaultEntities().length;
     }
     private updateSpriteNodeWorldMatrix() {
-        this.secondNodeWorldMatrix = this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getWorldMatrix().getVertics();
+        const component = this.getSceneManager().first().getComponents(CircleAnimator)[0];
+        if (!component) {
+            return;
+        }
+        this.secondNodeWorldMatrix = component.getEntity().get(Node).getWorldMatrix().getVertics();
     }
     update(): void {
         this.updateSceneNumber();
@@ -24,10 +28,14 @@ export default class SceneInfoModifier extends Modifier {
         super.update();
     }
     toggleSecondNodeScale(checked: boolean) {
+        const component = this.getSceneManager().first().getComponents(CircleAnimator)[0];
+        if (!component) {
+            return;
+        }
         if (checked) {
-            this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getSource()?.getScale().set(20, 20, 20);
+            component.getEntity().get(Node).getSource()?.getScale().set(20, 20, 20);
         } else {
-            this.getSceneManager().first().getComponents(CircleAnimator)[0].getEntity().get(Node).getSource()?.getScale().set(10, 10, 10);
+            component.getEntity().get(Node).getSource()?.getScale().set(10, 10, 10);
         }
     }
     getSceneNumber() {

@@ -1,4 +1,4 @@
-import BrowserCameraControllGame from "../game/BrowserCameraControllGame.js";
+import BrowserCameraControllGame from "../../game/BrowserCameraControllGame.js";
 
 // base web component
 export default class GameCameraControlWebComponent extends HTMLElement {

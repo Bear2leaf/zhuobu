@@ -1,4 +1,4 @@
-import BrowserGame from "../game/BrowserGame.js";
+import BrowserGame from "../../game/BrowserGame.js";
 
 // base web component
 export default class GameZhuobuWebComponent extends HTMLElement {

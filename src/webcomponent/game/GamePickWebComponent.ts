@@ -1,5 +1,5 @@
-import BrowserGame from "../game/BrowserGame.js";
-import BrowserPickGame from "../game/BrowserPickGame.js";
+import BrowserGame from "../../game/BrowserGame.js";
+import BrowserPickGame from "../../game/BrowserPickGame.js";
 
 // base web component
 export default class GamePickWebComponent extends HTMLElement {

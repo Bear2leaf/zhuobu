@@ -151,7 +151,6 @@ function edt1d(grid: { [x: string]: any; }, offset: number, stride: number, leng
 export default class SDFCanvas implements OffscreenCanvas {
     private context?: RenderingContext;
     private tinySDF?: TinySDF;
-    private readonly sdfs: Record<string, { x: number, y: number }> = {};
     setContext(context: RenderingContext): void {
         this.context = context;
         const fontSize = 24;
@@ -160,7 +159,7 @@ export default class SDFCanvas implements OffscreenCanvas {
         const radius = Math.ceil(fontSize / 3);
 
         this.tinySDF = new TinySDF({ fontSize, buffer, radius, fontWeight }, context);
-        const chars = '泽'
+        const chars = '和'
         const { data, width, height } = this.getTinySDF().draw(chars);
         context.putImageData(this.makeRGBAImageData(data, width, height), 0, 0);
     }
