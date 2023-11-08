@@ -1,13 +1,11 @@
-// @ts-nocheck
+//@ts-nocheck
 var window = self;
 
-function onMessageCallback() { postMessageCallBack("[global.js][onMessageCallback()]", arguments[0]) }
-
 var Request = function () {
-    onMessageCallback("[global.js][Request()]", arguments)
+    console.debug("[global.js][Request()]", arguments)
 };
 var Blob = function (buffer) {
-    onMessageCallback("[global.js][Blob()]", arguments)
+    console.debug("[global.js][Blob()]", arguments)
     this.arrayBuffer = function () {
         return new Promise(resolve => resolve(buffer));
     }
@@ -18,10 +16,10 @@ var Blob = function (buffer) {
 try {
 	Object.defineProperty(window, "navigator", {
 		set: function () {
-			onMessageCallback("[global.js][window.navigator=]", arguments)
+			console.debug("[global.js][window.navigator=]", arguments)
 		},
 		get: function () {
-			onMessageCallback("[global.js][window.navigator]", arguments)
+			console.debug("[global.js][window.navigator]", arguments)
 			return {
 				userAgent: "",
 			}
@@ -29,10 +27,10 @@ try {
 	});
 	Object.defineProperty(window, "location", {
 		set: function () {
-			onMessageCallback("[global.js][window.location=]", arguments)
+			console.debug("[global.js][window.location=]", arguments)
 		},
 		get: function () {
-			onMessageCallback("[global.js][window.location]", arguments)
+			console.debug("[global.js][window.location]", arguments)
 			return {
 				href: "",
 				search: "",
@@ -40,7 +38,7 @@ try {
 		}
 	});
 } catch (e) {
-	onMessageCallback("not support defineProperty, minigame device", e);
+	console.debug("not support defineProperty, minigame device", e);
 	window = globalThis;
 	location = {
 		href: "",
@@ -55,7 +53,7 @@ try {
 }
 
 window.fetch = function () {
-    onMessageCallback("[global.js][window.fetch()]", arguments)
+    console.debug("[global.js][window.fetch()]", arguments)
     return new Promise(resolve => resolve(new Blob([0])));
 }
 
@@ -72,22 +70,22 @@ window.AudioContext = function () {
         return {
             gain: {
                 setValueAtTime: function () {
-                    onMessageCallback("[global.js][AudioContext.setValueAtTime()]", arguments)
+                    console.debug("[global.js][AudioContext.setValueAtTime()]", arguments)
                 }, cancelScheduledValues: function () {
-                    onMessageCallback("[global.js][AudioContext.cancelScheduledValues()]", arguments)
+                    console.debug("[global.js][AudioContext.cancelScheduledValues()]", arguments)
                 }, setValueAtTime: function () {
-                    onMessageCallback("[global.js][AudioContext.setValueAtTime()]", arguments)
+                    console.debug("[global.js][AudioContext.setValueAtTime()]", arguments)
                 }, linearRampToValueAtTime: function () {
-                    onMessageCallback("[global.js][AudioContext.linearRampToValueAtTime()]", arguments)
+                    console.debug("[global.js][AudioContext.linearRampToValueAtTime()]", arguments)
                 }
             },
             connect: function () {
-                onMessageCallback("[global.js][AudioContext.connect()]", arguments)
+                console.debug("[global.js][AudioContext.connect()]", arguments)
             }
         }
     }
     that.decodeAudioData = function () {
-        onMessageCallback("[global.js][AudioContext.decodeAudioData()]", arguments)
+        console.debug("[global.js][AudioContext.decodeAudioData()]", arguments)
     }
     return that;
 }
@@ -97,19 +95,19 @@ window.craftable = {}
 window.good = {}
 window.jQuery = {
     Callbacks: function () {
-        onMessageCallback("[global.js][jQuery.Callbacks()]");
+        console.debug("[global.js][jQuery.Callbacks()]");
         var that = this;
         this.callbacks = this.callbacks || [];
         this.fire = function (event) {
-            onMessageCallback("[global.js][jQuery.Callbacks.fire()]", arguments)
+            console.debug("[global.js][jQuery.Callbacks.fire()]", arguments)
             that.callbacks.forEach(callback => callback(event));
         }
         this.add = function () {
-            onMessageCallback("[global.js][jQuery.Callbacks.add()]", arguments)
+            console.debug("[global.js][jQuery.Callbacks.add()]", arguments)
             that.callbacks.push(arguments[0]);
         }
         this.remove = function () {
-            onMessageCallback("[global.js][jQuery.Callbacks.remove()]", arguments)
+            console.debug("[global.js][jQuery.Callbacks.remove()]", arguments)
             that.callbacks = that.callbacks.filter(callback => callback !== arguments[0]);
 
         }
@@ -127,19 +125,14 @@ var elementSet = {
 }
 var queue = [];
 function postMessageCallBack() {
-    if (typeof window.worker === 'undefined') {
-        self.postMessage({ subject: 'Adarkroom', stage: 'running', args: [...arguments] });
+    if (window.worker === undefined) {
+        queue.push({ subject: 'Adarkroom', stage: 'init', args: arguments[0] });
     } else {
-
-        if (window.processor === undefined) {
-            queue.push({ subject: 'Adarkroom', stage: 'init', args: arguments });
-        } else {
-            queue.splice(0, queue.length).forEach(msg => window.processor.postMessage(msg));
-            window.processor.postMessage({ subject: 'Adarkroom', stage: 'running', args: arguments });
-        }
+        queue.splice(0, queue.length).forEach(msg => window.worker.postMessage(msg));
+        window.worker.postMessage({ subject: 'Adarkroom', stage: 'running', args: arguments[0] });
     }
 }
-onMessageCallback("[query.js][vars]", elementSet, queue)
+console.debug("[query.js][vars]", elementSet, queue)
 
 window.$ = function () {
     if (typeof arguments[0] === 'string' && !arguments[0].startsWith('<') && elementSet[arguments[0]]) {
@@ -161,7 +154,7 @@ window.$ = function () {
     }
 
     that.attr = function (key, value) {
-        onMessageCallback("[query.js][$().attr()]", key, value)
+        console.debug("[query.js][$().attr()]", key, value)
         if (typeof key !== "string") {
             Object.assign(that.attrSet, key);
         } else if (value === undefined) {
@@ -172,19 +165,19 @@ window.$ = function () {
         return that;
     }
     that.css = function (key, value) {
-        onMessageCallback("[query.js][$().css()]", key, value)
+        console.debug("[query.js][$().css()]", key, value)
         return that;
     }
     that.children = function () {
-        onMessageCallback("[query.js][$().children()]")
+        console.debug("[query.js][$().children()]")
         return [];
     }
     that.width = function (width) {
-        onMessageCallback("[query.js][$().width()]", width)
+        console.debug("[query.js][$().width()]", width)
         return that;
     }
     that.data = function (key, value) {
-        onMessageCallback("[query.js][$().data()]", key, value)
+        console.debug("[query.js][$().data()]", key, value)
         if (typeof key !== "string") {
             Object.assign(that.dataSet, key);
         } else if (value === undefined) {
@@ -195,67 +188,67 @@ window.$ = function () {
         }
     }
     that.prependTo = function (element) {
-        onMessageCallback("[query.js][$().prependTo()]", element);
+        console.debug("[query.js][$().prependTo()]", element);
         return that;
     }
     that.appendTo = function (element) {
-        onMessageCallback("[query.js][$().appendTo()]", element);
+        console.debug("[query.js][$().appendTo()]", element);
         return that;
     }
     that.append = function (element) {
-        onMessageCallback("[query.js][$().append()]", element);
+        console.debug("[query.js][$().append()]", element);
         return that;
     }
     that.addClass = function (className) {
-        onMessageCallback("[query.js][$().addClass()]", className);
+        console.debug("[query.js][$().addClass()]", className);
         return that;
     }
     that.removeClass = function (className) {
-        onMessageCallback("[query.js][$().removeClass()]", className);
+        console.debug("[query.js][$().removeClass()]", className);
         return that;
     }
     that.index = function (element) {
-        onMessageCallback("[query.js][$().index()]", element);
+        console.debug("[query.js][$().index()]", element);
         return -1;
     }
     that.animate = function (options) {
-        onMessageCallback("[query.js][$().animate()]", options);
+        console.debug("[query.js][$().animate()]", options);
         return that;
     }
     that.hasClass = function (className) {
-        onMessageCallback("[query.js][$().hasClass()]", className);
+        console.debug("[query.js][$().hasClass()]", className);
         return that;
     }
     that.hide = function () {
-        onMessageCallback("[query.js][$().hide()]");
+        console.debug("[query.js][$().hide()]");
         return that;
     }
     that.show = function () {
-        onMessageCallback("[query.js][$().show()]");
+        console.debug("[query.js][$().show()]");
         return that;
     }
     that.text = function (text) {
-        onMessageCallback("[query.js][$().text()]", text);
+        console.debug("[query.js][$().text()]", text);
         return that;
     }
     that.click = function () {
-        onMessageCallback("[query.js][$().clicked()]");
+        console.debug("[query.js][$().clicked()]");
         return that;
     }
     that.off = function (eventName) {
-        onMessageCallback(`[query.js][$().off()]${eventName}`);
+        console.debug(`[query.js][$().off()]${eventName}`);
         return that;
     }
     that.on = function (eventName) {
-        onMessageCallback(`[query.js][$().on()]${eventName}`, ...arguments);
+        console.debug(`[query.js][$().on()]${eventName}`, ...arguments);
         return that;
     }
     that.keydown = function (callback) {
-        onMessageCallback(`[query.js][$().keydown()]`, callback);
+        console.debug(`[query.js][$().keydown()]`, callback);
         return that;
     }
     that.keyup = function (callback) {
-        onMessageCallback(`[query.js][$().keyup()]`, callback);
+        console.debug(`[query.js][$().keyup()]`, callback);
         return that;
     }
     if (arguments.length === 1) {
@@ -271,14 +264,14 @@ window.$ = function () {
         if (arguments.length === 2 && typeof arguments[1] !== "string") {
             return {
                 each: function () {
-                    onMessageCallback("[query.js][$().iterator().each()]");
+                    console.debug("[query.js][$().iterator().each()]");
                 },
                 empty: function () {
-                    onMessageCallback("[query.js][$().iterator().empty()]");
+                    console.debug("[query.js][$().iterator().empty()]");
                 }
             };
         } else if (arguments.length === 2 && typeof arguments[1].dataSet !== undefined) {
-            onMessageCallback("[query.js][$(a,b)][warn][not implement]", ...arguments);
+            console.debug("[query.js][$(a,b)][warn][not implement]", ...arguments);
             return arguments[1].children().find(o => o.selector === arguments[0]);
         } else {
             throw new Error(`[query.js][$()][error][not support arguments]`, ...arguments)
@@ -1324,7 +1317,7 @@ var StateManager = {
 //alias
 var $SM = StateManager;
 function execEval() {
-    onMessageCallback("[state_manager.js][execEval()][params]", ...arguments);
+    console.debug("[state_manager.js][execEval()][params]", ...arguments);
     if (arguments.length === 1 && typeof arguments[0] === 'string') {
         var arg = arguments[0];
         if (arg.indexOf("whichState = (") === 0) {
@@ -1343,10 +1336,10 @@ function execEval() {
                     state = state[key];
                 })
             } catch (e) {
-                onMessageCallback("[state_manager.js][execEval()][error][fullPath not valid for key index]", e);
+                console.debug("[state_manager.js][execEval()][error][fullPath not valid for key index]", e);
                 return undefined;
             }
-            onMessageCallback(`[state_manager.js][execEval()][result][State.${keys.join('.')}]`, state);
+            console.debug(`[state_manager.js][execEval()][result][State.${keys.join('.')}]`, state);
             return state;
         } else {
             throw new Error("[state_manager.js][execEval()][error][not support eval with one arg]", arg)
@@ -1366,10 +1359,10 @@ function execEval() {
                 }
             })
         } catch (e) {
-            onMessageCallback("[state_manager.js][execEval()][error][fullPath not valid for key index]", fullPath);
+            console.debug("[state_manager.js][execEval()][error][fullPath not valid for key index]", fullPath);
             return false;
         }
-        onMessageCallback(`[state_manager.js][execEval()][result]`, arg, value, result);
+        console.debug(`[state_manager.js][execEval()][result]`, arg, value, result);
         return true;
     } else {
         throw new Error("[state_manager.js][execEval()][error][not support eval]", ...arguments)

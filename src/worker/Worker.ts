@@ -8,6 +8,7 @@ export default class Worker {
     private readonly pingProcessor: PingProcessor;
     constructor() {
         this.pingProcessor = new PingProcessor();
+        (globalThis as unknown as { worker: Worker}).worker = this;
     }
     onMessage(data: WorkerRequest): void {
         this.pingProcessor.decode(data)
