@@ -66,7 +66,6 @@ class TinySDF {
 
         const width = glyphWidth + 2 * this.buffer;
         const height = glyphHeight + 2 * this.buffer;
-        console.log(this.context.measureText(char))
 
         const len = Math.max(width * height, 0);
         const data = new Uint8ClampedArray(len);

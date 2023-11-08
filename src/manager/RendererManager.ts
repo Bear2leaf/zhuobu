@@ -45,7 +45,7 @@ export default class RendererManager extends Manager<Renderer> {
             renderer.initShader(rc, this.getCacheManager());
             renderer.initPrimitive(rc);
         }
-
+        this.get(SDFRenderer).setScale(128 * 0.5 * this.getDevice().getWindowInfo().pixelRatio);
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);
