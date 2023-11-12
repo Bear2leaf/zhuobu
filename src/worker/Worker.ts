@@ -1,6 +1,6 @@
 import { WorkerRequest, WorkerResponse } from "./MessageProcessor.js";
 import PingProcessor from "./PingProcessor.js";
-import "./adarkroom.js"
+// import "./adarkroom.js"
 
 
 
