@@ -8,6 +8,7 @@ export default class ClickToStartButton extends Button  {
     constructor(private readonly game: Game) {
         super();
         this.setText("Start");
+        this.style.display = "inline-block";
     }
     onClick() {
         this.remove();

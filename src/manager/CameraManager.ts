@@ -98,11 +98,6 @@ export default class CameraManager extends Manager<Camera> {
             }));
 
         }
-        this.getSceneManager().all().forEach(scene => scene.getComponents(DepthMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(PickMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(SingleColorCanvasMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, windowInfo.windowHeight / 2, windowInfo.windowWidth, windowInfo.windowHeight / 2)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCanvasMap).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, windowInfo.windowHeight / 4, windowInfo.windowWidth, windowInfo.windowHeight / 4)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(Flowers).forEach(comp => comp.getEntity().get(Sprite).updateRect(0, 0, windowInfo.windowWidth, windowInfo.windowHeight / 4)));
 
     }
     getSceneManager(): SceneManager {

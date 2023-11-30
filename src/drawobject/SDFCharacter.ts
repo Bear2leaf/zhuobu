@@ -8,7 +8,7 @@ export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 1, 1, 1];
     private spacing: number = 0;
     private chars: string[] = [];
-    private readonly texSize: Vec2 = new Vec2(36, 36);
+    private readonly texSize: Vec2 = new Vec2(180, 36);
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
@@ -35,7 +35,7 @@ export default class SDFCharacter extends DrawObject {
     create(fontInfo: FontInfo) {
         let { x, y } = new Vec2(0, 0);
         const scale = new Vec2(1, 1);
-        let { spacing, chars } = this;
+        const { spacing, chars } = this;
         const texHeight = this.texSize.y;
         const texWidth = this.texSize.x;
         const ox = x;

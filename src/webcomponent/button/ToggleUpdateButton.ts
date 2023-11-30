@@ -6,6 +6,7 @@ export default class ToggleUpdateButton extends Button {
     constructor(private readonly modifier: GameUpdateModifier) {
         super();
         this.setText("Pause");
+        this.style.display = "inline-block";
     }
     onClick(): void {
         

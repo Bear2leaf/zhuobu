@@ -30,7 +30,7 @@ class TinySDF {
         // make the canvas size big enough to both have the specified buffer around the glyph
         // for "halo", and account for some glyphs possibly being larger than their font size
         const size = this.size = fontSize + buffer * 4;
-        context.updateSize(size, size);
+        context.updateSize(size * 5, size);
         const font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
         const textBaseline = 'alphabetic';
         const textAlign = 'left'; // Necessary so that RTL text doesn't have different alignment
@@ -158,9 +158,14 @@ export default class SDFCanvas implements OffscreenCanvas {
         const radius = Math.ceil(fontSize / 3);
 
         this.tinySDF = new TinySDF({ fontSize, buffer, radius, fontWeight }, context);
-        const chars = '和'
-        const { data, width, height } = this.getTinySDF().draw(chars);
-        context.putImageData(this.makeRGBAImageData(data, width, height), 0, 0);
+        const chars = '和气生财'
+        let x = fontSize + buffer * 4;
+        for (let i = 0; i < chars.length; i++) {
+            const char = chars[i];
+            const { data, width, height } = this.getTinySDF().draw(char);
+            context.putImageData(this.makeRGBAImageData(data, width, height), x, 0);
+            x += width;
+        }
     }
 
     // Convert alpha-only to RGBA so we can use `putImageData` for building the composite bitmap
