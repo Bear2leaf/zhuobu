@@ -14,6 +14,7 @@ import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import ModifierManager from "../manager/ModifierManager.js";
 import OffscreenCanvasManager from "../manager/OffscreenCanvasManager.js";
+import AdrManager from "../manager/AdrManager.js";
 
 
 export default abstract class Game extends Manager<Object> {
@@ -35,7 +36,8 @@ export default abstract class Game extends Manager<Object> {
             RendererManager,
             WorkerManager,
             OffscreenCanvasManager,
-            ModifierManager
+            ModifierManager,
+            AdrManager
         ];
         ctors.forEach(ctor => {
             this.add(ctor);
@@ -77,6 +79,7 @@ export default abstract class Game extends Manager<Object> {
         this.get(AnimationManager).setSceneManager(this.get(SceneManager));
         this.get(AnimationManager).setTimestepManager(this.get(TimestepManager));
         this.get(ModifierManager).setSceneManager(this.get(SceneManager));
+        this.get(AdrManager).setSceneManager(this.get(SceneManager));
         this.get(ModifierManager).setTimestepManager(this.get(TimestepManager));
         this.get(ModifierManager).setGame(this);
     }
