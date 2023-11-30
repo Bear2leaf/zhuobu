@@ -76,8 +76,6 @@ export default class TextureManager extends Manager<Texture> {
         
     }
     update(): void {
-        this.get(SingleColorTexture).generate(300, 150)
-        this.get(SDFTexture).generate(180, 36)
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

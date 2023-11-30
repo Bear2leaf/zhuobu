@@ -2,20 +2,22 @@ import { flatten, Vec2, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLContainer from "../container/GLContainer.js";
+import { FontInfo } from "./Text.js";
 
-export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
 export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 1, 1, 1];
     private spacing: number = 0;
     private chars: string[] = [];
-    private readonly texSize: Vec2 = new Vec2(180, 36);
+    private readonly texSize: Vec2 = new Vec2(0, 0);
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly texcoords: Vec4[] = []
     private fontInfo: FontInfo = {};
-    setFontInfo(fontInfo: FontInfo) {
+    setFontInfo(fontInfo: FontInfo, texWidth: number, texHeight: number) {
         this.fontInfo = fontInfo;
+        this.texSize.x = texWidth;
+        this.texSize.y = texHeight;
     }
     getFontInfo(): FontInfo {
         if (this.fontInfo === undefined) {

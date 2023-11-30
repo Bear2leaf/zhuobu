@@ -31,32 +31,6 @@ export default class CacheManager extends Manager<Cache<Object>> {
     init(): void {
         const fontInfo = this.getFontInfo("boxy_bold_font");
         this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => text.setFontInfo(fontInfo)));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCharacter).forEach(text => text.setFontInfo({
-            '和': {
-                x: 36,
-                y: 0,
-                width: 36,
-                height: 36,
-            },
-            '气': {
-                x: 72,
-                y: 0,
-                width: 36,
-                height: 36,
-            },
-            '生': {
-                x: 108,
-                y: 0,
-                width: 36,
-                height: 36,
-            },
-            '财': {
-                x: 144,
-                y: 0,
-                width: 36,
-                height: 36,
-            }
-        })));
     }
 
     update(): void {

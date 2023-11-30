@@ -1,3 +1,4 @@
+import { FontInfo } from "../drawobject/Text.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 const INF = 1e20;
@@ -13,11 +14,15 @@ class TinySDF {
     private readonly f: Float64Array;
     private readonly z: Float64Array;
     private readonly v: Uint16Array;
+    private readonly canvasSize = {
+        x: 0,
+        y: 0
+    }
     constructor({
         fontSize = 24,
         buffer = 3,
         radius = 8,
-        cutoff = 0.25,
+        cutoff = 0.2,
         fontFamily = 'sans-serif',
         fontWeight = 'normal',
         fontStyle = 'normal',
@@ -30,7 +35,9 @@ class TinySDF {
         // make the canvas size big enough to both have the specified buffer around the glyph
         // for "halo", and account for some glyphs possibly being larger than their font size
         const size = this.size = fontSize + buffer * 4;
-        context.updateSize(size * 5, size);
+        context.updateSize(size * 10, size);
+        this.canvasSize.x = size * 10;
+        this.canvasSize.y = size;
         const font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
         const textBaseline = 'alphabetic';
         const textAlign = 'left'; // Necessary so that RTL text doesn't have different alignment
@@ -44,10 +51,10 @@ class TinySDF {
         this.z = new Float64Array(size + 1);
         this.v = new Uint16Array(size);
     }
-
-    isASCII(str: string) {
-        return /^[\x00-\x7F]*$/.test(str);
+    getCanvasSize() {
+        return this.canvasSize;
     }
+
     draw(char: string) {
         const {
             width: glyphAdvance,
@@ -61,7 +68,7 @@ class TinySDF {
         const glyphLeft = 0;
 
         // If the glyph overflows the canvas size, it will be clipped at the bottom/right
-        const glyphWidth = Math.max(0, Math.min(this.size - this.buffer, glyphAdvance));
+        const glyphWidth = Math.max(0, Math.min(this.size - this.buffer, Math.ceil(glyphAdvance)));
         const glyphHeight = Math.min(this.size - this.buffer, glyphTop + Math.ceil(actualBoundingBoxDescent));
 
         const width = glyphWidth + 2 * this.buffer;
@@ -150,6 +157,7 @@ function edt1d(grid: { [x: string]: any; }, offset: number, stride: number, leng
 export default class SDFCanvas implements OffscreenCanvas {
     private context?: RenderingContext;
     private tinySDF?: TinySDF;
+    private readonly fontInfo: FontInfo = {};
     setContext(context: RenderingContext): void {
         this.context = context;
         const fontSize = 24;
@@ -158,16 +166,24 @@ export default class SDFCanvas implements OffscreenCanvas {
         const radius = Math.ceil(fontSize / 3);
 
         this.tinySDF = new TinySDF({ fontSize, buffer, radius, fontWeight }, context);
-        const chars = '和气生财'
+        const chars = '和气生财abcd!'
         let x = fontSize + buffer * 4;
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
-            const { data, width, height } = this.getTinySDF().draw(char);
-            context.putImageData(this.makeRGBAImageData(data, width, height), x, 0);
+            const { data, width, height, glyphTop, glyphHeight } = this.getTinySDF().draw(char);
+            context.putImageData(this.makeRGBAImageData(data, width, height), x, fontSize - glyphTop);
+            this.fontInfo[char] = {
+                x,
+                y: 0,
+                width,
+                height: height + glyphTop,
+            };
             x += width;
         }
     }
-
+    getFontInfo() {
+        return this.fontInfo;
+    }
     // Convert alpha-only to RGBA so we can use `putImageData` for building the composite bitmap
     makeRGBAImageData(alphaChannel: Uint8ClampedArray, width: number, height: number) {
         const imageData = this.getContext().createImageData(width, height);
