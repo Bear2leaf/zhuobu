@@ -184,7 +184,7 @@ export default class AudioEngine {
         }
     };
     static playBackgroundMusic(src: string) {
-        if (!AudioEngine._initialized) {
+        if (!AudioEngine._initialized || !src) {
             return;
         }
         AudioEngine.loadAudioFile(src)
@@ -208,7 +208,7 @@ export default class AudioEngine {
         AudioEngine._stopEventMusic();
     };
     static playSound(src: string) {
-        if (!AudioEngine._initialized) {
+        if (!AudioEngine._initialized || !src) {
             return;
         }
         AudioEngine.loadAudioFile(src)

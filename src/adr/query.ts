@@ -1,3 +1,5 @@
+import { adr } from "./adr.js";
+
 const dataCache = new WeakMap<Element, Record<string, any>>();
 
 export default class Query {
@@ -13,29 +15,29 @@ export default class Query {
 	constructor(selector: string | Element, context?: Query | string) {
 		if (arguments.length === 1 && typeof selector === 'string') {
 			if (selector === 'body') {
-				this.el = document.body;
+				this.el = adr.body;
 				return;
 			} else if (selector === 'head') {
-				this.el = document.head;
+				this.el = adr.head;
 				return;
 			} else if (/^<([a-z\d]+)>$/.test(selector)) {
 				const parsed = /^<([a-z\d]+)>$/.exec(selector);
 				// Single tag
 				if (parsed) {
-					this.el = document.createElement(parsed[1]);
+					this.el = adr.createElement(parsed[1]);
 					return;
 				}
 			} else if (/^#[A-Za-z-\d_]+$/.test(selector)) {
-				this.el = document.getElementById(selector.slice(1));
+				this.el = adr.getElementById(selector.slice(1));
 				return;
 			} else if (/^.[A-Za-z-\d_]+$/.test(selector)) {
-				const els = document.getElementsByClassName(selector.slice(1));
+				const els = adr.getElementsByClassName(selector.slice(1));
 				if (els.length === 1) {
 					this.el = els.item(0);
 					return;
 				}
 			} else if (/^[a-z\d]+$/.test(selector)) {
-				const els = document.getElementsByTagName(selector);
+				const els = adr.getElementsByTagName(selector);
 				if (els.length === 1) {
 					this.el = els.item(0);
 					return;
@@ -102,8 +104,6 @@ export default class Query {
 		return null;
 	}
 
-	// Get the Nth element in the matched element set OR
-	// Get the whole matched element set as a clean array
 	get<T extends Element>(): T {
 		if (!this.el) {
 			throw new Error('Invalid arguments');
@@ -159,14 +159,10 @@ export default class Query {
 
 	offset(): Offset {
 
-		const elem = this.get(),
-			doc = elem && elem.ownerDocument;
-		let docElem = doc.documentElement;
-
-		let box = elem.getBoundingClientRect();
+		const box = this.get().getBoundingClientRect();
 		return {
-			top: box.top + docElem.scrollTop - (docElem.clientTop || 0),
-			left: box.left + docElem.scrollLeft - (docElem.clientLeft || 0)
+			top: box.top + adr.body.scrollTop - (adr.body.clientTop || 0),
+			left: box.left + adr.body.scrollLeft - (adr.body.clientLeft || 0)
 		};
 	}
 
@@ -188,7 +184,6 @@ export default class Query {
 		return this;
 	}
 
-	// keepData is for internal use only--do not document
 	remove() {
 		if (this.found) {
 			this.get().remove();

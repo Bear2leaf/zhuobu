@@ -6,6 +6,12 @@ import StateManager from "./state_manager.js";
 
 
 export const adr: {
+	body: Element;
+	head: Element;
+	createElement(selector: string): Element;
+	getElementById(selector: string): Element | null;
+	getElementsByClassName(selector: string): HTMLCollection;
+	getElementsByTagName(selector: string): HTMLCollection;
     addEventListener(eventName: string, resumeAudioContext: () => void, other: boolean): void;
     removeEventListener(eventName: string, resumeAudioContext: () => void): void;
     styleSheets: StyleSheetList;
@@ -33,6 +39,12 @@ export const adr: {
     Enemies: {
         Executioner
     },
+    head: document.head,
+    body: document.body,
+    createElement: (selector: string) => document.createElement(selector),
+    getElementById: (selector: string) => document.getElementById(selector),
+    getElementsByClassName: (selector: string) => document.getElementsByClassName(selector),
+    getElementsByTagName: (selector: string) => document.getElementsByTagName(selector),
     addEventListener(eventName: string, resumeAudioContext: () => void, other: boolean) {
         if (other) {
             document.addEventListener(eventName, resumeAudioContext);
