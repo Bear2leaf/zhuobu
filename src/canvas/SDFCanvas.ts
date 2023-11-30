@@ -162,8 +162,8 @@ export default class SDFCanvas implements OffscreenCanvas {
         this.context = context;
         const fontSize = 24;
         const fontWeight = "400";
-        const buffer = Math.ceil(fontSize / 8);
-        const radius = Math.ceil(fontSize / 3);
+        const buffer = Math.ceil(fontSize / 16);
+        const radius = Math.ceil(fontSize / 9);
 
         this.tinySDF = new TinySDF({ fontSize, buffer, radius, fontWeight }, context);
         const chars = '和气生财abcd!'

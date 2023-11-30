@@ -5,7 +5,7 @@ import GLContainer from "../container/GLContainer.js";
 import { FontInfo } from "./Text.js";
 
 export default class SDFCharacter extends DrawObject {
-    private color: [number, number, number, number] = [1, 1, 1, 1];
+    private color: [number, number, number, number] = [1, 0.3, 0.3, 1];
     private spacing: number = 0;
     private chars: string[] = [];
     private readonly texSize: Vec2 = new Vec2(0, 0);
