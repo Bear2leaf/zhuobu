@@ -1,4 +1,4 @@
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 import { AudioLibrary } from "./audioLibrary.js";
 
 /**
@@ -32,7 +32,7 @@ export default class AudioEngine {
         }
     };
     static _initAudioContext() {
-        AudioEngine._audioContext = new (adr.AudioContext);
+        AudioEngine._audioContext = adr.createAudioContext();
         AudioEngine._createMasterChannel();
     };
     static _createMasterChannel() {

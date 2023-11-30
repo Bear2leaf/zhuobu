@@ -1,6 +1,6 @@
 import Query from "./query.js";
 import _ from "./translate.js";
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 import Engine from "./engine.js";
 import StateManager from "./state_manager.js";
 

@@ -3,6 +3,12 @@ declare let ga: unknown;
 declare let langs: Record<string, string>;
 declare let oldIE: boolean;
 
+declare type LocalStorage = {
+    gameState?: string,
+    lang?: string,
+    clear: () => void,
+}
+
 declare type Prestige = {
     stores: number[],
     score: number,
@@ -89,7 +95,7 @@ declare type StateUpdate = {
     publish: (data: any) => void,
 
 }
-declare type Offset = { top: number; left: number; } ;
+declare type Offset = { top: number; left: number; };
 declare type Outfit = Record<string, number>;
 declare type Setpieces = Record<string, any>;
 declare type LootList = Record<string, any>;

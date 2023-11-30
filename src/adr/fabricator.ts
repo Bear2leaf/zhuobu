@@ -1,7 +1,7 @@
 import Query from "./query.js";
 import _ from "./translate.js";
 import Button from "./Button.js";
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 import AudioEngine from "./audio.js";
 import { AudioLibrary } from "./audioLibrary.js";
 import Engine from "./engine.js";

@@ -1,4 +1,4 @@
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 
 const dataCache = new WeakMap<Element, Record<string, any>>();
 
@@ -15,10 +15,10 @@ export default class Query {
 	constructor(selector: string | Element, context?: Query | string) {
 		if (arguments.length === 1 && typeof selector === 'string') {
 			if (selector === 'body') {
-				this.el = adr.body;
+				this.el = adr.body();
 				return;
 			} else if (selector === 'head') {
-				this.el = adr.head;
+				this.el = adr.head();
 				return;
 			} else if (/^<([a-z\d]+)>$/.test(selector)) {
 				const parsed = /^<([a-z\d]+)>$/.exec(selector);
@@ -161,8 +161,8 @@ export default class Query {
 
 		const box = this.get().getBoundingClientRect();
 		return {
-			top: box.top + adr.body.scrollTop - (adr.body.clientTop || 0),
-			left: box.left + adr.body.scrollLeft - (adr.body.clientLeft || 0)
+			top: box.top + adr.body().scrollTop - (adr.body().clientTop || 0),
+			left: box.left + adr.body().scrollLeft - (adr.body().clientLeft || 0)
 		};
 	}
 

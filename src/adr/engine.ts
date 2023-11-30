@@ -1,7 +1,7 @@
 import { Base64 } from "./base64.js";
 import Query from "./query.js";
 import _ from "./translate.js";
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 import AudioEngine from "./audio.js";
 import { AudioLibrary } from "./audioLibrary.js";
 import Events from "./events.js";
@@ -13,7 +13,6 @@ import { Prestige } from "./prestige.js";
 import Room from "./room.js";
 import Ship from "./ship.js";
 import StateManager from "./state_manager.js";
-import localStorage from "./localStorage.js";
 
 export default class Engine {
   static _incomeTimeout: number;
@@ -280,7 +279,7 @@ export default class Engine {
 
     Engine.toggleVolume(Boolean(StateManager.get('config.soundOn')));
     if (!AudioEngine.isAudioContextRunning()) {
-      adr.addEventListener('click', Engine.resumeAudioContext, true);
+      adr.addEventListener('click', Engine.resumeAudioContext);
     }
 
     Engine.saveLanguage();
@@ -306,7 +305,7 @@ export default class Engine {
   }
 
   static saveGame() {
-    if (typeof Storage !== 'undefined' && localStorage) {
+    if (typeof Storage !== 'undefined' && adr.localStorage()) {
       if (Engine._saveTimer !== null) {
         clearTimeout(Engine._saveTimer);
       }
@@ -314,20 +313,20 @@ export default class Engine {
         adr.$('#saveNotify').text(_("saved.")).css('opacity', 1).animate({ opacity: 0 }, 1000);
         Engine._lastNotify = Date.now();
       }
-      localStorage.gameState = JSON.stringify(adr.State);
+      adr.localStorage().gameState = JSON.stringify(adr.State);
     }
   }
 
   static loadGame() {
-    const savedState = localStorage.gameState === undefined ? undefined : JSON.parse(localStorage.gameState);
-    if (savedState) {
-      adr.State = savedState;
-      StateManager.updateOldState();
-      Engine.log("loaded save!");
-    } else {
+    const gameState = adr.localStorage().gameState;
+    if (!gameState) {
       adr.State = {};
       StateManager.set('version', Engine.VERSION);
       Engine.event('progress', 'new game');
+    } else {
+      adr.State = JSON.parse(gameState);
+      StateManager.updateOldState();
+      Engine.log("loaded save!");
     }
   }
 
@@ -406,7 +405,11 @@ export default class Engine {
   }
 
   static generateExport64() {
-    let string64 = Base64.encode(localStorage.gameState);
+    const gameState = adr.localStorage().gameState;
+    if (!gameState) {
+      throw new Error("No game state to export");
+    }
+    let string64 = Base64.encode(gameState);
     string64 = string64.replace(/\s/g, '');
     string64 = string64.replace(/\./g, '');
     string64 = string64.replace(/\n/g, '');
@@ -427,7 +430,7 @@ export default class Engine {
     string64 = string64.replace(/\./g, '');
     string64 = string64.replace(/\n/g, '');
     const decodedSave = Base64.decode(string64);
-    localStorage.gameState = decodedSave;
+    adr.localStorage().gameState = decodedSave;
     location.reload();
   }
 
@@ -460,10 +463,10 @@ export default class Engine {
   }
 
   static deleteSave(noReload: boolean) {
-    if (typeof Storage !== 'undefined' && localStorage) {
+    if (typeof Storage !== 'undefined' && adr.localStorage()) {
       const prestige = Prestige.get();
       adr.State = {};
-      localStorage.clear();
+      adr.localStorage().clear();
       Prestige.set(prestige);
     }
     if (!noReload) {
@@ -551,8 +554,9 @@ export default class Engine {
   }
 
   static findStylesheet(title: string) {
-    for (let i = 0; i < adr.styleSheets.length; i++) {
-      const sheet = adr.styleSheets[i];
+    const styleSheets = adr.styleSheets();
+    for (let i = 0; i < styleSheets.length; i++) {
+      const sheet = styleSheets[i];
       if (sheet.title === title) {
         return sheet;
       }
@@ -844,8 +848,8 @@ export default class Engine {
 
   static saveLanguage() {
     const lang = decodeURIComponent((new RegExp('[?|&]lang=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
-    if (lang && typeof Storage !== 'undefined' && localStorage) {
-      localStorage.lang = lang;
+    if (lang && typeof Storage !== 'undefined' && adr.localStorage()) {
+      adr.localStorage().lang = lang;
     }
   }
 

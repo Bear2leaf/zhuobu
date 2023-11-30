@@ -15,7 +15,7 @@
  */
 
 import Query from "./query.js";
-import { adr } from "./adr.js";
+import adr from "./adr.js";
 import Engine from "./engine.js";
 import Events from "./events.js";
 import Notifications from "./notifications.js";
