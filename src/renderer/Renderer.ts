@@ -7,6 +7,8 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Primitive from "../contextobject/Primitive.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 import { Vec3 } from "../geometry/Vector.js";
+import SceneManager from "../manager/SceneManager.js";
+import GLContainer from "../container/GLContainer.js";
 
 
 export default class Renderer extends Component {
@@ -14,7 +16,34 @@ export default class Renderer extends Component {
     private shader?: Shader;
     private shaderName?: string;
     private primitive?: Primitive;
+    private sceneManager?: SceneManager;
 
+    bindEntityRenderer(rc: RenderingContext) {
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(GLContainer).forEach(container => {
+                container.setRenderingContext(rc);
+            });
+        });
+        this.getSceneManager()
+            .all()
+            .forEach(scene => {
+                scene.getComponents(Renderer)
+                    .filter(renderer => this instanceof renderer.constructor)
+                    .forEach(entityRenderer => {
+                        entityRenderer.setShader(this.getShader());
+                        entityRenderer.setPrimitive(this.getPrimitive());
+                    });
+            })
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
     setPrimitive(primitive: Primitive) {
         this.primitive = primitive;
     }
@@ -63,7 +92,6 @@ export default class Renderer extends Component {
     initPrimitive(rc: RenderingContext): void {
         throw new Error("Method not implemented.");
     }
-
     render() {
         const node = this.getEntity().get(Node);
         node.getRoot().updateWorldMatrix();

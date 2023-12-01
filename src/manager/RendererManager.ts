@@ -43,24 +43,15 @@ export default class RendererManager extends Manager<Renderer> {
         const rc = this.getDevice().getRenderingContext();
         rc.init();
         for (const renderer of this.all()) {
+            renderer.setSceneManager(this.getSceneManager());
             renderer.initShader(rc, this.getCacheManager());
             renderer.initPrimitive(rc);
-            this.getScene().getComponents(Renderer).forEach(renderer => renderer.getEntity().get(GLContainer).setRenderingContext(rc));
+            renderer.bindEntityRenderer(rc);
         }
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);
         this.getScene().getComponents(Renderer).forEach(renderer => renderer.render());
-    }
-    bindEntityRenderer() {
-        this.getSceneManager().all().forEach(scene => scene.getComponents(Renderer).forEach(entityRenderer => {
-            for (const ctor of this.ctors()) {
-                if (entityRenderer instanceof ctor) {
-                    entityRenderer.setShader(this.get(ctor).getShader());
-                    entityRenderer.setPrimitive(this.get(ctor).getPrimitive());
-                }
-            }
-        }));
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

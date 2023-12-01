@@ -10,7 +10,6 @@ export default class SceneManager extends Manager<Scene> {
     }
     init(): void {
         this.all().forEach(scene => scene.initEntities());
-        
     }
     update(): void {
         this.all().forEach(scene => scene.update());
