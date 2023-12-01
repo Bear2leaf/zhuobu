@@ -1,11 +1,16 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import TextureContainer from "../container/TextureContainer.js";
+import PickMap from "../texturemap/PickMap.js";
 import GLTexture from "./GLTexture.js";
 import { TextureIndex } from "./Texture.js";
 
 export default class PickTexture extends GLTexture {
-    create(rc: RenderingContext): void {
-        super.create(rc);
+    init(): void {
         this.setBindIndex(TextureIndex.Pick);
+        super.init();
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(PickMap).forEach(comp => {
+                comp.getEntity().get(TextureContainer).setTexture(this);
+            });
+        });
     }
-    
 }

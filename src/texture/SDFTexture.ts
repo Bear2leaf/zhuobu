@@ -1,12 +1,16 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import TextureContainer from "../container/TextureContainer.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 import OffscreenCanvasTexture from "./OffscreenCanvasTexture.js";
-import { TextureIndex } from "./Texture.js";
 
 export default class SDFTexture extends OffscreenCanvasTexture {
-    create(rc: RenderingContext): void {
-        super.create(rc);
-        this.setBindIndex(TextureIndex.OffscreenCanvas);
+    init(): void {
+        super.init();
+        this.setCanvasContext(this.getDevice().getSDFCanvasRenderingContext());
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(SDFCharacter).forEach(comp => {
+                comp.getEntity().get(TextureContainer).setTexture(this);
+            });
+        });
     }
-    
     
 }

@@ -1,12 +1,15 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import TextureContainer from "../container/TextureContainer.js";
+import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
 import OffscreenCanvasTexture from "./OffscreenCanvasTexture.js";
-import { TextureIndex } from "./Texture.js";
 
 export default class SingleColorTexture extends OffscreenCanvasTexture {
-    create(rc: RenderingContext): void {
-        super.create(rc);
-        this.setBindIndex(TextureIndex.OffscreenCanvas);
+    init(): void {
+        super.init();
+        this.setCanvasContext(this.getDevice().getOffscreenCanvasRenderingContext());
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(SingleColorCanvasMap).forEach(comp => {
+                comp.getEntity().get(TextureContainer).setTexture(this);
+            });
+        });
     }
-    
-    
 }

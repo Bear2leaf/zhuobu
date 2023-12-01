@@ -1,5 +1,11 @@
+import TextureContainer from "../container/TextureContainer.js";
+import Device from "../device/Device.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 import { FontInfo } from "../drawobject/Text.js";
+import { Vec2 } from "../geometry/Vector.js";
+import SceneManager from "../manager/SceneManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
+import Texture from "../texture/Texture.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 const INF = 1e20;
 
@@ -14,10 +20,6 @@ class TinySDF {
     private readonly f: Float64Array;
     private readonly z: Float64Array;
     private readonly v: Uint16Array;
-    private readonly canvasSize = {
-        x: 0,
-        y: 0
-    }
     constructor({
         fontSize = 24,
         buffer = 3,
@@ -35,9 +37,6 @@ class TinySDF {
         // make the canvas size big enough to both have the specified buffer around the glyph
         // for "halo", and account for some glyphs possibly being larger than their font size
         const size = this.size = fontSize + buffer * 4;
-        context.updateSize(size * 10, size);
-        this.canvasSize.x = size * 10;
-        this.canvasSize.y = size;
         const font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
         const textBaseline = 'alphabetic';
         const textAlign = 'left'; // Necessary so that RTL text doesn't have different alignment
@@ -50,9 +49,6 @@ class TinySDF {
         this.f = new Float64Array(size);
         this.z = new Float64Array(size + 1);
         this.v = new Uint16Array(size);
-    }
-    getCanvasSize() {
-        return this.canvasSize;
     }
 
     draw(char: string) {
@@ -155,34 +151,53 @@ function edt1d(grid: { [x: string]: any; }, offset: number, stride: number, leng
 }
 
 export default class SDFCanvas implements OffscreenCanvas {
+    initEntity(sceneManager: SceneManager): void {
+        sceneManager.all().forEach(scene => scene.getComponents(SDFCharacter).forEach(text => {
+            this.updateFontInfoAndTextureSize(text, text.getEntity().get(TextureContainer).getTexture());
+        }));
+    }
+    initContext(device: Device): void {
+        this.setContext(device.getSDFCanvasRenderingContext());
+
+    }
     private context?: RenderingContext;
     private tinySDF?: TinySDF;
     private readonly fontInfo: FontInfo = {};
+    private readonly canvasSize: Vec2 = new Vec2(0, 0);
     setContext(context: RenderingContext): void {
         this.context = context;
         const fontSize = 24;
         const fontWeight = "400";
         const buffer = Math.ceil(fontSize / 16);
         const radius = Math.ceil(fontSize / 9);
-
+        const chars = '\n 和气生财你好世界abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{};\'\\:"|,./<>?~`·！￥…（）—【】、；‘：“《》，。？～';
+        const gridWidth = Math.ceil(Math.sqrt(chars.length));
+        const gridHeight = Math.ceil(chars.length / gridWidth);
+        const textureWidth = gridWidth * (fontSize + buffer * 4);
+        const textureHeight = gridHeight * (fontSize + buffer * 4);
+        
+        this.canvasSize.x = textureWidth;
+        this.canvasSize.y = textureHeight;
+        context.updateSize(textureWidth, textureHeight);
         this.tinySDF = new TinySDF({ fontSize, buffer, radius, fontWeight }, context);
-        const chars = '和气生财abcd!'
-        let x = fontSize + buffer * 4;
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
-            const { data, width, height, glyphTop, glyphHeight } = this.getTinySDF().draw(char);
-            context.putImageData(this.makeRGBAImageData(data, width, height), x, fontSize - glyphTop);
-            this.fontInfo[char] = {
-                x,
-                y: 0,
-                width,
-                height: height + glyphTop,
+            const glyph = this.tinySDF.draw(char);
+            const fontInfo = {
+                x: i % gridWidth * (fontSize + buffer * 4),
+                y: Math.floor(i / gridWidth) * (fontSize + buffer * 4),
+                width: glyph.width,
+                height: glyph.height,
+                offsetX: glyph.glyphLeft,
+                offsetY: glyph.glyphTop
             };
-            x += width;
+            this.fontInfo[char] = fontInfo;
+            context.putImageData(this.makeRGBAImageData(glyph.data, glyph.width, glyph.height), fontInfo.x, fontInfo.y);
         }
     }
-    getFontInfo() {
-        return this.fontInfo;
+    updateFontInfoAndTextureSize(text: SDFCharacter, texture: Texture) {
+        text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
+        texture.generate(this.canvasSize.x, this.canvasSize.y);
     }
     // Convert alpha-only to RGBA so we can use `putImageData` for building the composite bitmap
     makeRGBAImageData(alphaChannel: Uint8ClampedArray, width: number, height: number) {

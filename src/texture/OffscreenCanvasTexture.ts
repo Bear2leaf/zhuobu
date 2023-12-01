@@ -1,30 +1,23 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Texture, { TextureIndex } from "./Texture.js";
 
-export default class OffscreenCanvasTexture implements Texture {
+export default class OffscreenCanvasTexture extends Texture {
   private canvasContext?: RenderingContext;
   private glContext?: RenderingContext;
   private textureIndex?: number;
-  private bindIndex: TextureIndex = TextureIndex.OffscreenCanvas;
-  create(rc: RenderingContext) {
-    this.glContext = rc;
+  private readonly bindIndex: number = TextureIndex.OffscreenCanvas;
+  init(): void {
+    this.glContext = this.getDevice().getRenderingContext();
     this.textureIndex = this.getGLRenderingContext().createTexture();
-
   }
   setCanvasContext(canvasContext: RenderingContext) {
     this.canvasContext = canvasContext;
-  }
-  setBindIndex(bindIndex: TextureIndex) {
-    this.bindIndex = bindIndex;
   }
   getTextureIndex() {
     if (this.textureIndex === undefined) {
       throw new Error("OffscreenCanvas is not initialized.");
     }
     return this.textureIndex;
-  }
-  getBindIndex() {
-    return this.bindIndex;
   }
   getGLRenderingContext() {
     if (this.glContext === undefined) {

@@ -13,6 +13,8 @@ export default class BeartalkGame extends Game {
         this.canvas.height = 600;
         this.offscreenCanvas = document.createElement("canvas");
         this.sdfCanvas = document.createElement("canvas");
+        this.offscreenCanvas.style.display = "none";
+        this.sdfCanvas.style.display = "none";
         this.setDevice(new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas));
         this.addObjects();
     }

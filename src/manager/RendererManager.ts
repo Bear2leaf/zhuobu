@@ -1,3 +1,4 @@
+import GLContainer from "../container/GLContainer.js";
 import { ViewPortType } from "../device/Device.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
@@ -44,8 +45,8 @@ export default class RendererManager extends Manager<Renderer> {
         for (const renderer of this.all()) {
             renderer.initShader(rc, this.getCacheManager());
             renderer.initPrimitive(rc);
+            this.getScene().getComponents(Renderer).forEach(renderer => renderer.getEntity().get(GLContainer).setRenderingContext(rc));
         }
-        this.get(SDFRenderer).setScale(128 * 0.5 * this.getDevice().getWindowInfo().pixelRatio);
     }
     update(): void {
         this.getDevice().viewportTo(ViewPortType.Full);

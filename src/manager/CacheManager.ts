@@ -26,11 +26,14 @@ export default class CacheManager extends Manager<Cache<Object>> {
         });
     }
     async load(): Promise<void> {
-        
+
     }
     init(): void {
         const fontInfo = this.getFontInfo("boxy_bold_font");
-        this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => text.setFontInfo(fontInfo)));
+        const fontImage = this.getImage("boxy_bold_font");
+        this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => {
+            text.create(fontInfo, fontImage.width, fontImage.height);
+        }));
     }
 
     update(): void {

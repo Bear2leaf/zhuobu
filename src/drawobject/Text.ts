@@ -3,26 +3,15 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLContainer from "../container/GLContainer.js";
 
-export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number } };
+export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number, offsetX: number, offsetY: number } };
 export default class Text extends DrawObject {
     private color: [number, number, number, number] = [1, 1, 1, 1];
     private spacing: number = 1;
     private chars: string[] = [];
-    private readonly texSize: Vec2 = new Vec2(111, 80);
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly texcoords: Vec4[] = []
-    private fontInfo: FontInfo = {};
-    setFontInfo(fontInfo: FontInfo) {
-        this.fontInfo = fontInfo;
-    }
-    getFontInfo(): FontInfo {
-        if (this.fontInfo === undefined) {
-            throw new Error("FontInfo is not set");
-        }
-        return this.fontInfo;
-    }
     init() {
         super.init();
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
@@ -32,12 +21,10 @@ export default class Text extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(fontInfo: FontInfo) {
+    create(fontInfo: FontInfo, textureWidth: number, textureHeight: number) {
         let { x, y } = new Vec2(0, 0);
         const scale = new Vec2(1, 1);
         let { spacing, chars } = this;
-        const texHeight = this.texSize.y;
-        const texWidth = this.texSize.x;
         const ox = x;
         this.vertices.splice(0, this.vertices.length);
         this.texcoords.splice(0, this.texcoords.length);
@@ -62,12 +49,12 @@ export default class Text extends DrawObject {
                 new Vec4(xpos, ypos + h), new Vec4(xpos + w, ypos + h), new Vec4(xpos + w, ypos)
             ];
             const texcoords = [
-                new Vec4((ch.x) / texWidth, (ch.y + ch.height) / texHeight),
-                new Vec4((ch.x + ch.width) / texWidth, (ch.y) / texHeight),
-                new Vec4((ch.x) / texWidth, (ch.y) / texHeight),
-                new Vec4((ch.x) / texWidth, (ch.y + ch.height) / texHeight),
-                new Vec4((ch.x + ch.width) / texWidth, (ch.y + ch.height) / texHeight),
-                new Vec4((ch.x + ch.width) / texWidth, (ch.y) / texHeight)
+                new Vec4((ch.x) / textureWidth, (ch.y + ch.height) / textureHeight),
+                new Vec4((ch.x + ch.width) / textureWidth, (ch.y) / textureHeight),
+                new Vec4((ch.x) / textureWidth, (ch.y) / textureHeight),
+                new Vec4((ch.x) / textureWidth, (ch.y + ch.height) / textureHeight),
+                new Vec4((ch.x + ch.width) / textureWidth, (ch.y + ch.height) / textureHeight),
+                new Vec4((ch.x + ch.width) / textureWidth, (ch.y) / textureHeight)
             ];
             batch.push(...vertices);
             batchTexcoords.push(...texcoords);
@@ -77,7 +64,6 @@ export default class Text extends DrawObject {
     }
     draw(mode: number): void {
         this.bind();
-        this.create(this.fontInfo);
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));

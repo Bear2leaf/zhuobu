@@ -1,13 +1,15 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Texture, { TextureIndex } from "./Texture.js";
 
-export default class GLTexture implements Texture {
+export default class GLTexture extends Texture {
   private rc?: RenderingContext;
   private textureIndex?: number;
   private bindIndex: TextureIndex = TextureIndex.Default;
-  create(rc: RenderingContext) {
-    this.rc = rc;
-    this.textureIndex = this.rc.createTexture();
+  init(): void {
+    this.rc = this.getDevice().getRenderingContext();
+    this.textureIndex = this.getContext().createTexture();
+    const windowInfo = this.getDevice().getWindowInfo();
+    this.generate(windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio)
   }
   setBindIndex(bindIndex: TextureIndex) {
     this.bindIndex = bindIndex;
@@ -21,14 +23,14 @@ export default class GLTexture implements Texture {
   getBindIndex() {
     return this.bindIndex;
   }
-  getGL() {
+  getContext() {
     if (this.rc === undefined) {
       throw new Error("BaseTexture is not initialized.");
     }
     return this.rc;
   }
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
-    const rc = this.getGL();
+    const rc = this.getContext();
     rc.bindTexture(this.textureIndex);
     if (data === undefined) {
       if (this.bindIndex === TextureIndex.Depth) {
@@ -44,7 +46,7 @@ export default class GLTexture implements Texture {
     rc.bindTexture();
   }
   bind() {
-    const rc = this.getGL();
+    const rc = this.getContext();
     rc.activeTexture(this.bindIndex)
     rc.bindTexture(this.textureIndex);
   }

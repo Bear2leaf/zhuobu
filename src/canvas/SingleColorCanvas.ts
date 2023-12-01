@@ -1,7 +1,14 @@
+import Device from "../device/Device.js";
+import SceneManager from "../manager/SceneManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 
 export default class SingleColorCanvas implements OffscreenCanvas {
+    initEntity(sceneManager: SceneManager): void {
+    }
+    initContext(device: Device): void {
+        this.setContext(device.getOffscreenCanvasRenderingContext());
+    }
     private context?: RenderingContext;
     setContext(context: RenderingContext): void {
         this.context = context;

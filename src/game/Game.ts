@@ -28,14 +28,14 @@ export default abstract class Game extends Manager<Object> {
             InputManager,
             EventManager,
             TextureManager,
+            OffscreenCanvasManager,
+            RendererManager,
             SceneManager,
             TimestepManager,
             AnimationManager,
             AudioManager,
             FrameBufferManager,
-            RendererManager,
             WorkerManager,
-            OffscreenCanvasManager,
             ModifierManager,
             AdrManager
         ];

@@ -7,23 +7,17 @@ import { FontInfo } from "./Text.js";
 export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 0.3, 0.3, 1];
     private spacing: number = 0;
-    private chars: string[] = [];
-    private readonly texSize: Vec2 = new Vec2(0, 0);
+    private readonly chars: string[] = [];
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly texcoords: Vec4[] = []
-    private fontInfo: FontInfo = {};
-    setFontInfo(fontInfo: FontInfo, texWidth: number, texHeight: number) {
-        this.fontInfo = fontInfo;
-        this.texSize.x = texWidth;
-        this.texSize.y = texHeight;
-    }
-    getFontInfo(): FontInfo {
-        if (this.fontInfo === undefined) {
-            throw new Error("FontInfo is not set");
-        }
-        return this.fontInfo;
+    private readonly texSize: Vec2 = new Vec2(0, 0);
+    private readonly fontInfo: FontInfo = {};
+    private readonly textBoundingSize: Vec2 = new Vec2(0, 0);
+    updateFontInfoAndTextureSize(fontInfo: FontInfo, textureSize: Vec2) {
+        Object.assign(this.fontInfo, fontInfo);
+        this.texSize.from(textureSize);
     }
     init() {
         super.init();
@@ -34,27 +28,29 @@ export default class SDFCharacter extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
     }
-    create(fontInfo: FontInfo) {
+    create() {
         let { x, y } = new Vec2(0, 0);
-        const scale = new Vec2(1, 1);
+        const scale = new Vec2(1, -1);
         const { spacing, chars } = this;
         const texHeight = this.texSize.y;
         const texWidth = this.texSize.x;
         const ox = x;
         this.vertices.splice(0, this.vertices.length);
         this.texcoords.splice(0, this.texcoords.length);
+        this.textBoundingSize.set(0, 0, 0, 0);
         const batch = this.vertices;
         const batchTexcoords = this.texcoords;
+        const spaceScalar = 7;
         for (const c of chars) {
-            const ch = fontInfo[c];
-            const xpos = x;
-            const ypos = y;
+            const ch = this.fontInfo[c];
+            const xpos = x - ch.offsetX * scale.x;
+            const ypos = y - ch.offsetY * scale.y;
             const w = ch.width * scale.x;
             const h = ch.height * scale.y;
             x += w + spacing;
             if (c === '\n') {
                 x = ox;
-                y += h + spacing;
+                y += h * spaceScalar + spacing;
                 continue;
             } else if (c === ' ') {
                 continue;
@@ -73,13 +69,15 @@ export default class SDFCharacter extends DrawObject {
             ];
             batch.push(...vertices);
             batchTexcoords.push(...texcoords);
+            this.textBoundingSize.x = Math.max(this.textBoundingSize.x, x);
+            this.textBoundingSize.y = y + h;
         }
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
     }
     draw(mode: number): void {
         this.bind();
-        this.create(this.fontInfo);
+        this.create();
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));

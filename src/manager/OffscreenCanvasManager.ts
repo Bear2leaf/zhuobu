@@ -32,22 +32,12 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
 
     }
     init(): void {
-        this.get(SingleColorCanvas).setContext(this.getDevice().getOffscreenCanvasRenderingContext())
-        this.get(SDFCanvas).setContext(this.getDevice().getSDFCanvasRenderingContext())
-        this.getSceneManager().all().forEach(scene => scene.getComponents(SDFCharacter).forEach(text => {
-            const texSize = this.get(SDFCanvas).getTinySDF().getCanvasSize();
-            text.setFontInfo(this.get(SDFCanvas).getFontInfo(), texSize.x, texSize.y);
-            text.getEntity().get(TextureContainer).getTexture().generate(texSize.x, texSize.y);
-        }));
+        this.all().forEach(canvas => {
+            canvas.initContext(this.getDevice());
+            canvas.initEntity(this.getSceneManager());
+        });
     }
     update(): void {
-        const r = (Math.sin(this.getTimestepManager().getFrames() / 100) + 1.0) / 2.0;
-        const windowInfo = this.getDevice().getCanvasInfo();
-        this.all().forEach((canvas) => {
-            canvas.fillWithColor(r, 1 - r, r * r * r);
-            canvas.clearRect(0, 0, windowInfo.windowWidth, 96);
-            canvas.fillWithText(`FPS: ${this.getTimestepManager().getFPS().toFixed(2)}`);
-        });
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {
