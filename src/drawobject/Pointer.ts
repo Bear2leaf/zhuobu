@@ -22,8 +22,8 @@ export default class Pointer extends DrawObject {
     }
 
     draw(): void {
-        this.getRenderingContext().switchDepthTest(false);
         super.draw();
-        this.getRenderingContext().switchDepthTest(true);
+        const touch = this.getTouchEventContainer();
+        this.getTRS().getPosition().set(touch.getX(), touch.getY(), 1);
     }
 }
