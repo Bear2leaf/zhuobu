@@ -20,7 +20,7 @@ import AdrManager from "../manager/AdrManager.js";
 export default abstract class Game extends Manager<Object> {
     private rafId: number = 0;
     addObjects() {
-        
+
         const ctors: (new () => Manager<Object>)[] = [
             CacheManager,
             GLTFManager,
@@ -85,6 +85,7 @@ export default abstract class Game extends Manager<Object> {
     }
     update() {
         this.ctors<Manager<Object>>().forEach(ctor => this.get<Manager<Object>>(ctor).update());
+        this.get(RendererManager).render();
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {

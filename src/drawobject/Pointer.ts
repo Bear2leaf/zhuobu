@@ -14,16 +14,11 @@ export default class Pointer extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1, 1]), 4)
         this.updateEBO(new Uint16Array([0]))
     }
-    getTouchEventContainer() {
-        return this.getEntity().get(TouchEventContainer);
+    update(): void {
+        const touch = this.getEntity().get(TouchEventContainer);
+        this.getEntity().get(TRS).getPosition().set(touch.getX(), touch.getY(), 1);
     }
-    getTRS() {
-        return this.getEntity().get(TRS);
-    }
-
     draw(): void {
         super.draw();
-        const touch = this.getTouchEventContainer();
-        this.getTRS().getPosition().set(touch.getX(), touch.getY(), 1);
     }
 }

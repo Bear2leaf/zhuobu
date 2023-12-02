@@ -63,6 +63,9 @@ export default class RendererManager extends Manager<Renderer> {
         }
     }
     update(): void {
+    }
+    render(): void {
+
         this.getDevice().viewportTo(ViewPortType.Full);
         this.all().forEach(renderer => {
             if (renderer instanceof GLTFSkinMeshRenderer) {
