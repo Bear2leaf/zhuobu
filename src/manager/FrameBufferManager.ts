@@ -12,11 +12,13 @@ import PickTexture from "../texture/PickTexture.js";
 import { ViewPortType } from "../device/Device.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 import RenderTexture from "../texture/RenderTexture.js";
+import RendererManager from "./RendererManager.js";
 
 
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
     private sceneManager?: SceneManager;
     private textureManager?: TextureManager;
+    private rendererManager?: RendererManager;
     addObjects(): void {
         [
             DepthFrameBufferObject,
@@ -48,14 +50,13 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     update(): void {
         this.all().forEach(fbo => fbo.bind());
         this.getDevice().viewportTo(ViewPortType.Full)
-        this.getSceneManager()
-            .all()
-            .filter(scene => scene instanceof (DemoScene))
-            .forEach(scene => scene.getComponents(OnClickPickSubject).forEach((subject) => {
+        this.getRendererManager().all().forEach(renderer => {
+            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject) => {
                 subject.activate();
-                subject.getEntity().get(Renderer).render();
+                renderer.render();
                 subject.deactivate();
-            }));
+            });
+        });
         this.all().forEach(fbo => fbo.unbind());
     }
     getTextureManager() {
@@ -75,5 +76,14 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
+    }
+    getRendererManager(): RendererManager {
+        if (this.rendererManager === undefined) {
+            throw new Error("rendererManager is undefined");
+        }
+        return this.rendererManager;
+    }
+    setRendererManager(rendererManager: RendererManager) {
+        this.rendererManager = rendererManager;
     }
 }

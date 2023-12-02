@@ -14,8 +14,7 @@ export default class TexturedCubeObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            TexturedCube,
-            VertexColorTriangleRenderer
+            TexturedCube
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

@@ -53,8 +53,4 @@ export default class Mesh extends DrawObject {
     update(): void {
         this.getEntity().get(Node).updateWorldMatrix()
     }
-    draw(mode: number): void {
-        super.bind();
-        super.draw(mode);
-    }
 }

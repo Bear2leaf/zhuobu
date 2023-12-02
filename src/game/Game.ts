@@ -24,11 +24,11 @@ export default abstract class Game extends Manager<Object> {
         const ctors: (new () => Manager<Object>)[] = [
             CacheManager,
             GLTFManager,
-            CameraManager,
             InputManager,
             EventManager,
             TextureManager,
             OffscreenCanvasManager,
+            CameraManager,
             RendererManager,
             SceneManager,
             TimestepManager,
@@ -65,10 +65,12 @@ export default abstract class Game extends Manager<Object> {
         this.get(TextureManager).setCacheManager(this.get(CacheManager));
         this.get(FrameBufferManager).setTextureManager(this.get(TextureManager));
         this.get(FrameBufferManager).setSceneManager(this.get(SceneManager));
+        this.get(FrameBufferManager).setRendererManager(this.get(RendererManager));
         this.get(OffscreenCanvasManager).setTimestepManager(this.get(TimestepManager));
         this.get(OffscreenCanvasManager).setSceneManager(this.get(SceneManager));
         this.get(RendererManager).setCacheManager(this.get(CacheManager));
         this.get(RendererManager).setSceneManager(this.get(SceneManager));
+        this.get(RendererManager).setCameraManager(this.get(CameraManager));
         this.get(AudioManager).setSceneManager(this.get(SceneManager));
         this.get(AudioManager).setCacheManager(this.get(CacheManager));
         this.get(GLTFManager).setSceneManager(this.get(SceneManager));

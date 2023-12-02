@@ -16,7 +16,6 @@ export default class HelloWireframeObject extends Entity {
             TRS,
             Node,
             HelloWireframe,
-            WireframeRenderer,
             GLTFSkeletonAnimator
         ].forEach(ctor => {
             this.add<Component>(ctor);

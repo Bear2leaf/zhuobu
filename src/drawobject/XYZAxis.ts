@@ -35,12 +35,5 @@ export default class XYZAxis extends DrawObject {
         
         this.updateEBO(new Uint16Array(indices));
     }
-    update(): void {
-        
-    }
-    draw(mode: number): void {
-        this.bind()
-        super.draw(mode);
-    }
 }
 

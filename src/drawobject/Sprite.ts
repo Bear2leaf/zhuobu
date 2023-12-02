@@ -30,8 +30,4 @@ export default class Sprite extends DrawObject {
         quad.appendTo(vertices);
         this.updateABO(ArrayBufferIndex.Position, flatten(vertices))
     }
-    draw(mode: number): void {
-        this.bind();
-        super.draw(mode);
-    }
 }

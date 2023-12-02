@@ -18,8 +18,7 @@ export default class BackgroundFrameObject extends Entity {
             Node,
             WireQuad,
             BackgroundFrame,
-            VisualizeCamera,
-            LineRenderer
+            VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

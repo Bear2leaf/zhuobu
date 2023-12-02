@@ -16,7 +16,6 @@ export default class FlowersObject extends Entity {
             TRS,
             Node,
             Sprite,
-            SpriteRenderer,
             Flowers
         ].forEach(ctor => {
             this.add<Component>(ctor);

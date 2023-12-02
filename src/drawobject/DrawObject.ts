@@ -4,6 +4,7 @@ import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
 import GLContainer from "../container/GLContainer.js";
 import TextureContainer from "../container/TextureContainer.js";
+import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 
 
 export default class DrawObject extends Component {
@@ -11,13 +12,24 @@ export default class DrawObject extends Component {
     private ebo?: ArrayBufferObject;
     private aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
     private count: number = 0;
+    private primitive?: Primitive;
+    setPrimitive(primitive: Primitive) {
+        this.primitive = primitive;
+    }
+    getPrimitive() {
+        if (!this.primitive) {
+            throw new Error("primitive not exist");
+        }
+        return this.primitive;
+    }
     init() {
+        this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         this.vao = this.getRenderingContext().makeVertexArrayObject();
         this.vao.bind();
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
     }
-    draw(mode: number) {
-        this.getRenderingContext().draw(mode, this.count);
+    draw() {
+        this.getRenderingContext().draw(this.getPrimitive().getMode(), this.count);
     }
     bind() {
         if (!this.vao) {

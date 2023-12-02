@@ -18,7 +18,6 @@ export default class PointerObject extends Entity {
             TRS,
             Node,
             Pointer,
-            PointRenderer,
             OnClickSubject,
             OnClickBottomLeftSubject,
             TouchEventContainer

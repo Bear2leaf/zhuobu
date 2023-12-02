@@ -1,59 +1,36 @@
 import Camera from "../camera/Camera.js";
-import Component from "../entity/Component.js";
-import Node from "../transform/Node.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Primitive from "../contextobject/Primitive.js";
-import OnClickPickSubject from "../subject/OnClickPickSubject.js";
-import { Vec3 } from "../geometry/Vector.js";
 import SceneManager from "../manager/SceneManager.js";
 import GLContainer from "../container/GLContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
+import Node from "../transform/Node.js";
 
 
-export default class Renderer extends Component {
+export default class Renderer {
+    initRenderingContext(rc: RenderingContext) {
+        this.getSceneManager().all().forEach(scene => {
+            scene.getComponents(DrawObject).forEach(drawObject => {
+                drawObject.getEntity().get(GLContainer).setRenderingContext(rc);
+            });
+        });
+    }
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
-    private primitive?: Primitive;
-    private sceneManager?: SceneManager;
 
-    bindEntityRenderer(rc: RenderingContext) {
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(GLContainer).forEach(container => {
-                container.setRenderingContext(rc);
-            });
-        });
-        this.getSceneManager()
-            .all()
-            .forEach(scene => {
-                scene.getComponents(Renderer)
-                    .filter(renderer => this instanceof renderer.constructor)
-                    .forEach(entityRenderer => {
-                        entityRenderer.setShader(this.getShader());
-                        entityRenderer.setPrimitive(this.getPrimitive());
-                    });
-            })
+    private sceneManager?: SceneManager;
+    setSceneManager(scene: SceneManager) {
+        this.sceneManager = scene;
     }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
+
     getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
+        if (!this.sceneManager) {
+            throw new Error("scene is not set");
         }
         return this.sceneManager;
     }
-    setPrimitive(primitive: Primitive) {
-        this.primitive = primitive;
-    }
-    getPrimitive() {
-        if (!this.primitive) {
-            throw new Error("primitive not exist");
-        }
-        return this.primitive;
-    }
-
     setShader(shader: Shader) {
         this.shader = shader;
     }
@@ -89,21 +66,21 @@ export default class Renderer extends Component {
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
         this.shader = rc.makeShader(vs, fs);
     }
-    initPrimitive(rc: RenderingContext): void {
-        throw new Error("Method not implemented.");
-    }
-    render() {
-        const node = this.getEntity().get(Node);
-        node.getRoot().updateWorldMatrix();
-        const camera = this.getCamera();
+    prepareShader() {
         this.getShader().use();
-        this.getShader().setMatrix4fv("u_world", node.getWorldMatrix().getVertics())
+    }
+    prepareCamera() {
+        const camera = this.getCamera();
         this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
-        if (this.getEntity().has(OnClickPickSubject) && this.getEntity().get(OnClickPickSubject).getIsActive()) {
-            this.getShader().setVector3u("u_pickColor", this.getEntity().get(OnClickPickSubject).getColor());
-        } else {
-            this.getShader().setVector3u("u_pickColor", new Vec3());
-        }
+    }
+    drawEntity(drawObject: DrawObject) {
+
+        drawObject.getEntity().get(Node).updateWorldMatrix();
+        this.getShader().setMatrix4fv("u_world", drawObject.getEntity().get(Node).getWorldMatrix().getVertics());
+        drawObject.bind();
+        drawObject.draw();
+    }
+    render() {
     }
 }

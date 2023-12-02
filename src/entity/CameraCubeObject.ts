@@ -16,8 +16,7 @@ export default class CameraCubeObject extends Entity {
             TRS,
             Node,
             CameraCube,
-            VisualizeCamera,
-            LineRenderer
+            VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

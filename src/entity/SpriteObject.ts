@@ -20,7 +20,6 @@ export default class SpriteObject extends Entity {
             TRS,
             Node,
             Sprite,
-            SpriteRenderer,
             OnClickSpriteSubject,
             OnClickToggleAnim,
             OnClickToggleScale,

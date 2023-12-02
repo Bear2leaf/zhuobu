@@ -16,7 +16,6 @@ export default class CanvasObject extends Entity {
             TRS,
             Node,
             Sprite,
-            SpriteRenderer,
             SingleColorCanvasMap
         ].forEach(ctor => {
             this.add<Component>(ctor);

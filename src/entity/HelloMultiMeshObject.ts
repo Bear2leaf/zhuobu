@@ -20,8 +20,7 @@ export default class HelloMultiMeshObject extends Entity {
             HelloMultiMesh,
             OnClickPickSubject,
             OnClickPickSayHello,
-            TouchEventContainer,
-            GLTFMeshRenderer
+            TouchEventContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

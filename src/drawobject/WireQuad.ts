@@ -26,9 +26,5 @@ export default class WireQuad extends DrawObject {
         quad.getLines().forEach(line => line.appendTo(vertices))
         this.updateABO(ArrayBufferIndex.Position, flatten(vertices))
     }
-    draw(mode: number): void {
-        this.bind()
-        super.draw(mode);
-    }
 }
 

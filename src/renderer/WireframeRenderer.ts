@@ -1,18 +1,15 @@
-import { PrimitiveType } from "../contextobject/Primitive.js";
-import DrawObject from "../drawobject/DrawObject.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Renderer from "./Renderer.js";
-import Node from "../transform/Node.js";
 
 export default class WireframeRenderer extends Renderer {
     render() {
-        super.render();
-        this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
+        this.prepareShader();
+        this.prepareCamera();
+        this.prepareLight();
+        this.getSceneManager().first().getComponents(HelloWireframe).forEach(drawObject => {
+            this.drawEntity(drawObject);
+        });
     }
-    initPrimitive(rc: RenderingContext): void {
-        this.setPrimitive(rc.makePrimitive(PrimitiveType.TRIANGLES));
-    }
-    update(): void {
-        this.getEntity().get(Node).updateWorldMatrix();
+    prepareLight() {
     }
 }

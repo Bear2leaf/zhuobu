@@ -23,12 +23,12 @@ export default class Pointer extends DrawObject {
     private setPosition(x: number, y: number) {
         this.getTRS().getPosition().set(x, y, 0, 1);
     }
-    draw(mode: number): void {
+    draw(): void {
         this.setPosition(this.getTouchEventContainer().getX(), this.getTouchEventContainer().getY());
         this.bind();
         this.updateABO(ArrayBufferIndex.Position, this.getTRS().getPosition().toFloatArray());
-        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(false);
-        super.draw(mode);
-        this.getEntity().get(GLContainer).getRenderingContext().switchDepthTest(true);
+        this.getRenderingContext().switchDepthTest(false);
+        super.draw();
+        this.getRenderingContext().switchDepthTest(true);
     }
 }

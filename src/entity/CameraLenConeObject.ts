@@ -16,8 +16,7 @@ export default class CameraLenConeObject extends Entity {
             TRS,
             Node,
             CameraLenCone,
-            VisualizeCamera,
-            LineRenderer
+            VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

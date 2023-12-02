@@ -41,9 +41,5 @@ export default class SkinMesh extends Mesh {
         const jointData = Matrix.flatten(this.jointMatrices);
         this.getEntity().get(TextureContainer).getTexture(TextureIndex.Joint).generate(4, this.jointNodes.length, jointData);
     }
-    draw(mode: number): void {
-        this.update();
-        super.draw(mode);
-    }
 
 }

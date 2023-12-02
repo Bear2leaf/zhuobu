@@ -16,8 +16,7 @@ export default class PickMapObject extends Entity {
             PickMap,
             TRS,
             Node,
-            Sprite,
-            SpriteRenderer
+            Sprite
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

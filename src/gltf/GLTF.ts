@@ -146,7 +146,7 @@ export default class GLTF {
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
-        if (entity.has(GLTFSkinMeshRenderer)) {
+        if (entity.has(SkinMesh)) {
             const skin = this.getSkinByIndex(node.getSkin());
             const skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
             this.buildNodeTree(skeletonRootNode);

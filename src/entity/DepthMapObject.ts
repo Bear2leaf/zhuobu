@@ -16,8 +16,7 @@ export default class DepthMapObject extends Entity {
             DepthMap,
             TRS,
             Node,
-            Sprite,
-            SpriteRenderer
+            Sprite
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

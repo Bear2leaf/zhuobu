@@ -14,8 +14,7 @@ export default class FramesTextObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            FramesText,
-            SpriteRenderer
+            FramesText
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

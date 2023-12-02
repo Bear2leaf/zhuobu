@@ -14,8 +14,7 @@ export default class GasketObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            Gasket,
-            VertexColorTriangleRenderer
+            Gasket
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

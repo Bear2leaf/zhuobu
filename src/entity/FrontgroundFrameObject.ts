@@ -18,8 +18,7 @@ export default class FrontgroundFrameObject extends Entity {
             Node,
             WireQuad,
             FrontgroundFrame,
-            VisualizeCamera,
-            LineRenderer
+            VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

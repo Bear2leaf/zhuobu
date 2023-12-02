@@ -18,8 +18,7 @@ export default class UIFrameObject extends Entity {
             Node,
             WireQuad,
             UIFrame,
-            VisualizeCamera,
-            LineRenderer
+            VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

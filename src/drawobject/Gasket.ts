@@ -46,10 +46,7 @@ export default class Gasket extends DrawObject {
     update(): void {
         this.rotatePerFrame(this.frame++);
     }
-    draw(mode: number): void {
-        this.bind()
-        super.draw(mode);
-    }
+    
     rotatePerFrame(frame: number) {
         this.getEntity().get(TRS).getPosition().set(0, 2, -5, 1);
         const rotationMatrix = Matrix.rotationX(Math.PI / 180 * frame).multiply(Matrix.rotationY(Math.PI / 180 * frame)).multiply(Matrix.rotationZ(Math.PI / 180 * frame));

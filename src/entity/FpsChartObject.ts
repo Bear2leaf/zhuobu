@@ -14,8 +14,7 @@ export default class FpsChartObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            Histogram,
-            VertexColorTriangleRenderer
+            Histogram
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

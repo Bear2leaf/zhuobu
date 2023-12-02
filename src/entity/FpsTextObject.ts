@@ -14,8 +14,7 @@ export default class FpsTextObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            FpsText,
-            SpriteRenderer
+            FpsText
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

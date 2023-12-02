@@ -14,8 +14,7 @@ export default class HeTextObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            HeText,
-            SDFRenderer
+            HeText
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

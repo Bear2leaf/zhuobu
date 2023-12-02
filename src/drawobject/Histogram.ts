@@ -35,12 +35,12 @@ export default class Histogram extends DrawObject {
             prevQuad.setHeight(fps);
         }
     }
-    draw(mode: number): void {
+    draw(): void {
         this.bind()
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));
-        super.draw(mode);
+        super.draw();
     }
 }
 

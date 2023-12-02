@@ -14,8 +14,7 @@ export default class HelloWorldTextObject extends Entity {
             TextureContainer,
             TRS,
             Node,
-            HelloWorldText,
-            SpriteRenderer
+            HelloWorldText
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

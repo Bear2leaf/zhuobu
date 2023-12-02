@@ -15,18 +15,14 @@ export default class SDFRenderer extends Renderer {
     }
     render(): void {
 
-        super.render();
         this.getShader().setInteger("u_texture", TextureIndex.OffscreenCanvas);
         this.getShader().setVector4f("u_color", new Vec4(1, 1, 1, 1));
         this.getShader().setFloat("u_buffer", this.buffer);
-        this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
+        super.render();
     
         this.getShader().setVector4f("u_color", new Vec4(0, 0, 0, 1));
         this.getShader().setFloat("u_buffer", 0.75);
         this.getShader().setFloat("u_gamma", this.gamma * 1.4142 / this.scale);
-        this.getEntity().get(DrawObject).draw(this.getPrimitive().getMode());
-    }
-    initPrimitive(rc: RenderingContext): void {
-        this.setPrimitive(rc.makePrimitive(PrimitiveType.TRIANGLES));
+        super.render();
     }
 }

@@ -16,7 +16,6 @@ export default class SDFObject extends Entity {
             TRS,
             Node,
             Sprite,
-            SpriteRenderer,
             SDFCanvasMap
         ].forEach(ctor => {
             this.add<Component>(ctor);

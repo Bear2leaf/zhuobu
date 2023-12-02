@@ -22,8 +22,7 @@ export default class SkinMeshObject extends Entity {
             GLTFSkeletonAnimator,
             OnClickPickSubject,
             OnClickPickSayHello,
-            TouchEventContainer,
-            GLTFSkinMeshRenderer
+            TouchEventContainer
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
