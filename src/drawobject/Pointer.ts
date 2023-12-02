@@ -2,12 +2,13 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TouchEventContainer from "../container/TouchEventContainer.js";
 import TRS from "../transform/TRS.js";
-import GLContainer from "../container/GLContainer.js";
+import { PrimitiveType } from "../contextobject/Primitive.js";
 
 export default class Pointer extends DrawObject {
     init() {
         super.init();
 
+        this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.POINTS));
 
         this.createABO(ArrayBufferIndex.Position, new Float32Array([0, 0, 0, 1]), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1, 1]), 4)
@@ -20,13 +21,7 @@ export default class Pointer extends DrawObject {
         return this.getEntity().get(TRS);
     }
 
-    private setPosition(x: number, y: number) {
-        this.getTRS().getPosition().set(x, y, 0, 1);
-    }
     draw(): void {
-        this.setPosition(this.getTouchEventContainer().getX(), this.getTouchEventContainer().getY());
-        this.bind();
-        this.updateABO(ArrayBufferIndex.Position, this.getTRS().getPosition().toFloatArray());
         this.getRenderingContext().switchDepthTest(false);
         super.draw();
         this.getRenderingContext().switchDepthTest(true);

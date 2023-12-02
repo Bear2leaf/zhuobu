@@ -9,7 +9,6 @@ import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
 import TimestepManager from "./TimestepManager.js";
 import CameraAnimator from "../animator/CameraAnimator.js";
-import DrawObject from "../drawobject/DrawObject.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;

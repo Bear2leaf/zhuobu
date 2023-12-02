@@ -5,7 +5,6 @@ import TRS from "../transform/TRS.js";
 import TextureContainer from "../container/TextureContainer.js";
 import TouchEventContainer from "../container/TouchEventContainer.js";
 import Pointer from "../drawobject/Pointer.js";
-import { PointRenderer } from "../renderer/PointRenderer.js";
 import OnClickBottomLeftSubject from "../subject/OnClickBottomLeftSubject.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
 import Entity from "./Entity.js";

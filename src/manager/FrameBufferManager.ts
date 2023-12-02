@@ -13,6 +13,8 @@ import { ViewPortType } from "../device/Device.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
 import RenderTexture from "../texture/RenderTexture.js";
 import RendererManager from "./RendererManager.js";
+import DrawObject from "../drawobject/DrawObject.js";
+import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 
 
 export default class FrameBufferManager extends Manager<FrameBufferObject> {
@@ -50,12 +52,14 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     update(): void {
         this.all().forEach(fbo => fbo.bind());
         this.getDevice().viewportTo(ViewPortType.Full)
-        this.getRendererManager().all().forEach(renderer => {
-            this.getSceneManager().get(DemoScene).getComponents(OnClickPickSubject).forEach((subject) => {
-                subject.activate();
-                renderer.render();
-                subject.deactivate();
-            });
+        const scene = this.getSceneManager().get(DemoScene);
+        const renderer = this.getRendererManager().get(GLTFMeshRenderer);
+        scene.getComponents(OnClickPickSubject).forEach((subject) => {
+            subject.activate();
+            renderer.getShader().use();
+            renderer.getShader().setVector3u("u_pickColor", subject.getColor());
+            renderer.render();
+            subject.deactivate();
         });
         this.all().forEach(fbo => fbo.unbind());
     }

@@ -1,4 +1,5 @@
 import { MainCamera } from "../camera/MainCamera.js";
+import { UICamera } from "../camera/UICamera.js";
 import GLContainer from "../container/GLContainer.js";
 import { ViewPortType } from "../device/Device.js";
 import DrawObject from "../drawobject/DrawObject.js";
@@ -30,12 +31,12 @@ export default class RendererManager extends Manager<Renderer> {
         [
             SpriteRenderer
             , SDFRenderer
-            , PointRenderer
             , VertexColorTriangleRenderer
             , LineRenderer
             , GLTFMeshRenderer
             , WireframeRenderer
             , GLTFSkinMeshRenderer
+            , PointRenderer
         ].forEach(ctor => {
             this.add(ctor);
             this.get(ctor).setShaderName(ctor.name.replace("Renderer", "").replace("GLTF", ""));
@@ -52,9 +53,13 @@ export default class RendererManager extends Manager<Renderer> {
         rc.init();
         for (const renderer of this.all()) {
             renderer.initShader(rc, this.getCacheManager());
-            renderer.setCamera(this.getCameraManager().get(MainCamera));
             renderer.setSceneManager(this.getSceneManager());
             renderer.initRenderingContext(rc);
+            if (renderer instanceof PointRenderer) {
+                renderer.setCamera(this.getCameraManager().get(UICamera));
+            } else {
+                renderer.setCamera(this.getCameraManager().get(MainCamera));
+            }
         }
     }
     update(): void {
@@ -65,6 +70,10 @@ export default class RendererManager extends Manager<Renderer> {
             } else if (renderer instanceof GLTFMeshRenderer) {
                 renderer.render();
             } else if (renderer instanceof WireframeRenderer) {
+                renderer.render();
+            } else if (renderer instanceof SDFRenderer) {
+                renderer.render();
+            } else if (renderer instanceof PointRenderer) {
                 renderer.render();
             }
         });

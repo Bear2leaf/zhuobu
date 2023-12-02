@@ -44,6 +44,7 @@ export default class TextureManager extends Manager<Texture> {
             texture.setDevice(this.getDevice());
             texture.init();
         });
+        
 
     }
     update(): void {
