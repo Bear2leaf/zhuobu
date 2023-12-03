@@ -1,4 +1,4 @@
-import TextureContainer from "../container/TextureContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import GLTexture from "./GLTexture.js";
 import { TextureIndex } from "./Texture.js";
@@ -10,7 +10,7 @@ export default class JointTexture extends GLTexture {
 
         this.getSceneManager().all().forEach(scene => {
             scene.getComponents(SkinMesh).forEach(comp => {
-                comp.getEntity().get(TextureContainer).setTexture(this, this.getBindIndex());
+                comp.getEntity().get(DrawObject).setTexture(this, this.getBindIndex());
             });
         });
     }

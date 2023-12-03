@@ -1,4 +1,4 @@
-import TextureContainer from "../container/TextureContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import Flowers from "../texturemap/Flowers.js";
 import GLTexture from "./GLTexture.js";
 
@@ -9,7 +9,7 @@ export default class FlowerTexture extends GLTexture {
 
         this.getSceneManager().all().forEach(scene => {
             scene.getComponents(Flowers).forEach(comp => {
-                comp.getEntity().get(TextureContainer).setTexture(this);
+                comp.getEntity().get(DrawObject).setTexture(this);
             });
         });
     }

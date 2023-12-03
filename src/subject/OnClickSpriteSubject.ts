@@ -1,4 +1,4 @@
-import TouchEventContainer from "../container/TouchEventContainer.js";
+import TouchEvent from "../event/TouchEvent.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
 import TRS from "../transform/TRS.js";
@@ -7,7 +7,7 @@ import DemoSubject from "./DemoSubject.js";
 export default class OnClickSpriteSubject extends DemoSubject {
 
     update(): void {
-        const touchEvent = this.getEntity().get(TouchEventContainer);
+        const touchEvent = this.getEntity().get(TouchEvent);
         if (touchEvent.getIsTouchingStart()) {
             const transform = new Vec4();
             const quat = new Vec4();

@@ -1,4 +1,4 @@
-import TextureContainer from "../container/TextureContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import PickMap from "../texturemap/PickMap.js";
 import GLTexture from "./GLTexture.js";
 import { TextureIndex } from "./Texture.js";
@@ -9,7 +9,7 @@ export default class PickTexture extends GLTexture {
         super.init();
         this.getSceneManager().all().forEach(scene => {
             scene.getComponents(PickMap).forEach(comp => {
-                comp.getEntity().get(TextureContainer).setTexture(this);
+                comp.getEntity().get(DrawObject).setTexture(this);
             });
         });
     }

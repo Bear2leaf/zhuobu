@@ -1,7 +1,6 @@
 import { flatten, Vec2, Vec4 } from "../geometry/Vector.js";
-import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import GLContainer from "../container/GLContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 
 export type FontInfo = { [key: string]: { width: number, height: number, x: number, y: number, offsetX: number, offsetY: number } };
 export default class Text extends DrawObject {

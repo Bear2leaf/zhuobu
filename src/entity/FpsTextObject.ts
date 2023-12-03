@@ -1,17 +1,13 @@
 import Component from "./Component.js";
-import GLContainer from "../container/GLContainer.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import TextureContainer from "../container/TextureContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import FpsText from "../drawobject/FpsText.js";
-import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import Entity from "./Entity.js";
 
 export default class FpsTextObject extends Entity {
     registerComponents(): void {
         [
-            GLContainer,
-            TextureContainer,
             TRS,
             Node,
             FpsText

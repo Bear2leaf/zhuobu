@@ -1,4 +1,4 @@
-import TouchEventContainer from "../container/TouchEventContainer.js";
+import TouchEvent from "../event/TouchEvent.js";
 import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
@@ -48,14 +48,14 @@ export default class InputManager extends Manager<Object> {
             this.y = touchInfo?.y || 0;
         })
         this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(TouchEventContainer).forEach((touchEvent) => {
+            scene.getComponents(TouchEvent).forEach((touchEvent) => {
                 touchEvent.setPixelRatio(this.getDevice().getWindowInfo().pixelRatio);
             });
         });
 
     }
     update(): void {
-        this.getSceneManager().all().forEach(scene => scene.getComponents(TouchEventContainer).forEach((touchEvent) => {
+        this.getSceneManager().all().forEach(scene => scene.getComponents(TouchEvent).forEach((touchEvent) => {
             touchEvent.setIsTouching(this.isTouching);
             touchEvent.setIsTouchingStart(this.isTouchingStart);
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);

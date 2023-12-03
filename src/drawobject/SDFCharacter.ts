@@ -1,7 +1,6 @@
 import { flatten, Vec2, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import GLContainer from "../container/GLContainer.js";
 import { FontInfo } from "./Text.js";
 
 export default class SDFCharacter extends DrawObject {

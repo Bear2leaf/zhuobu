@@ -1,4 +1,4 @@
-import GLContainer from "../container/GLContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Mesh from "./Mesh.js";

@@ -1,4 +1,4 @@
-import TextureContainer from "../container/TextureContainer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import Device from "../device/Device.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import { FontInfo } from "../drawobject/Text.js";
@@ -153,7 +153,7 @@ function edt1d(grid: { [x: string]: any; }, offset: number, stride: number, leng
 export default class SDFCanvas implements OffscreenCanvas {
     initEntity(sceneManager: SceneManager): void {
         sceneManager.all().forEach(scene => scene.getComponents(SDFCharacter).forEach(text => {
-            this.updateFontInfoAndTextureSize(text, text.getEntity().get(TextureContainer).getTexture());
+            this.updateFontInfoAndTextureSize(text, text.getEntity().get(DrawObject).getTexture());
         }));
     }
     initContext(device: Device): void {

@@ -3,7 +3,6 @@ import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
-import GLContainer from "../container/GLContainer.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
 
@@ -12,7 +11,7 @@ export default class Renderer {
     initRenderingContext(rc: RenderingContext) {
         this.getSceneManager().all().forEach(scene => {
             scene.getComponents(DrawObject).forEach(drawObject => {
-                drawObject.getEntity().get(GLContainer).setRenderingContext(rc);
+                drawObject.setRenderingContext(rc);
             });
         });
     }

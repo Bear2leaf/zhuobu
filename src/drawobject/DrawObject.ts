@@ -1,10 +1,9 @@
-import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
-import GLContainer from "../container/GLContainer.js";
-import TextureContainer from "../container/TextureContainer.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import Texture, { TextureIndex } from "../texture/Texture.js";
 
 
 export default class DrawObject extends Component {
@@ -13,6 +12,21 @@ export default class DrawObject extends Component {
     private aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
     private count: number = 0;
     private primitive?: Primitive;
+    private renderingContext?: RenderingContext;
+    private readonly textureMap: Map<TextureIndex, Texture> = new Map();
+    setTexture(texture: Texture, index: TextureIndex = TextureIndex.Default) {
+        this.textureMap.set(index, texture);
+    }
+    getTexture(index: TextureIndex = TextureIndex.Default): Texture {
+        const texture = this.textureMap.get(index);
+        if (texture === undefined) {
+            throw new Error("texture not exist");
+        }
+        return texture;
+    }
+    getTextures() {
+        return [...this.textureMap.values()];
+    }
     setPrimitive(primitive: Primitive) {
         this.primitive = primitive;
     }
@@ -36,10 +50,16 @@ export default class DrawObject extends Component {
             throw new Error("vao is not set");
         }
         this.vao.bind();
-        this.getEntity().get(TextureContainer).getTextures().forEach(texture => texture.bind());
+        this.getEntity().get(DrawObject).getTextures().forEach(texture => texture.bind());
     }
     getRenderingContext() {
-        return this.getEntity().get(GLContainer).getRenderingContext();
+        if (!this.renderingContext) {
+            throw new Error("renderingContext is not set");
+        }
+        return this.renderingContext;
+    }
+    setRenderingContext(renderingContext: RenderingContext) {
+        this.renderingContext = renderingContext;
     }
 
     updateEBO(buffer: Uint16Array) {

@@ -1,7 +1,7 @@
 
 import Component from "../entity/Component.js";
 
-export default class TouchEventContainer extends Component {
+export default class TouchEvent extends Component {
     private x: number = 0;
     private y: number = 0;
     private isTouching: boolean = false;
