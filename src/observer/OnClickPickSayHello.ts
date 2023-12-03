@@ -1,10 +1,10 @@
 import Observer from "./Observer.js";
-import DemoSubject from "../subject/DemoSubject.js";
+import BaseTouchSubject from "../subject/BaseTouchSubject.js";
 import Mesh from "../drawobject/Mesh.js";
 import BleepAudio from "../audio/BleepAudio.js";
 
 export default class OnClickPickSayHello extends Observer {
-    private subject?: DemoSubject;
+    private subject?: BaseTouchSubject;
     private audioClip?: BleepAudio;
     public notify(): void {
         console.debug("Hello Pick! " + this.getEntity().get(Mesh).getGLTF().getName())
@@ -17,12 +17,12 @@ export default class OnClickPickSayHello extends Observer {
         if (!this.audioClip) throw new Error("audioClip is not set!");
         return this.audioClip;
     }
-    getSubject(): DemoSubject {
+    getSubject(): BaseTouchSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: DemoSubject) {
+    setSubject(subject: BaseTouchSubject) {
         this.subject = subject;
     }
 

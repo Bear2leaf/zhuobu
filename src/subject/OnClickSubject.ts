@@ -1,3 +1,3 @@
-import DemoSubject from "./DemoSubject.js";
+import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickSubject extends DemoSubject { }
+export default class OnClickSubject extends BaseTouchSubject { }

@@ -2,9 +2,9 @@ import DrawObject from "../drawobject/DrawObject.js";
 import TouchEvent from "../event/TouchEvent.js";
 import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
 import { Vec3 } from "../geometry/Vector.js";
-import DemoSubject from "./DemoSubject.js";
+import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickPickSubject extends DemoSubject {
+export default class OnClickPickSubject extends BaseTouchSubject {
 
     private frameBufferObject?: FrameBufferObject;
     private isActivated: boolean = false;

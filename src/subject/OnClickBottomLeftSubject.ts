@@ -1,7 +1,7 @@
 import TouchEvent from "../event/TouchEvent.js";
-import DemoSubject from "./DemoSubject.js";
+import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickBottomLeftSubject extends DemoSubject {
+export default class OnClickBottomLeftSubject extends BaseTouchSubject {
 
     update(): void {
         const touchEvent = this.getEntity().get(TouchEvent);

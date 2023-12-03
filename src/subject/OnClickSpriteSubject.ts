@@ -2,9 +2,9 @@ import TouchEvent from "../event/TouchEvent.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
 import TRS from "../transform/TRS.js";
-import DemoSubject from "./DemoSubject.js";
+import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickSpriteSubject extends DemoSubject {
+export default class OnClickSpriteSubject extends BaseTouchSubject {
 
     update(): void {
         const touchEvent = this.getEntity().get(TouchEvent);

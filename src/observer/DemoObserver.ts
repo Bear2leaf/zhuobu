@@ -1,8 +1,8 @@
-import DemoSubject from "../subject/DemoSubject.js";
+import BaseTouchSubject from "../subject/BaseTouchSubject.js";
 import Observer from "./Observer.js";
 
 export default class DemoObserver extends Observer {
-    private subject?: DemoSubject;
+    private subject?: BaseTouchSubject;
 
     init(): void {
         
@@ -13,12 +13,12 @@ export default class DemoObserver extends Observer {
         console.debug("DemoObserver's notify method");
     }
 
-    getSubject(): DemoSubject {
+    getSubject(): BaseTouchSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: DemoSubject) {
+    setSubject(subject: BaseTouchSubject) {
         this.subject = subject;
     }
 }
