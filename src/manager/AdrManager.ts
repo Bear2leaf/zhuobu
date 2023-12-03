@@ -67,9 +67,6 @@ export default class AdrManager extends Manager<AdrAdapter> {
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
     }
-    getScene(): Scene {
-        return this.getSceneManager().first();
-    }
     update(): void {
     }
 

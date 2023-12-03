@@ -22,29 +22,30 @@ export default class EventManager extends Manager<Object> {
     async load(): Promise<void> {
     }
     init(): void {
-        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickSubject).forEach(subject => {
+        const scene = this.getSceneManager().first();
+        scene.getComponents(OnClickSubject).forEach(subject => {
             scene.getComponents(OnClickToggleAnim).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        }));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickPickSubject).forEach(subject => {
+        });
+        scene.getComponents(OnClickPickSubject).forEach(subject => {
             const component = subject.getEntity().get(OnClickPickSayHello);
             component.setSubject(subject);
             subject.register(component);
-        }));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickBottomLeftSubject).forEach(subject => {
+        });
+        scene.getComponents(OnClickBottomLeftSubject).forEach(subject => {
             scene.getComponents(OnClickToggleAudio).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        }));
-        this.getSceneManager().all().forEach(scene => scene.getComponents(OnClickSpriteSubject).forEach(subject => {
+        });
+        scene.getComponents(OnClickSpriteSubject).forEach(subject => {
             scene.getComponents(OnClickToggleScale).forEach(component => {
                 component.setSubject(subject);
                 subject.register(component);
             });
-        }));
+        });
     }
     update(): void {
     }
@@ -56,8 +57,5 @@ export default class EventManager extends Manager<Object> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
-    }
-    getScene(): Scene {
-        return this.getSceneManager().first();
     }
 }

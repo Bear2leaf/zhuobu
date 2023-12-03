@@ -67,7 +67,4 @@ export default class TextureManager extends Manager<Texture> {
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
     }
-    getScene(): Scene {
-        return this.getSceneManager().first();
-    }
 }

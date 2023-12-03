@@ -1,5 +1,4 @@
 import TouchEvent from "../event/TouchEvent.js";
-import Scene from "../scene/Scene.js";
 import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
@@ -47,22 +46,19 @@ export default class InputManager extends Manager<Object> {
             this.x = touchInfo?.x || 0;
             this.y = touchInfo?.y || 0;
         })
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(TouchEvent).forEach((touchEvent) => {
-                touchEvent.setPixelRatio(this.getDevice().getWindowInfo().pixelRatio);
-            });
+        this.getSceneManager().first().getComponents(TouchEvent).forEach((touchEvent) => {
+            touchEvent.setPixelRatio(this.getDevice().getWindowInfo().pixelRatio);
         });
 
     }
     update(): void {
-        this.getSceneManager().all().forEach(scene => scene.getComponents(TouchEvent).forEach((touchEvent) => {
+        this.getSceneManager().first().getComponents(TouchEvent).forEach((touchEvent) => {
             touchEvent.setIsTouching(this.isTouching);
             touchEvent.setIsTouchingStart(this.isTouchingStart);
             touchEvent.setIsTouchingEnd(this.isTouchingEnd);
             touchEvent.setX(this.x);
             touchEvent.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
-
-        }));
+        });
         if (this.isTouchingEnd) {
             this.isTouchingEnd = false;
         }
@@ -78,8 +74,5 @@ export default class InputManager extends Manager<Object> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
-    }
-    getScene(): Scene {
-        return this.getSceneManager().first();
     }
 }

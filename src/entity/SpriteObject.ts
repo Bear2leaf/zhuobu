@@ -8,6 +8,7 @@ import OnClickToggleScale from "../observer/OnClickToggleScale.js";
 import OnClickSpriteSubject from "../subject/OnClickSpriteSubject.js";
 import Entity from "./Entity.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
+import MoveCircleController from "../controller/MoveCircleController.js";
 
 export default class SpriteObject extends Entity {
     registerComponents(): void {
@@ -19,7 +20,7 @@ export default class SpriteObject extends Entity {
             OnClickToggleAnim,
             OnClickToggleScale,
             TouchEvent,
-            CircleAnimator
+            MoveCircleController
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

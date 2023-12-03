@@ -52,9 +52,8 @@ export default class FrameBufferManager extends Manager<FrameBufferObject> {
     update(): void {
         this.all().forEach(fbo => fbo.bind());
         this.getDevice().viewportTo(ViewPortType.Full)
-        const scene = this.getSceneManager().get(DemoScene);
         const renderer = this.getRendererManager().get(GLTFMeshRenderer);
-        scene.getComponents(OnClickPickSubject).forEach((subject) => {
+        this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject) => {
             subject.activate();
             renderer.getShader().use();
             renderer.getShader().setVector3u("u_pickColor", subject.getColor());

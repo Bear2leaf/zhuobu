@@ -9,6 +9,8 @@ import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
 import TimestepManager from "./TimestepManager.js";
 import CameraAnimator from "../animator/CameraAnimator.js";
+import CameraController from "../controller/CameraController.js";
+import TRS from "../transform/TRS.js";
 
 export default class CameraManager extends Manager<Camera> {
     private sceneManager?: SceneManager;
@@ -27,7 +29,7 @@ export default class CameraManager extends Manager<Camera> {
     async load(): Promise<void> { }
     update(): void {
 
-        this.getSceneManager().all().forEach(scene => scene.getComponents(CameraAnimator).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEye())));
+        this.getSceneManager().first().getComponents(CameraController).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEntity().get(TRS).getPosition()));
     }
     init(): void {
         const deviceInfo = this.getDevice().getWindowInfo()
@@ -55,8 +57,5 @@ export default class CameraManager extends Manager<Camera> {
     }
     setTimestepManager(timestepManager: TimestepManager) {
         this.timestepManager = timestepManager;
-    }
-    getScene(): Scene {
-        return this.getSceneManager().first();
     }
 }

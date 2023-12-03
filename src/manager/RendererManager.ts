@@ -111,7 +111,4 @@ export default class RendererManager extends Manager<Renderer> {
     setCameraManager(cameraManager: CameraManager) {
         this.cameraManager = cameraManager;
     }
-    getScene(): Scene {
-        return this.getSceneManager().first();
-    }
 }

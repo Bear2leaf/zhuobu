@@ -1,31 +1,17 @@
-import Component from "../entity/Component.js";
+import SceneManager from "../manager/SceneManager.js";
 
-export default class Animator extends Component {
-    private time: number = 0;
-    private paused: boolean = false;
-
-    tick(): void {
-        if (this.paused) {
-            return;
-        }
-        this.time += 10;
-    }
-    getTime(): number {
-        return this.time;
-    }
+export default class Animator  {
+    private sceneManager?: SceneManager;
     animate(): void {
         throw new Error("Method not implemented.");
     }
-    update(): void {
-        if (this.paused) {
-            return;
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
+    }
+    getSceneManager(): SceneManager {
+        if (!this.sceneManager) {
+            throw new Error("scene manager not exist");
         }
-        this.animate();
-    }
-    isPaused(): boolean {
-        return this.paused;
-    }
-    toggle(): void {
-        this.paused = !this.paused;
+        return this.sceneManager;
     }
 }

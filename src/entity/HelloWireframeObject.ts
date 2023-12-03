@@ -1,10 +1,9 @@
 import Component from "./Component.js";
-import GLTFSkeletonAnimator from "../animator/GLTFSkeletonAnimator.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Entity from "./Entity.js";
+import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
 export default class HelloWireframeObject extends Entity {
     registerComponents(): void {
@@ -12,7 +11,7 @@ export default class HelloWireframeObject extends Entity {
             TRS,
             Node,
             HelloWireframe,
-            GLTFSkeletonAnimator
+            GLTFAnimationController
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);

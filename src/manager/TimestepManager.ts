@@ -41,18 +41,15 @@ export default class TimestepManager extends Manager<Object> {
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
     }
-    getScene(): Scene {
-        return this.getSceneManager().first();
-    }
     update(): void {
         this.frames++;
         this.currentFrameTime = this.now();
         this.deltaTime = this.currentFrameTime - this.lastFrameTime;
         this.fps = 1000 / this.deltaTime;
         this.lastFrameTime = this.currentFrameTime;
-        this.getScene().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
-        this.getScene().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
-        this.getScene().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}\nDeltaTime: ${this.deltaTime}`));
+        this.getSceneManager().first().getComponents(Histogram).forEach(histogram => histogram.updateHistogram(this.getFPS()));
+        this.getSceneManager().first().getComponents(FpsText).forEach(text => text.updateChars(`FPS: ${this.getFPS()}`));
+        this.getSceneManager().first().getComponents(FramesText).forEach(text => text.updateChars(`Frames: ${this.getFrames()}\nDeltaTime: ${this.deltaTime}`));
     }
 
 }

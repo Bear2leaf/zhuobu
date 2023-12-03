@@ -1,4 +1,4 @@
-import CircleAnimator from "../animator/CircleAnimator.js";
+import MoveCircleController from "../controller/MoveCircleController.js";
 import OnClickSubject from "../subject/OnClickSubject.js";
 import Observer from "./Observer.js";
 
@@ -11,7 +11,7 @@ export default class OnClickToggleAnim extends Observer {
     }
 
     public notify(): void {
-        this.getEntity().get(CircleAnimator).toggle();
+        this.getEntity().get(MoveCircleController).toggle();
     }
 
     getSubject(): OnClickSubject {

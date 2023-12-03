@@ -1,4 +1,4 @@
-import CircleAnimator from "../animator/CircleAnimator.js";
+import MoveCircleController from "../controller/MoveCircleController.js";
 import SceneManager from "../manager/SceneManager.js";
 import Node from "../transform/Node.js";
 import Modifier from "./Modifier.js";
@@ -15,7 +15,7 @@ export default class SceneInfoModifier extends Modifier {
         this.firstSceneEntityNumber = this.getSceneManager().first().getDefaultEntities().length;
     }
     private updateSpriteNodeWorldMatrix() {
-        const component = this.getSceneManager().first().getComponents(CircleAnimator)[0];
+        const component = this.getSceneManager().first().getComponents(MoveCircleController)[0];
         if (!component) {
             return;
         }
@@ -28,14 +28,14 @@ export default class SceneInfoModifier extends Modifier {
         super.update();
     }
     toggleSecondNodeScale(checked: boolean) {
-        const component = this.getSceneManager().first().getComponents(CircleAnimator)[0];
+        const component = this.getSceneManager().first().getComponents(MoveCircleController)[0];
         if (!component) {
             return;
         }
         if (checked) {
-            component.getEntity().get(Node).getSource()?.getScale().set(20, 20, 20);
+            component.getEntity().get(Node).getSource()?.getScale().set(2, 2, 2);
         } else {
-            component.getEntity().get(Node).getSource()?.getScale().set(10, 10, 10);
+            component.getEntity().get(Node).getSource()?.getScale().set(1, 1, 1);
         }
     }
     getSceneNumber() {

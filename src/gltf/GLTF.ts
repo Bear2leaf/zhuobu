@@ -1,6 +1,6 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
 import JSONCache from "../cache/FontInfoCache.js";
-import GLTFSkeletonAnimator from "../animator/GLTFSkeletonAnimator.js";
+import GLTFAnimator from "../animator/GLTFAnimator.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Mesh from "../drawobject/Mesh.js";
@@ -20,6 +20,7 @@ import GLTFSampler from "./GLTFSampler.js";
 import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
+import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
 const glTypeToTypedArrayMap = {
     '5120': Int8Array,    // gl.BYTE
@@ -171,11 +172,11 @@ export default class GLTF {
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
             );
         }
-        if (entity.has(GLTFSkeletonAnimator)) {
+        if (entity.has(GLTFAnimationController)) {
 
             const animation = this.getAnimationByIndex(0);
             animation.createBuffers(this);
-            entity.get(GLTFSkeletonAnimator).setAnimationData(
+            entity.get(GLTFAnimationController).setAnimationData(
                 animation
             );
         }

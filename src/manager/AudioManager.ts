@@ -42,8 +42,8 @@ export default class AudioManager extends Manager<AudioClip> {
         this.all().forEach(clip => {
             clip.init();
         });
-        this.getScene().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
-        this.getScene().getComponents(OnClickPickSayHello).forEach(comp => comp.setAudioClip(this.get(BleepAudio)));
+        this.getSceneManager().first().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
+        this.getSceneManager().first().getComponents(OnClickPickSayHello).forEach(comp => comp.setAudioClip(this.get(BleepAudio)));
         this.get(MidiAudio).playOnce();
     }
 
@@ -68,9 +68,6 @@ export default class AudioManager extends Manager<AudioClip> {
             throw new Error("cacheManager is undefined");
         }
         return this.cacheManager;
-    }
-    getScene(): Scene {
-        return this.getSceneManager().first();
     }
 }
 

@@ -42,9 +42,6 @@ export default class ModifierManager extends Manager<Modifier> {
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
     }
-    getScene(): Scene {
-        return this.getSceneManager().first();
-    }
     setTimestepManager(timestepManager: TimestepManager) {
         this.timestepManager = timestepManager;
     }

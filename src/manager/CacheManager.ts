@@ -31,9 +31,9 @@ export default class CacheManager extends Manager<Cache<Object>> {
     init(): void {
         const fontInfo = this.getFontInfo("boxy_bold_font");
         const fontImage = this.getImage("boxy_bold_font");
-        this.getSceneManager().all().forEach(scene => scene.getComponents(Text).forEach(text => {
+        this.getSceneManager().first().getComponents(Text).forEach(text => {
             text.create(fontInfo, fontImage.width, fontImage.height);
-        }));
+        });
     }
 
     update(): void {
@@ -49,9 +49,6 @@ export default class CacheManager extends Manager<Cache<Object>> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
-    }
-    getScene(): Scene {
-        return this.getSceneManager().first();
     }
     getVertShaderTxt(name: string) {
         return this.get(TextCache).get(`resources/shader/${name}.vert.sk`);
