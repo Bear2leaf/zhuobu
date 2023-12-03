@@ -1,9 +1,9 @@
 import CircleAnimator from "../animator/CircleAnimator.js";
-import DemoSubject from "../subject/OnClickSubject.js";
+import OnClickSubject from "../subject/OnClickSubject.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleAnim extends Observer {
-    private subject?: DemoSubject;
+    private subject?: OnClickSubject;
 
     init(): void {
         
@@ -14,12 +14,12 @@ export default class OnClickToggleAnim extends Observer {
         this.getEntity().get(CircleAnimator).toggle();
     }
 
-    getSubject(): DemoSubject {
+    getSubject(): OnClickSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: DemoSubject) {
+    setSubject(subject: OnClickSubject) {
         this.subject = subject;
     }
 }

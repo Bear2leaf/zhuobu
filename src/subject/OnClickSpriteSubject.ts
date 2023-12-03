@@ -1,3 +1,4 @@
+import Sprite from "../drawobject/Sprite.js";
 import TouchEvent from "../event/TouchEvent.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
@@ -12,9 +13,10 @@ export default class OnClickSpriteSubject extends BaseTouchSubject {
             const transform = new Vec4();
             const quat = new Vec4();
             const scale = new Vec4();
+            const rect = this.getEntity().get(Sprite).getRect();
             Matrix.decompose(this.getEntity().get(TRS).getMatrix(), transform, quat, scale);
-            if (touchEvent.getX() < transform.x + scale.x * 2 && touchEvent.getX() > transform.x &&
-                touchEvent.getY() < transform.y + scale.y * 2 && touchEvent.getY() > transform.y) {
+            if (touchEvent.getX() < transform.x + scale.x * rect.z && touchEvent.getX() > transform.x &&
+                touchEvent.getY() < transform.y + scale.y * rect.w && touchEvent.getY() > transform.y) {
                 console.debug("Sprite is clicked!")
                 this.notify();
             }

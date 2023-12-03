@@ -1,5 +1,5 @@
 import DrawObject from "../drawobject/DrawObject.js";
-import Flowers from "../texturemap/Flowers.js";
+import Flowers from "../sprite/Flowers.js";
 import GLTexture from "./GLTexture.js";
 
 export default class FlowerTexture extends GLTexture {

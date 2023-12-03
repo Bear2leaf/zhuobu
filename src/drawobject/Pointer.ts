@@ -16,6 +16,6 @@ export default class Pointer extends DrawObject {
     }
     update(): void {
         const touch = this.getEntity().get(TouchEvent);
-        this.getEntity().get(TRS).getPosition().set(touch.getX(), touch.getY(), 1);
+        this.getEntity().get(TRS).getPosition().set(touch.getX(), touch.getY(), 0);
     }
 }

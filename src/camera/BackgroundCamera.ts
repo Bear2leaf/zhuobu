@@ -1,12 +1,10 @@
-import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import { OrthoCamera } from "./OrthoCamera.js";
 
 export class BackgroundCamera extends OrthoCamera {
     init(): void {
         super.init();
-        this.getView().set(Matrix.lookAt(new Vec3(0, 0, -15), new Vec3(0, 0, -16), new Vec3(0, 1, 0)).inverse());
-        this.getProjection().translate(new Vec4(0, 0, -15.99, 1));
+        this.getView().scale(new Vec3(1, 1, 1 / 100)).translate(new Vec4(0, 0, 1, 1));
     }
     
 }

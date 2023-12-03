@@ -1,10 +1,10 @@
-import DemoSubject from "../subject/OnClickSubject.js";
+import OnClickSubject from "../subject/OnClickSubject.js";
 import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {
-    private subject?: DemoSubject;
-    private scale: number = 1;
+    private subject?: OnClickSubject;
+    private isScaleUp: boolean = false;
 
     init(): void {
         
@@ -12,20 +12,23 @@ export default class OnClickToggleScale extends Observer {
     }
 
     public notify(): void {
-        if (this.scale === 1) {
-            this.scale = 2;
+        const trs = this.getEntity().get(TRS);
+        this.isScaleUp = !this.isScaleUp;
+        if (this.isScaleUp) {
+            trs.getScale().x = 2;
+            trs.getScale().y = 2;
         } else {
-            this.scale = 1;
+            trs.getScale().x = 1;
+            trs.getScale().y = 1;
         }
-        this.getEntity().get(TRS).getScale().set(this.scale * 10, this.scale * 10, 1, 1);
     }
 
-    getSubject(): DemoSubject {
+    getSubject(): OnClickSubject {
         if (!this.subject) throw new Error("subject is not set!");
         return this.subject;
     }
 
-    setSubject(subject: DemoSubject) {
+    setSubject(subject: OnClickSubject) {
         this.subject = subject;
     }
 }

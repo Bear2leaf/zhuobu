@@ -9,14 +9,16 @@ import AudioBGMObject from "../entity/AudioBGMObject.js";
 import CameraControllerObject from "../entity/CameraControllerObject.js";
 import SDFObject from "../entity/SDFObject.js";
 import HeTextObject from "../entity/HeTextObject.js";
+import SpriteObject from "../entity/SpriteObject.js";
+import FlowersObject from "../entity/FlowersObject.js";
 
 export default class DemoScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new SDFObject()
-            // , new FlowersObject()
+            , new FlowersObject()
             // , new CanvasObject()
-            // , new SpriteObject()
+            , new SpriteObject()
             // , new GasketObject()
             // , new TexturedCubeObject()
             , new MeshObject()
