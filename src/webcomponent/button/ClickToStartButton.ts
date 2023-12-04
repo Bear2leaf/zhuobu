@@ -1,6 +1,6 @@
 import Game from "../../game/Game.js";
 import SceneManager from "../../manager/SceneManager.js";
-import DemoScene from "../../scene/DemoScene.js";
+import AdrScene from "../../scene/AdrScene.js";
 import Button from "./Button.js";
 
 export default class ClickToStartButton extends Button  {
@@ -13,7 +13,7 @@ export default class ClickToStartButton extends Button  {
     onClick() {
         this.remove();
         this.game.load().then(() => {
-            this.game.get(SceneManager).add(DemoScene);
+            this.game.get(SceneManager).add(AdrScene);
             this.game.get(SceneManager).addObjects();
             this.game.init();
             this.game.update();

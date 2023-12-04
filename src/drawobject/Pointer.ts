@@ -3,6 +3,7 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TouchEvent from "../event/TouchEvent.js";
 import TRS from "../transform/TRS.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
+import Node from "../transform/Node.js";
 
 export default class Pointer extends DrawObject {
     init() {
@@ -17,5 +18,6 @@ export default class Pointer extends DrawObject {
     update(): void {
         const touch = this.getEntity().get(TouchEvent);
         this.getEntity().get(TRS).getPosition().set(touch.getX(), touch.getY(), 0);
+        this.getEntity().get(Node).updateWorldMatrix();
     }
 }

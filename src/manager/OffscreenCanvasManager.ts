@@ -4,8 +4,6 @@ import OffscreenCanvas from "../canvas/OffscreenCanvas.js";
 import SingleColorCanvas from "../canvas/SingleColorCanvas.js";
 import TimestepManager from "./TimestepManager.js";
 import SDFCanvas from "../canvas/SDFCanvas.js";
-import SDFCharacter from "../drawobject/SDFCharacter.js";
-import DrawObject from "../drawobject/DrawObject.js";
 
 
 export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {

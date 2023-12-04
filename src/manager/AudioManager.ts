@@ -44,7 +44,7 @@ export default class AudioManager extends Manager<AudioClip> {
         });
         this.getSceneManager().first().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
         this.getSceneManager().first().getComponents(OnClickPickSayHello).forEach(comp => comp.setAudioClip(this.get(BleepAudio)));
-        this.get(MidiAudio).playOnce();
+        // this.get(MidiAudio).playOnce();
     }
 
     update(): void {

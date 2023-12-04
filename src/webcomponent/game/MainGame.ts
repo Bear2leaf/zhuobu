@@ -7,10 +7,10 @@ import SpriteScaleCheckbox from "../checkbox/SpriteScaleCheckbox.js";
 import ToggleUpdateButton from "../button/ToggleUpdateButton.js";
 import GameUpdateModifier from "../../modifier/GameUpdateModifier.js";
 import IntervalNumberRange from "../range/IntervalNumberRange.js";
-import BeartalkGame from "../../game/BeartalkGame.js";
+import AdrGame from "../../game/AdrGame.js";
 
 export default class MainGame extends HTMLElement {
-    private readonly game: BeartalkGame;
+    private readonly game: AdrGame;
     private readonly elChildren: HTMLElement[] = []
     addChildren(el: HTMLElement) {
         this.elChildren.push(el);
@@ -22,7 +22,7 @@ export default class MainGame extends HTMLElement {
 
     constructor() {
         super();
-        this.game = new BeartalkGame(this);
+        this.game = new AdrGame(this);
         const sceneInfoModifier = this.game.get(ModifierManager).get(SceneInfoModifier);
         const timestepModifier = this.game.get(ModifierManager).get(TimestepModifier);
         this.addChildren(new ClickToStartButton(this.game));

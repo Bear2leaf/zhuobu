@@ -1,4 +1,3 @@
-import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import SDFCharacter from "./SDFCharacter.js";
 

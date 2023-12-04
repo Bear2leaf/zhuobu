@@ -79,7 +79,6 @@ export default class Renderer {
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
     }
     drawEntity(drawObject: DrawObject) {
-        drawObject.getEntity().get(Node).updateWorldMatrix();
         this.getShader().setMatrix4fv("u_world", drawObject.getEntity().get(Node).getWorldMatrix().getVertics());
         drawObject.bind();
         drawObject.draw();
