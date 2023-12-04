@@ -1,22 +1,17 @@
 
 
 import MiniGameDevice from "../device/MiniGameDevice.js";
-import SceneManager from "../manager/SceneManager.js";
-import DemoScene from "../scene/DemoScene.js";
-import PickScene from "../scene/PickScene.js";
 import Game from "./Game.js";
 
 
 export default class MiniGame extends Game {
     constructor() {
         super();
-        this.setDevice(new MiniGameDevice());
-        this.addObjects();
-        this.load().then(() => {
-            this.get(SceneManager).add(DemoScene);
-            this.get(SceneManager).add(PickScene);
-            this.get(SceneManager).addObjects();
-            this.init();
+        const device = new MiniGameDevice();
+        this.buildVars(device);
+        this.buildDependency();
+        this.load(device).then(() => {
+            this.initManagers(device);
             this.update();
         });
     }

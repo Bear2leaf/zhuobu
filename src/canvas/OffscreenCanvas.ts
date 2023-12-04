@@ -1,15 +1,19 @@
-import Device from "../device/Device.js";
 import { Vec4 } from "../geometry/Vector.js";
-import SceneManager from "../manager/SceneManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
-export default interface OffscreenCanvas {
-    initEntity(sceneManager: SceneManager): void;
-    initContext(device: Device): void;
-    setContext(context: RenderingContext): void;
-    getContext(): RenderingContext
-    readOnePixel(x: number, y: number): Vec4
-    fillWithColor(r: number, g: number, b: number):void;
-    clearRect(x: number, y: number, width: number, height: number): void
-    fillWithText(text: string): void;
+export default abstract class OffscreenCanvas {
+    private context?: RenderingContext;
+    setContext(context: RenderingContext): void {
+        this.context = context;
+    }
+    getContext() {
+        if (this.context === undefined) {
+            throw new Error("context is undefined");
+        }
+        return this.context;
+    }
+    abstract readOnePixel(x: number, y: number): Vec4
+    abstract fillWithColor(r: number, g: number, b: number):void;
+    abstract clearRect(x: number, y: number, width: number, height: number): void
+    abstract fillWithText(text: string): void;
 }

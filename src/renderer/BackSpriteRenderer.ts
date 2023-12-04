@@ -1,11 +1,10 @@
-import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import CameraManager from "../manager/CameraManager.js";
 import Flowers from "../sprite/Flowers.js";
 import Renderer from "./Renderer.js";
 
 export default class BackSpriteRenderer extends Renderer {
     initCamera(cameraManager: CameraManager): void {
-        this.setCamera(cameraManager.get(BackgroundCamera));
+        this.setCamera(cameraManager.getBackgroundCamera());
     }
     render(): void {
         this.prepareShader();

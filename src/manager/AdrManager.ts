@@ -1,8 +1,5 @@
-import Scene from "../scene/Scene.js";
-import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import Engine from "../adr/engine.js";
-import AdrAdapter from "../adr/adapter/AdrAdapter.js";
 import BodyElement from "../adr/adapter/BodyElement.js";
 import HeadElement from "../adr/adapter/HeadElement.js";
 import LocalStorageAdapter from "../adr/adapter/LocalStorageAdapter.js";
@@ -23,38 +20,49 @@ import SetLocation from "../adr/adapter/SetLocation.js";
 import SetTimeout from "../adr/adapter/SetTimeout.js";
 import Title from "../adr/adapter/Title.js";
 
-export default class AdrManager extends Manager<AdrAdapter> {
+export default class AdrManager {
     private sceneManager?: SceneManager;
-    addObjects(): void {
+    private readonly addEventListener = new AddEventListener;
+    private readonly headElement = new HeadElement;
+    private readonly href = new Href;
+    private readonly bodyElement = new BodyElement;
+    private readonly localStorageAdapter = new LocalStorageAdapter;
+    private readonly clearInterval = new ClearInterval;
+    private readonly open = new Open;
+    private readonly clearTimeout = new ClearTimeout;
+    private readonly removeEventListener = new RemoveEventListener;
+    private readonly createAudioContext = new CreateAudioContext;
+    private readonly setInterval = new SetInterval;
+    private readonly createElement = new CreateElement;
+    private readonly setLocation = new SetLocation;
+    private readonly getElementById = new GetElementById;
+    private readonly setTimeout = new SetTimeout;
+    private readonly getElementsByClassName = new GetElementsByClassName;
+    private readonly styleSheetsAdapter = new StyleSheetsAdapter;
+    private readonly getElementsByTagName = new GetElementsByTagName;
+    private readonly title = new Title;
+    initAdr(): void {
         [
-            AddEventListener,
-            HeadElement,
-            Href,
-            BodyElement,
-            LocalStorageAdapter,
-            ClearInterval,
-            Open,
-            ClearTimeout,
-            RemoveEventListener,
-            CreateAudioContext,
-            SetInterval,
-            CreateElement,
-            SetLocation,
-            GetElementById,
-            SetTimeout,
-            GetElementsByClassName,
-            StyleSheetsAdapter,
-            GetElementsByTagName,
-            Title,
-        ].forEach((ctor) => {
-            this.add(ctor);
-        });
-    }
-    async load(): Promise<void> {
-
-    }
-    init(): void {
-        this.all().forEach(adapter => {
+            this.addEventListener,
+            this.headElement,
+            this.href,
+            this.bodyElement,
+            this.localStorageAdapter,
+            this.clearInterval,
+            this.open,
+            this.clearTimeout,
+            this.removeEventListener,
+            this.createAudioContext,
+            this.setInterval,
+            this.createElement,
+            this.setLocation,
+            this.getElementById,
+            this.setTimeout,
+            this.getElementsByClassName,
+            this.styleSheetsAdapter,
+            this.getElementsByTagName,
+            this.title,
+        ].forEach(adapter => {
             adapter.setSeceneManager(this.getSceneManager());
             adapter.init()
         });
@@ -69,8 +77,6 @@ export default class AdrManager extends Manager<AdrAdapter> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
-    }
-    update(): void {
     }
 
 }

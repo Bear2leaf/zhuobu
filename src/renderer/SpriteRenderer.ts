@@ -5,7 +5,7 @@ import Renderer from "./Renderer.js";
 
 export default class SpriteRenderer extends Renderer {
     initCamera(cameraManager: CameraManager): void {
-        this.setCamera(cameraManager.get(FrontgroundCamera));
+        this.setCamera(cameraManager.getFrontgroundCamera());
     }
     render(): void {
         this.prepareShader();

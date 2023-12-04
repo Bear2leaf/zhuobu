@@ -1,5 +1,4 @@
 import { WorkerRequest, WorkerResponse, WorkerResponseType } from "../worker/MessageProcessor.js";
-import Manager from "./Manager.js";
 
 export type postMessageCallback = (data: WorkerRequest) => void;
 
@@ -26,25 +25,10 @@ class MessageProcessor {
     }
 }
 
-export default class WorkerManager extends Manager<MessageProcessor> {
-    addObjects(): void {
-        [
-            MessageProcessor
-        ].forEach((ctor) => {
-            this.add(ctor);
-        });
-    }
-    async load(): Promise<void> {
-    }
-
-    init(): void {
-        this.getDevice().createWorker("worker/main.js", (postMessage: postMessageCallback, data: WorkerResponse) => {
-            this.all().forEach(processor => {
-                processor.setCallback(postMessage);
-                processor.onMessage(data);
-            });
-        });
-    }
-    update(): void {
+export default class WorkerManager {
+    private readonly messageProcessor: MessageProcessor = new MessageProcessor();
+    workerHandler(postMessage: postMessageCallback, data: WorkerResponse) {
+        this.messageProcessor.setCallback(postMessage);
+        this.messageProcessor.onMessage(data);
     }
 }

@@ -1,65 +1,34 @@
-import AudioClip from "../audio/AudioClip.js";
 import BleepAudio from "../audio/BleepAudio.js";
 import DemoAudio from "../audio/DemoAudio.js";
 import MidiAudio from "../audio/MidiAudio.js";
-import ArrayBufferCache from "../cache/ArrayBufferCache.js";
-import Device from "../device/Device.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
-import OnClickToggleAudio from "../observer/OnClickToggleAudio.js";
-import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
-import Manager from "./Manager.js";
-import SceneManager from "./SceneManager.js";
-export default class AudioManager extends Manager<AudioClip> {
-    private context?: AudioContext;
-    private sceneManager?: SceneManager;
+export default class AudioManager {
+    private readonly demoAudio = new DemoAudio;
+    private readonly bleepAudio = new BleepAudio;
+    private readonly midiAudio = new MidiAudio;
     private cacheManager?: CacheManager;
-    setDevice(device: Device): void {
-        super.setDevice(device);
-        this.context = device.createWebAudioContext();
-    }
-    addObjects(): void {
-        [
-            DemoAudio,
-            BleepAudio,
-            MidiAudio,
-        ].forEach(ctor => {
-            this.add<AudioClip>(ctor);
-            if (this.context === undefined) {
-                throw new Error("context is undefined");
-            }
-            this.get<AudioClip>(ctor).setContext(this.context);
-        });
+    setAudioContext(audioContext: AudioContext) {
+        this.demoAudio.setContext(audioContext)
+        this.bleepAudio.setContext(audioContext)
+        this.midiAudio.setContext(audioContext)
     }
     async load(): Promise<void> {
-        await this.getCacheManager().get(ArrayBufferCache).load("resources/audio/bleep.wav");
-        this.get(BleepAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/audio/bleep.wav"));
-        await this.getCacheManager().get(ArrayBufferCache).load("resources/midi/town_theme.bin");
-        this.get(MidiAudio).setBuffer(this.getCacheManager().get(ArrayBufferCache).get("resources/midi/town_theme.bin"));
-        await this.get(MidiAudio).loadBuffer();
+        await this.getCacheManager().getArrayBufferCache().load("resources/audio/bleep.wav");
+        await this.getCacheManager().getArrayBufferCache().load("resources/midi/town_theme.bin");
+        this.bleepAudio.setBuffer(this.getCacheManager().getArrayBufferCache().get("resources/audio/bleep.wav"));
+        this.midiAudio.setBuffer(this.getCacheManager().getArrayBufferCache().get("resources/midi/town_theme.bin"));
+        await this.midiAudio.loadBuffer();
     }
-    init() {
-        this.all().forEach(clip => {
+    initAudio() {
+        [
+            this.demoAudio,
+            this.bleepAudio,
+            this.midiAudio
+        ].forEach(clip => {
             clip.init();
         });
-        this.getSceneManager().first().getComponents(OnClickToggleAudio).forEach(comp => comp.setAudioClip(this.get(DemoAudio)));
-        this.getSceneManager().first().getComponents(OnClickPickSayHello).forEach(comp => comp.setAudioClip(this.get(BleepAudio)));
-        // this.get(MidiAudio).playOnce();
     }
 
-    update(): void {
-        this.all().forEach(clip => clip.update());
-    }
-
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
-    }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
     }

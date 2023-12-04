@@ -15,8 +15,14 @@ export default class AdrGame extends Game {
         this.sdfCanvas = document.createElement("canvas");
         this.offscreenCanvas.style.display = "none";
         this.sdfCanvas.style.display = "none";
-        this.setDevice(new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas));
-        this.addObjects();
+        const device = new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas);
+        this.buildVars(device);
+        this.buildDependency();
+        this.load(device).then(() => {
+            this.initManagers(device);
+            this.update();
+        });
+        this.appendToEl();
     }
     appendToEl() {
         this.el.appendChild(this.canvas);

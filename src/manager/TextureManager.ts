@@ -1,4 +1,3 @@
-import Scene from "../scene/Scene.js";
 import DefaultTexture from "../texture/DefaultTexture.js";
 import DepthTexture from "../texture/DepthTexture.js";
 import FlowerTexture from "../texture/FlowerTexture.js";
@@ -6,48 +5,57 @@ import FontTexture from "../texture/FontTexture.js";
 import JointTexture from "../texture/JointTexture.js";
 import PickTexture from "../texture/PickTexture.js";
 import RenderTexture from "../texture/RenderTexture.js";
-import Texture from "../texture/Texture.js";
 import CacheManager from "./CacheManager.js";
-import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 import SingleColorTexture from "../texture/SingleColorTexture.js";
 import SDFTexture from "../texture/SDFTexture.js";
+import Device from "../device/Device.js";
+import Texture from "../texture/Texture.js";
 
 
-export default class TextureManager extends Manager<Texture> {
+export default class TextureManager {
+    private readonly defaultTexture = new DefaultTexture;
+    private readonly fontTexture = new FontTexture;
+    private readonly flowerTexture = new FlowerTexture;
+    private readonly jointTexture = new JointTexture;
+    private readonly depthTexture = new DepthTexture;
+    private readonly pickTexture = new PickTexture;
+    private readonly renderTexture = new RenderTexture;
+    private readonly singleColorTexture = new SingleColorTexture;
+    private readonly sdfTexture = new SDFTexture;
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
-    addObjects(): void {
-        [
-            DefaultTexture,
-            FontTexture,
-            FlowerTexture,
-            JointTexture,
-            DepthTexture,
-            PickTexture,
-            RenderTexture,
-            SingleColorTexture,
-            SDFTexture,
-        ].forEach((ctor) => {
-            this.add<Texture>(ctor);
-        });
-    }
     async load(): Promise<void> {
-
         await this.getCacheManager().loadImageCache("flowers");
         await this.getCacheManager().loadFontCache("boxy_bold_font");
     }
-    init(): void {
-        this.all().forEach(texture => {
+    initTexture(device: Device): void {
+        [
+            this.defaultTexture,
+            this.fontTexture,
+            this.flowerTexture,
+            this.jointTexture,
+            this.depthTexture,
+            this.pickTexture,
+            this.renderTexture,
+            this.singleColorTexture,
+            this.sdfTexture
+        ].forEach(texture => {
             texture.setSceneManager(this.getSceneManager());
             texture.setCacheManager(this.getCacheManager());
-            texture.setDevice(this.getDevice());
+            texture.setDevice(device);
             texture.init();
-        });
-        
 
+        });
     }
-    update(): void {
+    getPickTexture(): Texture {
+        return this.pickTexture;
+    }
+    getDepthTexture(): Texture {
+        return this.depthTexture;
+    }
+    getRenderTexture(): Texture {
+        return this.renderTexture;
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

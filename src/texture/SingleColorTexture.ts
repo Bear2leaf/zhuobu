@@ -6,10 +6,8 @@ export default class SingleColorTexture extends OffscreenCanvasTexture {
     init(): void {
         super.init();
         this.setCanvasContext(this.getDevice().getOffscreenCanvasRenderingContext());
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(SingleColorCanvasMap).forEach(comp => {
-                comp.getEntity().get(DrawObject).setTexture(this);
-            });
+        this.getSceneManager().first().getComponents(SingleColorCanvasMap).forEach(comp => {
+            comp.getEntity().get(DrawObject).setTexture(this);
         });
     }
 }

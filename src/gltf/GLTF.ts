@@ -1,5 +1,5 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
-import JSONCache from "../cache/FontInfoCache.js";
+import JSONCache from "../cache/JSONCache.js";
 import GLTFAnimator from "../animator/GLTFAnimator.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
@@ -62,7 +62,6 @@ export default class GLTF {
     private extras?: readonly string[];
 
     private name?: string;
-    private gltfCache?: JSONCache;
     private bufferCache?: ArrayBufferCache;
 
     setName(name: string) {
@@ -72,20 +71,14 @@ export default class GLTF {
         if (this.name === undefined) throw new Error("name is not set");
         return this.name;
     }
-    setGLTFCache(gltfCache: JSONCache) {
-        this.gltfCache = gltfCache;
+    setBufferCache(cahce: ArrayBufferCache) {
+        this.bufferCache = cahce;
     }
-    setBufferCache(bufferCache: ArrayBufferCache) {
-        this.bufferCache = bufferCache;
+    getBufferCache() {
+        if (this.bufferCache === undefined) throw new Error("bufferCache is not set");
+        return this.bufferCache;
     }
-    init() {
-        if (!this.name || !this.gltfCache || !this.bufferCache) {
-            throw new Error("name or gltfCache or bufferCache not initialized");
-        }
-        const data = this.gltfCache.get(`resources/gltf/${this.name}.gltf`) as GLTF;
-        if (!data) {
-            throw new Error(`data ${`resources/gltf/${this.name}.gltf`} not found`);
-        }
+    init(data: GLTF) {
         this.scene = data.scene;
         this.scenes = data.scenes?.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes?.map((node) => new GLTFNode(node));
@@ -214,14 +207,10 @@ export default class GLTF {
         return node;
     }
     clone() {
-        if (!this.name || !this.gltfCache || !this.bufferCache) {
-            throw new Error("name or gltfCache or bufferCache not initialized");
-        }
         const gltf = new GLTF();
-        gltf.setName(this.name);
-        gltf.setGLTFCache(this.gltfCache);
-        gltf.setBufferCache(this.bufferCache);
-        gltf.init();
+        gltf.setName(this.getName());
+        gltf.bufferCache = this.getBufferCache();
+        gltf.init(this);
         return gltf;
     }
 }

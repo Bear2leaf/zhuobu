@@ -1,7 +1,5 @@
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import TouchEvent from "../event/TouchEvent.js";
-import TRS from "../transform/TRS.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Node from "../transform/Node.js";
 
@@ -16,8 +14,6 @@ export default class Pointer extends DrawObject {
         this.updateEBO(new Uint16Array([0]))
     }
     update(): void {
-        const touch = this.getEntity().get(TouchEvent);
-        this.getEntity().get(TRS).getPosition().set(touch.getX(), touch.getY(), 0);
         this.getEntity().get(Node).updateWorldMatrix();
     }
 }

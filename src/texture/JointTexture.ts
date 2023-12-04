@@ -8,10 +8,8 @@ export default class JointTexture extends GLTexture {
         this.setBindIndex(TextureIndex.Joint);
         super.init();
 
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(SkinMesh).forEach(comp => {
-                comp.getEntity().get(DrawObject).setTexture(this, this.getBindIndex());
-            });
+        this.getSceneManager().first().getComponents(SkinMesh).forEach(comp => {
+            comp.getEntity().get(DrawObject).setTexture(this, this.getBindIndex());
         });
     }
 }

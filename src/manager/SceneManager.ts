@@ -1,18 +1,18 @@
-import Scene from "../scene/Scene.js";
-import Manager from "./Manager.js";
+import AdrScene from "../scene/AdrScene.js";
 
-export default class SceneManager extends Manager<Scene> {
-    addObjects(): void {
-        this.all().forEach(scene => scene.registerEntities());
+export default class SceneManager {
+    private readonly adrScene = new AdrScene;
+    registerEntities(): void {
+        this.adrScene.registerEntities();
     }
-    async load(): Promise<void> {
-        
-    }
-    init(): void {
-        this.all().forEach(scene => scene.initEntities());
+    initSceneEntities(): void {
+        this.adrScene.initEntities();
     }
     update(): void {
-        this.all().forEach(scene => scene.update());
+        this.adrScene.update();
+    }
+    first() {
+        return this.adrScene;
     }
 
 }

@@ -1,6 +1,5 @@
-import Component from "../entity/Component.js";
-
-export default class Observer extends Component {
+    
+export default class Observer {
     public notify(): void {
         throw new Error("Abstract Method!");
     }

@@ -6,11 +6,9 @@ export default class SDFTexture extends OffscreenCanvasTexture {
     init(): void {
         super.init();
         this.setCanvasContext(this.getDevice().getSDFCanvasRenderingContext());
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(SDFCharacter).forEach(comp => {
-                comp.getEntity().get(DrawObject).setTexture(this);
-            });
+        this.getSceneManager().first().getComponents(SDFCharacter).forEach(comp => {
+            comp.getEntity().get(DrawObject).setTexture(this);
         });
     }
-    
+
 }

@@ -1,66 +1,66 @@
-import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
-import Manager from "./Manager.js";
-import DepthTexture from "../texture/DepthTexture.js";
 import TextureManager from "./TextureManager.js";
-import DemoScene from "../scene/DemoScene.js";
 import SceneManager from "./SceneManager.js";
-import Renderer from "../renderer/Renderer.js";
 import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObjectx.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
-import PickTexture from "../texture/PickTexture.js";
-import { ViewPortType } from "../device/Device.js";
+import Device, { ViewPortType } from "../device/Device.js";
 import OnClickPickSubject from "../subject/OnClickPickSubject.js";
-import RenderTexture from "../texture/RenderTexture.js";
 import RendererManager from "./RendererManager.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 
 
-export default class FrameBufferManager extends Manager<FrameBufferObject> {
+export default class FrameBufferManager {
+    private readonly depthFrameBufferObject = new DepthFrameBufferObject;
+    private readonly pickFrameBufferObject = new PickFrameBufferObject;
+    private readonly renderFrameBufferObject = new RenderFrameBufferObject;
     private sceneManager?: SceneManager;
     private textureManager?: TextureManager;
     private rendererManager?: RendererManager;
-    addObjects(): void {
+    private device?: Device;
+    setDevice(device: Device) {
+        this.device = device;
+    }
+    getDevice(): Device {
+        if (this.device === undefined) {
+            throw new Error("device is undefined");
+        }
+        return this.device;
+    }
+    initFramebuffer(): void {
         [
-            DepthFrameBufferObject,
-            PickFrameBufferObject,
-            RenderFrameBufferObject,
-        ].forEach((ctor) => {
-            this.add(ctor);
-        });
-    }
-    async load(): Promise<void> {
-
-    }
-    init(): void {
-        this.all().forEach((fbo) => {
+            this.depthFrameBufferObject,
+            this.pickFrameBufferObject,
+            this.renderFrameBufferObject,
+        ].forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
-            fbo.attach(this.getTextureManager().get(DepthTexture));
-            fbo.attach(this.getTextureManager().get(RenderTexture));
-            fbo.attach(this.getTextureManager().get(PickTexture));
+            fbo.attach(this.getTextureManager().getDepthTexture());
+            fbo.attach(this.getTextureManager().getRenderTexture());
+            fbo.attach(this.getTextureManager().getPickTexture());
         });
-        this.getSceneManager()
-            .all()
-            .filter(scene => scene instanceof (DemoScene))
-            .forEach(scene => scene.getComponents(OnClickPickSubject).forEach((subject, index) => {
-                subject.getColor().set(index + 1, 0, 0, 255)
-                subject.setFrameBufferObject(this.get(PickFrameBufferObject));
-            }));
+        // this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject, index) => {
+        //     subject.getColor().set(index + 1, 0, 0, 255)
+        //     subject.setFrameBufferObject(this.pickFrameBufferObject);
+        // });
 
     }
     update(): void {
-        this.all().forEach(fbo => fbo.bind());
+        const all =
+            [
+                this.depthFrameBufferObject,
+                this.pickFrameBufferObject,
+                this.renderFrameBufferObject,
+            ];
+        all.forEach(fbo => fbo.bind());
         this.getDevice().viewportTo(ViewPortType.Full)
-        const renderer = this.getRendererManager().get(GLTFMeshRenderer);
-        this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject) => {
-            subject.activate();
-            renderer.getShader().use();
-            renderer.getShader().setVector3u("u_pickColor", subject.getColor());
-            renderer.render();
-            subject.deactivate();
-        });
-        this.all().forEach(fbo => fbo.unbind());
+        // const renderer = this.getRendererManager().get(GLTFMeshRenderer);
+        // this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject) => {
+        //     subject.activate();
+        //     renderer.getShader().use();
+        //     renderer.getShader().setVector3u("u_pickColor", subject.getColor());
+        //     renderer.render();
+        //     subject.deactivate();
+        // });
+        all.forEach(fbo => fbo.unbind());
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

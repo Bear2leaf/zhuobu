@@ -5,8 +5,6 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
-import CameraManager from "../manager/CameraManager.js";
-import { MainCamera } from "../camera/MainCamera.js";
 
 
 export default class Renderer {
@@ -52,14 +50,9 @@ export default class Renderer {
         }
         await cacheManager.loadShaderTxtCache(this.shaderName);
     }
-    initCamera(cameraManager: CameraManager) {
-        this.setCamera(cameraManager.get(MainCamera));
-    }
     initRenderingContext(rc: RenderingContext) {
-        this.getSceneManager().all().forEach(scene => {
-            scene.getComponents(DrawObject).forEach(drawObject => {
-                drawObject.setRenderingContext(rc);
-            });
+        this.getSceneManager().first().getComponents(DrawObject).forEach(drawObject => {
+            drawObject.setRenderingContext(rc);
         });
     }
     initShader(rc: RenderingContext, cacheManager: CacheManager) {

@@ -1,38 +1,26 @@
-import Animator from "../animator/Animator.js";
 import CameraAnimator from "../animator/CameraAnimator.js";
 import CircleAnimator from "../animator/CircleAnimator.js";
 import GLTFAnimator from "../animator/GLTFAnimator.js";
 import LinearAnimator from "../animator/LinearAnimator.js";
-import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
-import TimestepManager from "./TimestepManager.js";
-export default class AnimationManager extends Manager<Animator> {
+export default class AnimationManager {
+    private readonly linearAnimator = new LinearAnimator;
+    private readonly cameraAnimator = new CameraAnimator;
+    private readonly circleAnimator = new CircleAnimator;
+    private readonly gltfAnimator = new GLTFAnimator;
     private sceneManager?: SceneManager;
-    private timestepManager?: TimestepManager;
-    addObjects(): void {
-        const ctors: (new () => Animator)[] = [
-            LinearAnimator,
-            CameraAnimator,
-            CircleAnimator,
-            GLTFAnimator
-        ];
-        ctors.forEach(ctor => {
-            this.add<Animator>(ctor);
-        });
-    }
-    async load(): Promise<void> {
-
-    }
-    init() {
-        this.all().forEach(animator => {
-            animator.setSceneManager(this.getSceneManager());
-        });
+    initAnimator() {
+        this.linearAnimator.setSceneManager(this.getSceneManager());
+        this.cameraAnimator.setSceneManager(this.getSceneManager());
+        this.circleAnimator.setSceneManager(this.getSceneManager());
+        this.gltfAnimator.setSceneManager(this.getSceneManager());
     }
 
-    update(): void {
-        this.all().forEach(animator => {
-            animator.animate();
-        });
+    animate(): void {
+        this.linearAnimator.animate();
+        this.cameraAnimator.animate();
+        this.circleAnimator.animate();
+        this.gltfAnimator.animate();
     }
 
     getSceneManager(): SceneManager {
@@ -43,15 +31,6 @@ export default class AnimationManager extends Manager<Animator> {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
-    }
-    setTimestepManager(timestepManager: TimestepManager) {
-        this.timestepManager = timestepManager;
-    }
-    getTimestepManager(): TimestepManager {
-        if (this.timestepManager === undefined) {
-            throw new Error("timestepManager is undefined");
-        }
-        return this.timestepManager;
     }
 }
 

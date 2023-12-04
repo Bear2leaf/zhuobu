@@ -2,60 +2,35 @@ import Camera from "../camera/Camera.js";
 import { MainCamera } from "../camera/MainCamera.js";
 import { FrontgroundCamera } from "../camera/FrontgroundCamera.js";
 import { DebugCamera } from "../camera/DebugCamera.js";
-import Scene from "../scene/Scene.js";
-import Manager from "./Manager.js";
-import SceneManager from "./SceneManager.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
-import TimestepManager from "./TimestepManager.js";
-import CameraAnimator from "../animator/CameraAnimator.js";
-import CameraController from "../controller/CameraController.js";
-import TRS from "../transform/TRS.js";
+import Device from "../device/Device.js";
 
-export default class CameraManager extends Manager<Camera> {
-    private sceneManager?: SceneManager;
-    private timestepManager?: TimestepManager;
-    addObjects(): void {
-        [
-            DebugCamera,
-            MainCamera,
-            UICamera,
-            FrontgroundCamera,
-            BackgroundCamera
-        ].forEach((ctor) => {
-            this.add<Camera>(ctor);
-        });
-    }
+export default class CameraManager {
+    private readonly debugCamera = new DebugCamera;
+    private readonly mainCamera = new MainCamera;
+    private readonly uiCamera = new UICamera;
+    private readonly frontgroundCamera = new FrontgroundCamera;
+    private readonly backgroundCamera = new BackgroundCamera;
     async load(): Promise<void> { }
-    update(): void {
+    initCamera(device: Device): void {
+        const windowWidth = device.getWindowInfo().windowWidth;
+        const windowHeight = device.getWindowInfo().windowHeight;
+        this.debugCamera.setSize(windowWidth, windowHeight);
+        this.mainCamera.setSize(windowWidth, windowHeight);
+        this.uiCamera.setSize(windowWidth, windowHeight);
+        this.frontgroundCamera.setSize(windowWidth, windowHeight);
+        this.backgroundCamera.setSize(windowWidth, windowHeight);
+        this.debugCamera.init();
+        this.mainCamera.init();
+        this.uiCamera.init();
+        this.frontgroundCamera.init();
+        this.backgroundCamera.init();
+    }
+    getMainCamera() { return this.mainCamera; }
+    getDebugCamera() { return this.debugCamera; }
+    getUICamera() { return this.uiCamera; }
+    getFrontgroundCamera() { return this.frontgroundCamera; }
+    getBackgroundCamera() { return this.backgroundCamera; }
 
-        this.getSceneManager().first().getComponents(CameraController).forEach(cameraController => this.get(MainCamera).updataEye(cameraController.getEntity().get(TRS).getPosition()));
-    }
-    init(): void {
-        const deviceInfo = this.getDevice().getWindowInfo()
-        const windowWidth = deviceInfo.windowWidth;
-        const windowHeight = deviceInfo.windowHeight;
-        this.all().forEach(camera => {
-            camera.setSize(windowWidth, windowHeight);
-            camera.init();
-        });
-    }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
-    }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
-    getTimestepManager(): TimestepManager {
-        if (this.timestepManager === undefined) {
-            throw new Error("timestepManager is undefined");
-        }
-        return this.timestepManager;
-    }
-    setTimestepManager(timestepManager: TimestepManager) {
-        this.timestepManager = timestepManager;
-    }
 }

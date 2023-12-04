@@ -1,41 +1,15 @@
-import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
-import OffscreenCanvas from "../canvas/OffscreenCanvas.js";
 import SingleColorCanvas from "../canvas/SingleColorCanvas.js";
-import TimestepManager from "./TimestepManager.js";
 import SDFCanvas from "../canvas/SDFCanvas.js";
+import Device from "../device/Device.js";
 
 
-export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
-    private sceneManager?: SceneManager;
-    private timestepManager?: TimestepManager;
-    setTimestepManager(timestepManager: TimestepManager) {
-        this.timestepManager = timestepManager;
-    }
-    getTimestepManager(): TimestepManager {
-        if (this.timestepManager === undefined) {
-            throw new Error("timestepManager is undefined");
-        }
-        return this.timestepManager;
-    }
-    addObjects(): void {
-        [
-            SingleColorCanvas,
-            SDFCanvas
-        ].forEach((ctor) => {
-            this.add<OffscreenCanvas>(ctor);
-        });
-    }
-    async load(): Promise<void> {
-
-    }
-    init(): void {
-        this.all().forEach(canvas => {
-            canvas.initContext(this.getDevice());
-            canvas.initEntity(this.getSceneManager());
-        });
-    }
-    update(): void {
+export default class OffscreenCanvasManager {
+    private readonly offscreenCanvas = new SingleColorCanvas;
+    private readonly sdfCanvas = new SDFCanvas;
+    private sceneManager?: SceneManager
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
     }
     getSceneManager(): SceneManager {
         if (this.sceneManager === undefined) {
@@ -43,7 +17,10 @@ export default class OffscreenCanvasManager extends Manager<OffscreenCanvas> {
         }
         return this.sceneManager;
     }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
+    initOffscreenCanvas(device: Device): void {
+        this.offscreenCanvas.setContext(device.getOffscreenCanvasRenderingContext());
+        this.sdfCanvas.setContext(device.getSDFCanvasRenderingContext());
+        this.sdfCanvas.initEntities(this.getSceneManager());
+
     }
 }

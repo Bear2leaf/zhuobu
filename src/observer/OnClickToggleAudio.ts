@@ -5,7 +5,6 @@ import Observer from "./Observer.js";
 export default class OnClickToggleAudio extends Observer {
     private subject?: OnClickSubject;
     private audioClip?: DemoAudio;
-
     setAudioClip(audioClip: DemoAudio) {
         this.audioClip = audioClip;
     }
@@ -15,8 +14,8 @@ export default class OnClickToggleAudio extends Observer {
     }
 
     init(): void {
-        
         console.debug("OnClickToggleAudio", "is inited!");
+        this.getSubject().register(this);
     }
 
     public notify(): void {

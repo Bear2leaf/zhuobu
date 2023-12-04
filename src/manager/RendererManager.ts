@@ -1,87 +1,95 @@
-import { ViewPortType } from "../device/Device.js";
+import Device, { ViewPortType } from "../device/Device.js";
 import BackSpriteRenderer from "../renderer/BackSpriteRenderer.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
-import Renderer from "../renderer/Renderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
 import CameraManager from "./CameraManager.js";
-import Manager from "./Manager.js";
 import SceneManager from "./SceneManager.js";
 
-export default class RendererManager extends Manager<Renderer> {
+export default class RendererManager {
+    private readonly spriteRenderer = new SpriteRenderer;
+    private readonly backSpriteRenderer = new BackSpriteRenderer;
+    private readonly sdfRenderer = new SDFRenderer;
+    private readonly vertexColorTriangleRenderer = new VertexColorTriangleRenderer;
+    private readonly lineRenderer = new LineRenderer;
+    private readonly gltfMeshRenderer = new GLTFMeshRenderer;
+    private readonly wireframeRenderer = new WireframeRenderer;
+    private readonly gltfSkinMeshRenderer = new GLTFSkinMeshRenderer;
+    private readonly pointRenderer = new PointRenderer;
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
     private cameraManager?: CameraManager;
-    addObjects(): void {
-
-        [
-            SpriteRenderer
-            , BackSpriteRenderer
-            , SDFRenderer
-            , VertexColorTriangleRenderer
-            , LineRenderer
-            , GLTFMeshRenderer
-            , WireframeRenderer
-            , GLTFSkinMeshRenderer
-            , PointRenderer
-        ].forEach(ctor => {
-            this.add(ctor);
-        });
-
-        this.get(SpriteRenderer).setShaderName("Sprite");
-        this.get(BackSpriteRenderer).setShaderName("Sprite");
-        this.get(SDFRenderer).setShaderName("SDF");
-        this.get(VertexColorTriangleRenderer).setShaderName("VertexColorTriangle");
-        this.get(LineRenderer).setShaderName("Line");
-        this.get(GLTFMeshRenderer).setShaderName("Mesh");
-        this.get(WireframeRenderer).setShaderName("Wireframe");
-        this.get(GLTFSkinMeshRenderer).setShaderName("SkinMesh");
-        this.get(PointRenderer).setShaderName("Point");
+    private device?: Device;
+    initShaderName() {
+        this.spriteRenderer.setShaderName("Sprite");
+        this.backSpriteRenderer.setShaderName("Sprite");
+        this.sdfRenderer.setShaderName("SDF");
+        this.vertexColorTriangleRenderer.setShaderName("VertexColorTriangle");
+        this.lineRenderer.setShaderName("Line");
+        this.gltfMeshRenderer.setShaderName("Mesh");
+        this.wireframeRenderer.setShaderName("Wireframe");
+        this.gltfSkinMeshRenderer.setShaderName("SkinMesh");
+        this.pointRenderer.setShaderName("Point");
     }
     async load(): Promise<void> {
-        for await (const renderer of this.all()) {
-            await renderer.loadShaderTxtCache(this.getCacheManager());
-        }
+
+
+        await this.spriteRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.backSpriteRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.sdfRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.vertexColorTriangleRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.lineRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.gltfMeshRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.wireframeRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.gltfSkinMeshRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.pointRenderer.loadShaderTxtCache(this.getCacheManager());
 
     }
-    init(): void {
+    setDevice(device: Device) {
+        this.device = device;
+    }
+    getDevice(): Device {
+        if (this.device === undefined) {
+            throw new Error("device is undefined");
+        }
+        return this.device;
+    }
+    initRenderer(): void {
         const rc = this.getDevice().getRenderingContext();
         rc.init();
-        for (const renderer of this.all()) {
+        [
+            this.gltfSkinMeshRenderer,
+            this.gltfMeshRenderer,
+            this.wireframeRenderer,
+            this.sdfRenderer,
+            this.pointRenderer,
+            this.spriteRenderer,
+            this.backSpriteRenderer,
+        ].forEach(renderer => {
             renderer.initShader(rc, this.getCacheManager());
             renderer.setSceneManager(this.getSceneManager());
             renderer.initRenderingContext(rc);
-            renderer.initCamera(this.getCameraManager());
-        }
-    }
-    update(): void {
+            renderer.setCamera(this.getCameraManager().getMainCamera());
+        });
+        this.pointRenderer.setCamera(this.getCameraManager().getUICamera());
+        this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
+        this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
     }
     render(): void {
-
         this.getDevice().viewportTo(ViewPortType.Full);
-        this.all().forEach(renderer => {
-            if (renderer instanceof GLTFSkinMeshRenderer) {
-                renderer.render();
-            } else if (renderer instanceof GLTFMeshRenderer) {
-                renderer.render();
-            } else if (renderer instanceof WireframeRenderer) {
-                renderer.render();
-            } else if (renderer instanceof SDFRenderer) {
-                renderer.render();
-            } else if (renderer instanceof PointRenderer) {
-                renderer.render();
-            } else if (renderer instanceof SpriteRenderer) {
-                renderer.render();
-            } else if (renderer instanceof BackSpriteRenderer) {
-                renderer.render();
-            }
-        });
+        this.gltfSkinMeshRenderer.render();
+        this.gltfMeshRenderer.render();
+        this.wireframeRenderer.render();
+        this.sdfRenderer.render();
+        this.pointRenderer.render();
+        this.spriteRenderer.render();
+        this.backSpriteRenderer.render();
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

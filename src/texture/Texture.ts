@@ -14,6 +14,23 @@ export default abstract class Texture {
   private device?: Device;
   private sceneManager?: SceneManager;
   private cacheManager?: CacheManager;
+  private textureIndex?: number;
+  private bindIndex: TextureIndex = TextureIndex.Default;
+  setBindIndex(bindIndex: TextureIndex) {
+    this.bindIndex = bindIndex;
+  }
+  setTextureIndex(textureIndex: number) {
+    this.textureIndex = textureIndex;
+  }
+  getTextureIndex() {
+    if (this.textureIndex === undefined) {
+      throw new Error("BaseTexture is not initialized.");
+    }
+    return this.textureIndex;
+  }
+  getBindIndex() {
+    return this.bindIndex;
+  }
   setDevice(device: Device): void {
     this.device = device;
   };
