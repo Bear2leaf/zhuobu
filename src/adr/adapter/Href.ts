@@ -1,7 +1,7 @@
 import adr from "../adr.js";
 import AdrAdapter from "./AdrAdapter.js";
 
-export default class Href implements AdrAdapter {
+export default class Href extends AdrAdapter {
     init() {
         adr.href = (href?: string): void | string => {
             if (href) {

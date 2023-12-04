@@ -9,7 +9,6 @@ import SDFRenderer from "../renderer/SDFRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
-import Scene from "../scene/Scene.js";
 import CacheManager from "./CacheManager.js";
 import CameraManager from "./CameraManager.js";
 import Manager from "./Manager.js";

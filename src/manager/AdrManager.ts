@@ -54,7 +54,10 @@ export default class AdrManager extends Manager<AdrAdapter> {
 
     }
     init(): void {
-        this.all().forEach(adapter => adapter.init());
+        this.all().forEach(adapter => {
+            adapter.setSeceneManager(this.getSceneManager());
+            adapter.init()
+        });
         Engine.createDefaultElements();
         Engine.init();
     }

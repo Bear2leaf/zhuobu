@@ -1,7 +1,7 @@
 import adr from "../adr.js";
 import AdrAdapter from "./AdrAdapter.js";
 
-export default class Title implements AdrAdapter {
+export default class Title extends AdrAdapter {
     init() {
         adr.title = (title?: string): void | string => {
             if (title) {
