@@ -1,14 +1,19 @@
-import OnClickBottomLeftSubject from "../subject/OnClickBottomLeftSubject.js";
-import OnClickPickSubject from "../subject/OnClickPickSubject.js";
-import OnClickSpriteSubject from "../subject/OnClickSpriteSubject.js";
-import OnClickSubject from "../subject/OnClickSubject.js";
-import OnAddToSceneSubject from "../subject/OnAddToSceneSubject.js";
+import ClickBottomLeft from "../subject/ClickBottomLeft.js";
+import ClickPickSubject from "../subject/ClickPick.js";
+import ClickSprite from "../subject/ClickSprite.js";
+import Click from "../subject/Click.js";
+import EntityInit from "../subject/EntityInit.js";
+import OnEntityInit from "../observer/OnEntityInit.js";
 
 
 export default class EventManager {
-    private readonly onAddToSceneSubject = new OnAddToSceneSubject;
-    private readonly onClickSubject = new OnClickSubject;
-    private readonly onClickPickSubject = new OnClickPickSubject;
-    private readonly onClickBottomLeftSubject = new OnClickBottomLeftSubject;
-    private readonly onClickSpriteSubject = new OnClickSpriteSubject;
+    readonly entityInit = new EntityInit;
+    readonly click = new Click;
+    readonly clickPick = new ClickPickSubject;
+    readonly clickBottomLeft = new ClickBottomLeft;
+    readonly clickSprite = new ClickSprite;
+    registerDefaultObservers() {
+        const onEntityInit = new OnEntityInit();
+        onEntityInit.setSubject(this.entityInit);
+    }
 }

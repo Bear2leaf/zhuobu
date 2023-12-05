@@ -3,7 +3,7 @@ import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
 import { Vec3 } from "../geometry/Vector.js";
 import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickPickSubject extends BaseTouchSubject {
+export default class ClickPickSubject extends BaseTouchSubject {
 
     private frameBufferObject?: FrameBufferObject;
     private isActivated: boolean = false;

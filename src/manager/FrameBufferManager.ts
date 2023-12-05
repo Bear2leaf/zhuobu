@@ -4,7 +4,7 @@ import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObjectx.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import Device, { ViewPortType } from "../device/Device.js";
-import OnClickPickSubject from "../subject/OnClickPickSubject.js";
+import ClickPickSubject from "../subject/ClickPick.js";
 import RendererManager from "./RendererManager.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 

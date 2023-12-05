@@ -1,18 +1,7 @@
-import SceneManager from "../manager/SceneManager.js";
 import Observer from "../observer/Observer.js";
 
 export default abstract class Subject {
     private listeners: Observer[] = [];
-    private sceneManager?: SceneManager;
-    public setSceneManager(sceneManager: SceneManager): void {
-        this.sceneManager = sceneManager;
-    }
-    public getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
-    }
     public register(observer: Observer): void {
         console.debug(observer, "is pushed!");
         this.listeners.push(observer);

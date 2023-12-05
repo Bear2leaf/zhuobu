@@ -62,8 +62,10 @@ export default abstract class Game {
         this.rendererManager.initShaderName();
         this.audioManager.setAudioContext(device.createWebAudioContext());
         this.sceneManager.registerEntities();
+        this.eventManager.registerDefaultObservers();
     }
     buildDependency() {
+        this.sceneManager.setEventManager(this.eventManager);
         this.textureManager.setSceneManager(this.sceneManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.framebufferManager.setTextureManager(this.textureManager);

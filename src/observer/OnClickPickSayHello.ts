@@ -4,7 +4,6 @@ import BleepAudio from "../audio/BleepAudio.js";
 import Observer from "./Observer.js";
 
 export default class OnClickPickSayHello extends Observer {
-    private subject?: BaseTouchSubject;
     private audioClip?: BleepAudio;
     init(): void {
         console.debug("OnClickPickSayHello", "is inited!");
@@ -20,14 +19,6 @@ export default class OnClickPickSayHello extends Observer {
     getAudioClip() {
         if (!this.audioClip) throw new Error("audioClip is not set!");
         return this.audioClip;
-    }
-    getSubject(): BaseTouchSubject {
-        if (!this.subject) throw new Error("subject is not set!");
-        return this.subject;
-    }
-
-    setSubject(subject: BaseTouchSubject) {
-        this.subject = subject;
     }
 
 }

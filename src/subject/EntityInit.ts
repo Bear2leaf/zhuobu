@@ -1,7 +1,7 @@
 import Entity from "../entity/Entity.js";
 import Subject from "./Subject.js";
 
-export default class OnAddToSceneSubject extends Subject {
+export default class EntityInit extends Subject {
     private entity?: Entity;
     getEntity(): Entity {
         if (!this.entity) throw new Error("entity is not set!");

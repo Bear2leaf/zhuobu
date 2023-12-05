@@ -1,9 +1,8 @@
-import OnClickSubject from "../subject/OnClickSubject.js";
+import Click from "../subject/Click.js";
 import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {
-    private subject?: OnClickSubject;
     private isScaleUp: boolean = false;
 
     init(): void {
@@ -23,12 +22,4 @@ export default class OnClickToggleScale extends Observer {
         // }
     }
 
-    getSubject(): OnClickSubject {
-        if (!this.subject) throw new Error("subject is not set!");
-        return this.subject;
-    }
-
-    setSubject(subject: OnClickSubject) {
-        this.subject = subject;
-    }
 }

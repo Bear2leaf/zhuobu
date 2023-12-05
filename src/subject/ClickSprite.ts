@@ -1,10 +1,7 @@
-import Sprite from "../drawobject/Sprite.js";
-import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
-import TRS from "../transform/TRS.js";
 import BaseTouchSubject from "./BaseTouchSubject.js";
 
-export default class OnClickSpriteSubject extends BaseTouchSubject {
+export default class ClickSprite extends BaseTouchSubject {
 
     update(): void {
         if (this.getTouch().getIsTouchingStart()) {
