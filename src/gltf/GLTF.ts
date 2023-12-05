@@ -210,7 +210,7 @@ export default class GLTF {
         const gltf = new GLTF();
         gltf.setName(this.getName());
         gltf.bufferCache = this.getBufferCache();
-        gltf.init(this);
+        gltf.init(JSON.parse(JSON.stringify(this)));
         return gltf;
     }
 }

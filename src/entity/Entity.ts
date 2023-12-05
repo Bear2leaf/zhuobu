@@ -50,10 +50,5 @@ export default abstract class Entity {
             component.init();
         });
     }
-    update(): void {
-        this.all().forEach(component => {
-            component.update();
-        });
-    }
 
 }

@@ -1,16 +1,15 @@
 
-import WhaleMesh from "../drawobject/WhaleMesh.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFMeshRenderer extends Renderer {
-    render() {
+    render(drawObject: DrawObject) {
         this.prepareShader();
         this.prepareCamera();
         this.prepareLight();
-        // this.getSceneManager().first().getComponents(WhaleMesh).forEach(drawObject => {
-        //     this.drawEntity(drawObject);
-        // });
+        this.drawEntity(drawObject);
+
     }
     prepareLight() {
         this.getShader().setVector4f("u_diffuse", new Vec4(1, 1, 1, 1));

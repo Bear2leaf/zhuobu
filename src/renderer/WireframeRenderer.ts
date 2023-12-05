@@ -1,12 +1,11 @@
-import HelloWireframe from "../drawobject/HelloWireframe.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import Renderer from "./Renderer.js";
 
 export default class WireframeRenderer extends Renderer {
-    render() {
+    render(drawObject: DrawObject) {
         this.prepareShader();
         this.prepareCamera();
-        // this.getSceneManager().first().getComponents(HelloWireframe).forEach(drawObject => {
-        //     this.drawEntity(drawObject);
-        // });
+        this.drawEntity(drawObject);
+
     }
 }

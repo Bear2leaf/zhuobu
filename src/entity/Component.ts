@@ -14,7 +14,4 @@ export default abstract class Component {
     init() {
 
     }
-    update() {
-        
-    }
 }

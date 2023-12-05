@@ -99,17 +99,26 @@ export default class RendererManager {
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
     }
-    getSDFRenderer(): SDFRenderer {
+    getSDFRenderer() {
         return this.sdfRenderer;
     }
-    getSpriteRenderer(): SpriteRenderer {
+    getSpriteRenderer() {
         return this.spriteRenderer;
     }
-    getBackSpriteRenderer(): BackSpriteRenderer {
+    getBackSpriteRenderer() {
         return this.backSpriteRenderer;
     }
-    getPointRenderer(): PointRenderer {
+    getPointRenderer() {
         return this.pointRenderer;
+    }
+    getMeshRenderer() {
+        return this.gltfMeshRenderer;
+    }
+    getWireframeRenderer() {
+        return this.wireframeRenderer;
+    }
+    getSkinMeshRenderer() {
+        return this.gltfSkinMeshRenderer;
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

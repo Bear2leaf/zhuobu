@@ -23,7 +23,7 @@ export default class OffscreenCanvasManager {
         observer.setSubject(this.getEventManager().entityRegisterComponents);
         observer.setSDFCanvas(this.sdfCanvas);
     }
-    initOffscreenCanvas(device: Device): void {
+    setDevice(device: Device): void {
         this.offscreenCanvas.setContext(device.getOffscreenCanvasRenderingContext());
         this.sdfCanvas.setContext(device.getSDFCanvasRenderingContext());
     }

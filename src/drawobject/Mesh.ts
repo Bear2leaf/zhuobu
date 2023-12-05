@@ -2,7 +2,7 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLTF from "../gltf/GLTF.js";
 import Node from "../transform/Node.js";
-import { Vec3, Vec4, flatten } from "../geometry/Vector.js";
+import { Vec3, flatten } from "../geometry/Vector.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
@@ -10,8 +10,7 @@ export default class Mesh extends DrawObject {
     setNodeIndex(nodeIndex: number) {
         this.nodeIndex = nodeIndex;
     }
-    init() {
-        super.init();
+    initMesh() {
         this.getGLTF().buildMesh(this.getEntity(), this.nodeIndex);
     }
     setGLTF(gltf: GLTF) {

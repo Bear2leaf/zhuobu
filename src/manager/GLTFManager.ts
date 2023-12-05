@@ -3,38 +3,43 @@ import HelloGLTF from "../model/HelloGLTF.js";
 import HelloMultiGLTF from "../model/HelloMultiGLTF.js";
 import CacheManager from "./CacheManager.js";
 import SceneManager from "./SceneManager.js";
-import HelloWireframe from "../drawobject/HelloWireframe.js";
-import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
-import Mesh from "../drawobject/Mesh.js";
+import EventManager from "./EventManager.js";
+import OnEntityInit from "../observer/OnEntityInit.js";
+import GLTF from "../gltf/GLTF.js";
 
 
 export default class GLTFManager {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
-    private readonly whaleGLTF: WhaleGLTF = new WhaleGLTF();
-    private readonly helloGLTF: HelloGLTF = new HelloGLTF();
-    private readonly helloMultiGLTF: HelloMultiGLTF = new HelloMultiGLTF();
+    private eventManager?: EventManager;
+    readonly whaleGLTF: WhaleGLTF = new WhaleGLTF();
+    readonly helloGLTF: HelloGLTF = new HelloGLTF();
+    readonly helloMultiGLTF: HelloMultiGLTF = new HelloMultiGLTF();
     async load(): Promise<void> {
         await this.getCacheManager().loadGLTFCache("whale.CYCLES");
         await this.getCacheManager().loadGLTFCache("hello");
         await this.getCacheManager().loadGLTFCache("hello-multi");
     }
-    initGLTF(): void {
+    setGLTFNames() {
         this.whaleGLTF.setName("whale.CYCLES");
         this.helloGLTF.setName("hello");
         this.helloMultiGLTF.setName("hello-multi");
 
+    }
+    setBufferCaches() {
         this.whaleGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.helloGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.helloMultiGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
+    }
+    initObservers() {
 
-        this.whaleGLTF.init(this.getCacheManager().getGLTF(this.whaleGLTF.getName()));
-        this.helloGLTF.init(this.getCacheManager().getGLTF(this.helloGLTF.getName()));
-        this.helloMultiGLTF.init(this.getCacheManager().getGLTF(this.helloMultiGLTF.getName()));
+        const onEntityRegisterComponents = new OnEntityInit;
+        onEntityRegisterComponents.setGLTFManager(this);
+        onEntityRegisterComponents.setSubject(this.getEventManager().entityInit);
+    }
+    initGLTF(gltf: GLTF): void {
+        gltf.init(this.getCacheManager().getGLTF(gltf.getName()));
 
-        // this.getSceneManager().first().getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.whaleGLTF.clone()));
-        // this.getSceneManager().first().getComponents(HelloWireframe).forEach(mesh => mesh.setGLTF(this.helloGLTF.clone()));
-        // this.getSceneManager().first().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.helloMultiGLTF.clone()));
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
@@ -53,5 +58,14 @@ export default class GLTFManager {
     }
     setSceneManager(sceneManager: SceneManager) {
         this.sceneManager = sceneManager;
+    }
+    setEventManager(eventManager: EventManager) {
+        this.eventManager = eventManager;
+    }
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
+        }
+        return this.eventManager;
     }
 }

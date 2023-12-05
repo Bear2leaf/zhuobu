@@ -4,7 +4,6 @@ import Tetrahedron from "../geometry/Tetrahedron.js";
 import Triangle from "../geometry/Triangle.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4, flatten } from "../geometry/Vector.js";
-import Node from "../transform/Node.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import TRS from "../transform/TRS.js";

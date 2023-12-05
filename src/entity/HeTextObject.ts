@@ -1,7 +1,6 @@
 import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import Entity from "./Entity.js";
 import HeText from "../drawobject/HeText.js";
 

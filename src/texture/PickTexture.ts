@@ -1,6 +1,4 @@
 import Device from "../device/Device.js";
-import DrawObject from "../drawobject/DrawObject.js";
-import PickMap from "../texturemap/PickMap.js";
 import GLTexture from "./GLTexture.js";
 import { TextureBindIndex } from "./Texture.js";
 

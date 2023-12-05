@@ -35,12 +35,10 @@ export default abstract class Game {
     private readonly adrManager = new AdrManager;
     initManagers(device: Device): void {
         this.textureManager.initTextures();
-        this.gltfManager.initGLTF();
         this.inputManager.initInput(device);
         this.cameraManager.initCamera(device);
         this.rendererManager.initRenderer();
         this.sceneManager.initSceneEntities();
-        this.animationManager.initAnimator();
         this.framebufferManager.initFramebuffer();
         this.adrManager.initAdr();
         this.audioManager.initAudio();
@@ -59,14 +57,18 @@ export default abstract class Game {
         this.framebufferManager.setDevice(device);
         this.rendererManager.setDevice(device);
         this.textureManager.setDevice(device);
+        this.offscreencanvasManager.setDevice(device);
         this.audioManager.setAudioContext(device.createWebAudioContext());
-        this.offscreencanvasManager.initOffscreenCanvas(device);
         this.inputManager.initObservers();
         this.eventManager.initObservers();
         this.rendererManager.initObservers();
         this.textureManager.initObservers();
+        this.animationManager.initObservers();
         this.adrManager.initObservers();
         this.offscreencanvasManager.initObservers();
+        this.gltfManager.initObservers();
+        this.gltfManager.setGLTFNames();
+        this.gltfManager.setBufferCaches();
         this.sceneManager.initSubjects(this.eventManager);
         this.rendererManager.initShaderName();
         this.sceneManager.registerEntities();
@@ -77,6 +79,8 @@ export default abstract class Game {
         this.offscreencanvasManager.setEventManager(this.eventManager);
         this.adrManager.setEventManager(this.eventManager);
         this.inputManager.setEventManager(this.eventManager);
+        this.animationManager.setEventManager(this.eventManager);
+        this.gltfManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setSceneManager(this.sceneManager);
@@ -88,12 +92,10 @@ export default abstract class Game {
         this.gltfManager.setSceneManager(this.sceneManager);
         this.gltfManager.setCacheManager(this.cacheManager);
         this.timestepManager.setSceneManager(this.sceneManager);
-        this.animationManager.setSceneManager(this.sceneManager);
     }
     update() {
         this.timestepManager.tick();
         this.inputManager.process();
-        this.animationManager.animate();
         this.sceneManager.update();
         this.sceneManager.render();
         this.rafId = requestAnimationFrame(this.update.bind(this));

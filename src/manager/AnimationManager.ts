@@ -2,36 +2,30 @@ import CameraAnimator from "../animator/CameraAnimator.js";
 import CircleAnimator from "../animator/CircleAnimator.js";
 import GLTFAnimator from "../animator/GLTFAnimator.js";
 import LinearAnimator from "../animator/LinearAnimator.js";
-import SceneManager from "./SceneManager.js";
+import OnEntityUpdate from "../observer/OnEntityUpdate.js";
+import EventManager from "./EventManager.js";
 export default class AnimationManager {
-    private readonly linearAnimator = new LinearAnimator;
-    private readonly cameraAnimator = new CameraAnimator;
-    private readonly circleAnimator = new CircleAnimator;
-    private readonly gltfAnimator = new GLTFAnimator;
-    private sceneManager?: SceneManager;
-    initAnimator() {
-        this.linearAnimator.setSceneManager(this.getSceneManager());
-        this.cameraAnimator.setSceneManager(this.getSceneManager());
-        this.circleAnimator.setSceneManager(this.getSceneManager());
-        this.gltfAnimator.setSceneManager(this.getSceneManager());
+    readonly linearAnimator = new LinearAnimator;
+    readonly cameraAnimator = new CameraAnimator;
+    readonly circleAnimator = new CircleAnimator;
+    readonly gltfAnimator = new GLTFAnimator;
+    private eventManager?: EventManager;
+    setEventManager(eventManager: EventManager): void {
+        this.eventManager = eventManager;
     }
-
-    animate(): void {
-        this.linearAnimator.animate();
-        this.cameraAnimator.animate();
-        this.circleAnimator.animate();
-        this.gltfAnimator.animate();
-    }
-
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
         }
-        return this.sceneManager;
+        return this.eventManager;
     }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
+
+    initObservers() {
+        const onEntityUpdate = new OnEntityUpdate;
+        onEntityUpdate.setAnimationManager(this);
+        onEntityUpdate.setSubject(this.getEventManager().entityUpdate);
     }
+
 }
 
 

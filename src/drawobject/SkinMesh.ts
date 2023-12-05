@@ -2,13 +2,22 @@ import Node from "../transform/Node.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import { TextureBindIndex } from "../texture/Texture.js";
-import DrawObject from "../drawobject/DrawObject.js";
+import Texture from "../texture/Texture.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
     private readonly jointMatrices: Matrix[] = [];
     private readonly inverseBindMatrices: Matrix[] = [];
+    private jointTexture?: Texture;
+    setJointTexture(texture: Texture) {
+        this.jointTexture = texture;
+    }
+    getJointTexture() {
+        if (!this.jointTexture) {
+            throw new Error("jointTexture is not set");
+        }
+        return this.jointTexture;
+    }
     setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal);
         this.jointNodes.splice(0, this.jointNodes.length, ...jointNodes);
@@ -39,7 +48,7 @@ export default class SkinMesh extends Mesh {
             Matrix.multiply(dst, this.inverseBindMatrices[j], dst);
         }
         const jointData = Matrix.flatten(this.jointMatrices);
-        this.getEntity().get(DrawObject).getTexture(TextureBindIndex.Joint).generate(4, this.jointNodes.length, jointData);
+        this.getJointTexture().generate(4, this.jointNodes.length, jointData);
     }
 
 }
