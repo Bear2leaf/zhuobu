@@ -16,8 +16,8 @@ export default class AdrGame extends Game {
         this.offscreenCanvas.style.display = "none";
         this.sdfCanvas.style.display = "none";
         const device = new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas);
-        this.buildVars(device);
         this.buildDependency();
+        this.buildVars(device);
         this.load(device).then(() => {
             this.initManagers(device);
             this.update();

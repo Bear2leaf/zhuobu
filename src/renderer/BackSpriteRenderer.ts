@@ -9,8 +9,8 @@ export default class BackSpriteRenderer extends Renderer {
     render(): void {
         this.prepareShader();
         this.prepareCamera();
-        this.getSceneManager().first().getComponents(Flowers).forEach(drawObject => {
-            this.drawEntity(drawObject);
-        });
+        // this.getSceneManager().first().getComponents(Flowers).forEach(drawObject => {
+        //     this.drawEntity(drawObject);
+        // });
     }
 }

@@ -5,8 +5,8 @@ export class PointRenderer extends Renderer {
 
         this.prepareShader();
         this.prepareCamera();
-        this.getSceneManager().first().getComponents(Pointer).forEach(drawObject => {
-            this.drawEntity(drawObject);
-        });
+        // this.getSceneManager().first().getComponents(Pointer).forEach(drawObject => {
+        //     this.drawEntity(drawObject);
+        // });
     }
 }

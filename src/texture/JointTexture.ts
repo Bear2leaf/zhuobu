@@ -1,15 +1,15 @@
-import DrawObject from "../drawobject/DrawObject.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
+
+import Device from "../device/Device.js";
 import GLTexture from "./GLTexture.js";
-import { TextureIndex } from "./Texture.js";
+import { TextureBindIndex } from "./Texture.js";
 
 export default class JointTexture extends GLTexture {
-    init(): void {
-        this.setBindIndex(TextureIndex.Joint);
-        super.init();
+    setDevice(device: Device): void {
+        super.setDevice(device);
+        this.setBindIndex(TextureBindIndex.Joint);
 
-        this.getSceneManager().first().getComponents(SkinMesh).forEach(comp => {
-            comp.getEntity().get(DrawObject).setTexture(this, this.getBindIndex());
-        });
+        // this.getSceneManager().first().getComponents(SkinMesh).forEach(comp => {
+        //     comp.getEntity().get(DrawObject).setTexture(this, this.getBindIndex());
+        // });
     }
 }

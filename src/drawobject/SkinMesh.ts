@@ -2,7 +2,7 @@ import Node from "../transform/Node.js";
 import Mesh from "./Mesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import { TextureIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "../texture/Texture.js";
 import DrawObject from "../drawobject/DrawObject.js";
 
 export default class SkinMesh extends Mesh {
@@ -39,7 +39,7 @@ export default class SkinMesh extends Mesh {
             Matrix.multiply(dst, this.inverseBindMatrices[j], dst);
         }
         const jointData = Matrix.flatten(this.jointMatrices);
-        this.getEntity().get(DrawObject).getTexture(TextureIndex.Joint).generate(4, this.jointNodes.length, jointData);
+        this.getEntity().get(DrawObject).getTexture(TextureBindIndex.Joint).generate(4, this.jointNodes.length, jointData);
     }
 
 }

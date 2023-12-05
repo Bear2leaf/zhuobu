@@ -8,9 +8,9 @@ export default class GLTFMeshRenderer extends Renderer {
         this.prepareShader();
         this.prepareCamera();
         this.prepareLight();
-        this.getSceneManager().first().getComponents(WhaleMesh).forEach(drawObject => {
-            this.drawEntity(drawObject);
-        });
+        // this.getSceneManager().first().getComponents(WhaleMesh).forEach(drawObject => {
+        //     this.drawEntity(drawObject);
+        // });
     }
     prepareLight() {
         this.getShader().setVector4f("u_diffuse", new Vec4(1, 1, 1, 1));

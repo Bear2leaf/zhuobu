@@ -14,7 +14,7 @@ export default abstract class Subject {
     }
 
     public notify(): void {
-        console.debug("notify all the observers", this.listeners);
+        // console.debug("notify all the observers", this.listeners);
         var i: number
           , max: number;
 

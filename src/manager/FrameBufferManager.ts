@@ -4,9 +4,7 @@ import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObjectx.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import Device, { ViewPortType } from "../device/Device.js";
-import ClickPickSubject from "../subject/ClickPick.js";
 import RendererManager from "./RendererManager.js";
-import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 
 
 export default class FrameBufferManager {
@@ -33,9 +31,9 @@ export default class FrameBufferManager {
             this.renderFrameBufferObject,
         ].forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
-            fbo.attach(this.getTextureManager().getDepthTexture());
-            fbo.attach(this.getTextureManager().getRenderTexture());
-            fbo.attach(this.getTextureManager().getPickTexture());
+            fbo.attach(this.getTextureManager().depthTexture);
+            fbo.attach(this.getTextureManager().renderTexture);
+            fbo.attach(this.getTextureManager().pickTexture);
         });
         // this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject, index) => {
         //     subject.getColor().set(index + 1, 0, 0, 255)

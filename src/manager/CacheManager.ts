@@ -12,7 +12,7 @@ export default class CacheManager {
     private readonly textCache: TextCache = new TextCache();
     private readonly jsonCache: JSONCache = new JSONCache();
     
-    setCacheDevice(device: Device) {
+    setDevice(device: Device) {
         this.arrayBufferCache.setDevice(device);
         this.imageCache.setDevice(device);
         this.textCache.setDevice(device);

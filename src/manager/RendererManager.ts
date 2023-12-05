@@ -1,4 +1,7 @@
 import Device, { ViewPortType } from "../device/Device.js";
+import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
+import OnEntityRender from "../observer/OnEntityRender.js";
+import OnViewPortChange from "../observer/OnViewPortChange.js";
 import BackSpriteRenderer from "../renderer/BackSpriteRenderer.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
@@ -10,6 +13,7 @@ import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRend
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
 import CameraManager from "./CameraManager.js";
+import EventManager from "./EventManager.js";
 import SceneManager from "./SceneManager.js";
 
 export default class RendererManager {
@@ -25,6 +29,7 @@ export default class RendererManager {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
     private cameraManager?: CameraManager;
+    private eventManager?: EventManager;
     private device?: Device;
     initShaderName() {
         this.spriteRenderer.setShaderName("Sprite");
@@ -60,6 +65,20 @@ export default class RendererManager {
         }
         return this.device;
     }
+    initObservers() {
+        const onEntityRegisterComponents = new OnEntityRegisterComponents;
+        onEntityRegisterComponents.setRenderingContext = (drawObject) => {
+            drawObject.setRenderingContext(this.getDevice().getRenderingContext());
+        }
+        onEntityRegisterComponents.setSubject(this.getEventManager().entityRegisterComponents);
+        const onEntityRender = new OnEntityRender;
+        onEntityRender.setRendererManager(this);
+        onEntityRender.setSubject(this.getEventManager().entityRender);
+        const onViewPortChange = new OnViewPortChange();
+        onViewPortChange.setDevice(this.getDevice());
+        onViewPortChange.setSubject(this.getEventManager().viewPortChange);
+        
+    }
     initRenderer(): void {
         const rc = this.getDevice().getRenderingContext();
         rc.init();
@@ -74,22 +93,14 @@ export default class RendererManager {
         ].forEach(renderer => {
             renderer.initShader(rc, this.getCacheManager());
             renderer.setSceneManager(this.getSceneManager());
-            renderer.initRenderingContext(rc);
             renderer.setCamera(this.getCameraManager().getMainCamera());
         });
         this.pointRenderer.setCamera(this.getCameraManager().getUICamera());
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
     }
-    render(): void {
-        this.getDevice().viewportTo(ViewPortType.Full);
-        this.gltfSkinMeshRenderer.render();
-        this.gltfMeshRenderer.render();
-        this.wireframeRenderer.render();
-        this.sdfRenderer.render();
-        this.pointRenderer.render();
-        this.spriteRenderer.render();
-        this.backSpriteRenderer.render();
+    getSDFRenderer(): SDFRenderer {
+        return this.sdfRenderer;
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
@@ -117,5 +128,14 @@ export default class RendererManager {
     }
     setCameraManager(cameraManager: CameraManager) {
         this.cameraManager = cameraManager;
+    }
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
+        }
+        return this.eventManager;
+    }
+    setEventManager(eventManager: EventManager) {
+        this.eventManager = eventManager;
     }
 }

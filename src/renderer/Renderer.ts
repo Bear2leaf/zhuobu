@@ -50,11 +50,6 @@ export default class Renderer {
         }
         await cacheManager.loadShaderTxtCache(this.shaderName);
     }
-    initRenderingContext(rc: RenderingContext) {
-        this.getSceneManager().first().getComponents(DrawObject).forEach(drawObject => {
-            drawObject.setRenderingContext(rc);
-        });
-    }
     initShader(rc: RenderingContext, cacheManager: CacheManager) {
         if (!this.shaderName) {
             throw new Error("shader name not exist");
@@ -76,7 +71,7 @@ export default class Renderer {
         drawObject.bind();
         drawObject.draw();
     }
-    render() {
+    render(drawObject: DrawObject) {
         throw new Error("not implemented");
     }
 }

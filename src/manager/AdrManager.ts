@@ -19,9 +19,12 @@ import SetInterval from "../adr/adapter/SetInterval.js";
 import SetLocation from "../adr/adapter/SetLocation.js";
 import SetTimeout from "../adr/adapter/SetTimeout.js";
 import Title from "../adr/adapter/Title.js";
+import OnEntityInit from "../observer/OnEntityInit.js";
+import EventManager from "./EventManager.js";
+import Entity from "../entity/Entity.js";
 
 export default class AdrManager {
-    private sceneManager?: SceneManager;
+    private eventManager?: EventManager;
     private readonly addEventListener = new AddEventListener;
     private readonly headElement = new HeadElement;
     private readonly href = new Href;
@@ -63,20 +66,35 @@ export default class AdrManager {
             this.getElementsByTagName,
             this.title,
         ].forEach(adapter => {
-            adapter.setSeceneManager(this.getSceneManager());
             adapter.init()
         });
         Engine.createDefaultElements();
         Engine.init();
     }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
+    initRoot(entity: Entity) {
+        this.headElement.setRoot(entity);
+        this.bodyElement.setRoot(entity);
     }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
+    initHead(entity: Entity) {
+        this.headElement.setEntity(entity);
+    }
+    initBody(entity: Entity) {
+        this.bodyElement.setEntity(entity);
+    }
+    initObservers() {
+
+        const onEntityInit = new OnEntityInit;
+        onEntityInit.setAdrManager(this);
+        onEntityInit.setSubject(this.getEventManager().entityRegisterComponents);
+    }
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
+        }
+        return this.eventManager;
+    }
+    setEventManager(eventManager: EventManager) {
+        this.eventManager = eventManager;
     }
 
 }

@@ -1,8 +1,7 @@
 import Device from "../device/Device.js";
-import CacheManager from "../manager/CacheManager.js";
-import SceneManager from "../manager/SceneManager.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 
-export enum TextureIndex {
+export enum TextureBindIndex {
   Default = 0,
   Joint = 1,
   Depth = 2,
@@ -11,12 +10,19 @@ export enum TextureIndex {
   OffscreenCanvas = 5,
 }
 export default abstract class Texture {
-  private device?: Device;
-  private sceneManager?: SceneManager;
-  private cacheManager?: CacheManager;
   private textureIndex?: number;
-  private bindIndex: TextureIndex = TextureIndex.Default;
-  setBindIndex(bindIndex: TextureIndex) {
+  private bindIndex: TextureBindIndex = TextureBindIndex.Default;
+  private rc?: RenderingContext;
+  getContext() {
+    if (this.rc === undefined) {
+      throw new Error("BaseTexture is not initialized.");
+    }
+    return this.rc;
+  }
+  setContext(rc: RenderingContext) {
+    this.rc = rc;
+  }
+  setBindIndex(bindIndex: TextureBindIndex) {
     this.bindIndex = bindIndex;
   }
   setTextureIndex(textureIndex: number) {
@@ -31,34 +37,7 @@ export default abstract class Texture {
   getBindIndex() {
     return this.bindIndex;
   }
-  setDevice(device: Device): void {
-    this.device = device;
-  };
-  setSceneManager(sceneManager: SceneManager): void {
-    this.sceneManager = sceneManager;
-  };
-  setCacheManager(cacheManager: CacheManager): void {
-    this.cacheManager = cacheManager;
-  };
-  getDevice() {
-    if (this.device === undefined) {
-      throw new Error("Texture is not initialized.");
-    }
-    return this.device;
-  };
-  getSceneManager() {
-    if (this.sceneManager === undefined) {
-      throw new Error("Texture is not initialized.");
-    }
-    return this.sceneManager;
-  };
-  getCacheManager() {
-    if (this.cacheManager === undefined) {
-      throw new Error("Texture is not initialized.");
-    }
-    return this.cacheManager;
-  };
-  abstract init(): void;
+  abstract setDevice(device: Device): void;
   abstract generate(width: number, height: number, data?: HTMLImageElement | Float32Array): void;
   abstract bind(): void;
 }

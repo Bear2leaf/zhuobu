@@ -32,9 +32,9 @@ export default class GLTFManager {
         this.helloGLTF.init(this.getCacheManager().getGLTF(this.helloGLTF.getName()));
         this.helloMultiGLTF.init(this.getCacheManager().getGLTF(this.helloMultiGLTF.getName()));
 
-        this.getSceneManager().first().getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.whaleGLTF.clone()));
-        this.getSceneManager().first().getComponents(HelloWireframe).forEach(mesh => mesh.setGLTF(this.helloGLTF.clone()));
-        this.getSceneManager().first().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.helloMultiGLTF.clone()));
+        // this.getSceneManager().first().getComponents(Mesh).forEach(mesh => mesh.setGLTF(this.whaleGLTF.clone()));
+        // this.getSceneManager().first().getComponents(HelloWireframe).forEach(mesh => mesh.setGLTF(this.helloGLTF.clone()));
+        // this.getSceneManager().first().getComponents(HelloMultiMesh).forEach(mesh => mesh.setGLTF(this.helloMultiGLTF.clone()));
     }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;

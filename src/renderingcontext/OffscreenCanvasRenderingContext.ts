@@ -4,7 +4,7 @@ import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import { Vec4 } from "../geometry/Vector.js";
 import Shader from "../shader/Shader.js";
-import { TextureIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
@@ -96,7 +96,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     createTexture(): number {
         return -1;
     }
-    activeTexture(bindIndex: TextureIndex): void {
+    activeTexture(bindIndex: TextureBindIndex): void {
         throw new Error("Method not implemented.");
     }
     bindTexture(textureIndex?: number): void {

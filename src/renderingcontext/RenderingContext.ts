@@ -4,7 +4,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import { Vec4 } from "../geometry/Vector.js";
 import Shader from "../shader/Shader.js";
-import { TextureIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "../texture/Texture.js";
 
 export enum ArrayBufferIndex {
     Position = 0,
@@ -37,7 +37,7 @@ export default interface RenderingContext {
     createFramebuffer(): number;
     getImageData(x: number, y: number, width: number, height: number): ImageBitmapSource;
     createTexture(): number;
-    activeTexture(bindIndex: TextureIndex): void;
+    activeTexture(bindIndex: TextureBindIndex): void;
     bindTexture(textureIndex?: number): void;
     bindFramebuffer(fboIndex?: number): void;
     bindPickReadFramebuffer(fboIndex?: number): void;

@@ -8,7 +8,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import { Vec4 } from "../geometry/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
-import { TextureIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
@@ -91,7 +91,7 @@ export default class GLRenderingContext implements RenderingContext {
         }
         return this.allWebGLTextures.push(texture) - 1;
     }
-    activeTexture(bindIndex: TextureIndex): void {
+    activeTexture(bindIndex: TextureBindIndex): void {
         this.gl.activeTexture(this.gl.TEXTURE0 + bindIndex)
     }
     bindTexture(textureIndex?: number): void {

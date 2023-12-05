@@ -172,7 +172,7 @@ export default class SDFCanvas extends OffscreenCanvas {
         }
         return this.tinySDF;
     }
-    initEntities(sceneManager: SceneManager): void {
+    initSDFCharacter(text: SDFCharacter): void {
 
         const fontSize = 24;
         const fontWeight = "400";
@@ -203,10 +203,8 @@ export default class SDFCanvas extends OffscreenCanvas {
             this.getContext().putImageData(this.makeRGBAImageData(glyph.data, glyph.width, glyph.height), fontInfo.x, fontInfo.y);
         }
 
-        sceneManager.first().getComponents(SDFCharacter).forEach(text => {
-            text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
-            text.getEntity().get(DrawObject).getTexture().generate(this.canvasSize.x, this.canvasSize.y);
-        });
+        text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
+        text.getTexture().generate(this.canvasSize.x, this.canvasSize.y);
     }
     readOnePixel(x: number, y: number) {
         return this.getContext().readSinglePixel(x, y)

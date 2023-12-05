@@ -1,25 +1,18 @@
-import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Texture, { TextureIndex } from "./Texture.js";
+import Device from "../device/Device.js";
+import Texture, { TextureBindIndex } from "./Texture.js";
 
 export default class GLTexture extends Texture {
-  private rc?: RenderingContext;
-  init(): void {
-    this.rc = this.getDevice().getRenderingContext();
+  setDevice(device: Device): void {
+    this.setContext(device.getRenderingContext());
     this.setTextureIndex(this.getContext().createTexture());
-    const windowInfo = this.getDevice().getWindowInfo();
+    const windowInfo = device.getWindowInfo();
     this.generate(windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio)
-  }
-  getContext() {
-    if (this.rc === undefined) {
-      throw new Error("BaseTexture is not initialized.");
-    }
-    return this.rc;
   }
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
     const rc = this.getContext();
     rc.bindTexture(this.getTextureIndex());
     if (data === undefined) {
-      if (this.getBindIndex() === TextureIndex.Depth) {
+      if (this.getBindIndex() === TextureBindIndex.Depth) {
         rc.texImage2D_DEPTH24_UINT_NULL(width, height);
       } else {
         rc.texImage2D_RGBA_RGBA_NULL(width, height);

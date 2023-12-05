@@ -3,7 +3,7 @@ import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
+import Texture, { TextureBindIndex } from "../texture/Texture.js";
 
 
 export default class DrawObject extends Component {
@@ -13,19 +13,16 @@ export default class DrawObject extends Component {
     private count: number = 0;
     private primitive?: Primitive;
     private renderingContext?: RenderingContext;
-    private readonly textureMap: Map<TextureIndex, Texture> = new Map();
-    setTexture(texture: Texture, index: TextureIndex = TextureIndex.Default) {
+    private readonly textureMap: Map<TextureBindIndex, Texture> = new Map();
+    setTexture(texture: Texture, index: TextureBindIndex = TextureBindIndex.Default) {
         this.textureMap.set(index, texture);
     }
-    getTexture(index: TextureIndex = TextureIndex.Default): Texture {
+    getTexture(index: TextureBindIndex = TextureBindIndex.Default): Texture {
         const texture = this.textureMap.get(index);
         if (texture === undefined) {
             throw new Error("texture not exist");
         }
         return texture;
-    }
-    getTextures() {
-        return [...this.textureMap.values()];
     }
     setPrimitive(primitive: Primitive) {
         this.primitive = primitive;
@@ -50,7 +47,7 @@ export default class DrawObject extends Component {
             throw new Error("vao is not set");
         }
         this.vao.bind();
-        this.getEntity().get(DrawObject).getTextures().forEach(texture => texture.bind());
+        this.textureMap.forEach(texture => texture.bind());
     }
     getRenderingContext() {
         if (!this.renderingContext) {

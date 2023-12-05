@@ -8,8 +8,8 @@ export default class MiniGame extends Game {
     constructor() {
         super();
         const device = new MiniGameDevice();
-        this.buildVars(device);
         this.buildDependency();
+        this.buildVars(device);
         this.load(device).then(() => {
             this.initManagers(device);
             this.update();

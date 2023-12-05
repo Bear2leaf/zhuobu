@@ -10,8 +10,8 @@ export default class SpriteRenderer extends Renderer {
     render(): void {
         this.prepareShader();
         this.prepareCamera();
-        this.getSceneManager().first().getComponents(DefaultSprite).forEach(drawObject => {
-            this.drawEntity(drawObject);
-        });
+        // this.getSceneManager().first().getComponents(DefaultSprite).forEach(drawObject => {
+        //     this.drawEntity(drawObject);
+        // });
     }
 }

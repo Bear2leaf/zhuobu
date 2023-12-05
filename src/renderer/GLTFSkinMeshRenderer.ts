@@ -1,17 +1,15 @@
-import SkinMesh from "../drawobject/SkinMesh.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {
 
-    render() {
+    render(drawObject: DrawObject) {
         this.prepareShader();
         this.prepareCamera();
         this.prepareLight();
         this.prepareJoints();
-        this.getSceneManager().first().getComponents(SkinMesh).forEach(drawObject => {
-            this.drawEntity(drawObject);
-        });
+        this.drawEntity(drawObject);
     }
     prepareLight() {
         this.getShader().setVector4f("u_diffuse", new Vec4(.5, .8, 1, 1));

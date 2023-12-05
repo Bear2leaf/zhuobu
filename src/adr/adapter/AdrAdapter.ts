@@ -1,15 +1,25 @@
-import SceneManager from "../../manager/SceneManager.js";
+import Entity from "../../entity/Entity.js";
 
 export default abstract class AdrAdapter {
-    private sceneManager?: SceneManager;
-    setSeceneManager(sceneManager: SceneManager): void {
-        this.sceneManager = sceneManager;
+    private root?: Entity;
+    private entity?: Entity;
+    setEntity(entity: Entity) {
+        this.entity = entity;
     }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
+    getEntity() {
+        if (!this.entity) {
+            throw new Error("Entity not found");
         }
-        return this.sceneManager;
+        return this.entity;
+    }
+    setRoot(root: Entity) {
+        this.root = root;
+    }
+    getRoot() {
+        if (!this.root) {
+            throw new Error("Root not found");
+        }
+        return this.root;
     }
     abstract init(): void;
 }

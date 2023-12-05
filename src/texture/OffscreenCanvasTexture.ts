@@ -1,23 +1,17 @@
+import Device from "../device/Device.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Texture, { TextureIndex } from "./Texture.js";
+import Texture, { TextureBindIndex } from "./Texture.js";
 
 export default class OffscreenCanvasTexture extends Texture {
   private canvasContext?: RenderingContext;
-  private glContext?: RenderingContext;
-  init(): void {
-    this.glContext = this.getDevice().getRenderingContext();
-    this.setTextureIndex(this.getGLRenderingContext().createTexture());
-    this.setBindIndex(TextureIndex.OffscreenCanvas);
+  setDevice(device: Device): void {
+    this.setContext(device.getRenderingContext());
+    this.setCanvasContext(device.getSDFCanvasRenderingContext());
+    this.setTextureIndex(this.getContext().createTexture());
+    this.setBindIndex(TextureBindIndex.OffscreenCanvas);
   }
   setCanvasContext(canvasContext: RenderingContext) {
     this.canvasContext = canvasContext;
-  }
-  getGLRenderingContext() {
-    if (this.glContext === undefined) {
-      throw new Error("OffscreenCanvas is not initialized.");
-    }
-    return this.glContext;
-  
   }
   getCanvasRenderingContext() {
     if (this.canvasContext === undefined) {
@@ -26,7 +20,7 @@ export default class OffscreenCanvasTexture extends Texture {
     return this.canvasContext;
   }
   generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
-    const glRC = this.getGLRenderingContext();
+    const glRC = this.getContext();
     const canvasRC = this.getCanvasRenderingContext();
     // todo update size
     // canvasRC.updateSize(width, height);
@@ -36,7 +30,7 @@ export default class OffscreenCanvasTexture extends Texture {
   }
 
   bind() {
-    const rc = this.getGLRenderingContext();
+    const rc = this.getContext();
     rc.activeTexture(this.getBindIndex())
     rc.bindTexture(this.getTextureIndex());
   }

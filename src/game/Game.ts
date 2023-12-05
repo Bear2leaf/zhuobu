@@ -36,15 +36,10 @@ export default abstract class Game {
     initManagers(device: Device): void {
         this.gltfManager.initGLTF();
         this.inputManager.initInput(device);
-        this.textureManager.initTexture(device);
-        this.offscreencanvasManager.initOffscreenCanvas(device);
         this.cameraManager.initCamera(device);
-        this.rendererManager.setDevice(device);
         this.rendererManager.initRenderer();
         this.sceneManager.initSceneEntities();
-        this.timestepManager.setDevice(device);
         this.animationManager.initAnimator();
-        this.framebufferManager.setDevice(device);
         this.framebufferManager.initFramebuffer();
         this.adrManager.initAdr();
         this.audioManager.initAudio();
@@ -58,20 +53,31 @@ export default abstract class Game {
         await this.audioManager.load();
     }
     buildVars(device: Device) {
-        this.cacheManager.setCacheDevice(device);
-        this.rendererManager.initShaderName();
+        this.cacheManager.setDevice(device);
+        this.timestepManager.setDevice(device);
+        this.framebufferManager.setDevice(device);
+        this.rendererManager.setDevice(device);
+        this.textureManager.setDevice(device);
         this.audioManager.setAudioContext(device.createWebAudioContext());
+        this.offscreencanvasManager.initOffscreenCanvas(device);
+        this.eventManager.initObservers();
+        this.rendererManager.initObservers();
+        this.textureManager.initObservers();
+        this.adrManager.initObservers();
+        this.offscreencanvasManager.initObservers();
+        this.sceneManager.initSubjects(this.eventManager);
+        this.rendererManager.initShaderName();
         this.sceneManager.registerEntities();
-        this.eventManager.registerDefaultObservers();
     }
     buildDependency() {
-        this.sceneManager.setEventManager(this.eventManager);
-        this.textureManager.setSceneManager(this.sceneManager);
+        this.rendererManager.setEventManager(this.eventManager);
+        this.textureManager.setEventManager(this.eventManager);
+        this.offscreencanvasManager.setEventManager(this.eventManager);
+        this.adrManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setSceneManager(this.sceneManager);
         this.framebufferManager.setRendererManager(this.rendererManager);
-        this.offscreencanvasManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCacheManager(this.cacheManager);
         this.rendererManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCameraManager(this.cameraManager);
@@ -80,15 +86,13 @@ export default abstract class Game {
         this.gltfManager.setCacheManager(this.cacheManager);
         this.timestepManager.setSceneManager(this.sceneManager);
         this.animationManager.setSceneManager(this.sceneManager);
-        this.adrManager.setSceneManager(this.sceneManager);
     }
     update() {
         this.timestepManager.tick();
         this.inputManager.process();
         this.animationManager.animate();
-        this.framebufferManager.update();
         this.sceneManager.update();
-        this.rendererManager.render();
+        this.sceneManager.render();
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }
     stop() {

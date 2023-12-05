@@ -1,5 +1,5 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Texture, { TextureIndex } from "../texture/Texture.js";
+import Texture, { TextureBindIndex } from "../texture/Texture.js";
 import FrameBufferObject from "./FrameBufferObject.js";
 
 export default class BaseFrameBufferObject implements FrameBufferObject {
@@ -24,11 +24,11 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
     }
     attach(texture: Texture): void {
         this.bind();
-        if (texture.getBindIndex() === TextureIndex.Depth) {
+        if (texture.getBindIndex() === TextureBindIndex.Depth) {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
-        } else if (texture.getBindIndex() === TextureIndex.Pick) {
+        } else if (texture.getBindIndex() === TextureBindIndex.Pick) {
             this.getGL().framebufferPickTexture2D(texture.getTextureIndex());
-        }  else if (texture.getBindIndex() === TextureIndex.Render) {
+        }  else if (texture.getBindIndex() === TextureBindIndex.Render) {
             this.getGL().framebufferRenderTexture2D(texture.getTextureIndex());
         } else {
             throw new Error("attach Not implemented");

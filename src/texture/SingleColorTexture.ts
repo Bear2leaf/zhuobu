@@ -1,13 +1,11 @@
-import DrawObject from "../drawobject/DrawObject.js";
-import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
+import Device from "../device/Device.js";
 import OffscreenCanvasTexture from "./OffscreenCanvasTexture.js";
 
 export default class SingleColorTexture extends OffscreenCanvasTexture {
-    init(): void {
-        super.init();
-        this.setCanvasContext(this.getDevice().getOffscreenCanvasRenderingContext());
-        this.getSceneManager().first().getComponents(SingleColorCanvasMap).forEach(comp => {
-            comp.getEntity().get(DrawObject).setTexture(this);
-        });
+    setDevice(device: Device): void {
+        super.setDevice(device);
+        // this.getSceneManager().first().getComponents(SingleColorCanvasMap).forEach(comp => {
+        //     comp.getEntity().get(DrawObject).setTexture(this);
+        // });
     }
 }
