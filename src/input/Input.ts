@@ -1,7 +1,6 @@
 import Device from "../device/Device.js";
 
 export abstract class Input {
-    abstract process(): void;
     private device?: Device;
     abstract init(): void;
     getDevice() {

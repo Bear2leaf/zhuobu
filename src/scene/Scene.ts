@@ -3,7 +3,6 @@ import EntityAdd from "../subject/EntityAdd.js";
 import EntityRegisterComponents from "../subject/EntityRegisterComponents.js";
 import EntityRender from "../subject/EntityRender.js";
 import EntitySubject from "../subject/EntitySubject.js";
-import ViewPortChange from "../subject/ViewPortChange.js";
 
 export default abstract class Scene {
     private readonly entities: Entity[] = [];

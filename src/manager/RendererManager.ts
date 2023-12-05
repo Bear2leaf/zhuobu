@@ -102,6 +102,15 @@ export default class RendererManager {
     getSDFRenderer(): SDFRenderer {
         return this.sdfRenderer;
     }
+    getSpriteRenderer(): SpriteRenderer {
+        return this.spriteRenderer;
+    }
+    getBackSpriteRenderer(): BackSpriteRenderer {
+        return this.backSpriteRenderer;
+    }
+    getPointRenderer(): PointRenderer {
+        return this.pointRenderer;
+    }
     setCacheManager(cacheManager: CacheManager) {
         this.cacheManager = cacheManager;
     }

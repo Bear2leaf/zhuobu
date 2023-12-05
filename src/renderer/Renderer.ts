@@ -23,9 +23,6 @@ export default class Renderer {
         }
         return this.sceneManager;
     }
-    setShader(shader: Shader) {
-        this.shader = shader;
-    }
     getShader() {
         if (!this.shader) {
             throw new Error("shader not exist");

@@ -42,24 +42,11 @@ export default class Touch extends Input {
 
         this.setPixelRatio(this.getDevice().getWindowInfo().pixelRatio);
     }
-    process(): void {
-        this.setIsTouching(this.isTouching);
-        this.setIsTouchingStart(this.isTouchingStart);
-        this.setIsTouchingEnd(this.isTouchingEnd);
-        this.setX(this.x);
-        this.setY(this.getDevice().getWindowInfo().windowHeight - this.y);
-        if (this.isTouchingEnd) {
-            this.isTouchingEnd = false;
-        }
-        if (this.isTouchingStart) {
-            this.isTouchingStart = false;
-        }
-    }
     getX() {
         return this.x;
     }
     getY() {
-        return this.y;
+        return this.getDevice().getWindowInfo().windowHeight - this.y;
     }
     setX(x: number) {
         this.x = x;

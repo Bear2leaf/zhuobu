@@ -40,6 +40,9 @@ export default class TextureManager {
         this.singleColorTexture.setDevice(device);
         this.sdfTexture.setDevice(device);
     }
+    initTextures() {
+        this.flowerTexture.generate(2, 2, this.getCacheManager().getImage("flowers"));
+    }
     initObservers() {
 
         const onEntityRegisterComponents = new OnEntityRegisterComponents;

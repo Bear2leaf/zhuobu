@@ -2,6 +2,8 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
+import Touch from "../input/Touch.js";
 
 export default class Pointer extends DrawObject {
     init() {
@@ -12,6 +14,10 @@ export default class Pointer extends DrawObject {
         this.createABO(ArrayBufferIndex.Position, new Float32Array([0, 0, 0, 1]), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1, 1]), 4)
         this.updateEBO(new Uint16Array([0]))
+    }
+    onClick(touch: Touch){
+        this.getEntity().get(TRS).getPosition().x = touch.getX();
+        this.getEntity().get(TRS).getPosition().y = touch.getY();
     }
     update(): void {
         this.getEntity().get(Node).updateWorldMatrix();

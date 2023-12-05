@@ -1,17 +1,15 @@
-import { FrontgroundCamera } from "../camera/FrontgroundCamera.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import CameraManager from "../manager/CameraManager.js";
-import DefaultSprite from "../sprite/DefaultSprite.js";
 import Renderer from "./Renderer.js";
 
 export default class SpriteRenderer extends Renderer {
     initCamera(cameraManager: CameraManager): void {
         this.setCamera(cameraManager.getFrontgroundCamera());
     }
-    render(): void {
+    render(drawObject: DrawObject): void {
         this.prepareShader();
         this.prepareCamera();
-        // this.getSceneManager().first().getComponents(DefaultSprite).forEach(drawObject => {
-        //     this.drawEntity(drawObject);
-        // });
+        this.drawEntity(drawObject);
+
     }
 }
