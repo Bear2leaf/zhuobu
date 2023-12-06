@@ -3,6 +3,7 @@ import Mesh from "./Mesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
+import AnimationController from "../controller/AnimationController.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
@@ -37,6 +38,9 @@ export default class SkinMesh extends Mesh {
     }
     update() {
         super.update();
+        if (!this.getEntity().has(AnimationController)) {
+            return;
+        }
         const globalWorldInverse = this.getEntity().get(Node).getWorldMatrix().inverse();
         // go through each joint and get its current worldMatrix
         // apply the inverse bind matrices and store the

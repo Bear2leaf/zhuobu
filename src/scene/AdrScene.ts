@@ -16,9 +16,9 @@ export default class AdrScene extends Scene {
         return [
             new FlowersObject()
             , new SpriteObject() 
-            , new HelloWireframeObject()
-            , new MeshObject()
             , new SkinMeshObject()
+            , new MeshObject()
+            , new HelloWireframeObject()
             , new AdrRootObject()
             , new AdrHeadObject()
             , new AdrBodyObject()

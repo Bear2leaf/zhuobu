@@ -38,10 +38,10 @@ export default abstract class Game {
         this.inputManager.initInput(device);
         this.cameraManager.initCamera(device);
         this.rendererManager.initRenderer();
-        this.sceneManager.initSceneEntities();
         this.framebufferManager.initFramebuffer();
         this.adrManager.initAdr();
         this.audioManager.initAudio();
+        this.sceneManager.initSceneEntities();
         device.createWorker('worker/main.js', this.workerManager.workerHandler.bind(this.workerManager));
     }
     async load(device: Device): Promise<void> {
