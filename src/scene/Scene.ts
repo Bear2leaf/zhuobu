@@ -18,13 +18,7 @@ export default abstract class Scene {
     registerEntities(): void {
         this.getDefaultEntities().forEach(entity => {
             this.addEntity(entity);
-            this.entityAdd?.setEntity(entity);
-            this.entityAdd?.notify();
-        });
-        this.entities.forEach(entity => {
-            entity.registerComponents();
-            this.entityRegisterComponents?.setEntity(entity);
-            this.entityRegisterComponents?.notify();
+            this.registerComponents(entity);
         });
     }
     update(): void {
@@ -57,12 +51,22 @@ export default abstract class Scene {
     }
     initEntities(): void {
         this.entities.forEach(entity => {
-            entity.init();
-            this.entityInit?.setEntity(entity);
-            this.entityInit?.notify();
+            this.initEntity(entity);
         });
     }
     addEntity(entity: Entity) {
         this.entities.push(entity);
+        this.entityAdd?.setEntity(entity);
+        this.entityAdd?.notify();
+    }
+    registerComponents(entity: Entity) {
+        entity.registerComponents();
+        this.entityRegisterComponents?.setEntity(entity);
+        this.entityRegisterComponents?.notify();
+    }
+    initEntity(entity: Entity) {
+        entity.init();
+        this.entityInit?.setEntity(entity);
+        this.entityInit?.notify();
     }
 }
