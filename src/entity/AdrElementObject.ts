@@ -2,14 +2,14 @@ import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
-import HeText from "../drawobject/HeText.js";
+import AdrElementText from "../drawobject/AdrElementText.js";
 
-export default class AdrBodyObject extends Entity {
+export default class AdrElementObject extends Entity {
     registerComponents(): void {
         [
             TRS,
             Node,
-            HeText,
+            AdrElementText,
         ].forEach(ctor => {
             this.add<Component>(ctor);
             this.get<Component>(ctor).setEntity(this);
