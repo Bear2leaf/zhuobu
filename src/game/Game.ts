@@ -69,8 +69,8 @@ export default abstract class Game {
         this.gltfManager.initObservers();
         this.gltfManager.setGLTFNames();
         this.gltfManager.setBufferCaches();
-        this.sceneManager.initSubjects(this.eventManager);
         this.rendererManager.initShaderName();
+        this.sceneManager.initSubjects(this.eventManager);
         this.sceneManager.registerEntities();
     }
     buildDependency() {
@@ -89,6 +89,7 @@ export default abstract class Game {
         this.rendererManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCameraManager(this.cameraManager);
         this.audioManager.setCacheManager(this.cacheManager);
+        this.adrManager.setSceneManager(this.sceneManager);
         this.gltfManager.setSceneManager(this.sceneManager);
         this.gltfManager.setCacheManager(this.cacheManager);
         this.timestepManager.setSceneManager(this.sceneManager);

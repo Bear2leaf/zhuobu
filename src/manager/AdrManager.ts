@@ -24,6 +24,7 @@ import EventManager from "./EventManager.js";
 import Entity from "../entity/Entity.js";
 
 export default class AdrManager {
+    private sceneManager?: SceneManager;
     private eventManager?: EventManager;
     private readonly addEventListener = new AddEventListener;
     private readonly headElement = new HeadElement;
@@ -66,14 +67,36 @@ export default class AdrManager {
             this.getElementsByTagName,
             this.title,
         ].forEach(adapter => {
+            adapter.setSceneManager(this.getSceneManager());
             adapter.init()
         });
         Engine.createDefaultElements();
         Engine.init();
     }
-    initRoot(entity: Entity) {
-        this.headElement.setRoot(entity);
-        this.bodyElement.setRoot(entity);
+    initRoot(root: Entity) {
+        [
+            this.addEventListener,
+            this.headElement,
+            this.href,
+            this.bodyElement,
+            this.localStorageAdapter,
+            this.clearInterval,
+            this.open,
+            this.clearTimeout,
+            this.removeEventListener,
+            this.createAudioContext,
+            this.setInterval,
+            this.createElement,
+            this.setLocation,
+            this.getElementById,
+            this.setTimeout,
+            this.getElementsByClassName,
+            this.styleSheetsAdapter,
+            this.getElementsByTagName,
+            this.title,
+        ].forEach(adapter => {
+            adapter.setRoot(root)
+        });
     }
     initHead(entity: Entity) {
         this.headElement.setEntity(entity);
@@ -95,6 +118,15 @@ export default class AdrManager {
     }
     setEventManager(eventManager: EventManager) {
         this.eventManager = eventManager;
+    }
+    getSceneManager() {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
     }
 
 }
