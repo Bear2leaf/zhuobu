@@ -26,7 +26,12 @@ export default class EntityAdr extends AdrAdapter {
         entity.get(Node).setParent(this.getAdrManager().getRoot().get(Node));
         scene.initEntity(entity);
         entity.get(AdrText).updateChars(selector);
-        return document.createElement(selector);
+        const adrElement = new AdrElement();
+        const domElement = document.createElement(selector);
+        adrElement.setDomElement(domElement);
+        adrElement.setEntity(entity);
+        this.getAdrManager().addElement(adrElement)
+        return domElement;
     }
     getElementById(selector: string): AdrElement | null {
         return document.getElementById(selector) as AdrElement;

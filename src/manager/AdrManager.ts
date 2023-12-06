@@ -5,11 +5,16 @@ import adr from "../adr/adr.js";
 import AdrTextObject from "../entity/AdrTextObject.js";
 import OnEntityUpdate from "../observer/OnEntityUpdate.js";
 import OnEntityInit from "../observer/OnEntityInit.js";
+import AdrElement from "../adr/adapter/AdrElement.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
     private eventManager?: EventManager;
     private root?: AdrTextObject;
+    private readonly elements: AdrElement[] = [];
+    addElement(adrElement: AdrElement) {
+        this.elements.push(adrElement);
+    }
     initAdr(): void {
         adr.setAdrManager(this);
         this.root = new AdrTextObject();
@@ -19,6 +24,7 @@ export default class AdrManager {
         scene.initEntity(this.root);
         Engine.createDefaultElements();
         Engine.init();
+        console.log("AdrManager.initAdr", this);
     }
     getRoot() {
         if (this.root === undefined) {

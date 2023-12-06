@@ -1,4 +1,14 @@
+import Entity from "../../entity/Entity.js";
+
 export default class AdrElement {
+	private domElement?: Element;
+	private entity?: Entity;
+	setDomElement(domElement: Element) {
+		this.domElement = domElement;
+	}
+	setEntity(entity: Entity) {
+		this.entity = entity;
+	}
 	tagName: string;
 	children: AdrElement[];
 	classList: string[];
