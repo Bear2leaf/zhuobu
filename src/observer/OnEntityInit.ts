@@ -1,13 +1,12 @@
-import AdrBodyText from "../drawobject/AdrBodyText.js";
-import AdrHeadText from "../drawobject/AdrHeadText.js";
-import AdrRoot from "../drawobject/AdrRoot.js";
+import AdrText from "../drawobject/AdrText.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import AdrManager from "../manager/AdrManager.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
+import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityInit extends Observer {
@@ -32,13 +31,7 @@ export default class OnEntityInit extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         console.log("OnEntityInit", entity);
-        if (entity.has(AdrRoot) && this.adrManager) {
-            this.adrManager.initRoot(entity);
-        } else if (entity.has(AdrHeadText) && this.adrManager) {
-            this.adrManager.initHead(entity);
-        } else if (entity.has(AdrBodyText) && this.adrManager) {
-            this.adrManager.initBody(entity);
-        } else if (entity.has(Mesh) && this.gltfManager) {
+        if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 this.gltfManager.initGLTF(this.gltfManager.whaleGLTF);
                 entity.get(WhaleMesh).setGLTF(this.gltfManager.whaleGLTF.clone());
@@ -47,6 +40,11 @@ export default class OnEntityInit extends Observer {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             }
             entity.get(Mesh).initMesh();
+        } else if (entity.has(AdrText) && this.adrManager) {
+            if (entity.get(Node).getRoot() === entity.get(Node)) {
+                entity.get(AdrText).updateChars("Adr Root!");
+                entity.get(TRS).getScale().set(0.025, 0.025, 1);
+            }
         }
     }
 

@@ -1,10 +1,11 @@
 import adr from "./adr.js";
+import AdrElement from './adapter/AdrElement.js';
 
-const dataCache = new WeakMap<Element, Record<string, any>>();
+const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 
 export default class Query {
 
-	el: Element | null = null;
+	el: AdrElement | null = null;
 	get found() {
 		return this.el ? 1 : 0;
 	}
@@ -12,7 +13,7 @@ export default class Query {
 		return this.get().tagName;
 	}
 
-	constructor(selector: string | Element, context?: Query | string) {
+	constructor(selector: string | AdrElement, context?: Query | string) {
 		if (arguments.length === 1 && typeof selector === 'string') {
 			if (selector === 'body') {
 				this.el = adr.body();
@@ -104,7 +105,7 @@ export default class Query {
 		return null;
 	}
 
-	get<T extends Element>(): T {
+	get<T extends AdrElement>(): T {
 		if (!this.el) {
 			throw new Error('Invalid arguments');
 		}
@@ -167,7 +168,7 @@ export default class Query {
 	}
 
 	parent() {
-		return this.get().parentNode as Element;
+		return this.get().parentNode as AdrElement;
 	}
 	index(elem: Query) {
 		const collection = this.get().children;
@@ -236,7 +237,7 @@ export default class Query {
 	css(name: string, value: string | number): Query;
 	css(name: Record<string, string>): Query;
 	css(name: string | Record<string, string>, value?: string | number): string | Query {
-		const el = this.get() as HTMLElement;
+		const el = this.get() as AdrElement;
 		if (typeof name === 'string') {
 			if (value === undefined) {
 				return el.style.getPropertyValue(name);
@@ -305,7 +306,7 @@ export default class Query {
 		if (value !== undefined) {
 			return this.css('width', value);
 		}
-		return this.get<HTMLElement>().offsetWidth;
+		return this.get<AdrElement>().offsetWidth;
 	}
 	height(): number;
 	height(value: number): Query;
@@ -313,7 +314,7 @@ export default class Query {
 		if (value !== undefined) {
 			return this.css('height', value);
 		}
-		return this.get<HTMLElement>().offsetHeight;
+		return this.get<AdrElement>().offsetHeight;
 	}
 
 	eventHandler(type: string, fn?: EventListener, once?: boolean) {
@@ -344,13 +345,13 @@ export default class Query {
 	text(value?: string | number): Query | string {
 		if (value === undefined) {
 			if (arguments.length === 0) {
-				return this.get<HTMLElement>().innerText;
+				return this.get<AdrElement>().innerText;
 			} else {
-				this.get<HTMLElement>().innerText = "";
+				this.get<AdrElement>().innerText = "";
 				return this;
 			}
 		} else {
-			this.get<HTMLElement>().innerText = value.toString();
+			this.get<AdrElement>().innerText = value.toString();
 			return this;
 		}
 	}

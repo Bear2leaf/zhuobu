@@ -23,6 +23,10 @@ export default class SDFCharacter extends DrawObject {
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
+        this.create();
+    }
+    getRandomChar() {
+        return Object.keys(this.fontInfo)[Math.floor(Math.random() * Object.keys(this.fontInfo).length)];
     }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);

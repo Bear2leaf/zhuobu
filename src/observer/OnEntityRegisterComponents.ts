@@ -1,7 +1,5 @@
 import SDFCanvas from "../canvas/SDFCanvas.js";
-import AnimationController from "../controller/AnimationController.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";

@@ -1,11 +1,7 @@
-import DrawObject from "../drawobject/DrawObject.js";
-import Device from "../device/Device.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import { FontInfo } from "../drawobject/Text.js";
 import { Vec2 } from "../geometry/Vector.js";
-import SceneManager from "../manager/SceneManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Texture from "../texture/Texture.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 const INF = 1e20;
 

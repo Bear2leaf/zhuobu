@@ -1,5 +1,4 @@
 import AdrScene from "../scene/AdrScene.js";
-import ViewPortChange from "../subject/ViewPortChange.js";
 import EventManager from "./EventManager.js";
 
 export default class SceneManager {
