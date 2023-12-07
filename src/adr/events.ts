@@ -16,6 +16,7 @@ import Notifications from "./notifications.js";
 import Path from "./path.js";
 import StateManager from "./state_manager.js";
 import World from "./world.js";
+import AdrElement from "./adapter/AdrElement.js";
 
 /**
  * Module that handles the random event system
@@ -954,7 +955,7 @@ export default class Events {
 
 	static dropStuff(takeItemBtn: Query, e: Event) {
 		e.stopPropagation();
-		const target = e.target as HTMLElement;
+		const target = e.target as unknown as AdrElement;
 		const dropBtn = adr.$(target);
 		const thing = dropBtn.data('thing');
 		const id = 'take_' + thing.replace(/ /g, '-');

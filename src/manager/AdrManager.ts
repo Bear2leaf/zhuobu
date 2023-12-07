@@ -4,52 +4,53 @@ import EventManager from "./EventManager.js";
 import adr from "../adr/adr.js";
 import AdrTextObject from "../entity/AdrTextObject.js";
 import OnEntityUpdate from "../observer/OnEntityUpdate.js";
-import OnEntityInit from "../observer/OnEntityInit.js";
 import AdrElement from "../adr/adapter/AdrElement.js";
-import Entity from "../entity/Entity.js";
 import Node from "../transform/Node.js";
 import AdrText from "../drawobject/AdrText.js";
 import TRS from "../transform/TRS.js";
+import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
     private eventManager?: EventManager;
-    private root?: AdrTextObject;
-    private readonly elements: AdrElement[] = [];
-    addElement(adrElement: AdrElement) {
-        this.elements.push(adrElement);
-    }
+    private readonly root = new AdrRootElement();
     initAdr(): void {
         adr.setAdrManager(this);
-        this.root = new AdrTextObject();
+        const root = this.root;
+        root.setEntity(new AdrTextObject());
         const scene = this.getSceneManager().first();
-        scene.addEntity(this.root);
-        scene.registerComponents(this.root);
-        scene.initEntity(this.root);
-        this.root.get(AdrText).updateChars("Adr Root!");
-        this.root.get(TRS).getScale().set(0.025, 0.025, 1);
+        scene.addEntity(root.getEntity());
+        scene.registerComponents(root.getEntity());
+        scene.initEntity(root.getEntity());
+        root.getEntity().get(AdrText).updateChars("Adr Root!");
+        root.getEntity().get(TRS).getScale().set(0.025, 0.025, 1);
         const body = new AdrTextObject();
         scene.addEntity(body);
         scene.registerComponents(body);
         scene.initEntity(body);
-        body.get(Node).setParent(this.root.get(Node));
+        body.get(Node).setParent(root.getEntity().get(Node));
         body.get(AdrText).updateChars("Adr Body!");
         body.get(TRS).getPosition().y = 100;
+        const bodyElement = new AdrElement();
+        bodyElement.setDomElement(document.body);
+        bodyElement.setEntity(body);
+        root.appendChild(bodyElement);
         const head = new AdrTextObject();
         scene.addEntity(head);
         scene.registerComponents(head);
         scene.initEntity(head);
-        head.get(Node).setParent(this.root.get(Node));
+        head.get(Node).setParent(root.getEntity().get(Node));
         head.get(AdrText).updateChars("Adr Head!");
         head.get(TRS).getPosition().y = 200;
+        const headElement = new AdrElement();
+        headElement.setDomElement(document.head);
+        headElement.setEntity(head);
+        root.appendChild(headElement);
         Engine.createDefaultElements();
         Engine.init();
         console.log("AdrManager.initAdr", this);
     }
     getRoot() {
-        if (this.root === undefined) {
-            throw new Error("root is not defined")
-        }
         return this.root;
     }
 

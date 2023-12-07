@@ -1,5 +1,5 @@
 import AdrManager from "../../manager/AdrManager.js";
-import AdrElement from "./AdrElement.js";
+import AdrElement, { AdrStyleSheetList } from "./AdrElement.js";
 import Query from "../query.js";
 
 export default abstract class AdrAdapter {
@@ -24,11 +24,11 @@ export default abstract class AdrAdapter {
     abstract onmousedown?: (e: Event) => void;
     abstract createElement(selector: string): AdrElement;
     abstract getElementById(selector: string): AdrElement | null;
-    abstract getElementsByClassName(selector: string): HTMLCollection;
-    abstract getElementsByTagName(selector: string): HTMLCollection;
+    abstract getElementsByClassName(selector: string): AdrElement[];
+    abstract getElementsByTagName(selector: string): AdrElement[];
     abstract addEventListener(eventName: string, resumeAudioContext: () => void): void;
     abstract removeEventListener(eventName: string, resumeAudioContext: () => void): void;
-    abstract styleSheets(): StyleSheetList;
+    abstract styleSheets(): AdrStyleSheetList;
     abstract href(href?: string): void | string;
     abstract title(title?: string): void | string;
     abstract open(url?: string | URL, target?: string, features?: string): void;

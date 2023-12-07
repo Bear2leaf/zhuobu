@@ -44,7 +44,7 @@ export default class Query {
 					return;
 				}
 			}
-		} else if (arguments.length === 1 && selector instanceof Element) {
+		} else if (arguments.length === 1 && selector instanceof AdrElement) {
 			this.el = selector;
 			return;
 		} else if (arguments.length === 2 && context instanceof Query && typeof selector === 'string') {
@@ -204,9 +204,9 @@ export default class Query {
 	val(value: string): Query;
 	val(value?: string): string | Query {
 		if (value === undefined) {
-			return this.get<HTMLTextAreaElement>().value;
+			return this.get().value;
 		} else {
-			this.get<HTMLTextAreaElement>().value = value;
+			this.get().value = value;
 			return this;
 		}
 	}

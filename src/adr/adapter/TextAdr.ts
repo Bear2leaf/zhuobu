@@ -11,8 +11,8 @@ export default class TextAdr extends AdrAdapter {
             clear: () => { }
         };
     }
-    body(): AdrElement { return document.body; }
-    head(): AdrElement { return document.head; }
+    body(): AdrElement { return this.getAdrManager().getRoot().children.item(0); }
+    head(): AdrElement { return this.getAdrManager().getRoot().children.item(1); }
     styleSheets(): StyleSheetList { return document.styleSheets; }
     onselectstart?: (e: Event) => void;
     onmousedown?: (e: Event) => void;
@@ -23,23 +23,23 @@ export default class TextAdr extends AdrAdapter {
         scene.registerComponents(entity);
         entity.get(TRS).getPosition().x = Math.random() * 500 - 250;
         entity.get(TRS).getPosition().y = Math.random() * 500 - 250;
-        entity.get(Node).setParent(this.getAdrManager().getRoot().get(Node).getChildByIndex(0));
+        entity.get(Node).setParent(this.body().getEntity().get(Node));
         scene.initEntity(entity);
         entity.get(AdrText).updateChars(selector);
         const adrElement = new AdrElement();
         const domElement = document.createElement(selector);
         adrElement.setDomElement(domElement);
         adrElement.setEntity(entity);
-        this.getAdrManager().addElement(adrElement)
-        return domElement;
+        this.body().appendChild(adrElement);
+        return adrElement;
     }
     getElementById(selector: string): AdrElement | null {
         return document.getElementById(selector) as AdrElement;
     }
-    getElementsByClassName(selector: string): HTMLCollection {
+    getElementsByClassName(selector: string): AdrElement[] {
         return document.getElementsByClassName(selector);
     }
-    getElementsByTagName(selector: string): HTMLCollection {
+    getElementsByTagName(selector: string): AdrElement[] {
         return document.getElementsByTagName(selector);
     }
     addEventListener(eventName: string, resumeAudioContext: () => void): void {
