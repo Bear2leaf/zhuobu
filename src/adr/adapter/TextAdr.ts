@@ -28,6 +28,7 @@ export default class TextAdr extends AdrAdapter {
         entity.get(AdrText).updateChars(selector);
         const adrElement = new AdrElement();
         const domElement = document.createElement(selector);
+        adrElement.tagName = selector;
         adrElement.setDomElement(domElement);
         adrElement.setEntity(entity);
         this.body().appendChild(adrElement);

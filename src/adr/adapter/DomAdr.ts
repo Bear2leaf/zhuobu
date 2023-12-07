@@ -1,45 +1,18 @@
 import AdrAdapter from "./AdrAdapter.js";
-import AdrElement, { AdrElementCollection, AdrStyleSheetList } from "./AdrElement.js";
+import AdrElement from "./AdrElement.js";
+import AdrElementCollection from "./AdrElementCollection.js";
+import AdrStyleSheetList from "./AdrStyleSheetList.js";
 
 export default class DomAdr extends AdrAdapter {
-    localStorage(): LocalStorage {
-        return {
-            clear: () => { }
-        };
-    }
-    body(): AdrElement {
-        return this.getAdrManager().getRoot().getBody();
-    }
-    head(): AdrElement {
-        return this.getAdrManager().getRoot().getHead();
-    }
     styleSheets(): AdrStyleSheetList { return AdrStyleSheetList.fromDom(document.styleSheets); }
     onselectstart?: (e: Event) => void;
     onmousedown?: (e: Event) => void;
     createElement(selector: string): AdrElement {
         const adrElement = new AdrElement();
         const domElement = document.createElement(selector);
+        adrElement.tagName = selector;
         adrElement.setDomElement(domElement);
         return adrElement;
-    }
-    getElementById(selector: string): AdrElement | null {
-        return this.getAdrManager().getRoot().getElementById(selector) as AdrElement;
-    }
-    getElementsByClassName(selector: string): AdrElementCollection {
-        throw new Error("to be contined.")
-        return document.getElementsByClassName(selector);
-    }
-    getElementsByTagName(selector: string): AdrElementCollection {
-        throw new Error("to be contined.")
-        return document.getElementsByTagName(selector);
-    }
-    addEventListener(eventName: string, resumeAudioContext: () => void): void {
-        throw new Error("to be contined.")
-        return document.addEventListener(eventName, resumeAudioContext);
-    }
-    removeEventListener(eventName: string, resumeAudioContext: () => void): void {
-        throw new Error("to be contined.")
-        return document.removeEventListener(eventName, resumeAudioContext);
     }
     href(href?: string | undefined): string | void {
         throw new Error("to be contined.")
@@ -81,10 +54,6 @@ export default class DomAdr extends AdrAdapter {
     clearTimeout(id?: number) {
         throw new Error("to be contined.")
         return clearTimeout.apply(window, [id]);
-    };
-    createAudioContext() {
-        throw new Error("to be contined.")
-        return new AudioContext();
     };
 
 }

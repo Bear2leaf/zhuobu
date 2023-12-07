@@ -9,11 +9,22 @@ import Node from "../transform/Node.js";
 import AdrText from "../drawobject/AdrText.js";
 import TRS from "../transform/TRS.js";
 import AdrRootElement from "../adr/adapter/AdrRootElement.js";
+import Device from "../device/Device.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
     private eventManager?: EventManager;
+    private device?: Device;
     private readonly root = new AdrRootElement();
+    setDevice(device: Device) {
+        this.device = device;
+    }
+    getDevice() {
+        if (!this.device) {
+            throw new Error("Device not found.")
+        }
+        return this.device;
+    }
     initAdr(): void {
         adr.setAdrManager(this);
         const root = this.root;

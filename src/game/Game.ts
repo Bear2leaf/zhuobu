@@ -52,6 +52,7 @@ export default abstract class Game {
         await this.audioManager.load();
     }
     buildVars(device: Device) {
+        this.adrManager.setDevice(device);
         this.cacheManager.setDevice(device);
         this.timestepManager.setDevice(device);
         this.framebufferManager.setDevice(device);

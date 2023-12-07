@@ -16,7 +16,7 @@ import Notifications from "./notifications.js";
 import Path from "./path.js";
 import StateManager from "./state_manager.js";
 import World from "./world.js";
-import AdrElement from "./adapter/AdrElement.js";
+import AdrElement from "./adapter/AdrElementCollection.js";
 
 /**
  * Module that handles the random event system

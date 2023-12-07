@@ -1,6 +1,8 @@
 import AdrManager from "../../manager/AdrManager.js";
-import AdrElement, { AdrStyleSheetList } from "./AdrElement.js";
 import Query from "../query.js";
+import AdrStyleSheetList from "./AdrStyleSheetList.js";
+import AdrElementCollection from "./AdrElementCollection.js";
+import AdrElement from "./AdrElement.js";
 
 export default abstract class AdrAdapter {
     private adrManager?: AdrManager;
@@ -17,17 +19,39 @@ export default abstract class AdrAdapter {
     $(selector: string | AdrElement, context?: Query | string) {
         return context === undefined ? new Query(selector) : new Query(selector, context);
     }
-    abstract localStorage(): LocalStorage;
-    abstract body(): AdrElement;
-    abstract head(): AdrElement;
+
+    localStorage(): LocalStorage {
+        return {
+            clear: () => { }
+        };
+    }
+    body(): AdrElement {
+        return this.getAdrManager().getRoot().getBody();
+    }
+    head(): AdrElement {
+        return this.getAdrManager().getRoot().getHead();
+    }
+    getElementById(selector: string): AdrElement | null {
+        return this.getAdrManager().getRoot().getElementById(selector) as AdrElement;
+    }
+    getElementsByClassName(selector: string): AdrElementCollection {
+        return this.getAdrManager().getRoot().getElementsByClassName(selector);
+    }
+    getElementsByTagName(selector: string): AdrElementCollection {
+        return this.getAdrManager().getRoot().getElementsByTagName(selector);
+    }
+    addEventListener(eventName: string, resumeAudioContext: () => void): void {
+        return this.getAdrManager().getRoot().addEventListener(eventName, resumeAudioContext, { once: false });
+    }
+    removeEventListener(eventName: string, resumeAudioContext: () => void): void {
+        return this.getAdrManager().getRoot().removeEventListener(eventName, resumeAudioContext);
+    }
+    createAudioContext() {
+        return this.getAdrManager().getDevice()?.createWebAudioContext();
+    };
     abstract onselectstart?: (e: Event) => void;
     abstract onmousedown?: (e: Event) => void;
     abstract createElement(selector: string): AdrElement;
-    abstract getElementById(selector: string): AdrElement | null;
-    abstract getElementsByClassName(selector: string): AdrElement[];
-    abstract getElementsByTagName(selector: string): AdrElement[];
-    abstract addEventListener(eventName: string, resumeAudioContext: () => void): void;
-    abstract removeEventListener(eventName: string, resumeAudioContext: () => void): void;
     abstract styleSheets(): AdrStyleSheetList;
     abstract href(href?: string): void | string;
     abstract title(title?: string): void | string;
@@ -37,5 +61,4 @@ export default abstract class AdrAdapter {
     abstract setInterval(handler: TimerHandler, timeout?: number | undefined, ...args: any[]): void;
     abstract setTimeout(handler: TimerHandler, timeout?: number | undefined, ...args: any[]): void;
     abstract clearTimeout(id?: number): void;
-    abstract createAudioContext(): AudioContext;
 }

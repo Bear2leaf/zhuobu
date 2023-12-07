@@ -1,69 +1,7 @@
 import Entity from "../../entity/Entity.js";
-
-export class AdrElementCollection {
-	[Symbol.iterator]() {
-		return this.elements[Symbol.iterator]();
-	}
-	private readonly elements: AdrElement[] = [];
-	get length() {
-		return this.elements.length;
-	}
-	item(index: number) {
-		return this.elements[index];
-	}
-	push(element: AdrElement) {
-		this.elements.push(element);
-	}
-	splice(index: number, deleteCount: number, ...elements: AdrElement[]) {
-		return this.elements.splice(index, deleteCount, ...elements);
-	}
-	indexOf(element: AdrElement) {
-		return this.elements.indexOf(element);
-	}
-	map<T>(fn: (element: AdrElement) => T) {
-		return this.elements.map(fn);
-	}
-}
-export class AdrElementStyle {
-	properties: Record<string, string> = {};
-	getPropertyValue(key: string) {
-		return this.properties[key];
-	}
-	setProperty(key: string, value: string) {
-		this.properties[key] = value;
-	}
-}
-export class AdrStyleSheetList {
-	private readonly styleSheets: { title: string | null }[] = [];
-	static fromDom(domStyleSheetList: StyleSheetList) {
-		const styleSheetList = new AdrStyleSheetList();
-		for (let i = 0; i < domStyleSheetList.length; i++) {
-			const domStyleSheet = domStyleSheetList[i];
-			styleSheetList.styleSheets.push({
-				title: domStyleSheet.title
-			});
-		}
-		return styleSheetList;
-	}
-
-}
-
-export class AdrClassList {
-	private readonly classList: string[] = [];
-	add(className: string) {
-		this.classList.push(className);
-	}
-	remove(className: string) {
-		const index = this.classList.indexOf(className);
-		if (index !== -1) {
-			this.classList.splice(index, 1);
-		}
-	}
-	contains(className: string) {
-		return this.classList.indexOf(className) !== -1;
-	}
-}
-
+import AdrClassList from "./AdrClassList.js";
+import AdrElementCollection from "./AdrElementCollection.js";
+import AdrElementStyle from "./AdrElementStyle.js";
 
 export default class AdrElement {
 	private domElement?: Element;
@@ -78,11 +16,12 @@ export default class AdrElement {
 	innerText: string = "";
 	innerHTML: string = "";
 	value: string = "";
-	readonly tagName: string = "";
+	tagName: string = "";
 	readonly children: AdrElementCollection = new AdrElementCollection();
 	readonly classList: AdrClassList = new AdrClassList();
 	readonly style: AdrElementStyle = new AdrElementStyle();
 	readonly attributes: Record<string, string> = {};
+	readonly eventLinsteners: Record<string, EventListener[]> = {};
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
@@ -102,7 +41,6 @@ export default class AdrElement {
 		return this.domElement;
 	}
 	getAttribute(options: string): string | null {
-		return this.getDomElement().getAttribute(options)
 		return this.attributes[options] || null;
 	}
 	setAttribute(key: string, value: string) {
@@ -113,7 +51,6 @@ export default class AdrElement {
 		top: number;
 		left: number;
 	} {
-		return this.getDomElement().getBoundingClientRect();
 		return {
 			top: 0,
 			left: 0
@@ -123,7 +60,19 @@ export default class AdrElement {
 		throw new Error("Method not implemented.");
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
-		throw new Error("Method not implemented.");
+		if (!this.eventLinsteners[type]) {
+			this.eventLinsteners[type] = []
+		}
+		const wrapperFn = (evt: Event) => {
+			if (option.once) {
+				this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+			}
+			fn(evt)
+		}
+		this.eventLinsteners[type].push(wrapperFn);
+	}
+	removeEventListener(type: string, fn: EventListener) {
+		this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
 	}
 	dispatchEvent(event: Event) {
 		throw new Error("Method not implemented.");

@@ -1,5 +1,5 @@
 import adr from "./adr.js";
-import AdrElement from './adapter/AdrElement.js';
+import AdrElement from "./adapter/AdrElement.js";
 
 const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 
