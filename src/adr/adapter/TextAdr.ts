@@ -5,7 +5,7 @@ import TRS from "../../transform/TRS.js";
 import AdrAdapter from "./AdrAdapter.js";
 import AdrElement from "./AdrElement.js";
 
-export default class EntityAdr extends AdrAdapter {
+export default class TextAdr extends AdrAdapter {
     localStorage(): LocalStorage {
         return {
             clear: () => { }
@@ -23,7 +23,7 @@ export default class EntityAdr extends AdrAdapter {
         scene.registerComponents(entity);
         entity.get(TRS).getPosition().x = Math.random() * 500 - 250;
         entity.get(TRS).getPosition().y = Math.random() * 500 - 250;
-        entity.get(Node).setParent(this.getAdrManager().getRoot().get(Node));
+        entity.get(Node).setParent(this.getAdrManager().getRoot().get(Node).getChildByIndex(0));
         scene.initEntity(entity);
         entity.get(AdrText).updateChars(selector);
         const adrElement = new AdrElement();

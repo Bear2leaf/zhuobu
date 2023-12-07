@@ -6,6 +6,10 @@ import AdrTextObject from "../entity/AdrTextObject.js";
 import OnEntityUpdate from "../observer/OnEntityUpdate.js";
 import OnEntityInit from "../observer/OnEntityInit.js";
 import AdrElement from "../adr/adapter/AdrElement.js";
+import Entity from "../entity/Entity.js";
+import Node from "../transform/Node.js";
+import AdrText from "../drawobject/AdrText.js";
+import TRS from "../transform/TRS.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
@@ -22,6 +26,22 @@ export default class AdrManager {
         scene.addEntity(this.root);
         scene.registerComponents(this.root);
         scene.initEntity(this.root);
+        this.root.get(AdrText).updateChars("Adr Root!");
+        this.root.get(TRS).getScale().set(0.025, 0.025, 1);
+        const body = new AdrTextObject();
+        scene.addEntity(body);
+        scene.registerComponents(body);
+        scene.initEntity(body);
+        body.get(Node).setParent(this.root.get(Node));
+        body.get(AdrText).updateChars("Adr Body!");
+        body.get(TRS).getPosition().y = 100;
+        const head = new AdrTextObject();
+        scene.addEntity(head);
+        scene.registerComponents(head);
+        scene.initEntity(head);
+        head.get(Node).setParent(this.root.get(Node));
+        head.get(AdrText).updateChars("Adr Head!");
+        head.get(TRS).getPosition().y = 200;
         Engine.createDefaultElements();
         Engine.init();
         console.log("AdrManager.initAdr", this);
@@ -32,10 +52,8 @@ export default class AdrManager {
         }
         return this.root;
     }
+
     initObservers() {
-        const onEntityInit = new OnEntityInit;
-        onEntityInit.setAdrManager(this);
-        onEntityInit.setSubject(this.getEventManager().entityInit);
         const onEntityUpdate = new OnEntityUpdate;
         onEntityUpdate.setAdrManager(this);
         onEntityUpdate.setSubject(this.getEventManager().entityUpdate);

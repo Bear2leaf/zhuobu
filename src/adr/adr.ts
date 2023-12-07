@@ -1,4 +1,4 @@
-import EntityAdr from "./adapter/EntityAdr.js";
+import TextAdr from "./adapter/TextAdr.js";
 
-const adr = new EntityAdr();
+const adr = new TextAdr();
 export default adr;

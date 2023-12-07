@@ -65,7 +65,6 @@ export default abstract class Scene {
         this.entityRegisterComponents?.notify();
     }
     initEntity(entity: Entity) {
-        entity.init();
         this.entityInit?.setEntity(entity);
         this.entityInit?.notify();
     }

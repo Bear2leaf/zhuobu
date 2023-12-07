@@ -1,4 +1,5 @@
 import AdrText from "../drawobject/AdrText.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
@@ -10,15 +11,10 @@ import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityInit extends Observer {
-    private adrManager?: AdrManager;
     private gltfManager?: GLTFManager;
     setGLTFManager(gltfManager: GLTFManager) {
         this.gltfManager = gltfManager;
     }
-    setAdrManager(adrManager: AdrManager) {
-        this.adrManager = adrManager;
-    }
-
     getSubject(): EntitySubject {
         const subject = super.getSubject();
         if (subject instanceof EntitySubject) {
@@ -31,6 +27,8 @@ export default class OnEntityInit extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         console.log("OnEntityInit", entity);
+        entity.get(Node).init();
+        entity.get(DrawObject).init();
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 this.gltfManager.initGLTF(this.gltfManager.whaleGLTF);
@@ -40,11 +38,6 @@ export default class OnEntityInit extends Observer {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             }
             entity.get(Mesh).initMesh();
-        } else if (entity.has(AdrText) && this.adrManager) {
-            if (entity.get(Node).getRoot() === entity.get(Node)) {
-                entity.get(AdrText).updateChars("Adr Root!");
-                entity.get(TRS).getScale().set(0.025, 0.025, 1);
-            }
         }
     }
 

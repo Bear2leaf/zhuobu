@@ -11,7 +11,4 @@ export default abstract class Component {
         }
         return this.entity;
     }
-    init() {
-
-    }
 }

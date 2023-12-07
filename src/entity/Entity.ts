@@ -45,10 +45,5 @@ export default abstract class Entity {
         return this.objects as T[];
     }
 
-    init(): void {
-        this.all().forEach(component => {
-            component.init();
-        });
-    }
 
 }
