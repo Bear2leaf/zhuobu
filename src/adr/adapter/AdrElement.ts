@@ -70,9 +70,13 @@ export default class AdrElement {
 			fn(evt)
 		}
 		this.eventLinsteners[type].push(wrapperFn);
+
+
+		return this.getDomElement().addEventListener(type, wrapperFn, option);
 	}
 	removeEventListener(type: string, fn: EventListener) {
 		this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+		this.getDomElement().removeEventListener(type, fn);
 	}
 	dispatchEvent(event: Event) {
 		throw new Error("Method not implemented.");
