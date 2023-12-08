@@ -13,6 +13,7 @@ import { Prestige } from "./prestige.js";
 import Room from "./room.js";
 import Ship from "./ship.js";
 import StateManager from "./state_manager.js";
+import AdrElement from "./adapter/AdrElement.js";
 
 export default class Engine {
   static _incomeTimeout: number;
@@ -177,10 +178,10 @@ export default class Engine {
         if (Object.prototype.hasOwnProperty.call(langs, name)) {
           const display = langs[name];
 
-          adr.$('<li>')
-            .text(display)
+          const li = adr.$('<li>');
+          li.text(display)
             .attr('data-language', name)
-            .click(Engine.switchLanguage)
+            .click(() => Engine.switchLanguage(li))
             .appendTo(optionsList);
         }
       }
@@ -556,7 +557,7 @@ export default class Engine {
   static findStylesheet(title: string) {
     const styleSheets = adr.styleSheets();
     for (let i = 0; i < styleSheets.length; i++) {
-      const sheet = styleSheets[i];
+      const sheet = styleSheets.item(i);
       if (sheet.title === title) {
         return sheet;
       }
@@ -836,8 +837,8 @@ export default class Engine {
   static handleStateUpdates(e: StateUpdateEvent) {
 
   }
-  static switchLanguage(this: Element) {
-    const lang = adr.$(this).attr("data-language");
+  static switchLanguage(el: Query) {
+    const lang = el.attr("data-language");
     const href = adr.href() as string;
     if (href.search(/[\?\&]lang=[a-z_]+/) !== -1) {
       adr.href(href.replace(/([\?\&]lang=)([a-z_]+)/gi, "$1" + lang));

@@ -17,6 +17,7 @@ export default class AdrElement {
 	innerHTML: string = "";
 	value: string = "";
 	tagName: string = "";
+	onRemove?(): void;
 	readonly children: AdrElementCollection = new AdrElementCollection();
 	readonly classList: AdrClassList = new AdrClassList();
 	readonly style: AdrElementStyle = new AdrElementStyle();
@@ -34,17 +35,20 @@ export default class AdrElement {
 		}
 		return this.entity;
 	}
-	getDomElement() {
-		if (!this.domElement) {
-			throw new Error("domElement not exist");
+	getText() {
+		return this.innerText;
+	}
+	setText(text: string) {
+		this.innerText = text;
+		if (this.domElement) {
+			this.domElement.textContent = text;
 		}
-		return this.domElement;
 	}
 	getAttribute(options: string): string | null {
 		return this.attributes[options] || null;
 	}
 	setAttribute(key: string, value: string) {
-		this.getDomElement().setAttribute(key, value);
+		this.domElement?.setAttribute(key, value);
 		this.attributes[key] = value;
 	}
 	getBoundingClientRect(): {
@@ -57,7 +61,11 @@ export default class AdrElement {
 		};
 	}
 	remove() {
-		throw new Error("Method not implemented.");
+		if (this.onRemove === undefined) {
+			throw new Error("onRemove not exist");
+		}
+		this.onRemove();
+		this.domElement?.remove();
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
 		if (!this.eventLinsteners[type]) {
@@ -72,21 +80,29 @@ export default class AdrElement {
 		this.eventLinsteners[type].push(wrapperFn);
 
 
-		return this.getDomElement().addEventListener(type, wrapperFn, option);
+		this.domElement?.addEventListener(type, wrapperFn, option);
 	}
 	removeEventListener(type: string, fn: EventListener) {
 		this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
-		this.getDomElement().removeEventListener(type, fn);
+		this.domElement?.removeEventListener(type, fn);
 	}
-	dispatchEvent(event: Event) {
-		throw new Error("Method not implemented.");
+	dispatchEvent(type: string) {
+		this.eventLinsteners[type]?.forEach(fn => {
+			fn(new Event(type));
+		});
+		const event = new Event(type);
+		this.domElement?.dispatchEvent(event);
 	}
 	appendChild(element: AdrElement) {
-		this.getDomElement().appendChild(element.getDomElement())
+		if (element.domElement) {
+			this.domElement?.appendChild(element.domElement)
+		}
 		this.children.push(element);
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement) {
-		this.getDomElement().insertBefore(element.getDomElement(), firstChild.getDomElement())
+		if (element.domElement && firstChild.domElement) {
+			this.domElement?.insertBefore(element.domElement, firstChild.domElement)
+		}
 		this.children.splice(this.children.indexOf(firstChild), 0, element);
 	}
 	get firstChild() {

@@ -10,11 +10,13 @@ import EntityRegisterComponents from "../subject/EntityRegisterComponents.js";
 import EntityRender from "../subject/EntityRender.js";
 import ViewPortChange from "../subject/ViewPortChange.js";
 import EntityUpdate from "../subject/EntityUpdate.js";
+import EntityRemove from "../subject/EntityRemove.js";
 
 
 export default class EventManager {
     readonly entityInit = new EntityInit;
     readonly entityAdd = new EntityAdd;
+    readonly entityRemove = new EntityRemove;
     readonly entityRender = new EntityRender;
     readonly entityUpdate = new EntityUpdate;
     readonly entityRegisterComponents = new EntityRegisterComponents;

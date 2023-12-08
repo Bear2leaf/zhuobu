@@ -815,11 +815,10 @@ export default class Events {
 							.text(_(k) + ' x' + numToDrop)
 							.data('thing', k)
 							.data('num', numToDrop)
-							.click(function (e: Event) {
-								Events.dropStuff(btn, e)
+							.click(function () {
+								Events.dropStuff(btn, dropRow)
 							})
-							.mouseenter(function (e: Event) {
-								e.stopPropagation();
+							.mouseenter(function () {
 							});
 						dropRow.appendTo(dropMenu);
 					}
@@ -827,11 +826,7 @@ export default class Events {
 			}
 			adr.$('<div>').attr('id', 'no_drop')
 				.text(_('nothing'))
-				.mouseenter(function (e: Event) {
-					e.stopPropagation();
-				})
-				.click(function (e: Event) {
-					e.stopPropagation();
+				.click(function () {
 					dropMenu.remove();
 				})
 				.appendTo(dropMenu);
@@ -953,10 +948,7 @@ export default class Events {
 		btn.data('canLeave', takeAndLeave);
 	};
 
-	static dropStuff(takeItemBtn: Query, e: Event) {
-		e.stopPropagation();
-		const target = e.target as unknown as AdrElement;
-		const dropBtn = adr.$(target);
+	static dropStuff(takeItemBtn: Query, dropBtn: Query) {
 		const thing = dropBtn.data('thing');
 		const id = 'take_' + thing.replace(/ /g, '-');
 		const num = dropBtn.data('num');

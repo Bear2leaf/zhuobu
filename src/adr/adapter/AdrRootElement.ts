@@ -22,29 +22,25 @@ export default class AdrRootElement extends AdrElement {
     }
     deepFilterByTagName(collection: AdrElementCollection, tagName: string): AdrElementCollection {
         const list: AdrElementCollection = new AdrElementCollection();
-        if (collection.length) {
-            for (let i = 0; i < collection.length; i++) {
-                const element = collection.item(i);
-                if (element.tagName === tagName) {
-                    list.push(element);
-                }
-                const childList = this.deepFilterByTagName(element.children, tagName);
-                list.push(...childList);
+        for (let i = 0; i < collection.length; i++) {
+            const element = collection.item(i);
+            if (element.tagName === tagName) {
+                list.push(element);
             }
+            const childList = this.deepFilterByTagName(element.children, tagName);
+            list.push(...childList);
         }
         return list;
     }
     deepFilterByClassName(collection: AdrElementCollection, className: string): AdrElementCollection {
         const list: AdrElementCollection = new AdrElementCollection();
-        if (collection.length) {
-            for (let i = 0; i < collection.length; i++) {
-                const element = collection.item(i);
-                if (element.classList.contains(className)) {
-                    list.push(element);
-                }
-                const childList = this.deepFilterByClassName(element.children, className);
-                list.push(...childList);
+        for (let i = 0; i < collection.length; i++) {
+            const element = collection.item(i);
+            if (element.classList.contains(className)) {
+                list.push(element);
             }
+            const childList = this.deepFilterByClassName(element.children, className);
+            list.push(...childList);
         }
         return list;
     }

@@ -36,7 +36,6 @@ export default class AdrManager {
         root.getEntity().get(AdrText).updateChars("Adr Root!");
         root.getEntity().get(TRS).getScale().set(0.025, 0.025, 1);
         const body = new AdrTextObject();
-        scene.addEntity(body);
         scene.registerComponents(body);
         scene.initEntity(body);
         body.get(Node).setParent(root.getEntity().get(Node));
@@ -47,7 +46,6 @@ export default class AdrManager {
         bodyElement.setEntity(body);
         root.appendChild(bodyElement);
         const head = new AdrTextObject();
-        scene.addEntity(head);
         scene.registerComponents(head);
         scene.initEntity(head);
         head.get(Node).setParent(root.getEntity().get(Node));

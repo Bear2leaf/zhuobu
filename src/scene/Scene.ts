@@ -1,6 +1,7 @@
 import Entity from "../entity/Entity.js";
 import EntityAdd from "../subject/EntityAdd.js";
 import EntityRegisterComponents from "../subject/EntityRegisterComponents.js";
+import EntityRemove from "../subject/EntityRemove.js";
 import EntityRender from "../subject/EntityRender.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import EntityUpdate from "../subject/EntityUpdate.js";
@@ -11,6 +12,7 @@ export default abstract class Scene {
     private viewPortChange?: ViewPortChange;
     private entityInit?: EntitySubject;
     private entityAdd?: EntityAdd;
+    private entityRemove?: EntityRemove;
     private entityRegisterComponents?: EntityRegisterComponents;
     private entityRender?: EntityRender;
     private entityUpdate?: EntityUpdate;
@@ -40,7 +42,8 @@ export default abstract class Scene {
         entityAdd: EntityAdd,
         entityRegisterComponents: EntityRegisterComponents,
         entityRender: EntityRender,
-        entityUpdate: EntityUpdate
+        entityUpdate: EntityUpdate,
+        entityRemove: EntityRemove
     ) {
         this.viewPortChange = viewPortChange;
         this.entityInit = entityInit;
@@ -48,6 +51,7 @@ export default abstract class Scene {
         this.entityRegisterComponents = entityRegisterComponents;
         this.entityRender = entityRender;
         this.entityUpdate = entityUpdate;
+        this.entityRemove = entityRemove;
     }
     initEntities(): void {
         this.entities.forEach(entity => {
@@ -58,6 +62,11 @@ export default abstract class Scene {
         this.entities.push(entity);
         this.entityAdd?.setEntity(entity);
         this.entityAdd?.notify();
+    }
+    removeEntity(entity: Entity) {
+        this.entities.splice(this.entities.indexOf(entity), 1);
+        this.entityRemove?.setEntity(entity);
+        this.entityRemove?.notify();
     }
     registerComponents(entity: Entity) {
         entity.registerComponents();

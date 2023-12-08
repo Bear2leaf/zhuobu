@@ -25,7 +25,8 @@ export default class SceneManager {
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
             eventManager.entityRender,
-            eventManager.entityUpdate
+            eventManager.entityUpdate,
+            eventManager.entityRemove
         );
     }
 }

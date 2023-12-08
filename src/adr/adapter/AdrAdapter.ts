@@ -3,6 +3,10 @@ import Query from "../query.js";
 import AdrStyleSheetList from "./AdrStyleSheetList.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 import AdrElement from "./AdrElement.js";
+import AdrTextObject from "../../entity/AdrTextObject.js";
+import AdrText from "../../drawobject/AdrText.js";
+import TRS from "../../transform/TRS.js";
+import Node from "../../transform/Node.js";
 
 export default abstract class AdrAdapter {
     private adrManager?: AdrManager;
@@ -31,6 +35,27 @@ export default abstract class AdrAdapter {
     head(): AdrElement {
         return this.getAdrManager().getRoot().getHead();
     }
+
+    createElement(selector: string): AdrElement {
+        const entity = new AdrTextObject();
+        const scene = this.getAdrManager().getSceneManager().first();
+        scene.addEntity(entity);
+        scene.registerComponents(entity);
+        entity.get(TRS).getPosition().x = Math.random() * 500 - 250;
+        entity.get(TRS).getPosition().y = Math.random() * 500 - 250;
+        entity.get(Node).setParent(this.body().getEntity().get(Node));
+        scene.initEntity(entity);
+        entity.get(AdrText).updateChars(selector);
+        const adrElement = new AdrElement();
+        adrElement.onRemove = () => {
+            this.getAdrManager().getSceneManager().first().removeEntity(entity);
+        };
+        const domElement = document.createElement(selector);
+        adrElement.tagName = selector;
+        adrElement.setDomElement(domElement);
+        adrElement.setEntity(entity);
+        return adrElement;
+    }
     getElementById(selector: string): AdrElement | null {
         return this.getAdrManager().getRoot().getElementById(selector) as AdrElement;
     }
@@ -51,7 +76,6 @@ export default abstract class AdrAdapter {
     };
     abstract onselectstart?: (e: Event) => void;
     abstract onmousedown?: (e: Event) => void;
-    abstract createElement(selector: string): AdrElement;
     abstract styleSheets(): AdrStyleSheetList;
     abstract href(href?: string): void | string;
     abstract title(title?: string): void | string;

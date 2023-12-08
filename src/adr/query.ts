@@ -323,7 +323,7 @@ export default class Query {
 				once
 			});
 		} else {
-			this.get().dispatchEvent(new Event(type));
+			this.get().dispatchEvent(type);
 		}
 		return this;
 	}
@@ -345,13 +345,13 @@ export default class Query {
 	text(value?: string | number): Query | string {
 		if (value === undefined) {
 			if (arguments.length === 0) {
-				return this.get<AdrElement>().innerText;
+				return this.get<AdrElement>().getText();
 			} else {
-				this.get<AdrElement>().innerText = "";
+				this.get<AdrElement>().setText("");
 				return this;
 			}
 		} else {
-			this.get<AdrElement>().innerText = value.toString();
+			this.get<AdrElement>().setText(value.toString());
 			return this;
 		}
 	}

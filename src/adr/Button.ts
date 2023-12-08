@@ -3,6 +3,7 @@ import _ from "./translate.js";
 import adr from "./adr.js";
 import Engine from "./engine.js";
 import StateManager from "./state_manager.js";
+import AdrElement from "./adapter/AdrElement.js";
 
 export default class Button {
 	static data_cooldown: number;
@@ -21,11 +22,11 @@ export default class Button {
 			.attr('id', typeof (options.id) !== 'undefined' ? options.id : "BTN_" + Engine.getGuid())
 			.addClass('button')
 			.text(typeof (options.text) !== 'undefined' ? options.text : "button")
-			.click(function (this: Element) {
-				if (!adr.$(this).hasClass('disabled')) {
-					Button.cooldown(adr.$(this));
+			.click(function () {
+				if (!el.hasClass('disabled')) {
+					Button.cooldown(el);
 					if (options.click) {
-						options.click(adr.$(this));
+						options.click(el);
 					}
 				}
 			})
