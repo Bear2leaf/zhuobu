@@ -119,18 +119,18 @@ export default class Query {
 
 	addClass(value: string): Query {
 		value.split(' ').forEach((v) => {
-			this.get().classList.add(v);
+			this.get().addClass(v);
 		});
 		return this;
 	};
 
 	removeClass(value: string) {
-		this.get().classList.remove(value);
+		this.get().removeClass(value);
 		return this;
 	};
 
 	hasClass(value: string) {
-		return this.get().classList.contains(value);
+		return this.get().hasClass(value);
 	};
 
 	find(selector: string) {
@@ -240,14 +240,14 @@ export default class Query {
 		const el = this.get() as AdrElement;
 		if (typeof name === 'string') {
 			if (value === undefined) {
-				return el.style.getPropertyValue(name);
+				return el.getStyle(name);
 			} else {
-				el.style.setProperty(name, value.toString());
+				el.setStyle(name, value.toString());
 				return this;
 			}
 		} else if (typeof name === 'object') {
 			for (const key in name) {
-				el.style.setProperty(key, name[key]);
+				el.setStyle(key, name[key]);
 			}
 			return this;
 		} else {
@@ -345,13 +345,13 @@ export default class Query {
 	text(value?: string | number): Query | string {
 		if (value === undefined) {
 			if (arguments.length === 0) {
-				return this.get<AdrElement>().getText();
+				return this.get<AdrElement>().innerText;
 			} else {
-				this.get<AdrElement>().setText("");
+				this.get<AdrElement>().innerText = "";
 				return this;
 			}
 		} else {
-			this.get<AdrElement>().setText(value.toString());
+			this.get<AdrElement>().innerText = value.toString();
 			return this;
 		}
 	}

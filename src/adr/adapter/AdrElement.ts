@@ -1,28 +1,66 @@
 import Entity from "../../entity/Entity.js";
 import AdrClassList from "./AdrClassList.js";
 import AdrElementCollection from "./AdrElementCollection.js";
-import AdrElementStyle from "./AdrElementStyle.js";
 
 export default class AdrElement {
 	private domElement?: Element;
 	private entity?: Entity;
 	parentNode?: AdrElement;
-	offsetWidth: number = 0;
-	offsetHeight: number = 0;
-	scrollTop: number = 0;
-	clientTop: number = 0;
-	scrollLeft: number = 0;
-	clientLeft: number = 0;
-	innerText: string = "";
-	innerHTML: string = "";
-	value: string = "";
-	tagName: string = "";
+	get offsetWidth(): number {
+		return (this.domElement as HTMLElement)?.offsetWidth || 0;
+	}
+	get offsetHeight(): number {
+		return (this.domElement as HTMLElement)?.offsetHeight || 0;
+	}
+	get scrollTop(): number {
+		return this.domElement?.scrollTop || 0;
+	}
+	get clientTop(): number {
+		return this.domElement?.clientTop || 0;
+	}
+	get scrollLeft(): number {
+		return this.domElement?.scrollLeft || 0;
+	}
+	get clientLeft(): number {
+		return this.domElement?.clientLeft || 0;
+	}
+	get innerText(): string {
+		return (this.domElement as HTMLElement)?.innerText || "";
+	}
+	set innerText(value: string) {
+		if (this.domElement) {
+			(this.domElement as HTMLElement).innerText = value;
+		}
+	}
+	get innerHTML(): string {
+		return (this.domElement as HTMLElement)?.innerHTML || "";
+	}
+	set innerHTML(value: string) {
+		if (this.domElement) {
+			this.domElement.innerHTML = value;
+
+		}
+	}
+	get tagName(): string {
+		return (this.domElement as HTMLElement)?.tagName || "";
+	};
+	set tagName(value: string) {
+
+	}
+	get value(): string {
+		return (this.domElement as HTMLTextAreaElement)?.value || "";
+	}
+	set value(value: string) {
+		if (this.domElement) {
+			(this.domElement as HTMLTextAreaElement).value = value;
+		}
+	}
 	onRemove?(): void;
 	readonly children: AdrElementCollection = new AdrElementCollection();
-	readonly classList: AdrClassList = new AdrClassList();
-	readonly style: AdrElementStyle = new AdrElementStyle();
-	readonly attributes: Record<string, string> = {};
-	readonly eventLinsteners: Record<string, EventListener[]> = {};
+	private readonly classSet: Set<string> = new Set();
+	private readonly style: Record<string, string> = {};
+	private readonly attributes: Record<string, string> = {};
+	private readonly eventLinsteners: Record<string, EventListener[]> = {};
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
@@ -35,15 +73,6 @@ export default class AdrElement {
 		}
 		return this.entity;
 	}
-	getText() {
-		return this.innerText;
-	}
-	setText(text: string) {
-		this.innerText = text;
-		if (this.domElement) {
-			this.domElement.textContent = text;
-		}
-	}
 	getAttribute(options: string): string | null {
 		return this.attributes[options] || null;
 	}
@@ -51,11 +80,29 @@ export default class AdrElement {
 		this.domElement?.setAttribute(key, value);
 		this.attributes[key] = value;
 	}
+	getStyle(options: string): string {
+		return (this.domElement as HTMLElement)?.style.getPropertyValue(options) || this.style[options] || "";
+	}
+	setStyle(key: string, value: string) {
+		(this.domElement as HTMLElement)?.style.setProperty(key, value);
+		this.style[key] = value;
+	}
+	addClass(className: string) {
+		this.classSet.add(className);
+		this.domElement?.classList.add(className);
+	}
+	removeClass(className: string) {
+		this.classSet.delete(className);
+		this.domElement?.classList.remove(className);
+	}
+	hasClass(className: string) {
+		return this.classSet.has(className);
+	}
 	getBoundingClientRect(): {
 		top: number;
 		left: number;
 	} {
-		return {
+		return (this.domElement as HTMLElement)?.getBoundingClientRect() || {
 			top: 0,
 			left: 0
 		};
@@ -99,20 +146,24 @@ export default class AdrElement {
 		}
 		this.children.push(element);
 	}
-	insertBefore(element: AdrElement, firstChild: AdrElement) {
-		if (element.domElement && firstChild.domElement) {
-			this.domElement?.insertBefore(element.domElement, firstChild.domElement)
+	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
+		if (element.domElement) {
+			this.domElement?.insertBefore(element.domElement, firstChild?.domElement || null)
 		}
-		this.children.splice(this.children.indexOf(firstChild), 0, element);
+		if (firstChild === null) {
+			this.children.push(element);
+		} else {
+			this.children.splice(this.children.indexOf(firstChild), 0, element);
+		}
 	}
-	get firstChild() {
-		return this.children.item(0);
+	get firstChild(): AdrElement | null {
+		return this.children.item(0) || null;
 	}
-	get nextSibling() {
+	get nextSibling(): AdrElement | null {
 		if (!this.parentNode) {
 			throw new Error("parentNode not exist");
 		}
 		const index = this.parentNode.children.indexOf(this);
-		return this.parentNode.children.item(index + 1);
+		return this.parentNode.children.item(index + 1) || null;
 	}
 }
