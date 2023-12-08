@@ -1,5 +1,4 @@
 import Entity from "../../entity/Entity.js";
-import AdrClassList from "./AdrClassList.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 
 export default class AdrElement {
@@ -112,7 +111,11 @@ export default class AdrElement {
 			throw new Error("onRemove not exist");
 		}
 		this.onRemove();
+		this.parentNode?.children.splice(this.parentNode?.children.indexOf(this), 1);
 		this.domElement?.remove();
+		for(const child of this.children) {
+			child.remove();
+		}
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
 		if (!this.eventLinsteners[type]) {
@@ -144,6 +147,7 @@ export default class AdrElement {
 		if (element.domElement) {
 			this.domElement?.appendChild(element.domElement)
 		}
+		element.parentNode = this;
 		this.children.push(element);
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
@@ -155,6 +159,7 @@ export default class AdrElement {
 		} else {
 			this.children.splice(this.children.indexOf(firstChild), 0, element);
 		}
+		element.parentNode = this;
 	}
 	get firstChild(): AdrElement | null {
 		return this.children.item(0) || null;

@@ -9,6 +9,9 @@ import TRS from "../../transform/TRS.js";
 import Node from "../../transform/Node.js";
 
 export default abstract class AdrAdapter {
+    private readonly store: LocalStorage = {
+        clear: () => this.store.gameState = undefined
+    }
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -25,9 +28,7 @@ export default abstract class AdrAdapter {
     }
 
     localStorage(): LocalStorage {
-        return {
-            clear: () => { }
-        };
+        return this.store;
     }
     body(): AdrElement {
         return this.getAdrManager().getRoot().getBody();

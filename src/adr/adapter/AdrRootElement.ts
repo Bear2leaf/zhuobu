@@ -24,7 +24,7 @@ export default class AdrRootElement extends AdrElement {
         const list: AdrElementCollection = new AdrElementCollection();
         for (let i = 0; i < collection.length; i++) {
             const element = collection.item(i);
-            if (element.tagName === tagName) {
+            if (element.tagName.toUpperCase() === tagName.toUpperCase()) {
                 list.push(element);
             }
             const childList = this.deepFilterByTagName(element.children, tagName);
