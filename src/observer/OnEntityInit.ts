@@ -7,7 +7,6 @@ import AdrManager from "../manager/AdrManager.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
-import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityInit extends Observer {
