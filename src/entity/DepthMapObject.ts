@@ -2,7 +2,6 @@ import Component from "./Component.js";
 import DepthMap from "../texturemap/DepthMap.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import DrawObject from "../drawobject/DrawObject.js";
 import Sprite from "../drawobject/Sprite.js";
 import Entity from "./Entity.js";
 

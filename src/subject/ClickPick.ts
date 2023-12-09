@@ -1,4 +1,3 @@
-import DrawObject from "../drawobject/DrawObject.js";
 import FrameBufferObject from "../framebuffer/FrameBufferObject.js";
 import { Vec3 } from "../geometry/Vector.js";
 import BaseTouchSubject from "./BaseTouchSubject.js";
