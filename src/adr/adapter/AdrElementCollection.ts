@@ -23,4 +23,7 @@ export default class AdrElementCollection {
 	map<T>(fn: (element: AdrElement) => T) {
 		return this.elements.map(fn);
 	}
+	pop() {
+		return this.elements.pop();
+	}
 }

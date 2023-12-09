@@ -1,10 +1,19 @@
 import Entity from "../../entity/Entity.js";
+import Node from "../../transform/Node.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 
 export default class AdrElement {
 	private domElement?: Element;
 	private entity?: Entity;
+	private readonly classSet: Set<string> = new Set();
+	private readonly style: Record<string, string> = {};
+	private readonly attributes: Record<string, string> = {};
+	private readonly eventLinsteners: Record<string, EventListener[]> = {};
+
+	readonly children: AdrElementCollection = new AdrElementCollection();
 	parentNode?: AdrElement;
+	onRemove?(): void;
+
 	get offsetWidth(): number {
 		return (this.domElement as HTMLElement)?.offsetWidth || 0;
 	}
@@ -54,12 +63,6 @@ export default class AdrElement {
 			(this.domElement as HTMLTextAreaElement).value = value;
 		}
 	}
-	onRemove?(): void;
-	readonly children: AdrElementCollection = new AdrElementCollection();
-	private readonly classSet: Set<string> = new Set();
-	private readonly style: Record<string, string> = {};
-	private readonly attributes: Record<string, string> = {};
-	private readonly eventLinsteners: Record<string, EventListener[]> = {};
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
@@ -110,12 +113,13 @@ export default class AdrElement {
 		if (this.onRemove === undefined) {
 			throw new Error("onRemove not exist");
 		}
-		this.onRemove();
-		this.parentNode?.children.splice(this.parentNode?.children.indexOf(this), 1);
-		this.domElement?.remove();
 		for(const child of this.children) {
 			child.remove();
 		}
+		this.domElement?.remove();
+		this.getEntity().get(Node).setParent();
+		this.parentNode = undefined;
+		this.onRemove();
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
 		if (!this.eventLinsteners[type]) {
@@ -148,6 +152,7 @@ export default class AdrElement {
 			this.domElement?.appendChild(element.domElement)
 		}
 		element.parentNode = this;
+		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
 		this.children.push(element);
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
@@ -160,6 +165,7 @@ export default class AdrElement {
 			this.children.splice(this.children.indexOf(firstChild), 0, element);
 		}
 		element.parentNode = this;
+		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
 	}
 	get firstChild(): AdrElement | null {
 		return this.children.item(0) || null;

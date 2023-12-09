@@ -7,6 +7,7 @@ import Pointer from "../drawobject/Pointer.js";
 import AdrManager from "../manager/AdrManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
+import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityUpdate extends Observer {
@@ -43,7 +44,9 @@ export default class OnEntityUpdate extends Observer {
         } else if (entity.has(Pointer)) {
             entity.get(Pointer).update();
         } else if (entity.has(AdrText) && this.adrManager) {
-            entity.get(AdrText).update();
+            if (entity.get(Node).getRoot() === entity.get(Node)) {
+                entity.get(Node).updateWorldMatrix();
+            }
         }
     }
 

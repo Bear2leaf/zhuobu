@@ -1,5 +1,6 @@
 import adr from "./adr.js";
 import AdrElement from "./adapter/AdrElement.js";
+import AdrText from "../drawobject/AdrText.js";
 
 const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 
@@ -187,6 +188,7 @@ export default class Query {
 
 	remove() {
 		if (this.found) {
+			this.parent().children.splice(this.index(this), 1);
 			this.get().remove();
 		}
 		return this;
@@ -348,10 +350,12 @@ export default class Query {
 				return this.get<AdrElement>().innerText;
 			} else {
 				this.get<AdrElement>().innerText = "";
+				this.get().getEntity().get(AdrText).updateChars("");
 				return this;
 			}
 		} else {
 			this.get<AdrElement>().innerText = value.toString();
+			this.get().getEntity().get(AdrText).updateChars(value.toString());
 			return this;
 		}
 	}

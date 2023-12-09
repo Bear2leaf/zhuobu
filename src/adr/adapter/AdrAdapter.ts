@@ -4,14 +4,13 @@ import AdrStyleSheetList from "./AdrStyleSheetList.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 import AdrElement from "./AdrElement.js";
 import AdrTextObject from "../../entity/AdrTextObject.js";
-import AdrText from "../../drawobject/AdrText.js";
 import TRS from "../../transform/TRS.js";
-import Node from "../../transform/Node.js";
 
 export default abstract class AdrAdapter {
     private readonly store: LocalStorage = {
         clear: () => this.store.gameState = undefined
     }
+    // private readonly store = localStorage;
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -42,11 +41,9 @@ export default abstract class AdrAdapter {
         const scene = this.getAdrManager().getSceneManager().first();
         scene.addEntity(entity);
         scene.registerComponents(entity);
-        entity.get(TRS).getPosition().x = Math.random() * 500 - 250;
-        entity.get(TRS).getPosition().y = Math.random() * 500 - 250;
-        entity.get(Node).setParent(this.body().getEntity().get(Node));
+        entity.get(TRS).getPosition().x = Math.random() * 400 - 200;
+        entity.get(TRS).getPosition().y = Math.random() * 300 - 150;
         scene.initEntity(entity);
-        entity.get(AdrText).updateChars(selector);
         const adrElement = new AdrElement();
         adrElement.onRemove = () => {
             this.getAdrManager().getSceneManager().first().removeEntity(entity);

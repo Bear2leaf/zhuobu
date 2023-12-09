@@ -44,7 +44,7 @@ export default class AdrManager {
         const bodyElement = new AdrElement();
         bodyElement.setDomElement(document.body);
         bodyElement.setEntity(body);
-        root.appendChild(bodyElement);
+        adr.$(root).append(adr.$(bodyElement))
         const head = new AdrTextObject();
         scene.registerComponents(head);
         scene.initEntity(head);
@@ -54,7 +54,7 @@ export default class AdrManager {
         const headElement = new AdrElement();
         headElement.setDomElement(document.head);
         headElement.setEntity(head);
-        root.appendChild(headElement);
+        adr.$(root).append(adr.$(headElement))
         Engine.createDefaultElements();
         Engine.init();
         console.log("AdrManager.initAdr", this);

@@ -75,6 +75,9 @@ export default class Node extends Component {
     const ndx = this.children.indexOf(child);
     this.children.splice(ndx, 1);
   }
+  getChildren(): readonly Node[] {
+    return this.children;
+  }
   getSource() {
     return this.source;
   }
