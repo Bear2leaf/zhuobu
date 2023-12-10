@@ -1,19 +1,21 @@
 import TextureManager from "./TextureManager.js";
-import SceneManager from "./SceneManager.js";
 import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
-import PickFrameBufferObject from "../framebuffer/PickFrameBufferObjectx.js";
+import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import Device, { ViewPortType } from "../device/Device.js";
 import RendererManager from "./RendererManager.js";
+import OnEntityRender from "../observer/OnEntityRender.js";
+import EventManager from "./EventManager.js";
+import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 
 
 export default class FrameBufferManager {
     private readonly depthFrameBufferObject = new DepthFrameBufferObject;
     private readonly pickFrameBufferObject = new PickFrameBufferObject;
     private readonly renderFrameBufferObject = new RenderFrameBufferObject;
-    private sceneManager?: SceneManager;
     private textureManager?: TextureManager;
     private rendererManager?: RendererManager;
+    private eventManager?: EventManager;
     private device?: Device;
     setDevice(device: Device) {
         this.device = device;
@@ -31,34 +33,31 @@ export default class FrameBufferManager {
             this.renderFrameBufferObject,
         ].forEach((fbo) => {
             fbo.create(this.getDevice().getRenderingContext());
-            fbo.attach(this.getTextureManager().depthTexture);
-            fbo.attach(this.getTextureManager().renderTexture);
-            fbo.attach(this.getTextureManager().pickTexture);
         });
-        // this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject, index) => {
-        //     subject.getColor().set(index + 1, 0, 0, 255)
-        //     subject.setFrameBufferObject(this.pickFrameBufferObject);
-        // });
 
+        this.depthFrameBufferObject.attach(this.getTextureManager().depthTexture);
+        this.pickFrameBufferObject.attach(this.getTextureManager().pickTexture);
+        this.renderFrameBufferObject.attach(this.getTextureManager().renderTexture);
     }
-    update(): void {
-        const all =
-            [
-                this.depthFrameBufferObject,
-                this.pickFrameBufferObject,
-                this.renderFrameBufferObject,
-            ];
-        all.forEach(fbo => fbo.bind());
-        this.getDevice().viewportTo(ViewPortType.Full)
-        // const renderer = this.getRendererManager().get(GLTFMeshRenderer);
-        // this.getSceneManager().first().getComponents(OnClickPickSubject).forEach((subject) => {
-        //     subject.activate();
-        //     renderer.getShader().use();
-        //     renderer.getShader().setVector3u("u_pickColor", subject.getColor());
-        //     renderer.render();
-        //     subject.deactivate();
-        // });
-        all.forEach(fbo => fbo.unbind());
+    initObservers() {
+        const onEntityRender = new OnEntityRender;
+        onEntityRender.setFrameBufferManager(this);
+        onEntityRender.setRendererManager(this.getRendererManager());
+        onEntityRender.setSubject(this.getEventManager().entityRender);
+        this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
+        const onClickPick = new OnClickPickSayHello();
+        onClickPick.setSubject(this.getEventManager().clickPick);
+    }
+    bindFramebuffers(): void {
+        // this.depthFrameBufferObject.bind();
+        this.pickFrameBufferObject.bind();
+        this.getDevice().viewportTo(ViewPortType.Full);
+        // this.renderFrameBufferObject.bind();
+    }
+    unbindFramebuffers(): void {
+        // this.depthFrameBufferObject.unbind();
+        this.pickFrameBufferObject.unbind();
+        // this.renderFrameBufferObject.unbind();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {
@@ -69,15 +68,6 @@ export default class FrameBufferManager {
     setTextureManager(textureManager: TextureManager) {
         this.textureManager = textureManager;
     }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
-        }
-        return this.sceneManager;
-    }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
     getRendererManager(): RendererManager {
         if (this.rendererManager === undefined) {
             throw new Error("rendererManager is undefined");
@@ -86,5 +76,14 @@ export default class FrameBufferManager {
     }
     setRendererManager(rendererManager: RendererManager) {
         this.rendererManager = rendererManager;
+    }
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
+        }
+        return this.eventManager;
+    }
+    setEventManager(eventManager: EventManager) {
+        this.eventManager = eventManager;
     }
 }

@@ -10,6 +10,8 @@ export default class InputManager {
     initInput(device: Device): void {
         this.touch.setDevice(device);
         this.touch.init();
+        this.getEventManager().click.setTouch(this.touch);
+        this.getEventManager().clickPick.setTouch(this.touch);
     }
     setEventManager(eventManager: EventManager): void {
         this.eventManager = eventManager;
@@ -31,7 +33,6 @@ export default class InputManager {
     }
     process(): void {
         if (this.touch.getIsTouchingStart() || this.touch.getIsTouching()) {
-            this.getEventManager().click.setTouch(this.touch);
             this.getEventManager().click.notify();
         }
     }

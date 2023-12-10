@@ -63,6 +63,7 @@ export default abstract class Game {
         this.inputManager.initObservers();
         this.eventManager.initObservers();
         this.rendererManager.initObservers();
+        this.framebufferManager.initObservers();
         this.textureManager.initObservers();
         this.animationManager.initObservers();
         this.adrManager.initObservers();
@@ -84,8 +85,8 @@ export default abstract class Game {
         this.gltfManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.framebufferManager.setTextureManager(this.textureManager);
-        this.framebufferManager.setSceneManager(this.sceneManager);
         this.framebufferManager.setRendererManager(this.rendererManager);
+        this.framebufferManager.setEventManager(this.eventManager);
         this.rendererManager.setCacheManager(this.cacheManager);
         this.rendererManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCameraManager(this.cameraManager);

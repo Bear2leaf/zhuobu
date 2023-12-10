@@ -4,7 +4,6 @@ import JointTexture from "../texture/JointTexture.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {
-
     render(drawObject: SkinMesh) {
         this.prepareShader();
         this.prepareCamera();

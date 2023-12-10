@@ -4,6 +4,7 @@ import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
+import FrameBufferManager from "../manager/FrameBufferManager.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
@@ -12,6 +13,7 @@ import Observer from "./Observer.js";
 
 export default class OnEntityRender extends Observer {
     private rendererManager?: RendererManager;
+    private framebufferManager?: FrameBufferManager;
     getSubject(): EntitySubject {
         const subject = super.getSubject();
         if (subject instanceof EntitySubject) {
@@ -24,9 +26,12 @@ export default class OnEntityRender extends Observer {
     setRendererManager(rendererManager: RendererManager) {
         this.rendererManager = rendererManager;
     }
+    setFrameBufferManager(framebufferManager: FrameBufferManager) {
+        this.framebufferManager = framebufferManager;
+    }
     public notify(): void {
         const entity = this.getSubject().getEntity();
-        if (entity.get(DrawObject) && this.rendererManager) {
+        if (entity.has(DrawObject) && this.rendererManager) {
             if (entity.has(SDFCharacter)) {
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
             } else if (entity.has(DefaultSprite)) {
@@ -45,7 +50,17 @@ export default class OnEntityRender extends Observer {
                 }
             }
         }
-
+        if (entity.has(SkinMesh) && this.framebufferManager && this.rendererManager) {
+            this.framebufferManager.bindFramebuffers();
+            const pickColor: readonly [1, 1, 1] = [1, 1, 1];
+            if (entity.has(AnimationController)) {
+                this.rendererManager.getSkinMeshRenderer().getPickColor().set(...pickColor);
+                this.rendererManager.getSkinMeshRenderer().render(entity.get(SkinMesh));
+            }
+            this.framebufferManager.unbindFramebuffers();
+            this.framebufferManager.getEventManager().clickPick.getColor().set(...pickColor);
+            this.framebufferManager.getEventManager().clickPick.checkIsPicked();
+        }
     }
 
 }

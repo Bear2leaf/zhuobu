@@ -61,7 +61,7 @@ export default class Touch extends Input {
         return this.x * this.pixelRatio;
     }
     getScreenY() {
-        return this.y * this.pixelRatio;
+        return (this.getDevice().getWindowInfo().windowHeight - this.y) * this.pixelRatio;
     }
 
     setIsTouchingEnd(isTouchingEnd: boolean) {

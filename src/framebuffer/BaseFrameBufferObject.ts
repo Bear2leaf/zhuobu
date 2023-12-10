@@ -5,15 +5,24 @@ import FrameBufferObject from "./FrameBufferObject.js";
 export default class BaseFrameBufferObject implements FrameBufferObject {
     private rc?: RenderingContext;
     private fboIndex?: number;
+    private texture?: Texture;
 
+    getTexture() {
+        if (this.texture === undefined) {
+            throw new Error("BaseFrameBufferObject is not initialized.");
+        }
+        return this.texture;
+    }
     create(rc: RenderingContext) {
         this.rc = rc;
         this.fboIndex = this.rc.createFramebuffer();
     }
     bind(): void {
+        this.getTexture().bind();
         this.getGL().bindFramebuffer(this.getFBOIndex());
     }
     bindPick(): void {
+        this.getTexture().bind();
         this.getGL().bindPickReadFramebuffer(this.getFBOIndex());
     }
     unbind(): void {
@@ -23,6 +32,7 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
         this.getGL().bindPickReadFramebuffer();
     }
     attach(texture: Texture): void {
+        this.texture = texture;;
         this.bind();
         if (texture.getBindIndex() === TextureBindIndex.Depth) {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
