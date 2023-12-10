@@ -10,9 +10,4 @@ export default abstract class BaseTouchSubject extends Subject {
     setTouch(touch: Touch) {
         this.touch = touch;
     }
-    update(): void {
-        if (this.getTouch().getIsTouchingStart()) {
-            this.notify();
-        }
-    }
 }

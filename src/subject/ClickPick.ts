@@ -35,9 +35,4 @@ export default class ClickPickSubject extends BaseTouchSubject {
     setFrameBufferObject(frameBufferObject: FrameBufferObject) {
         this.frameBufferObject = frameBufferObject;
     }
-    update(): void {
-        if (this.getTouch().getIsTouchingStart()) {
-            this.checkIsPicked();
-        }
-    }
 }

@@ -1,6 +1,4 @@
-import ClickBottomLeft from "../subject/ClickBottomLeft.js";
 import ClickPickSubject from "../subject/ClickPick.js";
-import ClickSprite from "../subject/ClickSprite.js";
 import Click from "../subject/Click.js";
 import EntityInit from "../subject/EntityInit.js";
 import EntityAdd from "../subject/EntityAdd.js";
@@ -23,8 +21,6 @@ export default class EventManager {
     readonly viewPortChange = new ViewPortChange;
     readonly click = new Click;
     readonly clickPick = new ClickPickSubject;
-    readonly clickBottomLeft = new ClickBottomLeft;
-    readonly clickSprite = new ClickSprite;
     initObservers() {
         const onEntityAdd = new OnEntityAdd();
         onEntityAdd.setSubject(this.entityAdd);

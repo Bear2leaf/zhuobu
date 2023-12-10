@@ -1,5 +1,4 @@
 import DemoAudio from "../audio/DemoAudio.js";
-import Click from "../subject/Click.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleAudio extends Observer {

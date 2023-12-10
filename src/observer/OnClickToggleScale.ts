@@ -1,5 +1,3 @@
-import Click from "../subject/Click.js";
-import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnClickToggleScale extends Observer {
