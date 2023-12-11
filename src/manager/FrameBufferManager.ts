@@ -2,11 +2,10 @@ import TextureManager from "./TextureManager.js";
 import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
-import Device, { ViewPortType } from "../device/Device.js";
+import Device from "../device/Device.js";
 import RendererManager from "./RendererManager.js";
 import OnEntityRender from "../observer/OnEntityRender.js";
 import EventManager from "./EventManager.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 
 
 export default class FrameBufferManager {
@@ -45,8 +44,6 @@ export default class FrameBufferManager {
         onEntityRender.setRendererManager(this.getRendererManager());
         onEntityRender.setSubject(this.getEventManager().entityRender);
         this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
-        const onClickPick = new OnClickPickSayHello();
-        onClickPick.setSubject(this.getEventManager().clickPick);
     }
     bindPickFramebuffer(): void {
         this.pickFrameBufferObject.bind();
@@ -59,8 +56,6 @@ export default class FrameBufferManager {
         const height = this.getDevice().getWindowInfo().windowHeight * this.getDevice().getWindowInfo().pixelRatio;
         this.pickFrameBufferObject.bindRead();
         this.pickFrameBufferObject.updatePixels(width, height);
-        this.getEventManager().clickPick.getColor().set(253, 1, 1);
-        this.getEventManager().clickPick.checkIsPicked();
         this.pickFrameBufferObject.unbindRead();
     }
     getTextureManager() {

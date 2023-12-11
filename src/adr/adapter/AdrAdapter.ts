@@ -42,6 +42,7 @@ export default abstract class AdrAdapter {
         scene.registerComponents(entity);
         entity.get(TRS).getPosition().x = Math.random() * 400 - 200;
         entity.get(TRS).getPosition().y = Math.random() * 300 - 150;
+        entity.get(SDFCharacter).getPickColor().set(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
         scene.initEntity(entity);
         const adrElement = new AdrElement();
         adrElement.onRemove = () => {

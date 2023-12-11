@@ -4,6 +4,7 @@ import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Texture from "../texture/Texture.js";
+import { Vec3 } from "../geometry/Vector.js";
 
 
 export default class DrawObject extends Component {
@@ -14,6 +15,10 @@ export default class DrawObject extends Component {
     private primitive?: Primitive;
     private renderingContext?: RenderingContext;
     private texture?: Texture;
+    private readonly pickColor = new Vec3();
+    getPickColor() {
+        return this.pickColor;
+    }
     setTexture(texture: Texture) {
         this.texture = texture;
     }

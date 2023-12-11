@@ -10,6 +10,7 @@ import AdrText from "../drawobject/AdrText.js";
 import TRS from "../transform/TRS.js";
 import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 import Device from "../device/Device.js";
+import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
@@ -67,6 +68,9 @@ export default class AdrManager {
         const onEntityUpdate = new OnEntityUpdate;
         onEntityUpdate.setAdrManager(this);
         onEntityUpdate.setSubject(this.getEventManager().entityUpdate);
+        const onClickPick = new OnClickPickSayHello();
+        onClickPick.setSubject(this.getEventManager().clickPick);
+        onClickPick.setAdrManager(this);
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

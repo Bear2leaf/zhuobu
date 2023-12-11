@@ -53,7 +53,6 @@ export default class OnEntityRender extends Observer {
         if (entity.has(SDFCharacter) && this.framebufferManager && this.rendererManager) {
             this.framebufferManager.bindPickFramebuffer();
             if (entity.has(SDFCharacter)) {
-                this.rendererManager.getSDFRenderer().getPickColor().set(253, 1, 1);
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
             }
             this.framebufferManager.unbindPickFramebuffer();

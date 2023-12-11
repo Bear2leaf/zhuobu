@@ -34,6 +34,7 @@ export default class InputManager {
     process(): void {
         if (this.touch.getIsTouchingStart() || this.touch.getIsTouching()) {
             this.getEventManager().click.notify();
+            this.getEventManager().clickPick.checkIsPicked();
         }
     }
 }

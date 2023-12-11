@@ -25,6 +25,9 @@ export default class SDFCharacter extends DrawObject {
         this.chars.splice(0, this.chars.length, ...chars);
         this.create();
     }
+    getChars() {
+        return this.chars;
+    }
     create() {
         let { x, y } = new Vec2(0, 0);
         const scale = new Vec2(1, -1);
