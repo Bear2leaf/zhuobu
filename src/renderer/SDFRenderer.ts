@@ -15,8 +15,10 @@ export default class SDFRenderer extends Renderer {
         this.prepareShader();
         this.prepareCamera();
         this.prepareOutline();
+        const pickColor = this.getPickColor().clone();
         this.drawEntity(drawObject);
         this.prepareText();
+        this.getPickColor().set(pickColor.x, pickColor.y, pickColor.z);
         this.drawEntity(drawObject);
     }
     prepareOutline() {

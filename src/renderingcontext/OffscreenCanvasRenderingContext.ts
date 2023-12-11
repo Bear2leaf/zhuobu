@@ -42,7 +42,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     putText(text: string): void {
         this.context.fillText(text, 0, this.measureText(text).actualBoundingBoxAscent);
     }
-    getImageData(x: number, y: number, width: number, height: number): ImageBitmapSource {
+    getImageData(x: number, y: number, width: number, height: number): ImageData {
         const imageData = this.context.getImageData(x, y, width, height);
         return imageData;
     }
@@ -85,9 +85,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     framebufferRenderTexture2D(textureIndex: number): void {
         throw new Error("Method not implemented.");
     }
-    readSinglePixel(x: number, y: number): Vec4 {
-        const imageData = this.context.getImageData(x, y, 1, 1);
-        return new Vec4(...imageData.data);
+    readPixels(x: number, y: number, width: number, height: number): Uint8Array {
+        const imageData = this.context.getImageData(x, y, width, height);
+        return new Uint8Array(imageData.data.buffer);
 
     }
     createFramebuffer(): number {

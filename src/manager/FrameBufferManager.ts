@@ -50,10 +50,18 @@ export default class FrameBufferManager {
     }
     bindPickFramebuffer(): void {
         this.pickFrameBufferObject.bind();
-        this.getDevice().viewportTo(ViewPortType.Full);
     }
     unbindPickFramebuffer(): void {
         this.pickFrameBufferObject.unbind();
+    }
+    processPickFramebuffer(): void {
+        const width = this.getDevice().getWindowInfo().windowWidth * this.getDevice().getWindowInfo().pixelRatio;
+        const height = this.getDevice().getWindowInfo().windowHeight * this.getDevice().getWindowInfo().pixelRatio;
+        this.pickFrameBufferObject.bindRead();
+        this.pickFrameBufferObject.updatePixels(width, height);
+        this.getEventManager().clickPick.getColor().set(253, 1, 1);
+        this.getEventManager().clickPick.checkIsPicked();
+        this.pickFrameBufferObject.unbindRead();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

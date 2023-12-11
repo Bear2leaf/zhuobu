@@ -33,7 +33,7 @@ export default interface RenderingContext {
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;
     framebufferRenderTexture2D(textureIndex: number): void;
-    readSinglePixel(x: number, y: number): Vec4;
+    readPixels(x: number, y: number, width: number, height: number): Uint8Array;
     createFramebuffer(): number;
     getImageData(x: number, y: number, width: number, height: number): ImageData;
     createTexture(): number;

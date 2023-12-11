@@ -71,11 +71,11 @@ export default class GLRenderingContext implements RenderingContext {
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
         this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0]);
     }
-    readSinglePixel(x: number, y: number): Vec4 {
+    readPixels(x: number, y: number, width: number, height: number): Uint8Array {
         const gl = this.gl;
-        const pixel = new Uint8Array(4);
-        gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-        return new Vec4(pixel[0], pixel[1], pixel[2], pixel[3]);
+        const pixel = new Uint8Array(4 * width * height);
+        gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+        return pixel;
     }
     createFramebuffer(): number {
         const fbo = this.gl.createFramebuffer();

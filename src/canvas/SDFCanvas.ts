@@ -203,8 +203,8 @@ export default class SDFCanvas extends OffscreenCanvas {
         text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
         text.getTexture().generate(canvasRC.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y));
     }
-    readOnePixel(x: number, y: number) {
-        return this.getContext().readSinglePixel(x, y)
+    readPixels(x: number, y: number, width: number, height: number) {
+        return this.getContext().readPixels(x, y, width, height);
     }
     fillWithColor(r: number, g: number, b: number) {
         // const context = this.getContext();

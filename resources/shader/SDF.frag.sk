@@ -3,14 +3,20 @@ precision highp float;
 
 in vec4 v_texcoord;
 in vec4 v_color;
-out vec4 color;
+
 uniform sampler2D u_texture;
 uniform float u_buffer;
 uniform vec4 u_color;
+uniform uvec3 u_pickColor;
 uniform float u_gamma;
+
+layout(location = 0) out vec4 o_color;
+layout(location = 1) out vec4 o_pickColor;
 
 void main() {
     float dist = texture(u_texture, v_texcoord.xy).r;
     float alpha = smoothstep(u_buffer - u_gamma, u_buffer + u_gamma, dist);
-    color = vec4((u_color * v_color).rgb, alpha * u_color.a * v_color.a);
+    o_color = vec4((u_color * v_color).rgb, alpha * u_color.a * v_color.a);
+    o_pickColor = vec4(vec3(u_pickColor) / 255.0f, 1.0f);
+    // o_color = vec4(vec3(u_pickColor) / 255.0f, 1.0f);
 }

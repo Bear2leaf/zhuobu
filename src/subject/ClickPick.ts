@@ -11,9 +11,9 @@ export default class ClickPickSubject extends BaseTouchSubject {
     }
     checkIsPicked(): void {
         if (this.color.x === 0 && this.color.y === 0 && this.color.z === 0) return;
-        const pixel = this.getFrameBufferObject().readSinglePixel(this.getTouch().getScreenX(), this.getTouch().getScreenY());
+        const pixel = this.getFrameBufferObject().readPixel(this.getTouch().getScreenX(), this.getTouch().getScreenY());
 
-        if (pixel.x === this.color.x && pixel.y === this.color.y && pixel.z === this.color.z) {
+        if (pixel[0] === this.color.x && pixel[1] === this.color.y && pixel[2] === this.color.z) {
             this.notify();
         }
         this.color.set(0, 0, 0);
