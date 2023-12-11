@@ -19,13 +19,14 @@ export default class OnClickPickSayHello extends Observer {
         return this.adrManager;
     }
     public notify(): void {
-        const x = this.getSubject().getTouch().getScreenX();
-        const y = this.getSubject().getTouch().getScreenY();
+        const x = this.getSubject().getX();
+        const y = this.getSubject().getY();
         const fbo = this.getSubject().getFrameBufferObject();
         const pixel = fbo.readPixel(x, y);
         const element = this.getAdrManager().getRoot().getElementByPixel(pixel);
         if (element) {
             console.debug("Hello Pick! ", element.getEntity().get(AdrText).getChars().join(""));
+            element.dispatchEvent("click", true);
         }
     }
 

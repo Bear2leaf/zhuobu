@@ -1,20 +1,19 @@
-import Touch from "../input/Touch.js";
-import BaseTouchSubject from "../subject/BaseTouchSubject.js";
+import BaseClickSubject from "../subject/BaseClickSubject.js";
 import Observer from "./Observer.js";
 
 export default class OnClick extends Observer {
-    private handler?: (touch: Touch) => void;
-    getSubject(): BaseTouchSubject {
-        if (!(super.getSubject() instanceof BaseTouchSubject)) {
-            throw new Error("subject is not BaseTouchSubject!");
+    private handler?: (x: number, y: number) => void;
+    getSubject(): BaseClickSubject {
+        if (!(super.getSubject() instanceof BaseClickSubject)) {
+            throw new Error("subject is not BaseClickSubject!");
         }
-        return super.getSubject() as BaseTouchSubject;
+        return super.getSubject() as BaseClickSubject;
     }
     public notify(): void {
         if (!this.handler) throw new Error("handler not set");
-        this.handler(this.getSubject().getTouch());
+        this.handler(this.getSubject().getX(), this.getSubject().getY());
     }
-    setHandler(handler: (touch: Touch) => void) {
+    setHandler(handler: (x: number, y: number) => void) {
         this.handler = handler;
     }
 }

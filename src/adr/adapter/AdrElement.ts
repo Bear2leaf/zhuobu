@@ -140,12 +140,14 @@ export default class AdrElement {
 		this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
 		this.domElement?.removeEventListener(type, fn);
 	}
-	dispatchEvent(type: string) {
+	dispatchEvent(type: string, listenerOnly: boolean = false) {
 		this.eventLinsteners[type]?.forEach(fn => {
 			fn(new Event(type));
 		});
-		const event = new Event(type);
-		this.domElement?.dispatchEvent(event);
+		if (!listenerOnly) {
+			const event = new Event(type);
+			this.domElement?.dispatchEvent(event);
+		}
 	}
 	appendChild(element: AdrElement) {
 		if (element.domElement) {

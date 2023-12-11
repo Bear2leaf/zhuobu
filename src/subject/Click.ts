@@ -1,4 +1,4 @@
-import BaseTouchSubject from "./BaseTouchSubject.js";
+import BaseClickSubject from "./BaseClickSubject.js";
 
-export default class Click extends BaseTouchSubject {
+export default class Click extends BaseClickSubject {
 }

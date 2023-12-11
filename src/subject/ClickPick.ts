@@ -1,11 +1,10 @@
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
-import BaseTouchSubject from "./BaseTouchSubject.js";
+import BaseClickSubject from "./BaseClickSubject.js";
 
-export default class ClickPickSubject extends BaseTouchSubject {
-
+export default class ClickPickSubject extends BaseClickSubject {
     private frameBufferObject?: PickFrameBufferObject;
     checkIsPicked(): void {
-        const pixel = this.getFrameBufferObject().readPixel(this.getTouch().getScreenX(), this.getTouch().getScreenY());
+        const pixel = this.getFrameBufferObject().readPixel(this.getX(), this.getY());
         if (pixel[0] === 0 && pixel[1] === 0 && pixel[2] === 0) {
             return;
         } else {

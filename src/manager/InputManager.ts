@@ -10,8 +10,6 @@ export default class InputManager {
     initInput(device: Device): void {
         this.touch.setDevice(device);
         this.touch.init();
-        this.getEventManager().click.setTouch(this.touch);
-        this.getEventManager().clickPick.setTouch(this.touch);
     }
     setEventManager(eventManager: EventManager): void {
         this.eventManager = eventManager;
@@ -22,7 +20,7 @@ export default class InputManager {
         }
         return this.eventManager;
     }
-    
+
     initObservers() {
         const onClick = new OnClick();
         onClick.setSubject(this.getEventManager().click);
@@ -32,9 +30,15 @@ export default class InputManager {
         
     }
     process(): void {
-        if (this.touch.getIsTouchingStart() || this.touch.getIsTouching()) {
+        if (this.touch.getIsTouchingStart()) {
+
+            const x = this.touch.getX();
+            const y = this.touch.getY();
+            this.getEventManager().click.setPosition(x, y);
             this.getEventManager().click.notify();
+            this.getEventManager().clickPick.setPosition(x, y);
             this.getEventManager().clickPick.checkIsPicked();
+            this.touch.setIsTouchingStart(false);
         }
     }
 }
