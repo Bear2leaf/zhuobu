@@ -48,16 +48,12 @@ export default class FrameBufferManager {
         const onClickPick = new OnClickPickSayHello();
         onClickPick.setSubject(this.getEventManager().clickPick);
     }
-    bindFramebuffers(): void {
-        // this.depthFrameBufferObject.bind();
+    bindPickFramebuffer(): void {
         this.pickFrameBufferObject.bind();
         this.getDevice().viewportTo(ViewPortType.Full);
-        // this.renderFrameBufferObject.bind();
     }
-    unbindFramebuffers(): void {
-        // this.depthFrameBufferObject.unbind();
+    unbindPickFramebuffer(): void {
         this.pickFrameBufferObject.unbind();
-        // this.renderFrameBufferObject.unbind();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

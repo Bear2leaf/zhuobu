@@ -36,6 +36,9 @@ export default class DrawObject extends Component {
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         this.vao = this.getRenderingContext().makeVertexArrayObject();
         this.vao.bind();
+        this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
+        this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
     }
     draw() {

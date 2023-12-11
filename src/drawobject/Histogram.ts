@@ -36,7 +36,6 @@ export default class Histogram extends DrawObject {
         }
     }
     draw(): void {
-        this.bind()
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateEBO(new Uint16Array(this.indices));

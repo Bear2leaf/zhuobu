@@ -18,13 +18,6 @@ export default class SDFCharacter extends DrawObject {
         Object.assign(this.fontInfo, fontInfo);
         this.texSize.from(textureSize);
     }
-    init() {
-        super.init();
-        this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
-        this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
-        this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
-        this.create();
-    }
     getRandomChar() {
         return Object.keys(this.fontInfo)[Math.floor(Math.random() * Object.keys(this.fontInfo).length)];
     }
@@ -78,14 +71,12 @@ export default class SDFCharacter extends DrawObject {
         }
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
-        this.bind();
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));
         this.updateEBO(new Uint16Array(this.indices));
     }
     draw(): void {
-        this.bind();
         this.getRenderingContext().switchBlend(true);
         this.getRenderingContext().switchNearestFilter(false);
         this.getRenderingContext().switchDepthWrite(false);

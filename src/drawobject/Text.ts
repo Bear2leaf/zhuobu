@@ -62,7 +62,6 @@ export default class Text extends DrawObject {
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));
     }
     draw(): void {
-        this.bind();
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateABO(ArrayBufferIndex.Color, flatten(this.colors));
         this.updateABO(ArrayBufferIndex.TextureCoord, flatten(this.texcoords));

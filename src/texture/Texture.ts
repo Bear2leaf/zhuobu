@@ -21,6 +21,7 @@ export default abstract class Texture {
   }
   setContext(rc: RenderingContext) {
     this.rc = rc;
+    this.setTextureIndex(this.getContext().createTexture());
   }
   setBindIndex(bindIndex: TextureBindIndex) {
     this.bindIndex = bindIndex;
@@ -37,7 +38,6 @@ export default abstract class Texture {
   getBindIndex() {
     return this.bindIndex;
   }
-  abstract setDevice(device: Device): void;
-  abstract generate(width: number, height: number, data?: HTMLImageElement | Float32Array): void;
+  abstract generate(data?: ImageData| HTMLImageElement | Float32Array, width?: number, height?: number): void;
   abstract bind(): void;
 }

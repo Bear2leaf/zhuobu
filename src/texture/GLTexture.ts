@@ -1,14 +1,7 @@
-import Device from "../device/Device.js";
 import Texture, { TextureBindIndex } from "./Texture.js";
 
 export default class GLTexture extends Texture {
-  setDevice(device: Device): void {
-    this.setContext(device.getRenderingContext());
-    this.setTextureIndex(this.getContext().createTexture());
-    const windowInfo = device.getWindowInfo();
-    this.generate(windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio)
-  }
-  generate(width: number, height: number, data?: HTMLImageElement | Float32Array) {
+  generate(data?: ImageData | HTMLImageElement | Float32Array, width: number = 1, height: number = 1) {
     const rc = this.getContext();
     rc.bindTexture(this.getTextureIndex());
     if (data === undefined) {
@@ -19,8 +12,10 @@ export default class GLTexture extends Texture {
       }
     } else if (data instanceof Float32Array) {
       rc.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
-    } else {
+    } else if (data instanceof HTMLImageElement) {
       rc.texImage2D_RGBA_RGBA_Image(data);
+    } else {
+      throw new Error("unspoourt data format")
     }
     rc.bindTexture();
   }

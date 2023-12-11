@@ -1,6 +1,7 @@
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
@@ -35,7 +36,10 @@ export default class OnEntityInit extends Observer {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             }
             entity.get(Mesh).initMesh();
+        } else if (entity.has(SDFCharacter)) {
+            entity.get(SDFCharacter).create();
         }
+
     }
 
 }

@@ -42,7 +42,7 @@ export default class GLRenderingContext implements RenderingContext {
     putText(text: string): void {
         throw new Error("Method not implemented.");
     }
-    getImageData(): ImageBitmapSource {
+    getImageData(): ImageData {
         throw new Error("Method not implemented.");
     }
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void {
@@ -113,7 +113,7 @@ export default class GLRenderingContext implements RenderingContext {
 
         }
     }
-    bindPickReadFramebuffer(fboIndex?: number): void {
+    bindReadFramebuffer(fboIndex?: number): void {
         if (fboIndex === undefined) {
             this.gl.bindFramebuffer(this.gl.READ_FRAMEBUFFER, null);
         } else {

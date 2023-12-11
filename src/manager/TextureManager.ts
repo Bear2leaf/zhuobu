@@ -11,6 +11,7 @@ import SDFTexture from "../texture/SDFTexture.js";
 import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
 import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
+import { TextureBindIndex } from "../texture/Texture.js";
 
 
 export default class TextureManager {
@@ -23,6 +24,7 @@ export default class TextureManager {
     readonly renderTexture = new RenderTexture;
     readonly singleColorTexture = new SingleColorTexture;
     readonly sdfTexture = new SDFTexture;
+    private device?: Device;
     private cacheManager?: CacheManager;
     private eventManager?: EventManager;
     async load(): Promise<void> {
@@ -30,18 +32,43 @@ export default class TextureManager {
         await this.getCacheManager().loadFontCache("boxy_bold_font");
     }
     setDevice(device: Device) {
-        this.defaultTexture.setDevice(device);
-        this.fontTexture.setDevice(device);
-        this.flowerTexture.setDevice(device);
-        this.jointTexture.setDevice(device);
-        this.depthTexture.setDevice(device);
-        this.pickTexture.setDevice(device);
-        this.renderTexture.setDevice(device);
-        this.singleColorTexture.setDevice(device);
-        this.sdfTexture.setDevice(device);
+        this.device = device;
+    }
+    getDevice() {
+        if (!this.device) {
+            throw new Error("Device not found");
+        }
+        return this.device;
     }
     initTextures() {
-        this.flowerTexture.generate(2, 2, this.getCacheManager().getImage("flowers"));
+
+        const glContext= this.getDevice().getRenderingContext();
+        this.defaultTexture.setContext(glContext);
+        this.fontTexture.setContext(glContext);
+        this.flowerTexture.setContext(glContext);
+        this.jointTexture.setContext(glContext);
+        this.depthTexture.setContext(glContext);
+        this.pickTexture.setContext(glContext);
+        this.renderTexture.setContext(glContext);
+        this.singleColorTexture.setContext(glContext);
+        this.sdfTexture.setContext(glContext);
+
+        this.singleColorTexture.setCanvasContext(this.getDevice().getOffscreenCanvasRenderingContext());
+        this.sdfTexture.setCanvasContext(this.getDevice().getSDFCanvasRenderingContext());
+
+        this.jointTexture.setBindIndex(TextureBindIndex.Joint);
+        this.depthTexture.setBindIndex(TextureBindIndex.Depth);
+        this.pickTexture.setBindIndex(TextureBindIndex.Pick);
+        this.renderTexture.setBindIndex(TextureBindIndex.Render);
+        this.singleColorTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
+        this.sdfTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
+
+        const windowInfo = this.getDevice().getWindowInfo();
+        this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
+        this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
+        this.pickTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+        this.renderTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+        this.depthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
     }
     initObservers() {
 

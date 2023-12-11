@@ -49,7 +49,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     bindFramebuffer(fboIndex?: number | undefined): void {
         throw new Error("Method not implemented.");
     }
-    bindPickReadFramebuffer(fboIndex?: number | undefined): void {
+    bindReadFramebuffer(fboIndex?: number | undefined): void {
         throw new Error("Method not implemented.");
     }
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject {

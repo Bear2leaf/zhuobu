@@ -51,13 +51,13 @@ export default class OnEntityRender extends Observer {
             }
         }
         if (entity.has(SkinMesh) && this.framebufferManager && this.rendererManager) {
-            this.framebufferManager.bindFramebuffers();
+            this.framebufferManager.bindPickFramebuffer();
             const pickColor: readonly [1, 1, 1] = [1, 1, 1];
             if (entity.has(AnimationController)) {
                 this.rendererManager.getSkinMeshRenderer().getPickColor().set(...pickColor);
                 this.rendererManager.getSkinMeshRenderer().render(entity.get(SkinMesh));
             }
-            this.framebufferManager.unbindFramebuffers();
+            this.framebufferManager.unbindPickFramebuffer();
             this.framebufferManager.getEventManager().clickPick.getColor().set(...pickColor);
             this.framebufferManager.getEventManager().clickPick.checkIsPicked();
         }
