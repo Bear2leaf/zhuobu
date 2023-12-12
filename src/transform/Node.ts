@@ -73,7 +73,10 @@ export default class Node extends Component {
   }
   private removeChild(child: this) {
     const ndx = this.children.indexOf(child);
-    this.children.splice(ndx, 1);
+
+    if (ndx !== -1) {
+      this.children.splice(ndx, 1);
+    }
   }
   getChildren(): readonly Node[] {
     return this.children;

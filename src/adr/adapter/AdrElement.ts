@@ -136,7 +136,10 @@ export default class AdrElement {
 		}
 		const wrapperFn = (evt: Event) => {
 			if (option.once) {
-				this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+				const n: number = this.eventLinsteners[type].indexOf(fn);
+				if (n !== -1) {
+					this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+				}
 			}
 			fn(evt)
 		}
@@ -146,7 +149,10 @@ export default class AdrElement {
 		this.domElement?.addEventListener(type, wrapperFn, option);
 	}
 	removeEventListener(type: string, fn: EventListener) {
-		this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+		const n: number = this.eventLinsteners[type].indexOf(fn);
+		if (n !== -1) {
+			this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
+		}
 		this.domElement?.removeEventListener(type, fn);
 	}
 	dispatchEvent(type: string, listenerOnly: boolean = false) {

@@ -30,7 +30,7 @@ export default abstract class Scene {
         });
     }
     render(): void {
-        this,this.viewPortChange?.notify();
+        this, this.viewPortChange?.notify();
         this.entities.forEach(entity => {
             this.entityRender?.setEntity(entity);
             this.entityRender?.notify();
@@ -59,14 +59,20 @@ export default abstract class Scene {
         });
     }
     addEntity(entity: Entity) {
-        this.entities.push(entity);
-        this.entityAdd?.setEntity(entity);
-        this.entityAdd?.notify();
+        const index = this.entities.indexOf(entity);
+        if (index === -1) {
+            this.entities.push(entity);
+            this.entityAdd?.setEntity(entity);
+            this.entityAdd?.notify();
+        }
     }
     removeEntity(entity: Entity) {
-        this.entities.splice(this.entities.indexOf(entity), 1);
-        this.entityRemove?.setEntity(entity);
-        this.entityRemove?.notify();
+        const index = this.entities.indexOf(entity);
+        if (index !== -1) {
+            this.entities.splice(index, 1);
+            this.entityRemove?.setEntity(entity);
+            this.entityRemove?.notify();
+        }
     }
     registerComponents(entity: Entity) {
         entity.registerComponents();

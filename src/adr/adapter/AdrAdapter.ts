@@ -51,6 +51,7 @@ export default abstract class AdrAdapter {
         adrElement.onIdChange = () => {
             const id = adrElement.getAttribute("id");
             if (id === 'notifications') {
+                this.getAdrManager().getSceneManager().getAdrScene().removeEntity(adrElement.getEntity());
                 this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
             }
         }
@@ -58,6 +59,7 @@ export default abstract class AdrAdapter {
             const id = adrElement.getAttribute("id");
             if (id === "notifications") {
                 for (const child of adrElement.children) {
+                    this.getAdrManager().getSceneManager().getAdrScene().removeEntity(child.getEntity());
                     this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(child.getEntity());
                 }
             }
