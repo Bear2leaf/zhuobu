@@ -24,9 +24,11 @@ export default class OnEntityInit extends Observer {
 
     public notify(): void {
         const entity = this.getSubject().getEntity();
-        console.log("OnEntityInit", entity);
+        console.debug("OnEntityInit", entity);
         entity.get(Node).init();
-        entity.get(DrawObject).init();
+        if (entity.has(DrawObject)) {
+            entity.get(DrawObject).init();
+        }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 this.gltfManager.initGLTF(this.gltfManager.whaleGLTF);

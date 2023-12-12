@@ -2,6 +2,8 @@ import SDFCharacter from "../drawobject/SDFCharacter.js";
 import { FontInfo } from "../drawobject/Text.js";
 import { Vec2 } from "../geometry/Vector.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
+import SDFTexture from "../texture/SDFTexture.js";
+import Texture from "../texture/Texture.js";
 import OffscreenCanvas from "./OffscreenCanvas.js";
 const INF = 1e20;
 
@@ -168,8 +170,10 @@ export default class SDFCanvas extends OffscreenCanvas {
         }
         return this.tinySDF;
     }
-    initSDFCharacter(text: SDFCharacter): void {
-
+    updateTextTexture(text: SDFCharacter) {
+        text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
+    }
+    initSDFTexture(texture: Texture): void {
         const fontSize = 24;
         const fontWeight = "400";
         const buffer = Math.ceil(fontSize / 16);
@@ -198,12 +202,11 @@ export default class SDFCanvas extends OffscreenCanvas {
             this.fontInfo[char] = fontInfo;
             this.getContext().putImageData(this.makeRGBAImageData(glyph.data, glyph.width, glyph.height), fontInfo.x, fontInfo.y);
         }
-
         const canvasRC = this.getContext();
-        text.updateFontInfoAndTextureSize(this.fontInfo, this.canvasSize);
-        text.getTexture().generate(canvasRC.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y));
+        texture.generate(canvasRC.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y));
+
     }
-    readPixels(x: number, y: number, width: number, height: number) {
+    readPixels(x: number, y: number, width: number = 1, height: number = 1) {
         return this.getContext().readPixels(x, y, width, height);
     }
     fillWithColor(r: number, g: number, b: number) {

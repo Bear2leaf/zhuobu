@@ -8,8 +8,8 @@ import TRS from "../../transform/TRS.js";
 import SDFCharacter from "../../drawobject/SDFCharacter.js";
 
 export default abstract class AdrAdapter {
-    private readonly store: LocalStorage = {clear: () => this.store.gameState = undefined}
-    // private readonly store = localStorage;
+    // private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
+    private readonly store = localStorage;
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -37,16 +37,16 @@ export default abstract class AdrAdapter {
 
     createElement(selector: string): AdrElement {
         const entity = new AdrTextObject();
-        const scene = this.getAdrManager().getSceneManager().first();
+        const scene = this.getAdrManager().getSceneManager().getAdrScene();
         scene.addEntity(entity);
         scene.registerComponents(entity);
-        entity.get(TRS).getPosition().x = Math.random() * 400 - 200;
+        entity.get(TRS).getPosition().x = -50;
         entity.get(TRS).getPosition().y = Math.random() * 300 - 150;
         entity.get(SDFCharacter).getPickColor().set(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
         scene.initEntity(entity);
         const adrElement = new AdrElement();
         adrElement.onRemove = () => {
-            this.getAdrManager().getSceneManager().first().removeEntity(entity);
+            this.getAdrManager().getSceneManager().getAdrScene().removeEntity(entity);
         };
         const domElement = document.createElement(selector);
         adrElement.tagName = selector;

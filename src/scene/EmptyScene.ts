@@ -2,7 +2,7 @@
 import Entity from "../entity/Entity.js";
 import Scene from "./Scene.js";
 
-export default class AdrScene extends Scene {
+export default class EmptyScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
         ];

@@ -35,7 +35,7 @@ export default class OnEntityRegisterComponents extends Observer {
 
     public notify(): void {
         const entity = this.getSubject().getEntity();
-        console.log("OnEntityRegisterComponents", entity);
+        console.debug("OnEntityRegisterComponents", entity);
         if (entity.has(DrawObject) && this.setRenderingContext) {
             this.setRenderingContext(entity.get(DrawObject)); 
         } else if (entity.has(DrawObject) && this.textureManager) {
@@ -48,7 +48,7 @@ export default class OnEntityRegisterComponents extends Observer {
                 entity.get(SkinMesh).setJointTexture(this.textureManager.jointTexture);
             }
         } else if (entity.has(SDFCharacter) && this.sdfCanvas) {
-            this.sdfCanvas.initSDFCharacter(entity.get(SDFCharacter));
+            this.sdfCanvas.updateTextTexture(entity.get(SDFCharacter));
         } else if (entity.has(Pointer) && this.onClick) {
             this.onClick.setHandler(entity.get(Pointer).onClick.bind(entity.get(Pointer)));
         }

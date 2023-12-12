@@ -35,6 +35,7 @@ export default abstract class Game {
     private readonly adrManager = new AdrManager;
     initManagers(device: Device): void {
         this.textureManager.initTextures();
+        this.offscreencanvasManager.initOffscreenCanvas();
         this.inputManager.initInput(device);
         this.cameraManager.initCamera(device);
         this.rendererManager.initRenderer();
@@ -84,6 +85,7 @@ export default abstract class Game {
         this.animationManager.setEventManager(this.eventManager);
         this.gltfManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
+        this.offscreencanvasManager.setTextureManager(this.textureManager);
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setRendererManager(this.rendererManager);
         this.framebufferManager.setEventManager(this.eventManager);

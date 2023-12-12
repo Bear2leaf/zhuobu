@@ -1,8 +1,8 @@
 import OffscreenCanvas from "./OffscreenCanvas.js";
 
 export default class SingleColorCanvas extends OffscreenCanvas {
-    readPixels(x: number, y: number) {
-        return this.getContext().readPixels(x, y, 1, 1)
+    readPixels(x: number, y: number, width = 1, height = 1) {
+        return this.getContext().readPixels(x, y, width, height)
     }
     fillWithColor(r: number, g: number, b: number) {
         const context = this.getContext();

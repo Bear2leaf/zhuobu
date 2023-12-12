@@ -30,7 +30,7 @@ export default class AdrManager {
         adr.setAdrManager(this);
         const root = this.root;
         root.setEntity(new AdrTextObject());
-        const scene = this.getSceneManager().first();
+        const scene = this.getSceneManager().getAdrScene();
         scene.addEntity(root.getEntity());
         scene.registerComponents(root.getEntity());
         scene.initEntity(root.getEntity());
@@ -58,7 +58,6 @@ export default class AdrManager {
         adr.$(root).append(adr.$(headElement))
         Engine.createDefaultElements();
         Engine.init();
-        console.log("AdrManager.initAdr", this);
     }
     getRoot() {
         return this.root;
