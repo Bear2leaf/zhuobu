@@ -56,6 +56,13 @@ export default class AdrManager {
         headElement.setDomElement(document.head);
         headElement.setEntity(head);
         adr.$(root).append(adr.$(headElement))
+
+        bodyElement.onRemove = () => {
+        };
+        bodyElement.onIdChange = () => {
+        }
+        bodyElement.onChildrenUpdate = () => {
+        }
         Engine.createDefaultElements();
         Engine.init();
     }

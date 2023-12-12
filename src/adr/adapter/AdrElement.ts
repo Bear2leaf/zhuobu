@@ -13,6 +13,9 @@ export default class AdrElement {
 	readonly children: AdrElementCollection = new AdrElementCollection();
 	parentNode?: AdrElement;
 	onRemove?(): void;
+	onIdChange?(): void;
+	onChildrenUpdate?(): void;
+	onParentUpdate?(): void;
 
 	get offsetWidth(): number {
 		return (this.domElement as HTMLElement)?.offsetWidth || 0;
@@ -81,6 +84,12 @@ export default class AdrElement {
 	setAttribute(key: string, value: string) {
 		this.domElement?.setAttribute(key, value);
 		this.attributes[key] = value;
+		if (this.onIdChange === undefined) {
+			throw new Error("onChangeId not exist");
+		}
+		if (key === 'id') {
+			this.onIdChange();
+		}
 	}
 	getStyle(options: string): string {
 		return (this.domElement as HTMLElement)?.style.getPropertyValue(options) || this.style[options] || "";
@@ -113,7 +122,7 @@ export default class AdrElement {
 		if (this.onRemove === undefined) {
 			throw new Error("onRemove not exist");
 		}
-		for(const child of this.children) {
+		for (const child of this.children) {
 			child.remove();
 		}
 		this.domElement?.remove();
@@ -156,6 +165,10 @@ export default class AdrElement {
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
 		this.children.push(element);
+		if (this.onChildrenUpdate === undefined) {
+			throw new Error("onChildrenUpdate is undefined");
+		}
+		this.onChildrenUpdate();
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
 		if (element.domElement) {
@@ -168,6 +181,10 @@ export default class AdrElement {
 		}
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
+		if (this.onChildrenUpdate === undefined) {
+			throw new Error("onChildrenUpdate is undefined");
+		}
+		this.onChildrenUpdate();
 	}
 	get firstChild(): AdrElement | null {
 		return this.children.item(0) || null;

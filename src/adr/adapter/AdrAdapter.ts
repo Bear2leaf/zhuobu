@@ -8,8 +8,8 @@ import TRS from "../../transform/TRS.js";
 import SDFCharacter from "../../drawobject/SDFCharacter.js";
 
 export default abstract class AdrAdapter {
-    // private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
-    private readonly store = localStorage;
+    private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
+    // private readonly store = localStorage;
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -48,6 +48,20 @@ export default abstract class AdrAdapter {
         adrElement.onRemove = () => {
             this.getAdrManager().getSceneManager().getAdrScene().removeEntity(entity);
         };
+        adrElement.onIdChange = () => {
+            const id = adrElement.getAttribute("id");
+            if (id === 'notifications') {
+                this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
+            }
+        }
+        adrElement.onChildrenUpdate = () => {
+            const id = adrElement.getAttribute("id");
+            if (id === "notifications") {
+                for (const child of adrElement.children) {
+                    this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(child.getEntity());
+                }
+            }
+        }
         const domElement = document.createElement(selector);
         adrElement.tagName = selector;
         adrElement.setDomElement(domElement);
