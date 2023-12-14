@@ -82,6 +82,12 @@ export default class AdrElement {
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
+	getDomElement(): Element {
+		if (!this.domElement) {
+			throw new Error("domElement not exist");
+		}
+		return this.domElement;
+	}
 	setEntity(entity: Entity) {
 		this.entity = entity;
 	}
@@ -91,6 +97,14 @@ export default class AdrElement {
 		}
 		return this.entity;
 	}
+
+    getDescendants() {
+		const descendants: AdrElement[] = [];
+		this.traverseChildren(child => {
+			descendants.push(child);
+		});
+		return descendants;
+    }
 	getAttribute(options: string): string | null {
 		return this.attributes[options] || null;
 	}
@@ -148,14 +162,8 @@ export default class AdrElement {
 		};
 	}
 	remove() {
-		for (const child of this.children) {
-			child.remove();
-		}
 		this.getSubject(AdrElementRemove).setElement(this);
 		this.getSubject(AdrElementRemove).notify();
-		this.domElement?.remove();
-		this.getEntity().get(Node).setParent();
-		this.parentNode = undefined;
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
 		if (!this.eventLinsteners[type]) {
@@ -195,9 +203,9 @@ export default class AdrElement {
 		if (element.domElement) {
 			this.domElement?.appendChild(element.domElement)
 		}
+		this.children.push(element);
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
-		this.children.push(element);
 		element.getSubject(AdrElementParentChange).setElement(element);
 		element.getSubject(AdrElementParentChange).notify();
 	}

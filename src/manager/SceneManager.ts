@@ -7,6 +7,7 @@ export default class SceneManager {
     private readonly adrScene = new AdrScene;
     private readonly adrNotificationScene = new AdrScene;
     private readonly adrEventScene = new AdrScene;
+    private readonly tmpScene = new AdrScene;
     private readonly emptyScene = new EmptyScene;
     private readonly gltfScene = new GLTFScene;
     registerEntities(): void {
@@ -15,6 +16,7 @@ export default class SceneManager {
         this.adrEventScene.registerEntities();
         this.adrScene.registerEntities();
         this.emptyScene.registerEntities();
+        this.tmpScene.registerEntities();
     }
     initSceneEntities(): void {
         this.gltfScene.initEntities();
@@ -22,6 +24,7 @@ export default class SceneManager {
         this.adrEventScene.initEntities();
         this.adrScene.initEntities();
         this.emptyScene.initEntities();
+        this.tmpScene.initEntities();
     }
     render(): void {
         this.current().render();
@@ -32,6 +35,9 @@ export default class SceneManager {
     getAdrEventScene() {
         return this.adrEventScene;
     }
+    getTmpScene() {
+        return this.tmpScene;
+    }
     getAdrNotificationScene() {
         return this.adrNotificationScene;
     }
@@ -40,11 +46,23 @@ export default class SceneManager {
     }
     update() {
         this.gltfScene.update();
+        this.tmpScene.update();
         this.adrNotificationScene.update();
         this.adrScene.update();
+        this.adrEventScene.update();
         this.emptyScene.update();
     }
     initSubjects(eventManager: EventManager) {
+
+        this.tmpScene.setEntitySubjects(
+            eventManager.viewPortChange,
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
 
         this.adrEventScene.setEntitySubjects(
             eventManager.viewPortChange,

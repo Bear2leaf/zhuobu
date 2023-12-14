@@ -16,11 +16,14 @@ export default class OnAdrElementIdChange extends AdrElementObserver {
         const adrElement = this.getSubject().getElement();
         const id = adrElement.getAttribute("id");
         if (id === 'notifications') {
-            this.getAdrManager().getSceneManager().getAdrScene().removeEntity(adrElement.getEntity());
+            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
             this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
         } else if (id === 'event') {
-            this.getAdrManager().getSceneManager().getAdrScene().removeEntity(adrElement.getEntity());
+            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
             this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(adrElement.getEntity());
+        } else if (id === 'content') {
+            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
+            this.getAdrManager().getSceneManager().getAdrScene().addEntity(adrElement.getEntity());
         }
     }
 

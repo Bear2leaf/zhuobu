@@ -116,7 +116,7 @@ export default class Button {
 			}
 			let time = start;
 			if (Engine.options.doubleTime) {
-				time /= 2;
+				time /= 20;
 			}
 			adr.$('.cooldown', btn).width(parseFloat(left.toString()) * 100 + "%").animate({ width: '0%' }, time * 1000, function () {
 				Button.clearCooldown(btn, true);

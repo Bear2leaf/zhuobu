@@ -33,7 +33,7 @@ export default class AdrManager {
         adr.setAdrManager(this);
         const root = this.root;
         root.setEntity(new AdrTextObject());
-        const scene = this.getSceneManager().getAdrScene();
+        const scene = this.getSceneManager().getTmpScene();
         scene.addEntity(root.getEntity());
         scene.registerComponents(root.getEntity());
         scene.initEntity(root.getEntity());
@@ -60,7 +60,9 @@ export default class AdrManager {
         headElement.setEntity(head);
         adr.$(root).append(adr.$(headElement))
         Engine.createDefaultElements();
-        Engine.init();
+        Engine.init({
+            doubleTime: true
+        });
     }
     getRoot() {
         return this.root;

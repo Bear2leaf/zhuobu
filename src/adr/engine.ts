@@ -286,7 +286,7 @@ export default class Engine {
     Engine.saveLanguage();
     Engine.travelTo(Room);
 
-    adr.setTimeout(notifyAboutSound, 3000);
+    // adr.setTimeout(notifyAboutSound, 3000);
 
   }
   static resumeAudioContext() {
@@ -872,7 +872,7 @@ export default class Engine {
   static setInterval(callback: VoidFunction, interval: number, skipDouble?: boolean) {
     if (Engine.options.doubleTime && !skipDouble) {
       Engine.log('Double time, cutting interval in half');
-      interval /= 2;
+      interval /= 20;
     }
 
     return adr.setInterval(callback, interval);
@@ -882,7 +882,7 @@ export default class Engine {
 
     if (Engine.options.doubleTime && !skipDouble) {
       Engine.log('Double time, cutting timeout in half');
-      timeout /= 2;
+      timeout /= 20;
     }
 
     return adr.setTimeout(callback, timeout);

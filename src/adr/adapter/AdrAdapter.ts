@@ -37,7 +37,7 @@ export default abstract class AdrAdapter {
     }
     createElement(selector: string): AdrElement {
         const entity = new AdrTextObject();
-        const scene = this.getAdrManager().getSceneManager().getAdrScene();
+        const scene = this.getAdrManager().getSceneManager().getTmpScene();
         scene.addEntity(entity);
         scene.registerComponents(entity);
         entity.get(TRS).getPosition().x = -50;

@@ -1,7 +1,6 @@
 import adr from "./adr.js";
 import AdrElement from "./adapter/AdrElement.js";
 import AdrText from "../drawobject/AdrText.js";
-import Observer from "../observer/Observer.js";
 
 const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 
@@ -188,8 +187,12 @@ export default class Query {
 
 	remove() {
 		if (this.found) {
-			this.parent().children.splice(this.index(this), 1);
-			this.get().remove();
+			const index = this.parent().children.indexOf(this.get());
+			if (index === -1) {
+				throw new Error("item not found");
+			}
+			const removeItems = this.parent().children.splice(index, 1);
+			removeItems.forEach(item => item.remove());
 		}
 		return this;
 	}
