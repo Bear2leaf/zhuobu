@@ -1,8 +1,8 @@
 
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
-import { Vec4 } from "../geometry/Vector.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 
@@ -16,6 +16,9 @@ export enum ArrayBufferIndex {
     Barycentric = 6,
 }
 
+export enum UniformBlockIndex {
+    PickColor = 0,
+}
 
 export default interface RenderingContext {
     putImageData(data: ImageData, dx: number, dy: number): void;
@@ -46,6 +49,7 @@ export default interface RenderingContext {
     draw(mode: number, count: number): void;
     viewportTo(left: number, top: number, width: number, height: number): void;
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
+    makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
     switchNearestFilter(enable: boolean): void;

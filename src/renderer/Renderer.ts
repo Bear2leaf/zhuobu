@@ -64,7 +64,6 @@ export default class Renderer {
         this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
     }
     drawEntity(drawObject: DrawObject) {
-        this.getShader().setVector3u("u_pickColor", drawObject.getPickColor());
         this.getShader().setMatrix4fv("u_world", drawObject.getEntity().get(Node).getWorldMatrix().getVertics());
         drawObject.bind();
         drawObject.draw();

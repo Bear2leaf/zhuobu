@@ -3,13 +3,15 @@ import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import GLArrayBufferObject from "../contextobject/GLArrayBufferObject.js";
 import GLElementBufferObject from "../contextobject/GLElementBufferObject.js";
 import GLPrimitive from "../contextobject/GLPrimitive.js";
+import GLUniformBufferObject from "../contextobject/GLUniformBufferObject.js";
 import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
+import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import { Vec4 } from "../geometry/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBlockIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
@@ -148,6 +150,9 @@ export default class GLRenderingContext implements RenderingContext {
     }
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
+    }
+    makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject {
+        return new GLUniformBufferObject(this.gl, index);
     }
     switchDepthTest(enable: boolean): void {
         if (enable) {

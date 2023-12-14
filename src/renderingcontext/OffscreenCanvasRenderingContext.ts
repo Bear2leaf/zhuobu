@@ -2,14 +2,17 @@
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
-import { Vec4 } from "../geometry/Vector.js";
+import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBlockIndex } from "./RenderingContext.js";
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
+    }
+    makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject {
+        throw new Error("Method not implemented.");
     }
     switchNearestFilter(enable: boolean): void {
         throw new Error("Method not implemented.");

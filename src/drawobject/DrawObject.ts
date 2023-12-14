@@ -1,23 +1,33 @@
-import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Texture from "../texture/Texture.js";
-import { Vec3 } from "../geometry/Vector.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
+import UniformBufferObject from "../contextobject/UniformBufferObject.js";
+import Shader from "../shader/Shader.js";
 
 
 export default class DrawObject extends Component {
+    private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
+    private readonly uboMap: Map<UniformBlockIndex, UniformBufferObject> = new Map();
     private vao?: VertexArrayObject;
     private ebo?: ArrayBufferObject;
-    private aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
     private count: number = 0;
     private primitive?: Primitive;
     private renderingContext?: RenderingContext;
     private texture?: Texture;
-    private readonly pickColor = new Vec3();
+    private readonly pickColor = new Vec4();
     getPickColor() {
         return this.pickColor;
+    }
+    getPickColorUBO() {
+        const ubo = this.uboMap.get(UniformBlockIndex.PickColor);
+        if (ubo === undefined) {
+            throw new Error("ubo not set");
+        }
+        return ubo;
     }
     setTexture(texture: Texture) {
         this.texture = texture;
@@ -44,6 +54,9 @@ export default class DrawObject extends Component {
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
+        this.pickColor.set(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255), 255);
+        this.createUBO(UniformBlockIndex.PickColor)
+        this.updateUBO(UniformBlockIndex.PickColor, this.pickColor.toFloatArray());
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
     }
     draw() {
@@ -54,6 +67,7 @@ export default class DrawObject extends Component {
             throw new Error("vao is not set");
         }
         this.vao.bind();
+        this.uboMap.forEach(ubo => ubo.bind());
         this.getTexture().bind()
     }
     getRenderingContext() {
@@ -86,5 +100,19 @@ export default class DrawObject extends Component {
             throw new Error("abo not exist");
         }
         abo.updateBuffer(data);
+    }
+    createUBO(index: UniformBlockIndex) {
+        if (!this.uboMap) {
+            throw new Error("uboMap is not set");
+        }
+
+        this.uboMap.set(index, this.getRenderingContext().makeUniformBlockObject(index));
+    }
+    updateUBO(index: UniformBlockIndex, data: Float32Array) {
+        const ubo = this.uboMap.get(index);
+        if (!ubo) {
+            throw new Error("ubo not exist");
+        }
+        ubo.updateBuffer(data);
     }
 }
