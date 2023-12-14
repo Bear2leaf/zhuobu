@@ -14,6 +14,9 @@ export default class OnEntityUpdate extends Observer {
 
     private animationManager?: AnimationManager;
     private adrManager?: AdrManager;
+    setAdrManager(adrManager: AdrManager) {
+        this.adrManager = adrManager;
+    }
     getSubject(): EntitySubject {
         const subject = super.getSubject();
         if (subject instanceof EntitySubject) {
@@ -25,9 +28,6 @@ export default class OnEntityUpdate extends Observer {
 
     setAnimationManager(animationManager: AnimationManager) {
         this.animationManager = animationManager;
-    }
-    setAdrManager(adrManager: AdrManager) {
-        this.adrManager = adrManager;
     }
     public notify(): void {
         const entity = this.getSubject().getEntity();

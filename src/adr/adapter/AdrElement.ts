@@ -1,21 +1,34 @@
 import Entity from "../../entity/Entity.js";
+import AdrElementIdChange from "../../subject/AdrElementIdChange.js";
+import AdrElementParentChange from "../../subject/AdrElementParentChange.js";
+import AdrElementRemove from "../../subject/AdrElementRemove.js";
+import AdrElementSubject from "../../subject/AdrElementSubject.js";
 import Node from "../../transform/Node.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 
 export default class AdrElement {
 	private domElement?: Element;
 	private entity?: Entity;
+	private readonly subjects: AdrElementSubject[] = [];
 	private readonly classSet: Set<string> = new Set();
 	private readonly style: Record<string, string> = {};
 	private readonly attributes: Record<string, string> = {};
 	private readonly eventLinsteners: Record<string, EventListener[]> = {};
-
 	readonly children: AdrElementCollection = new AdrElementCollection();
 	parentNode?: AdrElement;
-	onRemove?(): void;
-	onIdChange?(): void;
-	onChildrenUpdate?(): void;
-	onParentUpdate?(): void;
+	setSubjects(remove: AdrElementRemove, idChange: AdrElementIdChange, parentChange: AdrElementParentChange) {
+		this.subjects.push(remove, idChange, parentChange);
+		if (this.subjects.length !== 3) {
+			throw new Error("subjects are not correctly set");
+		}
+	}
+	getSubject<T extends AdrElementSubject>(subjectCtor: new () => T): T {
+		const subject = this.subjects.find(subject => subject instanceof subjectCtor);
+		if (!subject) {
+			throw new Error("subject is not set");
+		}
+		return subject as T;
+	}
 
 	get offsetWidth(): number {
 		return (this.domElement as HTMLElement)?.offsetWidth || 0;
@@ -84,11 +97,9 @@ export default class AdrElement {
 	setAttribute(key: string, value: string) {
 		this.domElement?.setAttribute(key, value);
 		this.attributes[key] = value;
-		if (this.onIdChange === undefined) {
-			throw new Error("onChangeId not exist");
-		}
 		if (key === 'id') {
-			this.onIdChange();
+			this.getSubject(AdrElementIdChange).setElement(this);
+			this.getSubject(AdrElementIdChange).notify();
 		}
 	}
 	getStyle(options: string): string {
@@ -109,6 +120,24 @@ export default class AdrElement {
 	hasClass(className: string) {
 		return this.classSet.has(className);
 	}
+
+    traverseChildren(callback: (child: AdrElement) => void) {
+		for (const child of this.children) {
+			callback(child);
+			child.traverseChildren(callback);
+		}
+		
+    }
+    isDescendantOfById(id: string) {
+		let parent = this.parentNode;
+		while (parent) {
+			if (parent.getAttribute("id") === id) {
+				return true;
+			}
+			parent = parent.parentNode;
+		}
+		return false;
+    }
 	getBoundingClientRect(): {
 		top: number;
 		left: number;
@@ -119,16 +148,14 @@ export default class AdrElement {
 		};
 	}
 	remove() {
-		if (this.onRemove === undefined) {
-			throw new Error("onRemove not exist");
-		}
 		for (const child of this.children) {
 			child.remove();
 		}
+		this.getSubject(AdrElementRemove).setElement(this);
+		this.getSubject(AdrElementRemove).notify();
 		this.domElement?.remove();
 		this.getEntity().get(Node).setParent();
 		this.parentNode = undefined;
-		this.onRemove();
 	}
 	addEventListener(type: string, fn: EventListener, option: { once: boolean | undefined; }) {
 		if (!this.eventLinsteners[type]) {
@@ -171,10 +198,8 @@ export default class AdrElement {
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
 		this.children.push(element);
-		if (this.onChildrenUpdate === undefined) {
-			throw new Error("onChildrenUpdate is undefined");
-		}
-		this.onChildrenUpdate();
+		element.getSubject(AdrElementParentChange).setElement(element);
+		element.getSubject(AdrElementParentChange).notify();
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
 		if (element.domElement) {
@@ -187,10 +212,8 @@ export default class AdrElement {
 		}
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
-		if (this.onChildrenUpdate === undefined) {
-			throw new Error("onChildrenUpdate is undefined");
-		}
-		this.onChildrenUpdate();
+		element.getSubject(AdrElementParentChange).setElement(element);
+		element.getSubject(AdrElementParentChange).notify();
 	}
 	get firstChild(): AdrElement | null {
 		return this.children.item(0) || null;

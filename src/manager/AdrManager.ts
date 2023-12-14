@@ -11,6 +11,9 @@ import TRS from "../transform/TRS.js";
 import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 import Device from "../device/Device.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
+import OnAdrElementRemove from "../observer/OnAdrElementRemove.js";
+import OnAdrElementParentChange from "../observer/OnAdrElementParentChange.js";
+import OnAdrElementIdChange from "../observer/OnAdrElementIdChange.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
@@ -56,13 +59,6 @@ export default class AdrManager {
         headElement.setDomElement(document.head);
         headElement.setEntity(head);
         adr.$(root).append(adr.$(headElement))
-
-        bodyElement.onRemove = () => {
-        };
-        bodyElement.onIdChange = () => {
-        }
-        bodyElement.onChildrenUpdate = () => {
-        }
         Engine.createDefaultElements();
         Engine.init();
     }
@@ -77,6 +73,18 @@ export default class AdrManager {
         const onClickPick = new OnClickPickSayHello();
         onClickPick.setSubject(this.getEventManager().clickPick);
         onClickPick.setAdrManager(this);
+
+        const onRemove = new OnAdrElementRemove();
+        onRemove.setAdrManager(this);
+        onRemove.setSubject(this.getEventManager().adrElementRemove);
+
+        const onIdChange = new OnAdrElementIdChange();
+        onIdChange.setAdrManager(this);
+        onIdChange.setSubject(this.getEventManager().adrElementIdChange);
+
+        const onParentChange = new OnAdrElementParentChange();
+        onParentChange.setAdrManager(this);
+        onParentChange.setSubject(this.getEventManager().adrElementParentChange);
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

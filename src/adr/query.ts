@@ -1,11 +1,11 @@
 import adr from "./adr.js";
 import AdrElement from "./adapter/AdrElement.js";
 import AdrText from "../drawobject/AdrText.js";
+import Observer from "../observer/Observer.js";
 
 const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 
 export default class Query {
-
 	el: AdrElement | null = null;
 	get found() {
 		return this.el ? 1 : 0;

@@ -6,17 +6,20 @@ import EventManager from "./EventManager.js";
 export default class SceneManager {
     private readonly adrScene = new AdrScene;
     private readonly adrNotificationScene = new AdrScene;
+    private readonly adrEventScene = new AdrScene;
     private readonly emptyScene = new EmptyScene;
     private readonly gltfScene = new GLTFScene;
     registerEntities(): void {
         this.gltfScene.registerEntities();
         this.adrNotificationScene.registerEntities();
+        this.adrEventScene.registerEntities();
         this.adrScene.registerEntities();
         this.emptyScene.registerEntities();
     }
     initSceneEntities(): void {
         this.gltfScene.initEntities();
         this.adrNotificationScene.initEntities();
+        this.adrEventScene.initEntities();
         this.adrScene.initEntities();
         this.emptyScene.initEntities();
     }
@@ -24,7 +27,10 @@ export default class SceneManager {
         this.current().render();
     }
     current() {
-        return this.adrNotificationScene;
+        return this.adrScene;
+    }
+    getAdrEventScene() {
+        return this.adrEventScene;
     }
     getAdrNotificationScene() {
         return this.adrNotificationScene;
@@ -39,6 +45,16 @@ export default class SceneManager {
         this.emptyScene.update();
     }
     initSubjects(eventManager: EventManager) {
+
+        this.adrEventScene.setEntitySubjects(
+            eventManager.viewPortChange,
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
 
         this.adrNotificationScene.setEntitySubjects(
             eventManager.viewPortChange,

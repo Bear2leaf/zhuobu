@@ -9,6 +9,10 @@ import EntityRender from "../subject/EntityRender.js";
 import ViewPortChange from "../subject/ViewPortChange.js";
 import EntityUpdate from "../subject/EntityUpdate.js";
 import EntityRemove from "../subject/EntityRemove.js";
+import AdrElementSubject from "../subject/AdrElementSubject.js";
+import AdrElementRemove from "../subject/AdrElementRemove.js";
+import AdrElementIdChange from "../subject/AdrElementIdChange.js";
+import AdrElementParentChange from "../subject/AdrElementParentChange.js";
 
 
 export default class EventManager {
@@ -21,6 +25,9 @@ export default class EventManager {
     readonly viewPortChange = new ViewPortChange;
     readonly click = new Click;
     readonly clickPick = new ClickPickSubject;
+    readonly adrElementRemove = new AdrElementRemove;
+    readonly adrElementIdChange = new AdrElementIdChange;
+    readonly adrElementParentChange = new AdrElementParentChange;
     initObservers() {
         const onEntityAdd = new OnEntityAdd();
         onEntityAdd.setSubject(this.entityAdd);

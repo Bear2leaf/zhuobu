@@ -22,7 +22,8 @@ export default abstract class AdrAdapter {
         this.adrManager = adrManager;
     }
     $(selector: string | AdrElement, context?: Query | string) {
-        return context === undefined ? new Query(selector) : new Query(selector, context);
+        const query = context === undefined ? new Query(selector) : new Query(selector, context);
+        return query;
     }
 
     localStorage(): LocalStorage {
@@ -34,7 +35,6 @@ export default abstract class AdrAdapter {
     head(): AdrElement {
         return this.getAdrManager().getRoot().getHead();
     }
-
     createElement(selector: string): AdrElement {
         const entity = new AdrTextObject();
         const scene = this.getAdrManager().getSceneManager().getAdrScene();
@@ -45,29 +45,12 @@ export default abstract class AdrAdapter {
         entity.get(SDFCharacter).getPickColor().set(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
         scene.initEntity(entity);
         const adrElement = new AdrElement();
-        adrElement.onRemove = () => {
-            this.getAdrManager().getSceneManager().getAdrScene().removeEntity(entity);
-        };
-        adrElement.onIdChange = () => {
-            const id = adrElement.getAttribute("id");
-            if (id === 'notifications') {
-                this.getAdrManager().getSceneManager().getAdrScene().removeEntity(adrElement.getEntity());
-                this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
-            }
-        }
-        adrElement.onChildrenUpdate = () => {
-            const id = adrElement.getAttribute("id");
-            if (id === "notifications") {
-                for (const child of adrElement.children) {
-                    this.getAdrManager().getSceneManager().getAdrScene().removeEntity(child.getEntity());
-                    this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(child.getEntity());
-                }
-            }
-        }
         const domElement = document.createElement(selector);
         adrElement.tagName = selector;
         adrElement.setDomElement(domElement);
         adrElement.setEntity(entity);
+        const eventManager = this.getAdrManager().getEventManager();
+        adrElement.setSubjects(eventManager.adrElementRemove, eventManager.adrElementIdChange, eventManager.adrElementParentChange);
         return adrElement;
     }
     getElementById(selector: string): AdrElement | null {
