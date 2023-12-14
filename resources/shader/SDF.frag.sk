@@ -19,6 +19,6 @@ void main() {
     float dist = texture(u_texture, v_texcoord.xy).r;
     float alpha = smoothstep(u_buffer - u_gamma, u_buffer + u_gamma, dist);
     o_pickColor = vec4((u_pickColor) / 255.0f);
-    // o_color = vec4((u_color * v_color).rgb, alpha * u_color.a * v_color.a);
-    o_color = vec4((u_pickColor) / 255.0f);
+    o_color = vec4((u_color * v_color).rgb, alpha * u_color.a * v_color.a);
+    // o_color = vec4((u_pickColor) / 255.0f);
 }
