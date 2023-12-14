@@ -118,14 +118,18 @@ export default class Query {
 	};
 
 	addClass(value: string): Query {
-		value.split(' ').forEach((v) => {
-			this.get().addClass(v);
-		});
+		if (this.found) {
+			value.split(' ').forEach((v) => {
+				this.get().addClass(v);
+			});
+		}
 		return this;
 	};
 
 	removeClass(value: string) {
-		this.get().removeClass(value);
+		if (this.found) {
+			this.get().removeClass(value);
+		}
 		return this;
 	};
 
