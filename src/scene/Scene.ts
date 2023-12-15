@@ -9,7 +9,6 @@ import ViewPortChange from "../subject/ViewPortChange.js";
 
 export default abstract class Scene {
     private readonly entities: Entity[] = [];
-    private viewPortChange?: ViewPortChange;
     private entityInit?: EntitySubject;
     private entityAdd?: EntityAdd;
     private entityRemove?: EntityRemove;
@@ -30,14 +29,12 @@ export default abstract class Scene {
         });
     }
     render(): void {
-        this, this.viewPortChange?.notify();
         this.entities.forEach(entity => {
             this.entityRender?.setEntity(entity);
             this.entityRender?.notify();
         });
     }
     setEntitySubjects(
-        viewPortChange: ViewPortChange,
         entityInit: EntitySubject,
         entityAdd: EntityAdd,
         entityRegisterComponents: EntityRegisterComponents,
@@ -45,7 +42,6 @@ export default abstract class Scene {
         entityUpdate: EntityUpdate,
         entityRemove: EntityRemove
     ) {
-        this.viewPortChange = viewPortChange;
         this.entityInit = entityInit;
         this.entityAdd = entityAdd;
         this.entityRegisterComponents = entityRegisterComponents;

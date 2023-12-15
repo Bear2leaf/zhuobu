@@ -1,6 +1,7 @@
 import AdrScene from "../scene/AdrScene.js";
 import EmptyScene from "../scene/EmptyScene.js";
 import GLTFScene from "../scene/GLTFScene.js";
+import ViewPortChange from "../subject/ViewPortChange.js";
 import EventManager from "./EventManager.js";
 
 export default class SceneManager {
@@ -10,6 +11,12 @@ export default class SceneManager {
     private readonly tmpScene = new AdrScene;
     private readonly emptyScene = new EmptyScene;
     private readonly gltfScene = new GLTFScene;
+    private viewPortChange?: ViewPortChange;
+    constructor() {
+        this.adrScene.addChild(this.adrNotificationScene);
+        this.adrScene.addChild(this.adrEventScene);
+        this.adrScene.addChild(this.tmpScene);
+    }
     registerEntities(): void {
         this.gltfScene.registerEntities();
         this.adrNotificationScene.registerEntities();
@@ -27,6 +34,7 @@ export default class SceneManager {
         this.tmpScene.initEntities();
     }
     render(): void {
+        this.viewPortChange?.notify();
         this.current().render();
     }
     current() {
@@ -53,9 +61,8 @@ export default class SceneManager {
         this.emptyScene.update();
     }
     initSubjects(eventManager: EventManager) {
-
+        this.viewPortChange = eventManager.viewPortChange;
         this.tmpScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -65,7 +72,6 @@ export default class SceneManager {
         );
 
         this.adrEventScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -75,7 +81,6 @@ export default class SceneManager {
         );
 
         this.adrNotificationScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -85,7 +90,6 @@ export default class SceneManager {
         );
 
         this.gltfScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -94,7 +98,6 @@ export default class SceneManager {
             eventManager.entityRemove
         );
         this.adrScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -103,7 +106,6 @@ export default class SceneManager {
             eventManager.entityRemove
         );
         this.emptyScene.setEntitySubjects(
-            eventManager.viewPortChange,
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
