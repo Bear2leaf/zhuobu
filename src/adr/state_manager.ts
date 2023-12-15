@@ -14,7 +14,6 @@
  * Original file created by: Michael Galusha
  */
 
-import Query from "./query.js";
 import adr from "./adr.js";
 import Engine from "./engine.js";
 import Events from "./events.js";
@@ -24,11 +23,9 @@ import World from "./world.js";
 
 
 function stateModifierError(...args: unknown[]) {
-	// console.warn("[state_manager.js][evalError()]" + args.map(arg => arg).join(', '));
 	throw new Error(`[state_manager.js][evalError()] ${args.map(arg => arg).join(', ')}`);
 }
 function stateModifier(...args: any[]) {
-	console.debug("[state_manager.js][execEval()][params]", ...arguments);
 	if (arguments.length === 1 && typeof arguments[0] === 'string') {
 		const arg = arguments[0];
 		if (/^whichState\s=\s\(([\w\s\.]+)+\)$/.test(arg) && arg.indexOf("whichState = (") === 0) {
