@@ -172,7 +172,7 @@ export default class Query {
 	}
 
 	parent() {
-		return this.get().parentNode as AdrElement;
+		return this.get().parentNode || null;
 	}
 	index(elem: Query) {
 		const collection = this.get().children;
@@ -190,13 +190,17 @@ export default class Query {
 	}
 
 	remove() {
-		if (this.found) {
-			const index = this.parent().children.indexOf(this.get());
+		const parent = this.parent();
+		if (parent) {
+			const index = parent.children.indexOf(this.get());
 			if (index === -1) {
 				throw new Error("item not found");
 			}
-			const removeItems = this.parent().children.splice(index, 1);
+			const removeItems = parent.children.splice(index, 1);
+
 			removeItems.forEach(item => item.remove());
+		} else {
+			this.get().remove();
 		}
 		return this;
 	}
@@ -387,12 +391,20 @@ export default class Query {
 	}
 
 	before(elem: Query) {
-		this.parent().insertBefore(elem.get(), this.get());
+		const parent = this.parent();
+		if (!parent) {
+			throw new Error('Invalid arguments');
+		}
+		parent.insertBefore(elem.get(), this.get());
 		return this;
 	}
 
 	after(elem: Query) {
-		this.parent().insertBefore(elem.get(), this.get().nextSibling);
+		const parent = this.parent();
+		if (!parent) {
+			throw new Error('Invalid arguments');
+		}
+		parent.insertBefore(elem.get(), this.get().nextSibling);
 		return this;
 	}
 

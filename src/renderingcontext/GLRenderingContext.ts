@@ -7,7 +7,6 @@ import GLUniformBufferObject from "../contextobject/GLUniformBufferObject.js";
 import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
-import { Vec4 } from "../geometry/Vector.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";

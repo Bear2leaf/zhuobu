@@ -250,7 +250,7 @@ export default class MIDIFile {
         const pitchBendRange = Array(16).fill(2); // Default pitch-bend range is 2 semitones.
         for (let i = 0; i < events.length; i++) {
             const expectedPitchBendRangeMessageNumberOld = expectedPitchBendRangeMessageNumber;
-            //console.debug('		next',events[i]);
+            console.debug('		next',events[i]);
             if (song.duration < events[i].playTime / 1000) {
                 song.duration = events[i].playTime / 1000;
             }
@@ -263,7 +263,7 @@ export default class MIDIFile {
                     }
                 } else {
                     if (events[i].param1 >= 0 && events[i].param1 <= 127) {
-                        //console.debug('start', events[i].param1);
+                        console.debug('start', events[i].param1);
                         this.startNote(events[i], song);
                     } else {
                         console.debug('wrong tone', events[i]);
@@ -273,7 +273,7 @@ export default class MIDIFile {
                 if (events[i].subtype == MIDIEvents.EVENT_MIDI_NOTE_OFF) {
                     if (events[i].channel != 9) {
                         this.closeNote(events[i], song);
-                        //console.debug('close', events[i].param1);
+                        console.debug('close', events[i].param1);
                     }
                 } else {
                     if (events[i].subtype == MIDIEvents.EVENT_MIDI_PROGRAM_CHANGE) {
@@ -289,7 +289,7 @@ export default class MIDIFile {
                                 if (events[i].channel != 9) { // TODO why not set loudness for drums?
                                     const track = this.takeTrack(events[i].channel, song);
                                     track.volume = events[i].param2 / 127 || 0.000001;
-                                    //console.debug('volume', track.volume,'for',events[i].channel);
+                                    console.debug('volume', track.volume,'for',events[i].channel);
                                 }
                             } else if (
                                 (expectedPitchBendRangeMessageNumber == 1 && events[i].param1 == 0x65 && events[i].param2 == 0x00) ||
@@ -318,7 +318,7 @@ export default class MIDIFile {
                             }
                         } else {
                             if (events[i].subtype == MIDIEvents.EVENT_MIDI_PITCH_BEND) {
-                                //console.debug('	bend', events[i].channel, events[i].param1, events[i].param2);
+                                console.debug('	bend', events[i].channel, events[i].param1, events[i].param2);
                                 this.addSlide(events[i], song, pitchBendRange[events[i].channel]);
                             } else {
                                 console.debug('unknown', events[i].channel, events[i]);

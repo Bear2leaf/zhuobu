@@ -445,7 +445,7 @@ export default class Outside {
 				throw new Error("found is undefined");
 			}
 			found.text(num);
-		} else if (num === 0) {
+		} else if (num === 0 && row.found) {
 			row.remove();
 		}
 	};
@@ -490,6 +490,8 @@ export default class Outside {
 		if (needsAppend && village.children().length > 1) {
 			village.prependTo(adr.$('#outsidePanel'));
 			village.animate({ opacity: 1 }, 300);
+		} else if (needsAppend) {
+			village.remove();
 		}
 
 		if (hasPeeps && typeof Outside._popTimeout === 'undefined') {

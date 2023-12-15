@@ -31,10 +31,10 @@ export default class AdrElement {
 	}
 
 	get offsetWidth(): number {
-		return (this.domElement as HTMLElement)?.offsetWidth || 0;
+		return this.getDomElement().offsetWidth || 0;
 	}
 	get offsetHeight(): number {
-		return (this.domElement as HTMLElement)?.offsetHeight || 0;
+		return this.getDomElement().offsetHeight || 0;
 	}
 	get scrollTop(): number {
 		return this.domElement?.scrollTop || 0;
@@ -49,7 +49,7 @@ export default class AdrElement {
 		return this.domElement?.clientLeft || 0;
 	}
 	get innerText(): string {
-		return (this.domElement as HTMLElement)?.innerText || "";
+		return this.getDomElement().innerText || "";
 	}
 	set innerText(value: string) {
 		if (this.domElement) {
@@ -57,7 +57,7 @@ export default class AdrElement {
 		}
 	}
 	get innerHTML(): string {
-		return (this.domElement as HTMLElement)?.innerHTML || "";
+		return this.getDomElement().innerHTML || "";
 	}
 	set innerHTML(value: string) {
 		if (this.domElement) {
@@ -66,7 +66,7 @@ export default class AdrElement {
 		}
 	}
 	get tagName(): string {
-		return (this.domElement as HTMLElement)?.tagName || "";
+		return this.getDomElement().tagName || "";
 	};
 	set tagName(value: string) {
 
@@ -82,11 +82,11 @@ export default class AdrElement {
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
-	getDomElement(): Element {
+	getDomElement(): HTMLElement {
 		if (!this.domElement) {
 			throw new Error("domElement not exist");
 		}
-		return this.domElement;
+		return this.domElement as HTMLElement;
 	}
 	setEntity(entity: Entity) {
 		this.entity = entity;
@@ -109,7 +109,7 @@ export default class AdrElement {
 		return this.attributes[options] || null;
 	}
 	setAttribute(key: string, value: string) {
-		this.domElement?.setAttribute(key, value);
+		this.getDomElement().setAttribute(key, value);
 		this.attributes[key] = value;
 		if (key === 'id') {
 			this.getSubject(AdrElementIdChange).setElement(this);
@@ -117,7 +117,7 @@ export default class AdrElement {
 		}
 	}
 	getStyle(options: string): string {
-		return (this.domElement as HTMLElement)?.style.getPropertyValue(options) || this.style[options] || "";
+		return this.getDomElement().style.getPropertyValue(options) || this.style[options] || "";
 	}
 	setStyle(key: string, value: string) {
 		(this.domElement as HTMLElement)?.style.setProperty(key, value);
@@ -156,7 +156,7 @@ export default class AdrElement {
 		top: number;
 		left: number;
 	} {
-		return (this.domElement as HTMLElement)?.getBoundingClientRect() || {
+		return this.getDomElement().getBoundingClientRect() || {
 			top: 0,
 			left: 0
 		};

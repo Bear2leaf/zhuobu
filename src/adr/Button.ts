@@ -50,6 +50,8 @@ export default class Button {
 			}
 			if (costTooltip.children().length > 0) {
 				costTooltip.appendTo(el);
+			} else {
+				costTooltip.remove();
 			}
 		}
 

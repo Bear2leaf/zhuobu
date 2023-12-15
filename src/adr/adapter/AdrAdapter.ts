@@ -5,6 +5,7 @@ import AdrElementCollection from "./AdrElementCollection.js";
 import AdrElement from "./AdrElement.js";
 import AdrTextObject from "../../entity/AdrTextObject.js";
 import TRS from "../../transform/TRS.js";
+import AdrText from "../../drawobject/AdrText.js";
 
 export default abstract class AdrAdapter {
     // private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }

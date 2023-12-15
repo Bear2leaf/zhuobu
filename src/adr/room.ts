@@ -919,21 +919,29 @@ export default class Room {
 		if (rNeedsAppend && resources.children().length > 0) {
 			resources.prependTo(stores);
 			resources.animate({ opacity: 1 }, 300);
+		} else if (rNeedsAppend && resources.children().length === 0) {
+			resources.remove();
 		}
 
 		if (sNeedsAppend && special.children().length > 0) {
 			special.appendTo(stores);
 			special.animate({ opacity: 1 }, 300);
+		} else if (sNeedsAppend && special.children().length === 0) {
+			special.remove();
 		}
 
 		if (needsAppend && stores.find('.storeRow').found > 0) {
 			stores.appendTo(adr.$('#storesContainer'));
 			stores.animate({ opacity: 1 }, 300);
+		} else if (needsAppend && stores.find('.storeRow').found === 0) {
+			stores.remove();
 		}
 
 		if (wNeedsAppend && weapons.children().length > 0) {
 			weapons.appendTo(adr.$('#storesContainer'));
 			weapons.animate({ opacity: 1 }, 300);
+		} else if (wNeedsAppend && weapons.children().length === 0) {
+			weapons.remove();
 		}
 
 		if (newRow) {
@@ -954,11 +962,15 @@ export default class Room {
 		const stores = adr.$('#resources');
 		const totalIncome: TotalIncome = {};
 		if (stores.found === 0 || typeof StateManager.get('income') === 'undefined') return;
-		stores.children().forEach(function (el, index) {
-			adr.$('.tooltip', el).remove();
+		stores.children().forEach(function (storeRow, index) {
+			storeRow.children().forEach(row => {
+				if (row.hasClass("tooltip")) {
+					row.remove();
+				}
+			});
 			const ttPos = index > 10 ? 'top right' : 'bottom right';
 			const tt = adr.$('<div>').addClass('tooltip ' + ttPos);
-			const storeName = el.attr('id').substring(4).replace('-', ' ');
+			const storeName = storeRow.attr('id').substring(4).replace('-', ' ');
 			for (const incomeSource in StateManager.get('income')) {
 				const income = StateManager.get('income.' + incomeSource + '');
 				for (const store in income.stores) {
@@ -987,7 +999,9 @@ export default class Room {
 					throw new Error("delay is undefined");
 				}
 				adr.$('<div>').addClass('total row_val').text(Engine.getIncomeMsg(total, delay.toString())).appendTo(tt);
-				tt.appendTo(el);
+				tt.appendTo(storeRow);
+			} else {
+				tt.remove();
 			}
 		});
 	};
@@ -1229,12 +1243,18 @@ export default class Room {
 
 		if (needsAppend && buildSection.children().length > 0) {
 			buildSection.appendTo(adr.$('#roomPanel')).animate({ opacity: 1 }, 300);
+		} else if (needsAppend && buildSection.children().length === 0) {
+			buildSection.remove();
 		}
 		if (cNeedsAppend && craftSection.children().length > 0) {
 			craftSection.appendTo(adr.$('#roomPanel')).animate({ opacity: 1 }, 300);
+		} else if (cNeedsAppend && buildSection.children().length === 0) {
+			craftSection.remove();
 		}
 		if (bNeedsAppend && buildSection.children().length > 0) {
 			buySection.appendTo(adr.$('#roomPanel')).animate({ opacity: 1 }, 300);
+		} else if (bNeedsAppend && buildSection.children().length === 0) {
+			buySection.remove();
 		}
 	};
 
