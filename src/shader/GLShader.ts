@@ -6,6 +6,7 @@ export default class GLShader implements Shader {
     private readonly gl: WebGL2RenderingContext;
     private readonly program: WebGLProgram;
     private readonly locMap: Map<string, WebGLUniformLocation | null>;
+    private readonly invalidBlockIndex = (-1 >>> 0);
     constructor(gl: WebGL2RenderingContext, vs: string, fs: string) {
         this.gl = gl;
         this.locMap = new Map();
@@ -95,7 +96,9 @@ export default class GLShader implements Shader {
     }
     bindUniform(index: UniformBlockIndex): void {
         const blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBlockIndex[index]);
-        this.gl.uniformBlockBinding(this.program, blockIndex, index);
+        // if (blockIndex !== this.invalidBlockIndex) {
+            this.gl.uniformBlockBinding(this.program, blockIndex, index);
+        // }
     }
 }
 
