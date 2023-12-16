@@ -96,9 +96,9 @@ export default class GLShader implements Shader {
     }
     bindUniform(index: UniformBlockIndex): void {
         const blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBlockIndex[index]);
-        // if (blockIndex !== this.invalidBlockIndex) {
+        if (blockIndex !== this.invalidBlockIndex) {
             this.gl.uniformBlockBinding(this.program, blockIndex, index);
-        // }
+        }
     }
 }
 
