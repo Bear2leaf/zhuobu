@@ -4,9 +4,8 @@ import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Texture from "../texture/Texture.js";
-import { Vec3, Vec4 } from "../geometry/Vector.js";
+import { Vec4 } from "../geometry/Vector.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
-import Shader from "../shader/Shader.js";
 
 
 export default class DrawObject extends Component {

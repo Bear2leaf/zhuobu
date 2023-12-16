@@ -1,4 +1,5 @@
 import { flatten, Vec3, Vec4 } from "../geometry/Vector.js";
+import { UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
 import Shader from "./Shader.js";
 
 export default class GLShader implements Shader {
@@ -91,6 +92,10 @@ export default class GLShader implements Shader {
     }
     use() {
         this.gl.useProgram(this.program);
+    }
+    bindUniform(index: UniformBlockIndex): void {
+        const blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBlockIndex[index]);
+        this.gl.uniformBlockBinding(this.program, blockIndex, index);
     }
 }
 

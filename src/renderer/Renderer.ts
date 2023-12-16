@@ -1,7 +1,7 @@
 import Camera from "../camera/Camera.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
-import RenderingContext from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
@@ -54,6 +54,7 @@ export default class Renderer {
         const vs = cacheManager.getVertShaderTxt(this.shaderName);
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
         this.shader = rc.makeShader(vs, fs);
+        this.getShader().bindUniform(UniformBlockIndex.PickColor);
     }
     prepareShader() {
         this.getShader().use();
