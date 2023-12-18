@@ -1,8 +1,8 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
-export type DeviceInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
-
-export type TouchInfoFunction = (info?: { x: number, y: number }) => void
+export type WindowInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
+export type TouchInfo = { x: number, y: number }
+export type TouchInfoFunction = (info?: TouchInfo) => void
 export enum ViewPortType {
   Full,
   TopRight,
@@ -45,8 +45,8 @@ export default abstract class Device {
     }
   }
   abstract getPerformance(): Performance;
-  abstract getWindowInfo(): DeviceInfo;
-  abstract getCanvasInfo(): DeviceInfo;
+  abstract getWindowInfo(): WindowInfo;
+  abstract getCanvasInfo(): WindowInfo;
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;

@@ -1,7 +1,7 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import { WorkerRequest } from "../worker/MessageProcessor.js";
-import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
+import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 
 type MiniGameType = {
     createCanvas: Function,
@@ -36,10 +36,10 @@ export default class MiniGameDevice extends Device {
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 
-    getWindowInfo(): DeviceInfo {
+    getWindowInfo(): WindowInfo {
         return wx.getWindowInfo();
     }
-    getCanvasInfo(): DeviceInfo {
+    getCanvasInfo(): WindowInfo {
         return wx.getWindowInfo();
     }
     getPerformance(): Performance {

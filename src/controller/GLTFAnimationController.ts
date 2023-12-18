@@ -1,7 +1,6 @@
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";
-import Node from "../transform/Node.js";
 import AnimationController from "./AnimationController.js";
 
 export default class GLTFAnimationController extends AnimationController {
@@ -36,7 +35,7 @@ export default class GLTFAnimationController extends AnimationController {
             // if there is no matrix saved for this joint
             const trs = node.getSource();
             if (!trs) {
-                throw new Error("jointSource is undefined");
+                throw new Error("source is undefined");
             }
             if (path === "translation") {
                 const currentBuffer = [...outputBuffer.slice(bufferIndex * 3, bufferIndex * 3 + 6)]

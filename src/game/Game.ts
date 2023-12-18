@@ -36,8 +36,8 @@ export default abstract class Game {
     initManagers(device: Device): void {
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();
-        this.inputManager.initInput(device);
-        this.cameraManager.initCamera(device);
+        this.inputManager.initInput();
+        this.cameraManager.initCamera();
         this.rendererManager.initRenderer();
         this.framebufferManager.initFramebuffer();
         this.adrManager.initAdr();
@@ -58,7 +58,9 @@ export default abstract class Game {
         this.timestepManager.setDevice(device);
         this.framebufferManager.setDevice(device);
         this.rendererManager.setDevice(device);
+        this.cameraManager.setDevice(device);
         this.textureManager.setDevice(device);
+        this.inputManager.setDevice(device);
         this.offscreencanvasManager.setDevice(device);
         this.audioManager.setAudioContext(device.createWebAudioContext());
         this.inputManager.initObservers();

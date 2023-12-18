@@ -1,7 +1,7 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import { WorkerRequest } from "../worker/MessageProcessor.js";
-import Device, { DeviceInfo, TouchInfoFunction } from "./Device.js";
+import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 
 export default class BrowserDevice extends Device {
@@ -14,14 +14,14 @@ export default class BrowserDevice extends Device {
         this.offscreenCanvas = offscreencanvas;
         this.isMouseDown = false;
     }
-    getWindowInfo(): DeviceInfo {
+    getWindowInfo(): WindowInfo {
         return {
             windowWidth: this.canvas.width,
             windowHeight: this.canvas.height,
             pixelRatio: 1
         }
     }
-    getCanvasInfo(): DeviceInfo {
+    getCanvasInfo(): WindowInfo {
         return {
             windowWidth: this.offscreenCanvas.width,
             windowHeight: this.offscreenCanvas.height,

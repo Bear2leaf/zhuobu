@@ -12,8 +12,17 @@ export default class CameraManager {
     private readonly uiCamera = new UICamera;
     private readonly frontgroundCamera = new FrontgroundCamera;
     private readonly backgroundCamera = new BackgroundCamera;
+    private device?: Device;
     async load(): Promise<void> { }
-    initCamera(device: Device): void {
+    setDevice(device: Device) {
+        this.device = device;
+    }
+    getDevice(): Device {
+        if (!this.device) throw new Error("Device not set");
+        return this.device;
+    }
+    initCamera(): void {
+        const device = this.getDevice();
         const windowWidth = device.getWindowInfo().windowWidth;
         const windowHeight = device.getWindowInfo().windowHeight;
         this.debugCamera.setSize(windowWidth, windowHeight);
