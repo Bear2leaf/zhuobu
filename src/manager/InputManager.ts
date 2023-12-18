@@ -22,7 +22,6 @@ export default class InputManager {
             command.setTouchInfo(touchInfo);
             command.setWindowInfo(this.getDevice().getWindowInfo());
             command.setClick(this.getEventManager().click);
-            command.setClickPick(this.getEventManager().clickPick);
             this.touchCommands.push(command);
         });
         this.getDevice().onTouchMove((touchInfo) => {

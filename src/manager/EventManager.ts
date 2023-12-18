@@ -62,6 +62,7 @@ export default class EventManager {
         this.onEntityRender.setSubject(this.entityRender);
         this.onIdChange.setSubject(this.adrElementIdChange);
         this.onClick.setSubject(this.click);
+        this.onClick.setChainNext(this.clickPick)
         this.onClickPick.setSubject(this.clickPick);
         this.onRemove.setSubject(this.adrElementRemove);
         this.onParentChange.setSubject(this.adrElementParentChange);
