@@ -39,11 +39,8 @@ export default class FrameBufferManager {
         this.renderFrameBufferObject.attach(this.getTextureManager().renderTexture);
     }
     initObservers() {
-        const onEntityRender = new OnEntityRender;
-        onEntityRender.setFrameBufferManager(this);
-        onEntityRender.setRendererManager(this.getRendererManager());
-        onEntityRender.setSubject(this.getEventManager().entityRender);
         this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
+        this.getEventManager().onEntityRender.setFrameBufferManager(this);
     }
     bindPickFramebuffer(): void {
         this.pickFrameBufferObject.bind();

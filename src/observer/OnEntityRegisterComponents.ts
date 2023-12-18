@@ -4,6 +4,7 @@ import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import TextureManager from "../manager/TextureManager.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Flowers from "../sprite/Flowers.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
@@ -12,6 +13,7 @@ import OnClick from "./OnClick.js";
 export default class OnEntityRegisterComponents extends Observer {
     private sdfCanvas?: SDFCanvas;
     private textureManager?: TextureManager;
+    private renderingContext?: RenderingContext;
     private onClick?: OnClick;
 
     getSubject(): EntitySubject {
@@ -25,7 +27,9 @@ export default class OnEntityRegisterComponents extends Observer {
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
-    setRenderingContext?: (drawObject: DrawObject) => void;
+    setRenderingContext(renderingContext: RenderingContext) {
+        this.renderingContext = renderingContext;
+    };
     setTextureManager(textureManager: TextureManager) {
         this.textureManager = textureManager;
     };
@@ -36,9 +40,10 @@ export default class OnEntityRegisterComponents extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         console.debug("OnEntityRegisterComponents", entity);
-        if (entity.has(DrawObject) && this.setRenderingContext) {
-            this.setRenderingContext(entity.get(DrawObject)); 
-        } else if (entity.has(DrawObject) && this.textureManager) {
+        if (entity.has(DrawObject) && this.renderingContext) {
+            entity.get(DrawObject).setRenderingContext(this.renderingContext);
+        }
+        if (entity.has(DrawObject) && this.textureManager) {
             entity.get(DrawObject).setTexture(this.textureManager.defaultTexture)
             if (entity.has(SDFCharacter)) {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
@@ -47,9 +52,11 @@ export default class OnEntityRegisterComponents extends Observer {
             } else if (entity.has(SkinMesh)) {
                 entity.get(SkinMesh).setJointTexture(this.textureManager.jointTexture);
             }
-        } else if (entity.has(SDFCharacter) && this.sdfCanvas) {
+        }
+        if (entity.has(SDFCharacter) && this.sdfCanvas) {
             this.sdfCanvas.updateTextTexture(entity.get(SDFCharacter));
-        } else if (entity.has(Pointer) && this.onClick) {
+        }
+        if (entity.has(Pointer) && this.onClick) {
             this.onClick.setHandler(entity.get(Pointer).onClick.bind(entity.get(Pointer)));
         }
 

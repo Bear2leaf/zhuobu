@@ -3,12 +3,14 @@ export function length(a: Vec4) {
     const len = Math.sqrt(lenSq);
     return len;
 }
+
 export function flatten(vec4Array: Vec4[]): Float32Array {
-    const result = new Float32Array(vec4Array.length * 4)
-    vec4Array.forEach((v, index) => {
-        result.set([v.x, v.y, v.z, v.w], index * 4);
-    })
-    return result;
+    return new Float32Array(vec4Array.reduce<number[]>(function (prev, current, index) {
+        for (let i = 0; i < current.getSize(); i++) {
+            prev.push(current.getByIndex(i));
+        }
+        return prev;
+    }, []));
 }
 
 

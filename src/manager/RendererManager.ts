@@ -66,18 +66,10 @@ export default class RendererManager {
         return this.device;
     }
     initObservers() {
-        const onEntityRegisterComponents = new OnEntityRegisterComponents;
-        onEntityRegisterComponents.setRenderingContext = (drawObject) => {
-            drawObject.setRenderingContext(this.getDevice().getRenderingContext());
-        }
-        onEntityRegisterComponents.setSubject(this.getEventManager().entityRegisterComponents);
-        const onEntityRender = new OnEntityRender;
-        onEntityRender.setRendererManager(this);
-        onEntityRender.setSubject(this.getEventManager().entityRender);
-        const onViewPortChange = new OnViewPortChange();
-        onViewPortChange.setDevice(this.getDevice());
-        onViewPortChange.setSubject(this.getEventManager().viewPortChange);
-        
+        this.getEventManager().onEntityRegisterComponents.setRenderingContext(this.getDevice().getRenderingContext())
+        this.getEventManager().onEntityRender.setRendererManager(this);
+        this.getEventManager().onViewPortChange.setDevice(this.getDevice());
+
     }
     initRenderer(): void {
         const rc = this.getDevice().getRenderingContext();

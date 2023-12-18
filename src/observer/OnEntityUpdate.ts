@@ -41,9 +41,11 @@ export default class OnEntityUpdate extends Observer {
             } else if (entity.has(MoveCircleController)) {
                 this.animationManager.circleAnimator.animate(entity.get(MoveCircleController));
             }
-        } else if (entity.has(Pointer)) {
+        }
+        if (entity.has(Pointer)) {
             entity.get(Pointer).update();
-        } else if (entity.has(AdrText) && this.adrManager) {
+        }
+        if (entity.has(AdrText) && this.adrManager) {
             if (entity.get(Node).getRoot() === entity.get(Node)) {
                 entity.get(Node).updateWorldMatrix();
             }

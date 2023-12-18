@@ -30,9 +30,7 @@ export default class OffscreenCanvasManager {
         return this.textureManager;
     }
     initObservers() {
-        const observer = new OnEntityRegisterComponents();
-        observer.setSubject(this.getEventManager().entityRegisterComponents);
-        observer.setSDFCanvas(this.sdfCanvas);
+        this.getEventManager().onEntityRegisterComponents.setSDFCanvas(this.sdfCanvas);
     }
     initOffscreenCanvas(): void {
         this.sdfCanvas.initSDFTexture(this.getTextureManager().sdfTexture);

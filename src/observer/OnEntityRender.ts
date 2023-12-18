@@ -34,6 +34,11 @@ export default class OnEntityRender extends Observer {
         if (entity.has(DrawObject) && this.rendererManager) {
             if (entity.has(SDFCharacter)) {
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
+                if (this.framebufferManager) {
+                    this.framebufferManager.bindPickFramebuffer();
+                    this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
+                    this.framebufferManager.unbindPickFramebuffer();
+                }
             } else if (entity.has(DefaultSprite)) {
                 this.rendererManager.getSpriteRenderer().render(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
@@ -49,13 +54,6 @@ export default class OnEntityRender extends Observer {
                     this.rendererManager.getMeshRenderer().render(entity.get(SkinMesh));
                 }
             }
-        }
-        if (entity.has(SDFCharacter) && this.framebufferManager && this.rendererManager) {
-            this.framebufferManager.bindPickFramebuffer();
-            if (entity.has(SDFCharacter)) {
-                this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
-            }
-            this.framebufferManager.unbindPickFramebuffer();
         }
     }
 

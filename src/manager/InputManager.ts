@@ -1,7 +1,6 @@
 import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
 import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
-import OnClick from "../observer/OnClick.js";
 import TouchCommand from "../command/TouchCommand.js";
 import TouchStartCommand from "../command/TouchStartCommand.js";
 import TouchMoveCommand from "../command/TouchMoveCommand.js";
@@ -57,11 +56,9 @@ export default class InputManager {
     }
 
     initObservers() {
-        const onClick = new OnClick();
-        onClick.setSubject(this.getEventManager().click);
         const onEntityRegisterComponents = new OnEntityRegisterComponents();
         onEntityRegisterComponents.setSubject(this.getEventManager().entityRegisterComponents);
-        onEntityRegisterComponents.setOnClick(onClick);
+        onEntityRegisterComponents.setOnClick(this.getEventManager().onClick);
 
     }
     process(): void {

@@ -32,10 +32,7 @@ export default class GLTFManager {
         this.helloMultiGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
     }
     initObservers() {
-
-        const onEntityRegisterComponents = new OnEntityInit;
-        onEntityRegisterComponents.setGLTFManager(this);
-        onEntityRegisterComponents.setSubject(this.getEventManager().entityInit);
+        this.getEventManager().onEntityInit.setGLTFManager(this);
     }
     initGLTF(gltf: GLTF): void {
         gltf.init(this.getCacheManager().getGLTF(gltf.getName()));

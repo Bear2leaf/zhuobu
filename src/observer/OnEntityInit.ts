@@ -38,7 +38,8 @@ export default class OnEntityInit extends Observer {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             }
             entity.get(Mesh).initMesh();
-        } else if (entity.has(SDFCharacter)) {
+        }
+        if (entity.has(SDFCharacter)) {
             entity.get(SDFCharacter).create();
         }
 

@@ -3,7 +3,6 @@ import Engine from "../adr/engine.js";
 import EventManager from "./EventManager.js";
 import adr from "../adr/adr.js";
 import AdrTextObject from "../entity/AdrTextObject.js";
-import OnEntityUpdate from "../observer/OnEntityUpdate.js";
 import AdrElement from "../adr/adapter/AdrElement.js";
 import Node from "../transform/Node.js";
 import AdrText from "../drawobject/AdrText.js";
@@ -13,7 +12,6 @@ import Device from "../device/Device.js";
 import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
 import OnAdrElementRemove from "../observer/OnAdrElementRemove.js";
 import OnAdrElementParentChange from "../observer/OnAdrElementParentChange.js";
-import OnAdrElementIdChange from "../observer/OnAdrElementIdChange.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
@@ -69,24 +67,11 @@ export default class AdrManager {
     }
 
     initObservers() {
-        const onEntityUpdate = new OnEntityUpdate;
-        onEntityUpdate.setAdrManager(this);
-        onEntityUpdate.setSubject(this.getEventManager().entityUpdate);
-        const onClickPick = new OnClickPickSayHello();
-        onClickPick.setSubject(this.getEventManager().clickPick);
-        onClickPick.setAdrManager(this);
-
-        const onRemove = new OnAdrElementRemove();
-        onRemove.setAdrManager(this);
-        onRemove.setSubject(this.getEventManager().adrElementRemove);
-
-        const onIdChange = new OnAdrElementIdChange();
-        onIdChange.setAdrManager(this);
-        onIdChange.setSubject(this.getEventManager().adrElementIdChange);
-
-        const onParentChange = new OnAdrElementParentChange();
-        onParentChange.setAdrManager(this);
-        onParentChange.setSubject(this.getEventManager().adrElementParentChange);
+        this.getEventManager().onEntityUpdate.setAdrManager(this);
+        this.getEventManager().onClickPick.setAdrManager(this);
+        this.getEventManager().onRemove.setAdrManager(this);
+        this.getEventManager().onIdChange.setAdrManager(this);
+        this.getEventManager().onParentChange.setAdrManager(this);
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

@@ -3,7 +3,6 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import Touch from "../input/Touch.js";
 
 export default class Pointer extends DrawObject {
     init() {
