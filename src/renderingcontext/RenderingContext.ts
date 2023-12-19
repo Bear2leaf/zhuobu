@@ -61,4 +61,5 @@ export default interface RenderingContext {
     useBlendFuncOneAndOneMinusSrcAlpha(): void;
     makePrimitive(type: PrimitiveType): Primitive;
     makeShader(vert: string, frag: string): Shader;
+    generatePickColor(): [number, number, number, number];
 }

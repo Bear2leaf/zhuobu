@@ -16,8 +16,19 @@ export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
     private readonly allWebGLFBOs: WebGLFramebuffer[] = [];
     private readonly allWebGLTextures: WebGLTexture[] = [];
+    private colorCounter = 0;
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
+    }
+    generatePickColor(): [number, number, number, number] {
+        const color = this.colorCounter++;
+        if (color >= 0xffffff) {
+            throw new Error("not enough color")
+        }
+        const r = (color & 0xff);
+        const g = ((color >> 8) & 0xff);
+        const b = ((color >> 16) & 0xff);
+        return [r, g, b, 255];
     }
     putImageData(data: ImageData, x: number, y: number): void {
         throw new Error("Method not implemented.");

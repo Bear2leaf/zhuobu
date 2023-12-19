@@ -4,7 +4,6 @@ import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
 import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import Device from "../device/Device.js";
 import RendererManager from "./RendererManager.js";
-import OnEntityRender from "../observer/OnEntityRender.js";
 import EventManager from "./EventManager.js";
 
 

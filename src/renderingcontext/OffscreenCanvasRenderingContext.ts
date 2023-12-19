@@ -11,6 +11,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
     }
+    generatePickColor(): [number, number, number, number] {
+        throw new Error("Method not implemented.");
+    }
     makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject {
         throw new Error("Method not implemented.");
     }

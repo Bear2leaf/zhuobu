@@ -53,7 +53,7 @@ export default class DrawObject extends Component {
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
-        this.pickColor.set(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255), 255);
+        this.pickColor.set(...this.getRenderingContext().generatePickColor());
         this.createUBO(UniformBlockIndex.PickColor)
         this.updateUBO(UniformBlockIndex.PickColor, this.pickColor.toFloatArray());
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));

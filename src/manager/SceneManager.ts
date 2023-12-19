@@ -38,7 +38,7 @@ export default class SceneManager {
         this.current().render();
     }
     current() {
-        return this.gltfScene;
+        return this.adrScene;
     }
     getAdrEventScene() {
         return this.adrEventScene;

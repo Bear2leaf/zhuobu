@@ -32,13 +32,12 @@ export default class OnEntityRender extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         if (entity.has(DrawObject) && this.rendererManager) {
-            if (entity.has(SDFCharacter)) {
+            if (entity.has(SDFCharacter) && this.framebufferManager) {
+                // this.framebufferManager.bindPickFramebuffer();
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
-                if (this.framebufferManager) {
-                    this.framebufferManager.bindPickFramebuffer();
-                    this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
-                    this.framebufferManager.unbindPickFramebuffer();
-                }
+                this.framebufferManager.bindPickFramebuffer();
+                this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
+                this.framebufferManager.unbindPickFramebuffer();
             } else if (entity.has(DefaultSprite)) {
                 this.rendererManager.getSpriteRenderer().render(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
