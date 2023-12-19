@@ -57,7 +57,7 @@ export default class OnEntityRegisterComponents extends Observer {
             this.sdfCanvas.updateTextTexture(entity.get(SDFCharacter));
         }
         if (entity.has(Pointer) && this.onClick) {
-            this.onClick.setHandler(entity.get(Pointer).onClick.bind(entity.get(Pointer)));
+            this.onClick.setPointer(entity.get(Pointer));
         }
 
     }
