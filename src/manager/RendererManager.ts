@@ -83,9 +83,9 @@ export default class RendererManager {
             this.spriteRenderer,
             this.backSpriteRenderer,
         ].forEach(renderer => {
+            renderer.setCamera(this.getCameraManager().getMainCamera());
             renderer.initShader(rc, this.getCacheManager());
             renderer.setSceneManager(this.getSceneManager());
-            renderer.setCamera(this.getCameraManager().getMainCamera());
         });
         this.pointRenderer.setCamera(this.getCameraManager().getUICamera());
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());

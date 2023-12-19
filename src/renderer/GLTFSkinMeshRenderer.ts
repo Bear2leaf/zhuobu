@@ -6,7 +6,6 @@ import Renderer from "./Renderer.js";
 export default class GLTFSkinMeshRenderer extends Renderer {
     render(drawObject: SkinMesh) {
         this.prepareShader();
-        this.prepareCamera();
         this.prepareLight();
         this.prepareJoints(drawObject.getJointTexture());
         this.drawEntity(drawObject);

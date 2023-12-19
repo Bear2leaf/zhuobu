@@ -6,7 +6,6 @@ import Renderer from "./Renderer.js";
 export default class GLTFMeshRenderer extends Renderer {
     render(drawObject: DrawObject) {
         this.prepareShader();
-        this.prepareCamera();
         this.prepareLight();
         this.drawEntity(drawObject);
 

@@ -12,7 +12,7 @@ export default class OnClickToggleAudio extends Observer {
     }
 
     init(): void {
-        console.debug("OnClickToggleAudio", "is inited!");
+        // console.debug("OnClickToggleAudio", "is inited!");
         this.getSubject().register(this);
     }
 

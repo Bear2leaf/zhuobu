@@ -3,9 +3,10 @@ precision highp float;
 
 in vec3 v_normal;
 
+vec4 u_pickColor;
+
 uniform vec4 u_diffuse;
 uniform vec3 u_lightDirection;
-uniform uvec3 u_pickColor;
 uniform sampler2D u_texture;
 
 layout(location = 0) out vec4 o_color;
@@ -15,5 +16,5 @@ void main() {
   vec3 normal = normalize(v_normal);
   float light = dot(u_lightDirection, normal) * .5f + .5f;
   o_color = vec4(u_diffuse.rgb * light, u_diffuse.a);
-  o_pickColor = vec4(vec3(u_pickColor) / 255.0f, 1.0f);
+  o_pickColor = vec4(u_pickColor / 255.0f);
 }

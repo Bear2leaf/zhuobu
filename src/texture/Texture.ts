@@ -1,4 +1,3 @@
-import Device from "../device/Device.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export enum TextureBindIndex {

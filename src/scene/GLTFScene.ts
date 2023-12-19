@@ -15,8 +15,8 @@ export default class GLTFScene extends Scene {
             , new SpriteObject() 
             , new SkinMeshObject()
             , new MeshObject()
-            , new HelloWireframeObject()
             , new PointerObject()
+            , new HelloWireframeObject()
         ];
     }
 

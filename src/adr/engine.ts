@@ -13,7 +13,6 @@ import { Prestige } from "./prestige.js";
 import Room from "./room.js";
 import Ship from "./ship.js";
 import StateManager from "./state_manager.js";
-import AdrElement from "./adapter/AdrElement.js";
 
 export default class Engine {
   static _incomeTimeout: number;

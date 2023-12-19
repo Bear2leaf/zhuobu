@@ -2,6 +2,7 @@ import AnimationController from "../controller/AnimationController.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import MoveCircleController from "../controller/MoveCircleController.js";
 import AdrText from "../drawobject/AdrText.js";
+import DrawObject from "../drawobject/DrawObject.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import AdrManager from "../manager/AdrManager.js";

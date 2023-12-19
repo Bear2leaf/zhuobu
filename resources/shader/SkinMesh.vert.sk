@@ -6,9 +6,14 @@ layout(location = 3) in vec3 a_normal;
 layout(location = 4) in vec4 a_weight;
 layout(location = 5) in uvec4 a_joint;
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
+
+uniform ViewProjection {
+    mat4 u_view;
+    mat4 u_projection;
+};
+
 uniform mat4 u_world;
+
 uniform sampler2D u_jointTexture;
 
 out vec3 v_normal;

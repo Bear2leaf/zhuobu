@@ -13,7 +13,6 @@ export default class SDFRenderer extends Renderer {
     }
     render(drawObject: SDFCharacter) {
         this.prepareShader();
-        this.prepareCamera();
         this.prepareOutline();
         this.drawEntity(drawObject);
         this.prepareText();

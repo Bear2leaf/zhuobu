@@ -4,6 +4,9 @@ export default class PickFrameBufferObject extends BaseFrameBufferObject {
     private pixels?: Uint8Array;
     private width: number = 0;
     updatePixels(width: number, height: number) {
+        if (this.pixels) {
+            return;
+        }
         this.pixels = this.getGL().readPixels(0, 0, width, height);
         this.width = width;
     }

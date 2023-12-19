@@ -17,7 +17,7 @@ export enum ArrayBufferIndex {
 }
 
 export enum UniformBlockIndex {
-    PickColor = 1,
+    ViewProjection = 1,
 }
 
 export default interface RenderingContext {

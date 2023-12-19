@@ -3,14 +3,14 @@ import Observer from "../observer/Observer.js";
 export default abstract class Subject {
     private readonly listeners: Observer[] = [];
     public register(observer: Observer): void {
-        console.debug(observer, "is pushed!");
+        // console.debug(observer, "is pushed!");
         this.listeners.push(observer);
     }
 
     public unregister(observer: Observer): void {
         const n: number = this.listeners.indexOf(observer);
         if (n !== -1) {
-            console.debug(observer, "is removed");
+            // console.debug(observer, "is removed");
             this.listeners.splice(n, 1);
         }
     }

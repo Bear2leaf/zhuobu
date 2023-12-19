@@ -33,7 +33,6 @@ export default class OnEntityRender extends Observer {
         const entity = this.getSubject().getEntity();
         if (entity.has(DrawObject) && this.rendererManager) {
             if (entity.has(SDFCharacter) && this.framebufferManager) {
-                // this.framebufferManager.bindPickFramebuffer();
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
                 this.framebufferManager.bindPickFramebuffer();
                 this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));

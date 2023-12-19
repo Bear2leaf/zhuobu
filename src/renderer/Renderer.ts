@@ -5,9 +5,11 @@ import RenderingContext, { UniformBlockIndex } from "../renderingcontext/Renderi
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
+import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 
 
 export default class Renderer {
+    private readonly uboMap: Map<UniformBlockIndex, UniformBufferObject> = new Map();
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
@@ -31,6 +33,7 @@ export default class Renderer {
     }
     setCamera(camera: Camera) {
         this.camera = camera;
+
     }
     getCamera() {
         if (!this.camera) {
@@ -54,18 +57,31 @@ export default class Renderer {
         const vs = cacheManager.getVertShaderTxt(this.shaderName);
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
         this.shader = rc.makeShader(vs, fs);
-        this.getShader().bindUniform(UniformBlockIndex.PickColor);
+        this.uboMap.set(UniformBlockIndex.ViewProjection, rc.makeUniformBlockObject(UniformBlockIndex.ViewProjection));
+        this.getShader().bindUniform(UniformBlockIndex.ViewProjection);
+
+        const camera = this.getCamera();
+        const projection = camera.getProjection().getVertics();
+        const view = camera.getView().getVertics();
+        this.updateUBO(UniformBlockIndex.ViewProjection, new Float32Array([...view, ...projection]));
+    }
+    bindUBOs() {
+        this.uboMap.forEach(ubo => ubo.bind());
+    }
+    updateUBO(index: UniformBlockIndex, data: Float32Array) {
+        const ubo = this.uboMap.get(index);
+        if (!ubo) {
+            throw new Error("ubo not exist");
+        }
+        ubo.updateBuffer(data);
     }
     prepareShader() {
         this.getShader().use();
     }
-    prepareCamera() {
-        const camera = this.getCamera();
-        this.getShader().setMatrix4fv("u_view", camera.getView().getVertics())
-        this.getShader().setMatrix4fv("u_projection", camera.getProjection().getVertics())
-    }
     drawEntity(drawObject: DrawObject) {
+        this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
         this.getShader().setMatrix4fv("u_world", drawObject.getEntity().get(Node).getWorldMatrix().getVertics());
+        this.bindUBOs();
         drawObject.bind();
         drawObject.draw();
     }

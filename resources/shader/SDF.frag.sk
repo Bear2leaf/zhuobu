@@ -4,13 +4,12 @@ precision highp float;
 in vec4 v_texcoord;
 in vec4 v_color;
 
-uniform PickColor {
-    vec4 u_pickColor;
-};
-uniform sampler2D u_texture;
-uniform float u_buffer;
+uniform vec4 u_pickColor;
 uniform vec4 u_color;
+uniform float u_buffer;
 uniform float u_gamma;
+
+uniform sampler2D u_texture;
 
 layout(location = 0) out vec4 o_color;
 layout(location = 1) out vec4 o_pickColor;

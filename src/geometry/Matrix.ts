@@ -240,7 +240,7 @@ export default class Matrix {
     }
     static axisRotation(axis: Vec3, angleInRadians: number, dst?: Matrix) {
         dst = dst || new Matrix();
-      
+
         let x = axis.x;
         let y = axis.y;
         let z = axis.z;
@@ -254,7 +254,7 @@ export default class Matrix {
         const c = Math.cos(angleInRadians);
         const s = Math.sin(angleInRadians);
         const oneMinusCosine = 1 - c;
-      
+
         dst.columns[0].x = xx + (1 - xx) * c;
         dst.columns[0].y = x * y * oneMinusCosine + z * s;
         dst.columns[0].z = x * z * oneMinusCosine - y * s;
@@ -271,10 +271,10 @@ export default class Matrix {
         dst.columns[3].y = 0;
         dst.columns[3].z = 0;
         dst.columns[3].w = 1;
-      
+
         return dst;
-      }
-      
+    }
+
     static quatFromRotationMatrix(m: Matrix, dst: Vec4) {
         // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 

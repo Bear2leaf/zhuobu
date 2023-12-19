@@ -1,10 +1,11 @@
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";
+import Node from "../transform/Node.js";
 import AnimationController from "./AnimationController.js";
 
 export default class GLTFAnimationController extends AnimationController {
-    
+
     private animationData?: GLTFAnimation;
     setAnimationData(animationData: GLTFAnimation): void {
         this.animationData = animationData;

@@ -8,7 +8,6 @@ export default class BackSpriteRenderer extends Renderer {
     }
     render(drawObject: DrawObject): void {
         this.prepareShader();
-        this.prepareCamera();
         this.drawEntity(drawObject);
     }
 }
