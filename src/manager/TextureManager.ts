@@ -10,7 +10,6 @@ import SingleColorTexture from "../texture/SingleColorTexture.js";
 import SDFTexture from "../texture/SDFTexture.js";
 import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
-import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 
 

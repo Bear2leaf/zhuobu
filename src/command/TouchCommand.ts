@@ -13,12 +13,12 @@ export default class TouchCommand implements Command {
     getX(): number {
         if (!this.touchInfo) throw new Error("TouchInfo not set");
         if (!this.windowInfo) throw new Error("WindowInfo not set");
-        return this.touchInfo.x;
+        return this.touchInfo.x * (this.windowInfo?.pixelRatio || 1);
     }
     getY(): number {
         if (!this.touchInfo) throw new Error("TouchInfo not set");
         if (!this.windowInfo) throw new Error("WindowInfo not set");
-        return this.windowInfo.windowHeight - this.touchInfo.y;
+        return (this.windowInfo.windowHeight - this.touchInfo.y) * (this.windowInfo?.pixelRatio || 1);
     }
     execute(): void {
         throw new Error("Method not implemented.");

@@ -30,7 +30,7 @@ export default class AdrElement {
 	private readonly classSet: Set<string> = new Set();
 	private readonly style: Record<string, string> = {};
 	private readonly attributes: Record<string, string> = {};
-	private readonly eventLinsteners: Record<string, EventListener[]> = {};
+	private readonly eventLinsteners: Record<string, Function[]> = {};
 	readonly children: AdrElementCollection = new AdrElementCollection();
 	parentNode?: AdrElement;
 	setSubjects(remove: AdrElementRemove, idChange: AdrElementIdChange, parentChange: AdrElementParentChange) {
@@ -203,12 +203,8 @@ export default class AdrElement {
 	}
 	dispatchEvent(type: string, listenerOnly: boolean = false) {
 		this.eventLinsteners[type]?.forEach(fn => {
-			fn(new Event(type));
+			fn();
 		});
-		if (!listenerOnly) {
-			const event = new Event(type);
-			this.getDomElement().dispatchEvent(event);
-		}
 	}
 	appendChild(element: AdrElement) {
 		this.getDomElement().appendChild(element.getDomElement())
