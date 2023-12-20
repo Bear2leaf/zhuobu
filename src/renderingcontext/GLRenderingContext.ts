@@ -161,8 +161,8 @@ export default class GLRenderingContext implements RenderingContext {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
     }
-    makeUniformBlockObject(index: UniformBinding): UniformBufferObject {
-        return new GLUniformBufferObject(this.gl, index);
+    makeUniformBlockObject(): UniformBufferObject {
+        return new GLUniformBufferObject(this.gl);
     }
     switchDepthTest(enable: boolean): void {
         if (enable) {

@@ -2,6 +2,7 @@ import { Vec3, Vec4 } from "../geometry/Vector.js";
 import { UniformBinding } from "../renderingcontext/RenderingContext.js";
 
 export default interface Shader {
+    setBool(name: string, data: number): void;
     setMatrix4fv(name: string, data: Float32Array): void;
     setVector4f(name: string, data: Vec4): void;
     setVector3f(name: string, data: Vec3): void;

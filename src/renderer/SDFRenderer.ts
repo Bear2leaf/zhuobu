@@ -1,12 +1,13 @@
 
 import SkinMesh from "../drawobject/SkinMesh.js";
-import { Vec4 } from "../geometry/Vector.js";
+import { UniformBinding } from "../renderingcontext/RenderingContext.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 import Renderer from "./Renderer.js";
 
 export default class SDFRenderer extends Renderer {
     private scale: number = 32;
     private buffer: number = 0.5;
+    private outlineBuffer: number = 0.75;
     private gamma: number = 2;
     setScale(scale: number) {
         this.scale = scale;
@@ -14,33 +15,31 @@ export default class SDFRenderer extends Renderer {
     render(clear: boolean = true) {
         this.getShader().use();
         this.bindUBOs();
+        const camera = this.getCamera();
+        const projection = camera.getProjection().getVertics();
+        const view = camera.getView().getVertics();
+        this.getShader().setInteger("u_texture", TextureBindIndex.OffscreenCanvas);
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
+        this.updateUBO(UniformBinding.SDF, new Float32Array([this.buffer, this.outlineBuffer, this.gamma * 1.4142 / this.scale, 0]));
+        
         this.getObjectList().forEach(drawObject => {
-            this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
+            drawObject.updatePick()
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
             }
             drawObject.bind();
-            this.prepareOutline();
+
+            this.getShader().setBool("u_inner", 0);
             drawObject.draw();
-            this.prepareText();
+
+            this.getShader().setBool("u_inner", 1);
             drawObject.draw();
+
         });
         if (clear) {
             this.getObjectList().splice(0, this.getObjectList().length);
         }
-    }
-    prepareOutline() {
-
-        this.getShader().setInteger("u_texture", TextureBindIndex.OffscreenCanvas);
-        this.getShader().setVector4f("u_color", new Vec4(1, 1, 1, 1));
-        this.getShader().setFloat("u_buffer", this.buffer);
-    }
-    prepareText() {
-
-        this.getShader().setVector4f("u_color", new Vec4(0, 0, 0, 1));
-        this.getShader().setFloat("u_buffer", 0.75);
-        this.getShader().setFloat("u_gamma", this.gamma * 1.4142 / this.scale);
     }
 
 }

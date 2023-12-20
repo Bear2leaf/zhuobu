@@ -66,6 +66,15 @@ export default class GLShader implements Shader {
         }
         this.gl.uniform3fv(loc, flatten([data]))
     }
+    setBool(name: string, data: number) {
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = this.gl.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
+        }
+        this.gl.uniform1i(loc, data)
+    }
     setInteger(name: string, data: number) {
         let loc = this.locMap.get(name);
         if (loc !== undefined) {

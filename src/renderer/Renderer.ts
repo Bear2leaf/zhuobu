@@ -4,10 +4,10 @@ import CacheManager from "../manager/CacheManager.js";
 import RenderingContext, { UniformBinding } from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import Node from "../transform/Node.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
-import Matrix from "../geometry/Matrix.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec4 } from "../geometry/Vector.js";
 
 
 export default class Renderer {
@@ -60,20 +60,20 @@ export default class Renderer {
         const vs = cacheManager.getVertShaderTxt(this.shaderName);
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
         this.shader = rc.makeShader(vs, fs);
-        this.uboMap.set(UniformBinding.Model, rc.makeUniformBlockObject(UniformBinding.Model));
-        this.uboMap.set(UniformBinding.Camera, rc.makeUniformBlockObject(UniformBinding.Camera));
-        const camera = this.getCamera();
-        const projection = camera.getProjection().getVertics();
-        const view = camera.getView().getVertics();
+        this.uboMap.set(UniformBinding.Camera, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.Model, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.Pick, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.SDF, rc.makeUniformBlockObject());
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...Matrix.identity().getVertics(), ...Matrix.identity().getVertics()]));
         this.updateUBO(UniformBinding.Model, Matrix.identity().getVertics());
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
-
+        this.updateUBO(UniformBinding.Pick, new Vec4().toFloatArray());
+        this.updateUBO(UniformBinding.SDF, new Vec4().toFloatArray());
     }
-    
+
     bindUBOs() {
         this.uboMap.forEach((ubo, index) => {
             this.getShader().bindUniform(index);
-            ubo.bind();
+            ubo.bind(index);
         });
     }
     updateUBO(index: UniformBinding, data: Float32Array) {
@@ -92,6 +92,10 @@ export default class Renderer {
     render() {
         this.getShader().use();
         this.bindUBOs();
+        const camera = this.getCamera();
+        const projection = camera.getProjection().getVertics();
+        const view = camera.getView().getVertics();
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
         const list = this.objectlist.splice(0, this.objectlist.length);
         list.forEach(drawObject => {
             this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
