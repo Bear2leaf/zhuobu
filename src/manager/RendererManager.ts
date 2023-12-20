@@ -88,13 +88,19 @@ export default class RendererManager {
         this.spriteRenderer.setSceneManager(this.getSceneManager());
     }
     render(): void {
-        this.spriteRenderer.render();
-        this.backSpriteRenderer.render();
-        this.sdfRenderer.render();
-        this.gltfMeshRenderer.render();
-        this.wireframeRenderer.render();
-        this.gltfSkinMeshRenderer.render();
-        this.pointRenderer.render();
+        [
+            this.spriteRenderer,
+            this.backSpriteRenderer,
+            this.sdfRenderer,
+            this.gltfMeshRenderer,
+            this.wireframeRenderer,
+            this.gltfSkinMeshRenderer,
+            this.pointRenderer
+        ].forEach(renderer => {
+            if (renderer.getObjectList().length) {
+                renderer.render();
+            }
+        })
     }
     getSDFRenderer() {
         return this.sdfRenderer;
