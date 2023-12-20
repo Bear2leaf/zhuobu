@@ -1,15 +1,17 @@
 import { flatten, Vec3, Vec4 } from "../geometry/Vector.js";
-import { UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
+import { UniformBindingIndex as UniformBinding } from "../renderingcontext/RenderingContext.js";
 import Shader from "./Shader.js";
 
 export default class GLShader implements Shader {
     private readonly gl: WebGL2RenderingContext;
     private readonly program: WebGLProgram;
     private readonly locMap: Map<string, WebGLUniformLocation | null>;
+    private readonly blockIndexMap: Map<UniformBinding, number>;
     private readonly invalidBlockIndex = (-1 >>> 0);
     constructor(gl: WebGL2RenderingContext, vs: string, fs: string) {
         this.gl = gl;
         this.locMap = new Map();
+        this.blockIndexMap = new Map();
         const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
         const fragmentShader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
         if (!vertexShader || !fragmentShader) {
@@ -85,15 +87,42 @@ export default class GLShader implements Shader {
     use() {
         this.gl.useProgram(this.program);
     }
-    bindUniform(index: UniformBlockIndex): void {
-        const blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBlockIndex[index]);
+    bindUniform(index: UniformBinding): void {
+        let blockIndex = this.blockIndexMap.get(index);
         if (blockIndex !== this.invalidBlockIndex) {
+            if (blockIndex === undefined) {
+                blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBinding[index]);
+                this.blockIndexMap.set(index, blockIndex);
+            }
             this.gl.uniformBlockBinding(this.program, blockIndex, index);
-            // const blockSize = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_DATA_SIZE);
-            // console.log(blockSize)
         } else {
             throw Error("block index is invalid");
         }
+
+
+        // const activeUniformBlocks = this.gl.getProgramParameter(this.program, this.gl.ACTIVE_UNIFORM_BLOCKS);
+        // for (let i = 0; i < activeUniformBlocks; i++) {
+        //     const name = this.gl.getActiveUniformBlockName(this.program, i)!;
+        //     const blockIndex = this.gl.getUniformBlockIndex(this.program, name)!;
+        //     const activeUniforms = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_ACTIVE_UNIFORMS)!;
+        //     const activeUniformIndices = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)!;
+        //     const bindding = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_BINDING)!;
+        //     const dataSize = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_DATA_SIZE)!;
+        //     const referencedByFrag = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER)!;
+        //     const referencedByVert = this.gl.getActiveUniformBlockParameter(this.program, blockIndex, this.gl.UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER)!;
+
+        //     console.log({
+        //         name,
+        //         blockIndex,
+        //         activeUniforms,
+        //         activeUniformIndices: [...activeUniformIndices],
+        //         bindding,
+        //         dataSize,
+        //         referencedByFrag,
+        //         referencedByVert,
+        //     })
+        // }
+
     }
 }
 

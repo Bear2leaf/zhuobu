@@ -9,9 +9,6 @@ import AdrText from "../drawobject/AdrText.js";
 import TRS from "../transform/TRS.js";
 import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 import Device from "../device/Device.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
-import OnAdrElementRemove from "../observer/OnAdrElementRemove.js";
-import OnAdrElementParentChange from "../observer/OnAdrElementParentChange.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;

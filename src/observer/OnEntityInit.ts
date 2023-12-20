@@ -24,7 +24,7 @@ export default class OnEntityInit extends Observer {
 
     public notify(): void {
         const entity = this.getSubject().getEntity();
-        // console.debug("OnEntityInit", entity);
+        console.debug("OnEntityInit", entity);
         entity.get(Node).init();
         if (entity.has(DrawObject)) {
             entity.get(DrawObject).init();

@@ -6,9 +6,9 @@ import AdrElement from "./AdrElement.js";
 import AdrTextObject from "../../entity/AdrTextObject.js";
 import TRS from "../../transform/TRS.js";
 
-export default abstract class AdrAdapter {
-    // private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
-    private readonly store = localStorage;
+export default class AdrAdapter {
+    private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
+    // private readonly store = localStorage;
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -27,6 +27,12 @@ export default abstract class AdrAdapter {
 
     localStorage(): LocalStorage {
         return this.store;
+    }
+    reload(): void {
+
+    }
+    search(): string {
+        return "";
     }
     body(): AdrElement {
         return this.getAdrManager().getRoot().getBody();
@@ -69,15 +75,27 @@ export default abstract class AdrAdapter {
     createAudioContext() {
         return this.getAdrManager().getDevice()?.createWebAudioContext();
     };
-    abstract onselectstart?: (e: Event) => void;
-    abstract onmousedown?: (e: Event) => void;
-    abstract styleSheets(): AdrStyleSheetList;
-    abstract href(href?: string): void | string;
-    abstract title(title?: string): void | string;
-    abstract open(url?: string | URL, target?: string, features?: string): void;
-    abstract setLocation(location: string): void;
-    abstract clearInterval(id: number | undefined): void;
-    abstract setInterval(handler: TimerHandler, timeout?: number | undefined, ...args: any[]): void;
-    abstract setTimeout(handler: TimerHandler, timeout?: number | undefined, ...args: any[]): void;
-    abstract clearTimeout(id?: number): void;
+    styleSheets(): AdrStyleSheetList { return new AdrStyleSheetList; }
+    onselectstart?: (e: Event) => void;
+    onmousedown?: (e: Event) => void;
+    href(href?: string | undefined): string | void {
+    }
+    title(title?: string | undefined): string | void {
+    }
+    open(url?: string | URL | undefined, target?: string | undefined, features?: string | undefined): void {
+    }
+    setLocation(location: string) {
+    }
+    clearInterval(id: number | undefined) {
+        return clearInterval(id);
+    };
+    setInterval(handler: TimerHandler, timeout?: number | undefined, ...args: any[]) {
+        return setInterval(handler, timeout, ...args);
+    };
+    setTimeout(handler: TimerHandler, timeout?: number | undefined, ...args: any[]) {
+        return setTimeout(handler, timeout, ...args);
+    };
+    clearTimeout(id?: number) {
+        return clearTimeout(id);
+    };
 }

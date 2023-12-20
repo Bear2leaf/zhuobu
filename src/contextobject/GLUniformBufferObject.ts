@@ -1,10 +1,10 @@
-import { UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
+import { UniformBindingIndex } from "../renderingcontext/RenderingContext.js";
 import UniformBufferObject from "./UniformBufferObject.js";
 export default class GLUniformBufferObject implements UniformBufferObject {
     private readonly buffer: WebGLBuffer;
     private readonly gl: WebGL2RenderingContext;
-    private readonly index: UniformBlockIndex;
-    constructor(gl: WebGL2RenderingContext, index: UniformBlockIndex) {
+    private readonly index: UniformBindingIndex;
+    constructor(gl: WebGL2RenderingContext, index: UniformBindingIndex) {
         this.gl = gl;
         this.index = index;
         const bufferObject = this.gl.createBuffer();

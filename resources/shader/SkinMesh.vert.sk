@@ -7,6 +7,7 @@ layout(location = 4) in vec4 a_weight;
 layout(location = 5) in uvec4 a_joint;
 
 
+
 uniform ViewProjection {
     mat4 u_view;
     mat4 u_projection;

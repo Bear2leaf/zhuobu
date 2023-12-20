@@ -8,7 +8,7 @@ class MessageProcessor {
         this.callback = callback;
     }
     onMessage(data: WorkerResponse): void {
-        // console.debug("Pong", data.args);
+        console.debug("Pong", data.args);
         switch (data.type) {
             case "Pong":
                 this.onPong(data);

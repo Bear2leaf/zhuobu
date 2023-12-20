@@ -3,6 +3,7 @@ layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec4 a_color;
 layout(location = 2) in vec4 a_texcoord;
 
+
 uniform ViewProjection {
     mat4 u_view;
     mat4 u_projection;

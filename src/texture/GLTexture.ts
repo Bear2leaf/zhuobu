@@ -12,10 +12,8 @@ export default class GLTexture extends Texture {
       }
     } else if (data instanceof Float32Array) {
       rc.texImage2D_RGBA32F_RGBA_FLOAT(width, height, data);
-    } else if (data instanceof HTMLImageElement) {
-      rc.texImage2D_RGBA_RGBA_Image(data);
     } else {
-      throw new Error("unspoourt data format")
+      rc.texImage2D_RGBA_RGBA_Image(data as HTMLImageElement);
     }
     rc.bindTexture();
   }

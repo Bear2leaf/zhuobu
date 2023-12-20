@@ -12,14 +12,13 @@ export default class OffscreenCanvasTexture extends Texture {
     }
     return this.canvasContext;
   }
-  generate(data?: ImageData | HTMLImageElement | Float32Array, width: number = 1, height: number = 1) {
+  generate(data?: HTMLImageElement, width: number = 1, height: number = 1) {
+    if (!data) {
+      throw new Error("OffscreenCanvasTexture.generate: data is undefined");
+    }
     const glRC = this.getContext();
     glRC.bindTexture(this.getTextureIndex());
-    if (data instanceof ImageData) {
-      glRC.texImage2D_RGBA_RGBA_Image(data);
-    } else {
-      throw new Error("unspport image format");
-    }
+    glRC.texImage2D_RGBA_RGBA_Image(data);
     glRC.bindTexture();
   }
 

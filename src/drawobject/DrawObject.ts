@@ -1,4 +1,4 @@
-import RenderingContext, { ArrayBufferIndex, UniformBlockIndex } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBindingIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";

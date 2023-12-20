@@ -16,7 +16,7 @@ export enum ArrayBufferIndex {
     Barycentric = 6,
 }
 
-export enum UniformBlockIndex {
+export enum UniformBindingIndex {
     ViewProjection = 1,
 }
 
@@ -31,7 +31,7 @@ export default interface RenderingContext {
     putText(text: string): void;
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void;
-    texImage2D_RGBA_RGBA_Image(data: HTMLImageElement | ImageData): void;
+    texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;
@@ -49,7 +49,7 @@ export default interface RenderingContext {
     draw(mode: number, count: number): void;
     viewportTo(left: number, top: number, width: number, height: number): void;
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
-    makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject;
+    makeUniformBlockObject(index: UniformBindingIndex): UniformBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
     switchNearestFilter(enable: boolean): void;

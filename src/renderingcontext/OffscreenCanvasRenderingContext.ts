@@ -5,7 +5,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex, UniformBlockIndex } from "./RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBindingIndex } from "./RenderingContext.js";
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
     constructor(canvas: HTMLCanvasElement) {
@@ -14,7 +14,7 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     generatePickColor(): [number, number, number, number] {
         throw new Error("Method not implemented.");
     }
-    makeUniformBlockObject(index: UniformBlockIndex): UniformBufferObject {
+    makeUniformBlockObject(index: UniformBindingIndex): UniformBufferObject {
         throw new Error("Method not implemented.");
     }
     switchNearestFilter(enable: boolean): void {

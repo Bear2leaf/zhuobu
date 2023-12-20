@@ -1,7 +1,4 @@
-import Device, { ViewPortType } from "../device/Device.js";
-import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
-import OnEntityRender from "../observer/OnEntityRender.js";
-import OnViewPortChange from "../observer/OnViewPortChange.js";
+import Device from "../device/Device.js";
 import BackSpriteRenderer from "../renderer/BackSpriteRenderer.js";
 import GLTFMeshRenderer from "../renderer/GLTFMeshRenderer.js";
 import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
@@ -79,9 +76,6 @@ export default class RendererManager {
             this.gltfMeshRenderer,
             this.wireframeRenderer,
             this.sdfRenderer,
-            this.pointRenderer,
-            this.spriteRenderer,
-            this.backSpriteRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getMainCamera());
             renderer.initShader(rc, this.getCacheManager());
@@ -89,10 +83,13 @@ export default class RendererManager {
         });
         this.pointRenderer.setCamera(this.getCameraManager().getUICamera());
         this.pointRenderer.initShader(rc, this.getCacheManager());
+        this.pointRenderer.setSceneManager(this.getSceneManager());
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
         this.backSpriteRenderer.initShader(rc, this.getCacheManager());
+        this.backSpriteRenderer.setSceneManager(this.getSceneManager());
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
         this.spriteRenderer.initShader(rc, this.getCacheManager());
+        this.spriteRenderer.setSceneManager(this.getSceneManager());
     }
     getSDFRenderer() {
         return this.sdfRenderer;

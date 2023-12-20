@@ -4,7 +4,7 @@ export default class OnClickToggleScale extends Observer {
     private isScaleUp: boolean = false;
 
     init(): void {
-        // console.debug("OnClickToggleScale", "is inited!");
+        console.debug("OnClickToggleScale", "is inited!");
         this.getSubject().register(this);
     }
 

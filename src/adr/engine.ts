@@ -297,7 +297,7 @@ export default class Engine {
     adr.removeEventListener('click', Engine.resumeAudioContext)
   }
   static browserValid() {
-    return typeof Storage !== 'undefined';
+    return true;
   }
 
   static isMobile() {
@@ -431,7 +431,7 @@ export default class Engine {
     string64 = string64.replace(/\n/g, '');
     const decodedSave = Base64.decode(string64);
     adr.localStorage().gameState = decodedSave;
-    location.reload();
+    adr.reload();
   }
 
   static event(cat: string, act: string) {
@@ -470,7 +470,7 @@ export default class Engine {
       Prestige.set(prestige);
     }
     if (!noReload) {
-      location.reload();
+      adr.reload();
     }
   }
 
@@ -847,7 +847,7 @@ export default class Engine {
   }
 
   static saveLanguage() {
-    const lang = decodeURIComponent((new RegExp('[?|&]lang=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
+    const lang = decodeURIComponent((new RegExp('[?|&]lang=' + '([^&;]+?)(&|#|;|$)').exec(adr.search()) || [, ""])[1].replace(/\+/g, '%20')) || null;
     if (lang && typeof Storage !== 'undefined' && adr.localStorage()) {
       adr.localStorage().lang = lang;
     }

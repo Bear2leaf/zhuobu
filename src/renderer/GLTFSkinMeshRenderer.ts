@@ -8,7 +8,7 @@ export default class GLTFSkinMeshRenderer extends Renderer {
         this.prepareShader();
         this.prepareLight();
         this.prepareJoints(drawObject.getJointTexture());
-        this.drawEntity(drawObject);
+        super.render(drawObject);
     }
     prepareLight() {
         this.getShader().setVector4f("u_diffuse", new Vec4(.5, .8, 1, 1));

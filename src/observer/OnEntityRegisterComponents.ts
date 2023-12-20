@@ -39,7 +39,7 @@ export default class OnEntityRegisterComponents extends Observer {
 
     public notify(): void {
         const entity = this.getSubject().getEntity();
-        // console.debug("OnEntityRegisterComponents", entity);
+        console.debug("OnEntityRegisterComponents", entity);
         if (entity.has(DrawObject) && this.renderingContext) {
             entity.get(DrawObject).setRenderingContext(this.renderingContext);
         }

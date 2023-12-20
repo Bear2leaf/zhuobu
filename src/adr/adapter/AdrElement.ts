@@ -37,33 +37,29 @@ export default class AdrElement {
 		return this.getDomElement().offsetHeight || 0;
 	}
 	get scrollTop(): number {
-		return this.domElement?.scrollTop || 0;
+		return this.getDomElement().scrollTop || 0;
 	}
 	get clientTop(): number {
-		return this.domElement?.clientTop || 0;
+		return this.getDomElement().clientTop || 0;
 	}
 	get scrollLeft(): number {
-		return this.domElement?.scrollLeft || 0;
+		return this.getDomElement().scrollLeft || 0;
 	}
 	get clientLeft(): number {
-		return this.domElement?.clientLeft || 0;
+		return this.getDomElement().clientLeft || 0;
 	}
 	get innerText(): string {
 		return this.getDomElement().innerText || "";
 	}
 	set innerText(value: string) {
-		if (this.domElement) {
-			(this.domElement as HTMLElement).innerText = value;
-		}
+		(this.getDomElement() as HTMLElement).innerText = value;
+
 	}
 	get innerHTML(): string {
 		return this.getDomElement().innerHTML || "";
 	}
 	set innerHTML(value: string) {
-		if (this.domElement) {
-			this.domElement.innerHTML = value;
-
-		}
+		this.getDomElement().innerHTML = value;
 	}
 	get tagName(): string {
 		return this.getDomElement().tagName || "";
@@ -72,19 +68,32 @@ export default class AdrElement {
 
 	}
 	get value(): string {
-		return (this.domElement as HTMLTextAreaElement)?.value || "";
+		return (this.getDomElement() as HTMLTextAreaElement)?.value || "";
 	}
 	set value(value: string) {
-		if (this.domElement) {
-			(this.domElement as HTMLTextAreaElement).value = value;
-		}
+		(this.getDomElement() as HTMLTextAreaElement).value = value;
 	}
 	setDomElement(domElement: Element) {
 		this.domElement = domElement;
 	}
 	getDomElement(): HTMLElement {
 		if (!this.domElement) {
-			throw new Error("domElement not exist");
+			throw new Error("domElement not exist")
+			// return {
+			// 	setAttribute: () => { },
+			// 	appendChild: () => { },
+			// 	addEventListener: () => { },
+			// 	insertBefore: () => { },
+			// 	remove: () => { },
+			// 	classList: {
+			// 		add: () => {},
+			// 		remove: () => {}
+			// 	},
+			// 	style: {
+			// 		getPropertyValue: () => {},
+			// 		setProperty: () => { },
+			// 	}
+			// }
 		}
 		return this.domElement as HTMLElement;
 	}
@@ -98,13 +107,13 @@ export default class AdrElement {
 		return this.entity;
 	}
 
-    getDescendants() {
+	getDescendants() {
 		const descendants: AdrElement[] = [];
 		this.traverseChildren(child => {
 			descendants.push(child);
 		});
 		return descendants;
-    }
+	}
 	getAttribute(options: string): string | null {
 		return this.attributes[options] || null;
 	}
@@ -120,29 +129,29 @@ export default class AdrElement {
 		return this.getDomElement().style.getPropertyValue(options) || this.style[options] || "";
 	}
 	setStyle(key: string, value: string) {
-		(this.domElement as HTMLElement)?.style.setProperty(key, value);
+		(this.getDomElement() as HTMLElement)?.style.setProperty(key, value);
 		this.style[key] = value;
 	}
 	addClass(className: string) {
 		this.classSet.add(className);
-		this.domElement?.classList.add(className);
+		this.getDomElement().classList.add(className);
 	}
 	removeClass(className: string) {
 		this.classSet.delete(className);
-		this.domElement?.classList.remove(className);
+		this.getDomElement().classList.remove(className);
 	}
 	hasClass(className: string) {
 		return this.classSet.has(className);
 	}
 
-    traverseChildren(callback: (child: AdrElement) => void) {
+	traverseChildren(callback: (child: AdrElement) => void) {
 		for (const child of this.children) {
 			callback(child);
 			child.traverseChildren(callback);
 		}
-		
-    }
-    isDescendantOfById(id: string) {
+
+	}
+	isDescendantOfById(id: string) {
 		let parent = this.parentNode;
 		while (parent) {
 			if (parent.getAttribute("id") === id) {
@@ -151,7 +160,7 @@ export default class AdrElement {
 			parent = parent.parentNode;
 		}
 		return false;
-    }
+	}
 	getBoundingClientRect(): {
 		top: number;
 		left: number;
@@ -181,14 +190,14 @@ export default class AdrElement {
 		this.eventLinsteners[type].push(wrapperFn);
 
 
-		this.domElement?.addEventListener(type, wrapperFn, option);
+		this.getDomElement().addEventListener(type, wrapperFn, option);
 	}
 	removeEventListener(type: string, fn: EventListener) {
 		const n: number = this.eventLinsteners[type].indexOf(fn);
 		if (n !== -1) {
 			this.eventLinsteners[type].splice(this.eventLinsteners[type].indexOf(fn), 1);
 		}
-		this.domElement?.removeEventListener(type, fn);
+		this.getDomElement().removeEventListener(type, fn);
 	}
 	dispatchEvent(type: string, listenerOnly: boolean = false) {
 		this.eventLinsteners[type]?.forEach(fn => {
@@ -196,13 +205,12 @@ export default class AdrElement {
 		});
 		if (!listenerOnly) {
 			const event = new Event(type);
-			this.domElement?.dispatchEvent(event);
+			this.getDomElement().dispatchEvent(event);
 		}
 	}
 	appendChild(element: AdrElement) {
-		if (element.domElement) {
-			this.domElement?.appendChild(element.domElement)
-		}
+		this.getDomElement().appendChild(element.getDomElement())
+
 		this.children.push(element);
 		element.parentNode = this;
 		element.getEntity().get(Node).setParent(this.getEntity().get(Node));
@@ -210,9 +218,8 @@ export default class AdrElement {
 		element.getSubject(AdrElementParentChange).notify();
 	}
 	insertBefore(element: AdrElement, firstChild: AdrElement | null) {
-		if (element.domElement) {
-			this.domElement?.insertBefore(element.domElement, firstChild?.domElement || null)
-		}
+		this.getDomElement().insertBefore(element.getDomElement(), firstChild?.getDomElement() || null)
+
 		if (firstChild === null) {
 			this.children.push(element);
 		} else {

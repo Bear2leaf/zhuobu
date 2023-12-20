@@ -7,7 +7,7 @@ export default class GLTFMeshRenderer extends Renderer {
     render(drawObject: DrawObject) {
         this.prepareShader();
         this.prepareLight();
-        this.drawEntity(drawObject);
+        super.render(drawObject);
 
     }
     prepareLight() {

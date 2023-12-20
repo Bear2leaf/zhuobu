@@ -14,9 +14,9 @@ export default class SDFRenderer extends Renderer {
     render(drawObject: SDFCharacter) {
         this.prepareShader();
         this.prepareOutline();
-        this.drawEntity(drawObject);
+        super.render(drawObject);
         this.prepareText();
-        this.drawEntity(drawObject);
+        super.render(drawObject);
     }
     prepareOutline() {
 
