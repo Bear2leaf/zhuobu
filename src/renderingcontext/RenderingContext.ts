@@ -16,8 +16,9 @@ export enum ArrayBufferIndex {
     Barycentric = 6,
 }
 
-export enum UniformBindingIndex {
-    ViewProjection = 1,
+export enum UniformBinding {
+    Model = 1,
+    Camera = 0,
 }
 
 export default interface RenderingContext {
@@ -49,7 +50,7 @@ export default interface RenderingContext {
     draw(mode: number, count: number): void;
     viewportTo(left: number, top: number, width: number, height: number): void;
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
-    makeUniformBlockObject(index: UniformBindingIndex): UniformBufferObject;
+    makeUniformBlockObject(index: UniformBinding): UniformBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
     switchNearestFilter(enable: boolean): void;

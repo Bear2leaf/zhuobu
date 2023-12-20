@@ -28,7 +28,7 @@ export default abstract class Scene {
             this.entityUpdate?.notify();
         });
     }
-    render(): void {
+    collectDrawObject(): void {
         this.entities.forEach(entity => {
             this.entityRender?.setEntity(entity);
             this.entityRender?.notify();

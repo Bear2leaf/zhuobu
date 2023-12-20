@@ -44,7 +44,7 @@ function stateModifier(...args: any[]) {
 					}
 				}
 			}
-			console.debug(`[state_manager.js][execEval()][result][State.${keys.join('.')}]`, state);
+			// console.debug(`[state_manager.js][execEval()][result][State.${keys.join('.')}]`, state);
 			return state;
 		} else if (/^\(delete\s([\w\s\.]+)+\)$/.test(arg) && arg.indexOf("(delete") === 0) {
 			const arg = arguments[0];
@@ -81,7 +81,7 @@ function stateModifier(...args: any[]) {
 		for (let i = 1; i < paths.length; i++) {
 			const key = paths[i];
 			if (result === undefined) {
-				console.debug(`[state_manager.js][execEval()][result missing][State.${fullPath}]`, arg, value, result);
+				// console.debug(`[state_manager.js][execEval()][result missing][State.${fullPath}]`, arg, value, result);
 				return undefined;
 			} else {
 				if (i === paths.length - 1) {
@@ -91,7 +91,7 @@ function stateModifier(...args: any[]) {
 				}
 			}
 		}
-		console.debug(`[state_manager.js][execEval()][result]`, arg, value, result);
+		// console.debug(`[state_manager.js][execEval()][result]`, arg, value, result);
 		return true;
 	} else {
 		stateModifierError(...arguments);

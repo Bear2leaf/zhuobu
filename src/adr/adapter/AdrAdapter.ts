@@ -7,8 +7,7 @@ import AdrTextObject from "../../entity/AdrTextObject.js";
 import TRS from "../../transform/TRS.js";
 
 export default class AdrAdapter {
-    private readonly store: LocalStorage = { clear: () => this.store.gameState = undefined }
-    // private readonly store = localStorage;
+    private readonly store: LocalStorage = typeof localStorage === 'undefined' ? { clear: () => this.store.gameState = undefined } : localStorage;
     private adrManager?: AdrManager;
     State?: Record<string, any>;
     good?: Good;
@@ -21,8 +20,7 @@ export default class AdrAdapter {
         this.adrManager = adrManager;
     }
     $(selector: string | AdrElement, context?: Query | string) {
-        const query = context === undefined ? new Query(selector) : new Query(selector, context);
-        return query;
+        return context === undefined ? new Query(selector) : new Query(selector, context);
     }
 
     localStorage(): LocalStorage {
@@ -49,12 +47,11 @@ export default class AdrAdapter {
         entity.get(TRS).getPosition().y = Math.random() * 200 - 100;
         scene.initEntity(entity);
         const adrElement = new AdrElement();
-        const domElement = document.createElement(selector);
         adrElement.tagName = selector;
-        adrElement.setDomElement(domElement);
         adrElement.setEntity(entity);
         const eventManager = this.getAdrManager().getEventManager();
         adrElement.setSubjects(eventManager.adrElementRemove, eventManager.adrElementIdChange, eventManager.adrElementParentChange);
+        
         return adrElement;
     }
     getElementById(selector: string): AdrElement | null {

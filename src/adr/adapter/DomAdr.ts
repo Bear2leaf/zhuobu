@@ -1,4 +1,5 @@
 import AdrAdapter from "./AdrAdapter.js";
+import AdrElement from "./AdrElement.js";
 import AdrStyleSheetList from "./AdrStyleSheetList.js";
 
 export default class DomAdr extends AdrAdapter {
@@ -38,5 +39,17 @@ export default class DomAdr extends AdrAdapter {
     clearTimeout(id?: number) {
         return clearTimeout.apply(window, [id]);
     };
+    reload(): void {
+        location.reload();
+    }
+    search(): string {
+        return location.search;
+    }
+    createElement(selector: string): AdrElement {
+        const element = super.createElement(selector);
+        const domElement = document.createElement(selector);
+        element.setDomElement(domElement);
+        return element;
+    }
 
 }

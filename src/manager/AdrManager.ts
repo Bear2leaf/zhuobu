@@ -9,6 +9,7 @@ import AdrText from "../drawobject/AdrText.js";
 import TRS from "../transform/TRS.js";
 import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 import Device from "../device/Device.js";
+import DomAdr from "../adr/adapter/DomAdr.js";
 
 export default class AdrManager {
     private sceneManager?: SceneManager;
@@ -41,7 +42,9 @@ export default class AdrManager {
         body.get(AdrText).updateChars("Adr Body!");
         body.get(TRS).getPosition().y = 100;
         const bodyElement = new AdrElement();
-        bodyElement.setDomElement(document.body);
+        if (adr instanceof DomAdr) {
+            bodyElement.setDomElement(document.body);
+        }
         bodyElement.setEntity(body);
         adr.$(root).append(adr.$(bodyElement))
         const head = new AdrTextObject();
@@ -51,7 +54,9 @@ export default class AdrManager {
         head.get(AdrText).updateChars("Adr Head!");
         head.get(TRS).getPosition().y = 200;
         const headElement = new AdrElement();
-        headElement.setDomElement(document.head);
+        if (adr instanceof DomAdr) {
+            headElement.setDomElement(document.head);
+        }
         headElement.setEntity(head);
         adr.$(root).append(adr.$(headElement))
         Engine.createDefaultElements();

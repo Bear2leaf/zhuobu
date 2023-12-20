@@ -3,8 +3,7 @@ precision highp float;
 
 in vec3 v_normal;
 
-vec4 u_pickColor;
-
+uniform vec4 u_pickColor;
 uniform vec4 u_diffuse;
 uniform vec3 u_lightDirection;
 uniform sampler2D u_texture;

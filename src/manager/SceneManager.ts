@@ -19,26 +19,26 @@ export default class SceneManager {
     }
     registerEntities(): void {
         this.gltfScene.registerEntities();
+        this.adrScene.registerEntities();
         this.adrNotificationScene.registerEntities();
         this.adrEventScene.registerEntities();
-        this.adrScene.registerEntities();
         this.emptyScene.registerEntities();
         this.tmpScene.registerEntities();
     }
     initSceneEntities(): void {
         this.gltfScene.initEntities();
+        this.adrScene.initEntities();
         this.adrNotificationScene.initEntities();
         this.adrEventScene.initEntities();
-        this.adrScene.initEntities();
         this.emptyScene.initEntities();
         this.tmpScene.initEntities();
     }
-    render(): void {
+    collectDrawObject(): void {
         this.viewPortChange?.notify();
-        this.current().render();
+        this.current().collectDrawObject();
     }
     current() {
-        return this.gltfScene;
+        return this.adrScene;
     }
     getAdrEventScene() {
         return this.adrEventScene;
@@ -59,9 +59,26 @@ export default class SceneManager {
         this.adrScene.update();
         this.adrEventScene.update();
         this.emptyScene.update();
+        this.collectDrawObject();
     }
     initSubjects(eventManager: EventManager) {
         this.viewPortChange = eventManager.viewPortChange;
+        this.gltfScene.setEntitySubjects(
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
+        this.adrScene.setEntitySubjects(
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
         this.tmpScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
@@ -89,22 +106,6 @@ export default class SceneManager {
             eventManager.entityRemove
         );
 
-        this.gltfScene.setEntitySubjects(
-            eventManager.entityInit,
-            eventManager.entityAdd,
-            eventManager.entityRegisterComponents,
-            eventManager.entityRender,
-            eventManager.entityUpdate,
-            eventManager.entityRemove
-        );
-        this.adrScene.setEntitySubjects(
-            eventManager.entityInit,
-            eventManager.entityAdd,
-            eventManager.entityRegisterComponents,
-            eventManager.entityRender,
-            eventManager.entityUpdate,
-            eventManager.entityRemove
-        );
         this.emptyScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,

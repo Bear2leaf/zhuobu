@@ -1,19 +1,20 @@
 #version 300 es
 layout(location = 0) in vec4 a_position;
-layout(location = 1) in vec3 a_color;
-layout(location = 2) in vec2 a_texcoord;
 layout(location = 3) in vec3 a_normal;
 layout(location = 4) in vec4 a_weight;
 layout(location = 5) in uvec4 a_joint;
 
 
 
-uniform ViewProjection {
-    mat4 u_view;
-    mat4 u_projection;
+
+uniform Model {
+  mat4 u_world;
+};
+uniform Camera {
+  mat4 u_view;
+  mat4 u_projection;
 };
 
-uniform mat4 u_world;
 
 uniform sampler2D u_jointTexture;
 

@@ -6,7 +6,6 @@ import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import { VertexColorTriangleRenderer } from "../renderer/VertexColorTriangleRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
 import CameraManager from "./CameraManager.js";
@@ -17,7 +16,6 @@ export default class RendererManager {
     private readonly spriteRenderer = new SpriteRenderer;
     private readonly backSpriteRenderer = new BackSpriteRenderer;
     private readonly sdfRenderer = new SDFRenderer;
-    private readonly vertexColorTriangleRenderer = new VertexColorTriangleRenderer;
     private readonly lineRenderer = new LineRenderer;
     private readonly gltfMeshRenderer = new GLTFMeshRenderer;
     private readonly wireframeRenderer = new WireframeRenderer;
@@ -32,7 +30,6 @@ export default class RendererManager {
         this.spriteRenderer.setShaderName("Sprite");
         this.backSpriteRenderer.setShaderName("Sprite");
         this.sdfRenderer.setShaderName("SDF");
-        this.vertexColorTriangleRenderer.setShaderName("VertexColorTriangle");
         this.lineRenderer.setShaderName("Line");
         this.gltfMeshRenderer.setShaderName("Mesh");
         this.wireframeRenderer.setShaderName("Wireframe");
@@ -45,7 +42,6 @@ export default class RendererManager {
         await this.spriteRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.backSpriteRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.sdfRenderer.loadShaderTxtCache(this.getCacheManager());
-        await this.vertexColorTriangleRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.lineRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfMeshRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.wireframeRenderer.loadShaderTxtCache(this.getCacheManager());
@@ -90,6 +86,15 @@ export default class RendererManager {
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
         this.spriteRenderer.initShader(rc, this.getCacheManager());
         this.spriteRenderer.setSceneManager(this.getSceneManager());
+    }
+    render(): void {
+        this.spriteRenderer.render();
+        this.backSpriteRenderer.render();
+        this.sdfRenderer.render();
+        this.gltfMeshRenderer.render();
+        this.wireframeRenderer.render();
+        this.gltfSkinMeshRenderer.render();
+        this.pointRenderer.render();
     }
     getSDFRenderer() {
         return this.sdfRenderer;

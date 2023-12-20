@@ -13,7 +13,7 @@ export default class OnEntityAdd extends Observer {
     }
 
     public notify(): void {
-        console.debug("OnEntityAdd", this.getSubject().getEntity());
+        // console.debug("OnEntityAdd", this.getSubject().getEntity());
     }
 
 }

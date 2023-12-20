@@ -32,24 +32,22 @@ export default class OnEntityRender extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         if (entity.has(DrawObject) && this.rendererManager) {
+            entity.get(DrawObject).updateModel();
             if (entity.has(SDFCharacter) && this.framebufferManager) {
-                this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
-                this.framebufferManager.bindPickFramebuffer();
-                this.rendererManager.getSDFRenderer().render(entity.get(SDFCharacter));
-                this.framebufferManager.unbindPickFramebuffer();
+                this.rendererManager.getSDFRenderer().addObject(entity.get(SDFCharacter));
             } else if (entity.has(DefaultSprite)) {
-                this.rendererManager.getSpriteRenderer().render(entity.get(DefaultSprite));
+                this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
-                this.rendererManager.getBackSpriteRenderer().render(entity.get(Flowers));
+                this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
             } else if (entity.has(Pointer)) {
-                this.rendererManager.getPointRenderer().render(entity.get(Pointer));
+                this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {
-                this.rendererManager.getWireframeRenderer().render(entity.get(HelloWireframe));
+                this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
             } else if (entity.has(SkinMesh)) {
                 if (entity.has(AnimationController)) {
-                    this.rendererManager.getSkinMeshRenderer().render(entity.get(SkinMesh));
+                    this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));
                 } else {
-                    this.rendererManager.getMeshRenderer().render(entity.get(SkinMesh));
+                    this.rendererManager.getMeshRenderer().addObject(entity.get(SkinMesh));
                 }
             }
         }

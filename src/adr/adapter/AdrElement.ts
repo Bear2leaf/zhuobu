@@ -7,7 +7,24 @@ import Node from "../../transform/Node.js";
 import AdrElementCollection from "./AdrElementCollection.js";
 
 export default class AdrElement {
-	private domElement?: Element;
+	private domElement?: Element = {
+		setAttribute: () => { },
+		//@ts-ignore
+		appendChild: () => { },
+		addEventListener: () => { },
+		//@ts-ignore
+		insertBefore: () => { },
+		remove: () => { },
+		//@ts-ignore
+		classList: {
+			add: () => { },
+			remove: () => { }
+		},
+		style: {
+			getPropertyValue: () => { },
+			setProperty: () => { },
+		}
+	};
 	private entity?: Entity;
 	private readonly subjects: AdrElementSubject[] = [];
 	private readonly classSet: Set<string> = new Set();
@@ -79,21 +96,6 @@ export default class AdrElement {
 	getDomElement(): HTMLElement {
 		if (!this.domElement) {
 			throw new Error("domElement not exist")
-			// return {
-			// 	setAttribute: () => { },
-			// 	appendChild: () => { },
-			// 	addEventListener: () => { },
-			// 	insertBefore: () => { },
-			// 	remove: () => { },
-			// 	classList: {
-			// 		add: () => {},
-			// 		remove: () => {}
-			// 	},
-			// 	style: {
-			// 		getPropertyValue: () => {},
-			// 		setProperty: () => { },
-			// 	}
-			// }
 		}
 		return this.domElement as HTMLElement;
 	}

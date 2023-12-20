@@ -10,7 +10,7 @@ import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { TextureBindIndex } from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex, UniformBindingIndex } from "./RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBinding } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
@@ -161,7 +161,7 @@ export default class GLRenderingContext implements RenderingContext {
     makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
         return new GLArrayBufferObject(this.gl, index, data, size);
     }
-    makeUniformBlockObject(index: UniformBindingIndex): UniformBufferObject {
+    makeUniformBlockObject(index: UniformBinding): UniformBufferObject {
         return new GLUniformBufferObject(this.gl, index);
     }
     switchDepthTest(enable: boolean): void {

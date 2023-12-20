@@ -1,15 +1,18 @@
 import Camera from "../camera/Camera.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
-import RenderingContext, { UniformBindingIndex } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { UniformBinding } from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
+import Matrix from "../geometry/Matrix.js";
+import SkinMesh from "../drawobject/SkinMesh.js";
 
 
 export default class Renderer {
-    private readonly uboMap: Map<UniformBindingIndex, UniformBufferObject> = new Map();
+    private readonly uboMap: Map<UniformBinding, UniformBufferObject> = new Map();
+    private readonly objectlist: DrawObject[] = [];
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
@@ -57,34 +60,47 @@ export default class Renderer {
         const vs = cacheManager.getVertShaderTxt(this.shaderName);
         const fs = cacheManager.getFragShaderTxt(this.shaderName);
         this.shader = rc.makeShader(vs, fs);
-        this.uboMap.set(UniformBindingIndex.ViewProjection, rc.makeUniformBlockObject(UniformBindingIndex.ViewProjection));
-        this.getShader().bindUniform(UniformBindingIndex.ViewProjection);
+        this.uboMap.set(UniformBinding.Model, rc.makeUniformBlockObject(UniformBinding.Model));
+        this.uboMap.set(UniformBinding.Camera, rc.makeUniformBlockObject(UniformBinding.Camera));
         const camera = this.getCamera();
         const projection = camera.getProjection().getVertics();
         const view = camera.getView().getVertics();
-        this.updateUBO(UniformBindingIndex.ViewProjection, new Float32Array([...view, ...projection]));
+        this.updateUBO(UniformBinding.Model, Matrix.identity().getVertics());
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
 
     }
+    
     bindUBOs() {
         this.uboMap.forEach((ubo, index) => {
+            this.getShader().bindUniform(index);
             ubo.bind();
         });
     }
-    updateUBO(index: UniformBindingIndex, data: Float32Array) {
+    updateUBO(index: UniformBinding, data: Float32Array) {
         const ubo = this.uboMap.get(index);
         if (!ubo) {
             throw new Error("ubo not exist");
         }
         ubo.updateBuffer(data);
     }
-    prepareShader() {
-        this.getShader().use();
+    addObject(drawObject: DrawObject) {
+        this.objectlist.push(drawObject);
     }
-    render(drawObject: DrawObject) {
-        this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
-        this.getShader().setMatrix4fv("u_world", drawObject.getEntity().get(Node).getWorldMatrix().getVertics());
+    getObjectList() {
+        return this.objectlist;
+    }
+    render() {
+        this.getShader().use();
         this.bindUBOs();
-        drawObject.bind();
-        drawObject.draw();
+        const list = this.objectlist.splice(0, this.objectlist.length);
+        list.forEach(drawObject => {
+            this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
+            if (drawObject instanceof SkinMesh) {
+                drawObject.getJointTexture().bind();
+                this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
+            }
+            drawObject.bind();
+            drawObject.draw();
+        });
     }
 }

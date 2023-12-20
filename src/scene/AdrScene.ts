@@ -16,9 +16,9 @@ export default class AdrScene extends Scene {
         this.children.push(child);
         child.setParent(this);
     }
-    render(): void {
-        super.render();
-        this.children.forEach(child => child.render());
+    collectDrawObject(): void {
+        super.collectDrawObject();
+        this.children.forEach(child => child.collectDrawObject());
     }
     update(): void {
         super.update();

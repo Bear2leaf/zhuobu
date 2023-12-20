@@ -48,6 +48,10 @@ export default class FrameBufferManager {
         this.pickFrameBufferObject.unbind();
     }
     processPickFramebuffer(): void {
+
+        this.bindPickFramebuffer();
+        this.getRendererManager().getSDFRenderer().render(false);
+        this.unbindPickFramebuffer();
         const width = this.getDevice().getWindowInfo().windowWidth * this.getDevice().getWindowInfo().pixelRatio;
         const height = this.getDevice().getWindowInfo().windowHeight * this.getDevice().getWindowInfo().pixelRatio;
         this.pickFrameBufferObject.bindRead();

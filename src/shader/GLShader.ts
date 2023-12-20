@@ -1,5 +1,5 @@
 import { flatten, Vec3, Vec4 } from "../geometry/Vector.js";
-import { UniformBindingIndex as UniformBinding } from "../renderingcontext/RenderingContext.js";
+import { UniformBinding as UniformBinding } from "../renderingcontext/RenderingContext.js";
 import Shader from "./Shader.js";
 
 export default class GLShader implements Shader {
@@ -89,14 +89,12 @@ export default class GLShader implements Shader {
     }
     bindUniform(index: UniformBinding): void {
         let blockIndex = this.blockIndexMap.get(index);
-        if (blockIndex !== this.invalidBlockIndex) {
-            if (blockIndex === undefined) {
-                blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBinding[index]);
+        if (blockIndex === undefined) {
+            blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBinding[index]);
+            if (blockIndex !== this.invalidBlockIndex) {
                 this.blockIndexMap.set(index, blockIndex);
+                this.gl.uniformBlockBinding(this.program, blockIndex, index);
             }
-            this.gl.uniformBlockBinding(this.program, blockIndex, index);
-        } else {
-            throw Error("block index is invalid");
         }
 
 

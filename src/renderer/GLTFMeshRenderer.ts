@@ -1,13 +1,12 @@
 
-import DrawObject from "../drawobject/DrawObject.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFMeshRenderer extends Renderer {
-    render(drawObject: DrawObject) {
-        this.prepareShader();
+    render() {
+        this.getShader().use();
         this.prepareLight();
-        super.render(drawObject);
+        super.render();
 
     }
     prepareLight() {

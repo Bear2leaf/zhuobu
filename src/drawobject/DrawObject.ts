@@ -1,4 +1,4 @@
-import RenderingContext, { ArrayBufferIndex, UniformBindingIndex } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex, UniformBinding } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Component from "../entity/Component.js";
@@ -7,10 +7,13 @@ import Texture from "../texture/Texture.js";
 import { Vec4 } from "../geometry/Vector.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import Shader from "../shader/Shader.js";
+import GLUniformBufferObject from "../contextobject/GLUniformBufferObject.js";
+import Node from "../transform/Node.js";
 
 
 export default class DrawObject extends Component {
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
+    private modelUBO?: UniformBufferObject;
     private vao?: VertexArrayObject;
     private ebo?: ArrayBufferObject;
     private count: number = 0;
@@ -47,6 +50,7 @@ export default class DrawObject extends Component {
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
         this.pickColor.set(...this.getRenderingContext().generatePickColor());
+        this.modelUBO = this.getRenderingContext().makeUniformBlockObject(UniformBinding.Model);
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
     }
     draw() {
@@ -56,6 +60,10 @@ export default class DrawObject extends Component {
         if (!this.vao) {
             throw new Error("vao is not set");
         }
+        if (!this.modelUBO) {
+            throw new Error("modelUBO is not set");
+        }
+        this.modelUBO.bind();
         this.vao.bind();
         this.getTexture().bind()
     }
@@ -68,7 +76,12 @@ export default class DrawObject extends Component {
     setRenderingContext(renderingContext: RenderingContext) {
         this.renderingContext = renderingContext;
     }
-
+    updateModel() {
+        if (!this.modelUBO) {
+            throw new Error("modelUBO is not set");
+        }
+        this.modelUBO.updateBuffer(this.getEntity().get(Node).getWorldMatrix().getVertics());
+    }
     updateEBO(buffer: Uint16Array) {
         if (!this.ebo) {
             throw new Error("ebo is not set");

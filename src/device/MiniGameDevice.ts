@@ -53,7 +53,7 @@ export default class MiniGameDevice extends Device {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: {errMsg: string}) {
-                    console.debug("load resources success", res)
+                    // console.debug("load resources success", res)
                     resolve(null)
                 },
                 fail(res: {errMsg: string}) {
@@ -62,7 +62,7 @@ export default class MiniGameDevice extends Device {
             })
 
             task.onProgressUpdate((res: {[key: string]: number}) => {
-                console.debug(`onProgressUpdate: ${Object.keys(res).map(key => `${key}: ${res[key]}`).join(", ")}`)
+                // console.debug(`onProgressUpdate: ${Object.keys(res).map(key => `${key}: ${res[key]}`).join(", ")}`)
             })
         });
     }
