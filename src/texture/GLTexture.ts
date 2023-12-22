@@ -26,6 +26,7 @@ export default class GLTexture extends Texture {
   bind() {
     const rc = this.getContext();
     if (this.getBindIndex() === TextureBindIndex.Skybox) {
+      rc.activeTexture(this.getBindIndex())
       rc.bindSkyboxTexture(this.getTextureIndex())
     } else {
       rc.activeTexture(this.getBindIndex())

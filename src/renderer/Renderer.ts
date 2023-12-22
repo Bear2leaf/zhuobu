@@ -8,6 +8,7 @@ import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
+import Skybox from "../drawobject/Skybox.js";
 
 
 export default class Renderer {
@@ -102,6 +103,9 @@ export default class Renderer {
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
+            } else if (drawObject instanceof Skybox) {
+                drawObject.getTexture().bind();
+                this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             }
             drawObject.bind();
             drawObject.draw();
