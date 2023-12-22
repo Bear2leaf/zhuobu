@@ -65,10 +65,14 @@ export default class Renderer {
         this.uboMap.set(UniformBinding.Model, rc.makeUniformBlockObject());
         this.uboMap.set(UniformBinding.Pick, rc.makeUniformBlockObject());
         this.uboMap.set(UniformBinding.SDF, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.Light, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.Material, rc.makeUniformBlockObject());
         this.updateUBO(UniformBinding.Camera, new Float32Array([...Matrix.identity().getVertics(), ...Matrix.identity().getVertics()]));
         this.updateUBO(UniformBinding.Model, Matrix.identity().getVertics());
         this.updateUBO(UniformBinding.Pick, new Vec4().toFloatArray());
         this.updateUBO(UniformBinding.SDF, new Vec4().toFloatArray());
+        this.updateUBO(UniformBinding.Light, new Vec4().toFloatArray());
+        this.updateUBO(UniformBinding.Material, new Vec4().toFloatArray());
     }
 
     bindUBOs() {

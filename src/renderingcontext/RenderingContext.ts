@@ -17,6 +17,8 @@ export enum ArrayBufferIndex {
 }
 
 export enum UniformBinding {
+    Material = 5,
+    Light = 4,
     Pick = 3,
     SDF = 2,
     Model = 1,
