@@ -1,4 +1,3 @@
-import CameraAnimator from "../animator/CameraAnimator.js";
 import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

@@ -1,4 +1,5 @@
 
+import CameraControllerObject from "../entity/CameraControllerObject.js";
 import Entity from "../entity/Entity.js";
 import FlowersObject from "../entity/FlowersObject.js";
 import HelloWireframeObject from "../entity/HelloWireframeObject.js";
@@ -19,6 +20,7 @@ export default class GLTFScene extends Scene {
             , new MeshObject()
             , new PointerObject()
             , new HelloWireframeObject()
+            , new CameraControllerObject()
         ];
     }
 

@@ -5,6 +5,7 @@ import { DebugCamera } from "../camera/DebugCamera.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
 import Device from "../device/Device.js";
+import EventManager from "./EventManager.js";
 
 export default class CameraManager {
     private readonly debugCamera = new DebugCamera;
@@ -12,6 +13,7 @@ export default class CameraManager {
     private readonly uiCamera = new UICamera;
     private readonly frontgroundCamera = new FrontgroundCamera;
     private readonly backgroundCamera = new BackgroundCamera;
+    private eventManager?: EventManager;
     private device?: Device;
     async load(): Promise<void> { }
     setDevice(device: Device) {
@@ -20,6 +22,15 @@ export default class CameraManager {
     getDevice(): Device {
         if (!this.device) throw new Error("Device not set");
         return this.device;
+    }
+    setEventManager(eventManager: EventManager) {
+        this.eventManager = eventManager;
+    }
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
+        }
+        return this.eventManager;
     }
     initCamera(): void {
         const device = this.getDevice();
@@ -35,6 +46,9 @@ export default class CameraManager {
         this.uiCamera.init();
         this.frontgroundCamera.init();
         this.backgroundCamera.init();
+    }
+    initObservers() {
+        this.getEventManager().onEntityUpdate.setCameraManager(this);
     }
     getMainCamera() { return this.mainCamera; }
     getDebugCamera() { return this.debugCamera; }
