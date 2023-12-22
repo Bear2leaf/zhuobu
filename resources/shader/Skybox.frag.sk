@@ -1,0 +1,14 @@
+#version 300 es 
+precision highp float;
+
+in vec4 v_texcoord;
+in vec4 v_color;
+out vec4 color;
+
+
+uniform samplerCube u_texture;
+
+void main() {
+        color = texture(u_texture, v_texcoord.xyz) * v_color;
+   
+}

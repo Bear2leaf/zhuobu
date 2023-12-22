@@ -7,7 +7,18 @@ export enum TextureBindIndex {
   Pick = 3,
   Render = 4,
   OffscreenCanvas = 5,
+  Skybox = 6,
 }
+
+export type SkyboxArray = readonly [
+  HTMLImageElement
+  , HTMLImageElement
+  , HTMLImageElement
+  , HTMLImageElement
+  , HTMLImageElement
+  , HTMLImageElement
+];
+
 export default abstract class Texture {
   private textureIndex?: number;
   private bindIndex: TextureBindIndex = TextureBindIndex.Default;
@@ -37,6 +48,6 @@ export default abstract class Texture {
   getBindIndex() {
     return this.bindIndex;
   }
-  abstract generate(data?: ImageData| HTMLImageElement | Float32Array, width?: number, height?: number): void;
+  abstract generate(data?: ImageData | HTMLImageElement | SkyboxArray | Float32Array, width?: number, height?: number): void;
   abstract bind(): void;
 }

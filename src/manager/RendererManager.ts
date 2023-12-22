@@ -5,6 +5,7 @@ import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
+import { SkyboxRenderer } from "../renderer/SkyboxRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
@@ -15,6 +16,7 @@ import SceneManager from "./SceneManager.js";
 export default class RendererManager {
     private readonly spriteRenderer = new SpriteRenderer;
     private readonly backSpriteRenderer = new BackSpriteRenderer;
+    private readonly skyboxRenderer = new SkyboxRenderer;
     private readonly sdfRenderer = new SDFRenderer;
     private readonly lineRenderer = new LineRenderer;
     private readonly gltfMeshRenderer = new GLTFMeshRenderer;
@@ -29,6 +31,7 @@ export default class RendererManager {
     initShaderName() {
         this.spriteRenderer.setShaderName("Sprite");
         this.backSpriteRenderer.setShaderName("Sprite");
+        this.skyboxRenderer.setShaderName("Skybox");
         this.sdfRenderer.setShaderName("SDF");
         this.lineRenderer.setShaderName("Line");
         this.gltfMeshRenderer.setShaderName("Mesh");
@@ -41,6 +44,7 @@ export default class RendererManager {
 
         await this.spriteRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.backSpriteRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.skyboxRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.sdfRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.lineRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfMeshRenderer.loadShaderTxtCache(this.getCacheManager());
@@ -72,6 +76,7 @@ export default class RendererManager {
             this.gltfMeshRenderer,
             this.wireframeRenderer,
             this.sdfRenderer,
+            this.skyboxRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getMainCamera());
             renderer.initShader(rc, this.getCacheManager());
@@ -91,6 +96,7 @@ export default class RendererManager {
         [
             this.spriteRenderer,
             this.backSpriteRenderer,
+            this.skyboxRenderer,
             this.sdfRenderer,
             this.gltfMeshRenderer,
             this.wireframeRenderer,
@@ -119,6 +125,9 @@ export default class RendererManager {
     }
     getWireframeRenderer() {
         return this.wireframeRenderer;
+    }
+    getSkyboxRenderer() {
+        return this.skyboxRenderer;
     }
     getSkinMeshRenderer() {
         return this.gltfSkinMeshRenderer;

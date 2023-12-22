@@ -9,7 +9,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
-import { TextureBindIndex } from "../texture/Texture.js";
+import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex, UniformBinding } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
@@ -66,6 +66,16 @@ export default class GLRenderingContext implements RenderingContext {
     texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, data)
     }
+    texImage2D_RGBA_RGBA_Skybox(data: SkyboxArray): void {
+        const gl = this.gl;
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[4]);
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[3]);
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[5]);
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[1]);
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[2]);
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data[0]);
+
+    }
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA32F, width, height, 0, this.gl.RGBA, this.gl.FLOAT, data)
     }
@@ -105,6 +115,18 @@ export default class GLRenderingContext implements RenderingContext {
     }
     activeTexture(bindIndex: TextureBindIndex): void {
         this.gl.activeTexture(this.gl.TEXTURE0 + bindIndex)
+    }
+    bindSkyboxTexture(index?: number): void {
+        if (index === undefined) {
+            this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, null);
+        } else {
+            this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, this.allWebGLTextures[index]);
+            this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+            this.gl.texParameterf(this.gl.TEXTURE_CUBE_MAP, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameterf(this.gl.TEXTURE_CUBE_MAP, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        }
+
     }
     bindTexture(textureIndex?: number): void {
         if (textureIndex === undefined) {

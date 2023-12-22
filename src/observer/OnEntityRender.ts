@@ -4,6 +4,7 @@ import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
+import Skybox from "../drawobject/Skybox.js";
 import FrameBufferManager from "../manager/FrameBufferManager.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
@@ -43,6 +44,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {
                 this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
+            } else if (entity.has(Skybox)) {
+                this.rendererManager.getSkyboxRenderer().addObject(entity.get(Skybox));
             } else if (entity.has(SkinMesh)) {
                 if (entity.has(AnimationController)) {
                     this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));

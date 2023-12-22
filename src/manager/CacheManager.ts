@@ -4,6 +4,7 @@ import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
 import GLTF from "../gltf/GLTF.js";
 import Device from "../device/Device.js";
+import { SkyboxArray } from "../texture/Texture.js";
 
 
 export default class CacheManager {
@@ -42,6 +43,16 @@ export default class CacheManager {
     getImage(name: string) {
         return this.imageCache.get(`resources/texture/${name}.png`);
     }
+    getSkybox(name: string): SkyboxArray {
+        return [
+            this.imageCache.get(`resources/texture/skybox/${name}_back.png`),
+            this.imageCache.get(`resources/texture/skybox/${name}_down.png`),
+            this.imageCache.get(`resources/texture/skybox/${name}_front.png`),
+            this.imageCache.get(`resources/texture/skybox/${name}_left.png`),
+            this.imageCache.get(`resources/texture/skybox/${name}_right.png`),
+            this.imageCache.get(`resources/texture/skybox/${name}_up.png`)
+        ]
+    }
     getFontInfo(name: string) {
         const font = this.jsonCache.get(`resources/font/${name}.json`);
         if (font === undefined) throw new Error(`fontCache resources/font/${name}.json not found`);
@@ -51,6 +62,14 @@ export default class CacheManager {
 
     async loadImageCache(url: string) {
         await this.imageCache.load(`resources/texture/${url}.png`);
+    }
+    async loadSkyboxCache(url: string) {
+        await this.imageCache.load(`resources/texture/skybox/${url}_back.png`),
+        await this.imageCache.load(`resources/texture/skybox/${url}_down.png`),
+        await this.imageCache.load(`resources/texture/skybox/${url}_front.png`),
+        await this.imageCache.load(`resources/texture/skybox/${url}_left.png`),
+        await this.imageCache.load(`resources/texture/skybox/${url}_right.png`),
+        await this.imageCache.load(`resources/texture/skybox/${url}_up.png`)
     }
 
     async loadGLTFCache(name: string) {

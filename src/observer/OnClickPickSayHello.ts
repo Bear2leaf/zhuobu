@@ -19,8 +19,8 @@ export default class OnClickPickSayHello extends Observer {
         return this.adrManager;
     }
     public notify(): void {
-        const x = this.getSubject().getX();
-        const y = this.getSubject().getY();
+        const x = this.getSubject().getScreenX();
+        const y = this.getSubject().getScreenY();
         const fbo = this.getSubject().getFrameBufferObject();
         const pixel = fbo.readPixel(x, y);
         const element = this.getAdrManager().getRoot().getElementByPixel(pixel);

@@ -13,6 +13,7 @@ export default class TouchStartCommand extends TouchCommand {
     }
     execute(): void {
         this.getClick().setPosition(this.getX(), this.getY());
+        this.getClick().setPixelRatio(this.getPixelRatio());
         this.getClick().notify();
     }
 }

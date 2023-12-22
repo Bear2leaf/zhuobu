@@ -10,15 +10,19 @@ export default class TouchCommand implements Command {
     setWindowInfo(windowInfo?: WindowInfo) {
         this.windowInfo = windowInfo;
     }
+    getPixelRatio(): number {
+        if (!this.windowInfo) throw new Error("WindowInfo not set");
+        return this.windowInfo.pixelRatio;
+    }
     getX(): number {
         if (!this.touchInfo) throw new Error("TouchInfo not set");
         if (!this.windowInfo) throw new Error("WindowInfo not set");
-        return this.touchInfo.x * (this.windowInfo?.pixelRatio || 1);
+        return this.touchInfo.x;
     }
     getY(): number {
         if (!this.touchInfo) throw new Error("TouchInfo not set");
         if (!this.windowInfo) throw new Error("WindowInfo not set");
-        return (this.windowInfo.windowHeight - this.touchInfo.y) * (this.windowInfo?.pixelRatio || 1);
+        return (this.windowInfo.windowHeight - this.touchInfo.y);
     }
     execute(): void {
         throw new Error("Method not implemented.");

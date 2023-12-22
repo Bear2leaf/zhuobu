@@ -3,6 +3,7 @@ import DrawObject from "../drawobject/DrawObject.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
+import Skybox from "../drawobject/Skybox.js";
 import TextureManager from "../manager/TextureManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Flowers from "../sprite/Flowers.js";
@@ -49,6 +50,8 @@ export default class OnEntityRegisterComponents extends Observer {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
             } else if (entity.has(Flowers)) {
                 entity.get(Flowers).setTexture(this.textureManager.flowerTexture);
+            } else if (entity.has(Skybox)) {
+                entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
             } else if (entity.has(SkinMesh)) {
                 entity.get(SkinMesh).setJointTexture(this.textureManager.jointTexture);
             }

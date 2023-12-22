@@ -4,12 +4,18 @@ import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import Shader from "../shader/Shader.js";
-import { TextureBindIndex } from "../texture/Texture.js";
+import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
+    }
+    bindSkyboxTexture(index?: number): unknown {
+        throw new Error("Method not implemented.");
+    }
+    texImage2D_RGBA_RGBA_Skybox(data: SkyboxArray): void {
+        throw new Error("Method not implemented.");
     }
     generatePickColor(): [number, number, number, number] {
         throw new Error("Method not implemented.");

@@ -11,6 +11,7 @@ import SDFTexture from "../texture/SDFTexture.js";
 import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
 import { TextureBindIndex } from "../texture/Texture.js";
+import SkyboxTexture from "../texture/SkyboxTexture.js";
 
 
 export default class TextureManager {
@@ -18,6 +19,7 @@ export default class TextureManager {
     readonly fontTexture = new FontTexture;
     readonly flowerTexture = new FlowerTexture;
     readonly jointTexture = new JointTexture;
+    readonly skyboxTexture = new SkyboxTexture;
     readonly depthTexture = new DepthTexture;
     readonly pickTexture = new PickTexture;
     readonly renderTexture = new RenderTexture;
@@ -28,6 +30,8 @@ export default class TextureManager {
     private eventManager?: EventManager;
     async load(): Promise<void> {
         await this.getCacheManager().loadImageCache("flowers");
+        await this.getCacheManager().loadSkyboxCache("vz_clear");
+        await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
         await this.getCacheManager().loadFontCache("boxy_bold_font");
     }
     setDevice(device: Device) {
@@ -46,6 +50,7 @@ export default class TextureManager {
         this.fontTexture.setContext(glContext);
         this.flowerTexture.setContext(glContext);
         this.jointTexture.setContext(glContext);
+        this.skyboxTexture.setContext(glContext);
         this.depthTexture.setContext(glContext);
         this.pickTexture.setContext(glContext);
         this.renderTexture.setContext(glContext);
@@ -56,6 +61,7 @@ export default class TextureManager {
         this.sdfTexture.setCanvasContext(this.getDevice().getSDFCanvasRenderingContext());
 
         this.jointTexture.setBindIndex(TextureBindIndex.Joint);
+        this.skyboxTexture.setBindIndex(TextureBindIndex.Skybox);
         this.depthTexture.setBindIndex(TextureBindIndex.Depth);
         this.pickTexture.setBindIndex(TextureBindIndex.Pick);
         this.renderTexture.setBindIndex(TextureBindIndex.Render);
@@ -65,6 +71,7 @@ export default class TextureManager {
         const windowInfo = this.getDevice().getWindowInfo();
         this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
+        this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
         this.pickTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.renderTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.depthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);

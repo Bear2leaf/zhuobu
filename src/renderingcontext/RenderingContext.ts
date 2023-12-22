@@ -4,7 +4,7 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Shader from "../shader/Shader.js";
-import { TextureBindIndex } from "../texture/Texture.js";
+import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
 
 export enum ArrayBufferIndex {
     Position = 0,
@@ -24,6 +24,7 @@ export enum UniformBinding {
 }
 
 export default interface RenderingContext {
+    bindSkyboxTexture(index?: number): unknown;
     putImageData(data: ImageData, dx: number, dy: number): void;
     createImageData(width: number, height: number): ImageData;
     updateSize(width: number, height: number): void;
@@ -35,6 +36,7 @@ export default interface RenderingContext {
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
+    texImage2D_RGBA_RGBA_Skybox(data: SkyboxArray): void;
     texImage2D_RGBA32F_RGBA_FLOAT(width: number, height: number, data: Float32Array): void;
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;

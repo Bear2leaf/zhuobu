@@ -22,6 +22,7 @@ export default class OnClick extends Observer {
         this.pointer?.onClick(this.getSubject().getX(), this.getSubject().getY());
         if (this.next) {
             this.next.setPosition(this.getSubject().getX(), this.getSubject().getY());
+            this.next.setPixelRatio(this.getSubject().getPixelRatio());
             this.next.notify();
         }
     }
