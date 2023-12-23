@@ -52,9 +52,6 @@ export default class FrameBufferManager {
         this.bindPickFramebuffer();
         this.getRendererManager().getSDFRenderer().render(false);
         this.unbindPickFramebuffer();
-        this.pickFrameBufferObject.bindRead();
-        this.pickFrameBufferObject.updatePixels(this.getEventManager().click.getScreenX(), this.getEventManager().click.getScreenY());
-        this.pickFrameBufferObject.unbindRead();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

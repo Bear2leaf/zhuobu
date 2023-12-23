@@ -43,8 +43,6 @@ export default class AdrAdapter {
         const scene = this.getAdrManager().getSceneManager().getTmpScene();
         scene.addEntity(entity);
         scene.registerComponents(entity);
-        entity.get(TRS).getPosition().x = -25;
-        entity.get(TRS).getPosition().y = Math.random() * 200 - 100;
         scene.initEntity(entity);
         const adrElement = new AdrElement();
         adrElement.tagName = selector;

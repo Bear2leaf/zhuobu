@@ -11,7 +11,7 @@ export default class PickFrameBufferObject extends BaseFrameBufferObject {
         }
         return this.pixels;
     }
-    readPixel(x: number, y: number): [number, number, number] {
+    readPixel(): [number, number, number] {
         const pixel = this.getPixels();
         return [pixel[0], pixel[1], pixel[2]];
     }

@@ -40,7 +40,6 @@ export default class AdrManager {
         scene.initEntity(body);
         body.get(Node).setParent(root.getEntity().get(Node));
         body.get(AdrText).updateChars("Adr Body!");
-        body.get(TRS).getPosition().y = 100;
         const bodyElement = new AdrElement();
         if (adr instanceof DomAdr) {
             bodyElement.setDomElement(document.body);
@@ -52,7 +51,6 @@ export default class AdrManager {
         scene.initEntity(head);
         head.get(Node).setParent(root.getEntity().get(Node));
         head.get(AdrText).updateChars("Adr Head!");
-        head.get(TRS).getPosition().y = 200;
         const headElement = new AdrElement();
         if (adr instanceof DomAdr) {
             headElement.setDomElement(document.head);
