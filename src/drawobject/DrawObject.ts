@@ -51,6 +51,7 @@ export default class DrawObject extends Component {
         this.pickColor.set(...this.getRenderingContext().generatePickColor());
         this.modelUBO = this.getRenderingContext().makeUniformBlockObject();
         this.pickUBO = this.getRenderingContext().makeUniformBlockObject();
+        this.pickUBO.updateBuffer(this.getPickColor().toFloatArray());
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
     }
     draw() {
@@ -85,12 +86,6 @@ export default class DrawObject extends Component {
             throw new Error("modelUBO is not set");
         }
         this.modelUBO.updateBuffer(this.getEntity().get(Node).getWorldMatrix().getVertics());
-    }
-    updatePick() {
-        if (!this.pickUBO) {
-            throw new Error("pickUBO is not set");
-        }
-        this.pickUBO.updateBuffer(this.getPickColor().toFloatArray());
     }
     updateEBO(buffer: Uint16Array) {
         if (!this.ebo) {

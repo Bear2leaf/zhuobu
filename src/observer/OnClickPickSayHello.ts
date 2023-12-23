@@ -23,6 +23,7 @@ export default class OnClickPickSayHello extends Observer {
         const y = this.getSubject().getScreenY();
         const fbo = this.getSubject().getFrameBufferObject();
         const pixel = fbo.readPixel(x, y);
+        console.log(pixel, x, y)
         const element = this.getAdrManager().getRoot().getElementByPixel(pixel);
         if (element) {
             console.debug("Hello Pick! ", element.getEntity().get(AdrText).getChars().join(""));

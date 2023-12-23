@@ -52,10 +52,8 @@ export default class FrameBufferManager {
         this.bindPickFramebuffer();
         this.getRendererManager().getSDFRenderer().render(false);
         this.unbindPickFramebuffer();
-        const width = this.getDevice().getWindowInfo().windowWidth * this.getDevice().getWindowInfo().pixelRatio;
-        const height = this.getDevice().getWindowInfo().windowHeight * this.getDevice().getWindowInfo().pixelRatio;
         this.pickFrameBufferObject.bindRead();
-        this.pickFrameBufferObject.updatePixels(width, height);
+        this.pickFrameBufferObject.updatePixels(this.getEventManager().click.getScreenX(), this.getEventManager().click.getScreenY());
         this.pickFrameBufferObject.unbindRead();
     }
     getTextureManager() {

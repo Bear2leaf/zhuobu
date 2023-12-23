@@ -18,9 +18,6 @@ export default class SDFCharacter extends DrawObject {
         Object.assign(this.fontInfo, fontInfo);
         this.texSize.from(textureSize);
     }
-    getRandomChar() {
-        return Object.keys(this.fontInfo)[Math.floor(Math.random() * Object.keys(this.fontInfo).length)];
-    }
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
         this.create();

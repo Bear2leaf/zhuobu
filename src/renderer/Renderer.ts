@@ -103,7 +103,6 @@ export default class Renderer {
         this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
         const list = this.objectlist.splice(0, this.objectlist.length);
         list.forEach(drawObject => {
-            this.getShader().setVector4f("u_pickColor", drawObject.getPickColor());
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());

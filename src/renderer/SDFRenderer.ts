@@ -1,5 +1,4 @@
 
-import SkinMesh from "../drawobject/SkinMesh.js";
 import { UniformBinding } from "../renderingcontext/RenderingContext.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 import Renderer from "./Renderer.js";
@@ -23,16 +22,9 @@ export default class SDFRenderer extends Renderer {
         this.updateUBO(UniformBinding.SDF, new Float32Array([this.buffer, this.outlineBuffer, this.gamma * 1.4142 / this.scale, 0]));
         
         this.getObjectList().forEach(drawObject => {
-            drawObject.updatePick()
-            if (drawObject instanceof SkinMesh) {
-                drawObject.getJointTexture().bind();
-                this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            }
             drawObject.bind();
-
             this.getShader().setBool("u_inner", 0);
             drawObject.draw();
-
             this.getShader().setBool("u_inner", 1);
             drawObject.draw();
 

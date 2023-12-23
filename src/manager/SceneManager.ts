@@ -38,7 +38,7 @@ export default class SceneManager {
         this.current().collectDrawObject();
     }
     current() {
-        return this.gltfScene;
+        return this.adrScene;
     }
     getAdrEventScene() {
         return this.adrEventScene;
@@ -54,12 +54,8 @@ export default class SceneManager {
     }
     update() {
         this.gltfScene.update();
-        this.tmpScene.update();
-        this.adrNotificationScene.update();
         this.adrScene.update();
-        this.adrEventScene.update();
         this.emptyScene.update();
-        this.collectDrawObject();
     }
     initSubjects(eventManager: EventManager) {
         this.viewPortChange = eventManager.viewPortChange;
