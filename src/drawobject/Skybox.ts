@@ -33,7 +33,9 @@ export default class Skybox extends DrawObject {
     }
     draw(): void {
         this.getRenderingContext().switchCulling(false);
+        this.getRenderingContext().switchDepthWrite(false);
         super.draw();
+        this.getRenderingContext().switchDepthWrite(true);
         this.getRenderingContext().switchCulling(true);
     }
 

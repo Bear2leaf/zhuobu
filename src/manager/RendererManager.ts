@@ -94,9 +94,9 @@ export default class RendererManager {
     }
     render(): void {
         [
-            this.spriteRenderer,
-            this.backSpriteRenderer,
             this.skyboxRenderer,
+            this.backSpriteRenderer,
+            this.spriteRenderer,
             this.sdfRenderer,
             this.gltfMeshRenderer,
             this.wireframeRenderer,

@@ -13,9 +13,9 @@ import Scene from "./Scene.js";
 export default class GLTFScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
-            new FlowersObject()
-            , new SpriteObject() 
-            , new SkyboxObject() 
+            new SkyboxObject()
+            , new FlowersObject()
+            , new SpriteObject()
             , new SkinMeshObject()
             , new MeshObject()
             , new PointerObject()

@@ -49,7 +49,8 @@ export class PerspectiveCamera extends Camera {
         return this.projection;
     }
     rotateViewPerFrame(frame: number) {
-        this.getView().set(Matrix.lookAt(new Vec3(0, 0, 7), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).rotateY((Math.PI / 180 * frame)).inverse());
+        this.getView().set(Matrix.lookAt(new Vec3(2, 2, 7), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).rotateY((Math.PI / 180 * frame)).inverse());
+        // this.getView().set(Matrix.lookAt(new Vec3(0, 0, 7), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).translate(new Vec3(-Math.cos(frame / 10) * 10, Math.sin(frame / 10) * 100 - 100, 0)).rotateY((Math.PI / 180 * frame)).inverse());
     }
     updataEye(eye: Vec3) {
         this.getView().set(Matrix.lookAt(eye, new Vec3(0, 2, 0), new Vec3(0, 1, 0)).inverse());
