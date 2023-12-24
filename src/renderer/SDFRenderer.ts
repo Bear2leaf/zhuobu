@@ -16,9 +16,9 @@ export default class SDFRenderer extends Renderer {
         this.bindUBOs();
         const camera = this.getCamera();
         const projection = camera.getProjection().getVertics();
-        const view = camera.getView().getVertics();
+        const viewInverse = camera.getView().inverse().getVertics();
         this.getShader().setInteger("u_texture", TextureBindIndex.OffscreenCanvas);
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
         this.updateUBO(UniformBinding.SDF, new Float32Array([this.buffer, this.outlineBuffer, this.gamma * 1.4142 / this.scale, 0]));
         
         this.getObjectList().forEach(drawObject => {

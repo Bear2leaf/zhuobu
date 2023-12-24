@@ -3,7 +3,7 @@ layout(location = 0) in vec3 a_position;
 layout(location = 6) in vec3 a_barycentric;
 
 uniform Camera {
-  mat4 u_view;
+  mat4 u_viewInverse;
   mat4 u_projection;
 };
 
@@ -20,6 +20,6 @@ void main() {
   //   0, 0, 1, 0,
   //   0, 0, 0, 1
   // );
-  gl_Position = u_projection * u_view * u_world * vec4(a_position, 1.0f);
+  gl_Position = u_projection * u_viewInverse * u_world * vec4(a_position, 1.0f);
   v_barycentric = a_barycentric;
 }

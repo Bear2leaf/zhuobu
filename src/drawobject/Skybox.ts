@@ -2,8 +2,6 @@ import Cube from "../geometry/Cube.js";
 import { Vec4, flatten } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import TRS from "../transform/TRS.js";
-import Node from "../transform/Node.js";
 
 export default class Skybox extends DrawObject {
     init() {
@@ -28,8 +26,6 @@ export default class Skybox extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(textureCoords), 2);
         this.updateEBO(new Uint16Array(indices))
-        this.getEntity().get(TRS).getScale().set(10, 10, 10);
-        this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
         this.getRenderingContext().switchCulling(false);

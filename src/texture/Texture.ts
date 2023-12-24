@@ -8,6 +8,7 @@ export enum TextureBindIndex {
   Render = 4,
   OffscreenCanvas = 5,
   Skybox = 6,
+  Reflect = 7,
 }
 
 export type SkyboxArray = readonly [

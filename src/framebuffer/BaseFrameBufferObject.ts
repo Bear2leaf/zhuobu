@@ -28,8 +28,10 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
         } else if (texture.getBindIndex() === TextureBindIndex.Pick) {
             this.getGL().framebufferPickTexture2D(texture.getTextureIndex());
-        }  else if (texture.getBindIndex() === TextureBindIndex.Render) {
+        } else if (texture.getBindIndex() === TextureBindIndex.Render) {
             this.getGL().framebufferRenderTexture2D(texture.getTextureIndex());
+        } else if (texture.getBindIndex() === TextureBindIndex.Reflect) {
+            this.getGL().framebufferReflectTexture2D(texture.getTextureIndex());
         } else {
             throw new Error("attach Not implemented");
         }

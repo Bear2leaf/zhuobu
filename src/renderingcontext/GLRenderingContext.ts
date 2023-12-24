@@ -10,7 +10,7 @@ import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import GLShader from "../shader/GLShader.js";
 import Shader from "../shader/Shader.js";
 import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
-import RenderingContext, { ArrayBufferIndex, UniformBinding } from "./RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 
 export default class GLRenderingContext implements RenderingContext {
     private readonly gl: WebGL2RenderingContext;
@@ -91,7 +91,12 @@ export default class GLRenderingContext implements RenderingContext {
     framebufferRenderTexture2D(textureIndex: number): void {
         const gl = this.gl;
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
-        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0]);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1]);
+    }
+    framebufferReflectTexture2D(textureIndex: number): void {
+        const gl = this.gl;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT2, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1, this.gl.COLOR_ATTACHMENT2]);
     }
     readPixels(x: number, y: number, width: number, height: number): Uint8Array {
         const gl = this.gl;

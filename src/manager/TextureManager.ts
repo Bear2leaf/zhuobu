@@ -12,6 +12,7 @@ import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 import SkyboxTexture from "../texture/SkyboxTexture.js";
+import ReflectTexture from "../texture/ReflectTexture.js";
 
 
 export default class TextureManager {
@@ -23,6 +24,7 @@ export default class TextureManager {
     readonly depthTexture = new DepthTexture;
     readonly pickTexture = new PickTexture;
     readonly renderTexture = new RenderTexture;
+    readonly reflectTexture = new ReflectTexture;
     readonly singleColorTexture = new SingleColorTexture;
     readonly sdfTexture = new SDFTexture;
     private device?: Device;
@@ -54,6 +56,7 @@ export default class TextureManager {
         this.depthTexture.setContext(glContext);
         this.pickTexture.setContext(glContext);
         this.renderTexture.setContext(glContext);
+        this.reflectTexture.setContext(glContext);
         this.singleColorTexture.setContext(glContext);
         this.sdfTexture.setContext(glContext);
 
@@ -65,6 +68,7 @@ export default class TextureManager {
         this.depthTexture.setBindIndex(TextureBindIndex.Depth);
         this.pickTexture.setBindIndex(TextureBindIndex.Pick);
         this.renderTexture.setBindIndex(TextureBindIndex.Render);
+        this.reflectTexture.setBindIndex(TextureBindIndex.Reflect);
         this.singleColorTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
         this.sdfTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
 
@@ -74,6 +78,7 @@ export default class TextureManager {
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
         this.pickTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.renderTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+        this.reflectTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.depthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
     }
     initObservers() {

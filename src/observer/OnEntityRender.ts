@@ -9,6 +9,8 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
+import ReflectMap from "../sprite/ReflectMap.js";
+import RenderMap from "../sprite/RenderMap.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 
@@ -40,6 +42,10 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
+            } else if (entity.has(RenderMap)) {
+                this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
+            } else if (entity.has(ReflectMap)) {
+                this.rendererManager.getBackSpriteRenderer().addObject(entity.get(ReflectMap));
             } else if (entity.has(Pointer)) {
                 this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {

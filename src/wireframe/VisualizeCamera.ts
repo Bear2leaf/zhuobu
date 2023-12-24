@@ -18,6 +18,6 @@ export default class VisualizeCamera extends Component {
         return this.getCamera().getFrustumTransformMatrix();
     }
     getViewInverse(): Matrix {
-        return this.getCamera().getViewInverse();
+        return this.getCamera().getView().inverse();
     }
 }

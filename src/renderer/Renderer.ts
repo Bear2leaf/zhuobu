@@ -9,6 +9,9 @@ import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec4 } from "../geometry/Vector.js";
 import Skybox from "../drawobject/Skybox.js";
+import Flowers from "../sprite/Flowers.js";
+import RenderMap from "../sprite/RenderMap.js";
+import ReflectMap from "../sprite/ReflectMap.js";
 
 
 export default class Renderer {
@@ -94,24 +97,25 @@ export default class Renderer {
     getObjectList() {
         return this.objectlist;
     }
-    render() {
+    render(clear: boolean = true) {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
         const projection = camera.getProjection().getVertics();
-        const view = camera.getView().getVertics();
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...view, ...projection]));
-        const list = this.objectlist.splice(0, this.objectlist.length);
-        list.forEach(drawObject => {
+        const viewInverse = camera.getView().inverse().getVertics();
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
+        this.objectlist.forEach(drawObject => {
+            drawObject.bind();
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            } else if (drawObject instanceof Skybox) {
-                drawObject.getTexture().bind();
+            } else if (drawObject instanceof Skybox || drawObject instanceof Flowers || drawObject instanceof RenderMap || drawObject instanceof ReflectMap) {
                 this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             }
-            drawObject.bind();
             drawObject.draw();
         });
+        if (clear) {
+            this.objectlist.splice(0, this.objectlist.length);
+        }
     }
 }

@@ -15,7 +15,7 @@ export default class AnimationController extends Component {
         if (this.paused) {
             return;
         }
-        this.time += 10;
+        this.time += this.getDelta();
     }
     getTime(): number {
         return this.time;
@@ -25,5 +25,8 @@ export default class AnimationController extends Component {
             return;
         }
         this.tick();
+    }
+    getDelta(): number {
+        return 10;
     }
 }

@@ -6,13 +6,13 @@ uniform Model {
   mat4 u_world;
 };
 uniform Camera {
-  mat4 u_view;
+  mat4 u_viewInverse;
   mat4 u_projection;
 };
 
 out vec3 v_normal;
 
 void main() {
-  gl_Position = u_projection * u_view * u_world * a_position;
+  gl_Position = u_projection * u_viewInverse * u_world * a_position;
   v_normal = mat3(u_world) * a_normal;
 }

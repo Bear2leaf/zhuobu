@@ -3,10 +3,10 @@ import { UniformBinding } from "../renderingcontext/RenderingContext.js";
 import Renderer from "./Renderer.js";
 
 export default class GLTFSkinMeshRenderer extends Renderer {
-    render() {
+    render(clear: boolean = true) {
         this.getShader().use();
         this.prepareLight();
-        super.render();
+        super.render(clear);
     }
     prepareLight() {
         this.updateUBO(UniformBinding.Light, new Vec3(0, 0, 1).toFloatArray());

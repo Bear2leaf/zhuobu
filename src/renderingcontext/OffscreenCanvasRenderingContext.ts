@@ -97,6 +97,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     framebufferRenderTexture2D(textureIndex: number): void {
         throw new Error("Method not implemented.");
     }
+    framebufferReflectTexture2D(textureIndex: number): void {
+        throw new Error("Method not implemented.");
+    }
     readPixels(x: number, y: number, width: number, height: number): Uint8Array {
         const imageData = this.context.getImageData(x, y, width, height);
         return new Uint8Array(imageData.data.buffer);

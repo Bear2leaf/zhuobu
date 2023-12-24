@@ -107,7 +107,7 @@ export default abstract class Game {
         this.inputManager.process();
         this.sceneManager.update();
         this.sceneManager.collectDrawObject();
-        this.framebufferManager.processPickFramebuffer();
+        this.framebufferManager.processFramebuffer();
         this.rendererManager.render();
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }

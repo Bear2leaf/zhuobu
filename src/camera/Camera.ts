@@ -10,9 +10,6 @@ export default abstract class Camera {
         return this.getView().inverse()
             .multiply(this.getProjection().inverse());
     }
-    getViewInverse(): Matrix {
-        return this.getView().inverse();
-    }
 }
 
 

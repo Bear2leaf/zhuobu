@@ -5,7 +5,7 @@ export class FrontgroundCamera extends OrthoCamera {
 
     init(): void {
         super.init();
-        this.getView().scale(new Vec3(1, 1, 1 / 100)).translate(new Vec4(0, 0, 99, 1));
+        this.getView().scale(new Vec3(1, 1, 100)).translate(new Vec4(0, 0, 0, 1));
     }
 
 }

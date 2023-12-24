@@ -58,13 +58,6 @@ export default class OnEntityUpdate extends Observer {
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();
         }
-        if (entity.has(Skybox) && this.cameraManager) {
-            const camPos = new Vec4();
-            const cameraView = this.cameraManager.getMainCamera().getView();
-            Matrix.decompose(cameraView.inverse(), camPos, new Vec4(), new Vec4());
-            entity.get(Skybox).getEntity().get(TRS).getPosition().from(camPos);
-            entity.get(Node).updateWorldMatrix();
-        }
         if (entity.has(AdrText) && this.adrManager) {
             if (entity.get(Node).getRoot() === entity.get(Node)) {
                 entity.get(Node).updateWorldMatrix();

@@ -11,6 +11,8 @@ import GLTFManager from "../manager/GLTFManager.js";
 import TextureManager from "../manager/TextureManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Flowers from "../sprite/Flowers.js";
+import ReflectMap from "../sprite/ReflectMap.js";
+import RenderMap from "../sprite/RenderMap.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
@@ -59,6 +61,10 @@ export default class OnEntityInit extends Observer {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
             } else if (entity.has(Flowers)) {
                 entity.get(Flowers).setTexture(this.textureManager.flowerTexture);
+            } else if (entity.has(RenderMap)) {
+                entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
+            } else if (entity.has(ReflectMap)) {
+                entity.get(ReflectMap).setTexture(this.textureManager.reflectTexture);
             } else if (entity.has(Skybox)) {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
             } else if (entity.has(SkinMesh)) {
