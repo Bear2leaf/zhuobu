@@ -78,7 +78,7 @@ export default class TextureManager {
     }
     initObservers() {
 
-        this.getEventManager().onEntityRegisterComponents.setTextureManager(this);
+        this.getEventManager().onEntityInit.setTextureManager(this);
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

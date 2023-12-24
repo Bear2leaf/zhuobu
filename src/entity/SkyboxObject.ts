@@ -5,14 +5,14 @@ import Entity from "./Entity.js";
 import Skybox from "../drawobject/Skybox.js";
 
 export default class SkyboxObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             Skybox
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

@@ -39,18 +39,11 @@ export default class AdrAdapter {
         return this.getAdrManager().getRoot().getHead();
     }
     createElement(selector: string): AdrElement {
-        const entity = new AdrTextObject();
         const scene = this.getAdrManager().getSceneManager().getTmpScene();
-        scene.addEntity(entity);
-        scene.registerComponents(entity);
-        scene.initEntity(entity);
-        const adrElement = new AdrElement();
-        adrElement.tagName = selector;
-        adrElement.setEntity(entity);
+        const element = scene.createAdrElement(selector);
         const eventManager = this.getAdrManager().getEventManager();
-        adrElement.setSubjects(eventManager.adrElementRemove, eventManager.adrElementIdChange, eventManager.adrElementParentChange);
-        
-        return adrElement;
+        element.setSubjects(eventManager.adrElementRemove, eventManager.adrElementIdChange, eventManager.adrElementParentChange);
+        return element;
     }
     getElementById(selector: string): AdrElement | null {
         return this.getAdrManager().getRoot().getElementById(selector) as AdrElement;

@@ -6,7 +6,7 @@ import TRS from "../transform/TRS.js";
 import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 
 export default class CameraUpCubeObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class CameraUpCubeObject extends Entity {
             VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

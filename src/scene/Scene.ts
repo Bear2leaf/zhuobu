@@ -19,6 +19,7 @@ export default abstract class Scene {
     registerEntities(): void {
         this.getDefaultEntities().forEach(entity => {
             this.addEntity(entity);
+            entity.addDefaultComponents();
             this.registerComponents(entity);
         });
     }
@@ -71,7 +72,6 @@ export default abstract class Scene {
         }
     }
     registerComponents(entity: Entity) {
-        entity.registerComponents();
         this.entityRegisterComponents?.setEntity(entity);
         this.entityRegisterComponents?.notify();
     }

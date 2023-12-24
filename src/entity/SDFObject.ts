@@ -7,7 +7,7 @@ import Entity from "./Entity.js";
 import SDFCanvasMap from "../texturemap/SDFCanvasMap.js";
 
 export default class SDFObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -15,7 +15,7 @@ export default class SDFObject extends Entity {
             SDFCanvasMap
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

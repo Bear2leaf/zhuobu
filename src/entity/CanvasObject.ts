@@ -6,7 +6,7 @@ import Entity from "./Entity.js";
 import SingleColorCanvasMap from "../texturemap/SingleColorCanvasMap.js";
 
 export default class CanvasObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class CanvasObject extends Entity {
             SingleColorCanvasMap
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

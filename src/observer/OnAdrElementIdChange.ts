@@ -1,3 +1,7 @@
+import AdrContent from "../drawobject/AdrContent.js";
+import AdrEvent from "../drawobject/AdrEvent.js";
+import AdrNotification from "../drawobject/AdrNotification.js";
+import AdrText from "../drawobject/AdrText.js";
 import AdrElementSubject from "../subject/AdrElementSubject.js";
 import TRS from "../transform/TRS.js";
 import AdrElementObserver from "./AdrElementObserver.js";
@@ -16,24 +20,38 @@ export default class OnAdrElementIdChange extends AdrElementObserver {
     public notify(): void {
         const adrElement = this.getSubject().getElement();
         const id = adrElement.getAttribute("id");
+        const entity = adrElement.getEntity();
+        const trs = entity.get(TRS);
+        const sceneManager = this.getAdrManager().getSceneManager();
         if (id === 'notifications') {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().x = -400;
-            adrElement.getEntity().get(TRS).getPosition().y = 100;
-            adrElement.getEntity().get(TRS).getPosition().z = -1;
+            sceneManager.getTmpScene().removeEntity(entity);
+            sceneManager.getAdrNotificationScene().addEntity(entity);
+            trs.getPosition().x = -400;
+            trs.getPosition().y = 100;
+            trs.getPosition().z = -1;
+            const comp = new AdrNotification();
+            comp.setEntity(entity);
+            entity.set(AdrText, comp);
+            sceneManager.getAdrNotificationScene().initEntity(entity);
         } else if (id === 'event') {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().x = -400;
-            adrElement.getEntity().get(TRS).getPosition().y = -200;
-            adrElement.getEntity().get(TRS).getPosition().z = -1;
+            sceneManager.getTmpScene().removeEntity(entity);
+            sceneManager.getAdrEventScene().addEntity(entity);
+            trs.getPosition().x = -400;
+            trs.getPosition().y = -200;
+            trs.getPosition().z = -1;
+            const comp = new AdrEvent();
+            comp.setEntity(entity);
+            entity.set(AdrText, comp);
+            sceneManager.getAdrEventScene().initEntity(entity);
         } else if (id === 'content') {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().y = 200;
-            adrElement.getEntity().get(TRS).getPosition().x = 0;
-            adrElement.getEntity().get(TRS).getPosition().z = -1;
+            sceneManager.getAdrScene().addEntity(entity);
+            trs.getPosition().y = 200;
+            trs.getPosition().x = 0;
+            trs.getPosition().z = -1;
+            const comp = new AdrContent();
+            comp.setEntity(entity);
+            entity.set(AdrText, comp);
+            sceneManager.getAdrScene().initEntity(entity);
         }
     }
 

@@ -5,14 +5,14 @@ import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
 
 export default class FlowersObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             Flowers
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

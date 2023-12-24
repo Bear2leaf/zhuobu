@@ -7,7 +7,7 @@ import Sprite from "../drawobject/Sprite.js";
 import Entity from "./Entity.js";
 
 export default class PickMapObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             PickMap,
             TRS,
@@ -15,7 +15,7 @@ export default class PickMapObject extends Entity {
             Sprite
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

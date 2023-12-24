@@ -6,7 +6,7 @@ import Sprite from "../drawobject/Sprite.js";
 import Entity from "./Entity.js";
 
 export default class DepthMapObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             DepthMap,
             TRS,
@@ -14,7 +14,7 @@ export default class DepthMapObject extends Entity {
             Sprite
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

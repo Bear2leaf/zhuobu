@@ -6,14 +6,14 @@ import TexturedCube from "../drawobject/TexturedCube.js";
 import Entity from "./Entity.js";
 
 export default class TexturedCubeObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             TexturedCube
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

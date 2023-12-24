@@ -7,7 +7,7 @@ import UIFrame from "../wireframe/UIFrame.js";
 import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 
 export default class UIFrameObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -16,7 +16,7 @@ export default class UIFrameObject extends Entity {
             VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

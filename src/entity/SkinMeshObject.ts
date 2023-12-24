@@ -6,7 +6,7 @@ import Entity from "./Entity.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
 export default class SkinMeshObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class SkinMeshObject extends Entity {
             GLTFAnimationController,
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

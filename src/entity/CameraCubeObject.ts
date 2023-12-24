@@ -6,7 +6,7 @@ import CameraCube from "../drawobject/CameraCube.js";
 import Entity from "./Entity.js";
 
 export default class CameraCubeObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class CameraCubeObject extends Entity {
             VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

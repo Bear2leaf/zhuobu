@@ -5,11 +5,15 @@ import MoveCircleController from "../controller/MoveCircleController.js";
 import AdrText from "../drawobject/AdrText.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
+import Skybox from "../drawobject/Skybox.js";
+import Matrix from "../geometry/Matrix.js";
+import { Vec4 } from "../geometry/Vector.js";
 import AdrManager from "../manager/AdrManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityUpdate extends Observer {
@@ -53,6 +57,13 @@ export default class OnEntityUpdate extends Observer {
         }
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();
+        }
+        if (entity.has(Skybox) && this.cameraManager) {
+            const camPos = new Vec4();
+            const cameraView = this.cameraManager.getMainCamera().getView();
+            Matrix.decompose(cameraView.inverse(), camPos, new Vec4(), new Vec4());
+            entity.get(Skybox).getEntity().get(TRS).getPosition().from(camPos);
+            entity.get(Node).updateWorldMatrix();
         }
         if (entity.has(AdrText) && this.adrManager) {
             if (entity.get(Node).getRoot() === entity.get(Node)) {

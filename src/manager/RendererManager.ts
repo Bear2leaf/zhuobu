@@ -63,7 +63,7 @@ export default class RendererManager {
         return this.device;
     }
     initObservers() {
-        this.getEventManager().onEntityRegisterComponents.setRenderingContext(this.getDevice().getRenderingContext())
+        this.getEventManager().onEntityInit.setRenderingContext(this.getDevice().getRenderingContext())
         this.getEventManager().onEntityRender.setRendererManager(this);
         this.getEventManager().onViewPortChange.setDevice(this.getDevice());
 

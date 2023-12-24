@@ -6,14 +6,14 @@ import FpsText from "../drawobject/FpsText.js";
 import Entity from "./Entity.js";
 
 export default class FpsTextObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             FpsText
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

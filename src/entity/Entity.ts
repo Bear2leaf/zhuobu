@@ -2,7 +2,7 @@ import Component from "./Component.js";
 
 export default abstract class Entity {
     private readonly objects: Component[] = [];
-    abstract registerComponents(): void;
+    abstract addDefaultComponents(): void;
     add<T extends Component>(ctor: new () => T): void {
         const object = this.objects.filter(m => m instanceof ctor);
         if (object.length !== 0) {

@@ -6,14 +6,14 @@ import Gasket from "../drawobject/Gasket.js";
 import Entity from "./Entity.js";
 
 export default class GasketObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             Gasket
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

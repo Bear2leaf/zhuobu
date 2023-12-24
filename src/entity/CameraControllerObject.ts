@@ -5,14 +5,14 @@ import Entity from "./Entity.js";
 import CameraController from "../controller/CameraController.js";
 
 export default class CameraControllerObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             CameraController,
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

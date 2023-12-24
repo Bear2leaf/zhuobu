@@ -6,14 +6,14 @@ import Histogram from "../drawobject/Histogram.js";
 import Entity from "./Entity.js";
 
 export default class FpsChartObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             Histogram
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

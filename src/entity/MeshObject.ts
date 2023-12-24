@@ -5,14 +5,14 @@ import WhaleMesh from "../drawobject/WhaleMesh.js";
 import Entity from "./Entity.js";
 
 export default class MeshObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
             WhaleMesh,
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

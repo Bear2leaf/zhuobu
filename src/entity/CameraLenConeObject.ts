@@ -6,7 +6,7 @@ import CameraLenCone from "../drawobject/CameraLenCone.js";
 import Entity from "./Entity.js";
 
 export default class CameraLenConeObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class CameraLenConeObject extends Entity {
             VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

@@ -4,14 +4,14 @@ import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
 
 export default class NodeObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         
         [
             TRS,
             Node
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

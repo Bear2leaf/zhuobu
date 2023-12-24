@@ -8,7 +8,7 @@ import Entity from "./Entity.js";
 import VisualizeCamera from "../wireframe/VisualizeCamera.js";
 
 export default class FrontgroundFrameObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -17,7 +17,7 @@ export default class FrontgroundFrameObject extends Entity {
             VisualizeCamera
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

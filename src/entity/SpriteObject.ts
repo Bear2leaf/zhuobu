@@ -6,7 +6,7 @@ import DefaultSprite from "../sprite/DefaultSprite.js";
 import MoveCircleController from "../controller/MoveCircleController.js";
 
 export default class SpriteObject extends Entity {
-    registerComponents(): void {
+    addDefaultComponents(): void {
         [
             TRS,
             Node,
@@ -14,7 +14,7 @@ export default class SpriteObject extends Entity {
             MoveCircleController
         ].forEach(ctor => {
             this.add<Component>(ctor);
-            this.get<Component>(ctor).setEntity(this);
+            
         });
     }
 }

@@ -2,7 +2,6 @@ import EventManager from "./EventManager.js";
 import SingleColorCanvas from "../canvas/SingleColorCanvas.js";
 import SDFCanvas from "../canvas/SDFCanvas.js";
 import Device from "../device/Device.js";
-import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
 import TextureManager from "./TextureManager.js";
 
 
@@ -30,7 +29,7 @@ export default class OffscreenCanvasManager {
         return this.textureManager;
     }
     initObservers() {
-        this.getEventManager().onEntityRegisterComponents.setSDFCanvas(this.sdfCanvas);
+        this.getEventManager().onEntityInit.setSDFCanvas(this.sdfCanvas);
     }
     initOffscreenCanvas(): void {
         this.sdfCanvas.initSDFTexture(this.getTextureManager().sdfTexture);
