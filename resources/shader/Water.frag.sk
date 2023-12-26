@@ -39,7 +39,7 @@ void main() {
     specularFactor = pow(specularFactor, shineDamper);
     vec3 specularColor = vec3(1.0f, 1.0f, 1.0f) * specularFactor * reflectivity;
     vec4 viewVector = normalize(v_vetexToCameraVector);
-    float refractFactor = dot(viewVector, vec4(0.0f, 0.0f, 1.0f, 0.0f));
-    color = mix(refractColor, reflectColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
+    float refractFactor = dot(viewVector, vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    color = mix(reflectColor, refractColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
 
 }
