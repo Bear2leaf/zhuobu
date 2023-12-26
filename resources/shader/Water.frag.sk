@@ -16,8 +16,11 @@ uniform sampler2D u_normalTexture;
 
 const float WAVE_STRENGTH = 0.02f;
 const float DISTORT_FACTOR = 0.1f;
+const float shineDamper = 20.0f;
+const float reflectivity = 0.5f;
 
 void main() {
+    vec3 lightDirection = vec3(0.0f, 0.0f, 1.0f );
     vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
     vec2 refractTexcoord = vec2(ndc.x, ndc.y);
     vec2 reflectTexcoord = vec2(ndc.x, 1.0f - ndc.y);
@@ -28,8 +31,15 @@ void main() {
     reflectTexcoord += totalDistortion;
     vec4 refractColor = texture(u_refractTexture, refractTexcoord);
     vec4 reflectColor = texture(u_reflectTexture, reflectTexcoord);
+    vec4 normalColor = texture(u_normalTexture, distortedTexCoords);
+    vec3 normal = vec3(normalColor.r * 2.0f - 1.0f, normalColor.b, normalColor.g * 2.0f - 1.0f);
+    normal = normalize(normal);
+    vec3 reflectedLightDirection = reflect(lightDirection, normal);
+    float specularFactor = max(dot(reflectedLightDirection, normalize(vec3(v_vetexToCameraVector))), 0.0f);
+    specularFactor = pow(specularFactor, shineDamper);
+    vec3 specularColor = vec3(1.0f, 1.0f, 1.0f) * specularFactor * reflectivity;
     vec4 viewVector = normalize(v_vetexToCameraVector);
     float refractFactor = dot(viewVector, vec4(0.0f, 0.0f, 1.0f, 0.0f));
-    color = mix(refractColor, reflectColor, refractFactor) * v_color;
+    color = mix(refractColor, reflectColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
 
 }

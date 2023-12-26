@@ -3,14 +3,14 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 export enum TextureBindIndex {
   Default = 0,
   Joint = 1,
+  Reflect = 1,
   Depth = 2,
   Pick = 3,
+  WaterDistortion = 3,
   Render = 4,
+  WaterNormal = 5,
   OffscreenCanvas = 5,
   Skybox = 6,
-  Reflect = 7,
-  WaterNormal = 8,
-  WaterDistortion = 9,
 }
 
 export type SkyboxArray = readonly [
