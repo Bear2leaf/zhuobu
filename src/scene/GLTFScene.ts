@@ -10,6 +10,7 @@ import RenderMapObject from "../entity/RenderMapObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
 import SkyboxObject from "../entity/SkyboxObject.js";
 import SpriteObject from "../entity/SpriteObject.js";
+import WaterObject from "../entity/WaterObject.js";
 import Scene from "./Scene.js";
 
 export default class GLTFScene extends Scene {
@@ -20,6 +21,7 @@ export default class GLTFScene extends Scene {
             , new FlowersObject()
             , new RenderMapObject()
             , new ReflectMapObject()
+            , new WaterObject()
             , new SpriteObject()
             , new SkinMeshObject()
             , new MeshObject()

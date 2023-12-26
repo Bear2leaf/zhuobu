@@ -28,11 +28,13 @@ export default class Skybox extends DrawObject {
         this.updateEBO(new Uint16Array(indices))
     }
     draw(): void {
+        this.getRenderingContext().switchBlend(true);
         this.getRenderingContext().switchCulling(false);
         this.getRenderingContext().switchDepthWrite(false);
         super.draw();
         this.getRenderingContext().switchDepthWrite(true);
         this.getRenderingContext().switchCulling(true);
+        this.getRenderingContext().switchBlend(false);
     }
 
 }

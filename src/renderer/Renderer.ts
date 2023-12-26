@@ -12,6 +12,7 @@ import Skybox from "../drawobject/Skybox.js";
 import Flowers from "../sprite/Flowers.js";
 import RenderMap from "../sprite/RenderMap.js";
 import ReflectMap from "../sprite/ReflectMap.js";
+import Water from "../sprite/Water.js";
 
 
 export default class Renderer {
@@ -111,6 +112,14 @@ export default class Renderer {
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
             } else if (drawObject instanceof Skybox || drawObject instanceof Flowers || drawObject instanceof RenderMap || drawObject instanceof ReflectMap) {
                 this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
+            } else if (drawObject instanceof Water) {
+                drawObject.getReflectTexture().bind();
+                drawObject.getDistortionTexture().bind();
+                drawObject.getNormalTexture().bind();
+                this.getShader().setInteger("u_refractTexture", drawObject.getTexture().getBindIndex());
+                this.getShader().setInteger("u_reflectTexture", drawObject.getReflectTexture().getBindIndex());
+                this.getShader().setInteger("u_normalTexture", drawObject.getNormalTexture().getBindIndex());
+                this.getShader().setInteger("u_distortionTexture", drawObject.getDistortionTexture().getBindIndex());
             }
             drawObject.draw();
         });

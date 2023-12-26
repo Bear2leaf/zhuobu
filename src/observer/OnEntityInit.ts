@@ -13,6 +13,7 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Flowers from "../sprite/Flowers.js";
 import ReflectMap from "../sprite/ReflectMap.js";
 import RenderMap from "../sprite/RenderMap.js";
+import Water from "../sprite/Water.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
@@ -65,6 +66,11 @@ export default class OnEntityInit extends Observer {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
             } else if (entity.has(ReflectMap)) {
                 entity.get(ReflectMap).setTexture(this.textureManager.reflectTexture);
+            } else if (entity.has(Water)) {
+                entity.get(Water).setTexture(this.textureManager.renderTexture);
+                entity.get(Water).setReflectTexture(this.textureManager.reflectTexture);
+                entity.get(Water).setDistortionTexture(this.textureManager.waterDistortionTexture);
+                entity.get(Water).setNormalTexture(this.textureManager.waterNormalTexture);
             } else if (entity.has(Skybox)) {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
             } else if (entity.has(SkinMesh)) {

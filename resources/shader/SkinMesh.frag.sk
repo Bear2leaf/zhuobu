@@ -2,29 +2,32 @@
 precision highp float;
 
 in vec3 v_normal;
-in vec4 v_position;
+in vec3 v_position;
 
 uniform vec4 u_pickColor;
 
 uniform Light {
-  vec3 u_lightDirection;
+    vec3 u_lightDirection;
 };
 uniform Material {
-  vec4 u_diffuse;
+    vec4 u_diffuse;
 };
-
 
 layout(location = 0) out vec4 o_color;
 layout(location = 1) out vec4 o_pickColor;
 layout(location = 2) out vec4 o_reflect;
+layout(location = 3) out vec4 o_refract;
+
+const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
 void main() {
-  vec3 normal = normalize(v_normal);
-  float light = dot(u_lightDirection, normal) * .5f + .5f;
-  o_color = vec4(u_diffuse.rgb * light, u_diffuse.a);
-  o_reflect = vec4(u_diffuse.rgb * light, u_diffuse.a);
-  o_pickColor = vec4(u_pickColor / 255.0f);
-  // for debugging .. see article
-  // outColor = vec4(1, 0, 0, 1);
-  // outColor = vec4(v_normal * .5 + .5, 1);
+    vec3 normal = normalize(v_normal);
+    float light = dot(u_lightDirection, normal) * .5f + .5f;
+    o_color = vec4(u_diffuse.rgb * light, u_diffuse.a);
+    if(dot(plane, vec4(v_position, 1.0f)) < 0.0f) {
+        o_refract = o_color;
+    } else {
+        o_reflect = o_color;
+    }
+    o_pickColor = vec4(u_pickColor / 255.0f);
 }

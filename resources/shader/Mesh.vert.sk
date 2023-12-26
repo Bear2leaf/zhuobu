@@ -11,8 +11,12 @@ uniform Camera {
 };
 
 out vec3 v_normal;
+out vec3 v_position;
 
 void main() {
-  gl_Position = u_projection * u_viewInverse * u_world * a_position;
+  vec4 pos = u_world * a_position;
+  mat4 viewProjection = u_projection * u_viewInverse;
+  gl_Position = viewProjection * pos;
   v_normal = mat3(u_world) * a_normal;
+  v_position = vec3(pos.xyz / pos.w);
 }

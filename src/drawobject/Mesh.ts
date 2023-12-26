@@ -52,4 +52,9 @@ export default class Mesh extends DrawObject {
     update(): void {
         this.getEntity().get(Node).updateWorldMatrix()
     }
+    draw(): void {
+        this.getRenderingContext().switchBlend(true);
+        super.draw();
+        this.getRenderingContext().switchBlend(false);
+    }
 }

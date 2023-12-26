@@ -90,8 +90,8 @@ export default class GLRenderingContext implements RenderingContext {
     }
     framebufferRenderTexture2D(textureIndex: number): void {
         const gl = this.gl;
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
-        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1]);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT3, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1, this.gl.COLOR_ATTACHMENT2, this.gl.COLOR_ATTACHMENT3]);
     }
     framebufferReflectTexture2D(textureIndex: number): void {
         const gl = this.gl;

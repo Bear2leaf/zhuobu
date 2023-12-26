@@ -11,6 +11,7 @@ import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
 import ReflectMap from "../sprite/ReflectMap.js";
 import RenderMap from "../sprite/RenderMap.js";
+import Water from "../sprite/Water.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 
@@ -52,6 +53,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
             } else if (entity.has(Skybox)) {
                 this.rendererManager.getSkyboxRenderer().addObject(entity.get(Skybox));
+            } else if (entity.has(Water)) {
+                this.rendererManager.getWaterRenderer().addObject(entity.get(Water));
             } else if (entity.has(SkinMesh)) {
                 if (entity.has(AnimationController)) {
                     this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));

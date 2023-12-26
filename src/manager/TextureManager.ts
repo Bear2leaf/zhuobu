@@ -13,12 +13,16 @@ import EventManager from "./EventManager.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 import SkyboxTexture from "../texture/SkyboxTexture.js";
 import ReflectTexture from "../texture/ReflectTexture.js";
+import WaterNormalTexture from "../texture/WaterNormalTexture.js";
+import WaterDistortionTexture from "../texture/WaterDistortionTexture.js";
 
 
 export default class TextureManager {
     readonly defaultTexture = new DefaultTexture;
     readonly fontTexture = new FontTexture;
     readonly flowerTexture = new FlowerTexture;
+    readonly waterNormalTexture = new WaterNormalTexture;
+    readonly waterDistortionTexture = new WaterDistortionTexture;
     readonly jointTexture = new JointTexture;
     readonly skyboxTexture = new SkyboxTexture;
     readonly depthTexture = new DepthTexture;
@@ -31,6 +35,9 @@ export default class TextureManager {
     private cacheManager?: CacheManager;
     private eventManager?: EventManager;
     async load(): Promise<void> {
+        await this.getCacheManager().loadImageCache("flowers");
+        await this.getCacheManager().loadImageCache("water_distortion");
+        await this.getCacheManager().loadImageCache("water_normal");
         await this.getCacheManager().loadImageCache("flowers");
         await this.getCacheManager().loadSkyboxCache("vz_clear");
         await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
@@ -51,6 +58,8 @@ export default class TextureManager {
         this.defaultTexture.setContext(glContext);
         this.fontTexture.setContext(glContext);
         this.flowerTexture.setContext(glContext);
+        this.waterDistortionTexture.setContext(glContext);
+        this.waterNormalTexture.setContext(glContext);
         this.jointTexture.setContext(glContext);
         this.skyboxTexture.setContext(glContext);
         this.depthTexture.setContext(glContext);
@@ -71,11 +80,15 @@ export default class TextureManager {
         this.reflectTexture.setBindIndex(TextureBindIndex.Reflect);
         this.singleColorTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
         this.sdfTexture.setBindIndex(TextureBindIndex.OffscreenCanvas);
+        this.waterDistortionTexture.setBindIndex(TextureBindIndex.WaterDistortion);
+        this.waterNormalTexture.setBindIndex(TextureBindIndex.WaterNormal);
 
         const windowInfo = this.getDevice().getWindowInfo();
         this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
+        this.waterNormalTexture.generate(this.getCacheManager().getImage("water_normal"));
+        this.waterDistortionTexture.generate(this.getCacheManager().getImage("water_distortion"));
         this.pickTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.renderTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
         this.reflectTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);

@@ -1,0 +1,25 @@
+#version 300 es 
+precision highp float;
+
+in vec4 v_texcoord;
+in vec4 v_color;
+in vec4 v_clipspacePosition;
+out vec4 color;
+
+uniform sampler2D u_reflectTexture;
+uniform sampler2D u_refractTexture;
+uniform sampler2D u_distortionTexture;
+uniform sampler2D u_normalTexture;
+
+void main() {
+    vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
+    vec2 refractTexcoord = vec2(ndc.x, ndc.y);
+    vec2 reflectTexcoord = vec2(ndc.x, 1.0f - ndc.y);
+    vec2 distortion = (texture(u_distortionTexture, v_texcoord.xy).rg * 2.0f - 1.0f);
+    refractTexcoord += distortion * 0.1f;
+    reflectTexcoord += distortion * 0.1f;
+    vec4 refractColor = texture(u_refractTexture, refractTexcoord);
+    vec4 reflectColor = texture(u_reflectTexture, reflectTexcoord);
+    color = mix(refractColor, reflectColor, 0.5f) * v_color;
+
+}

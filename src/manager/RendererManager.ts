@@ -7,6 +7,7 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
 import { SkyboxRenderer } from "../renderer/SkyboxRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
+import WaterRenderer from "../renderer/WaterRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
 import CameraManager from "./CameraManager.js";
@@ -16,6 +17,7 @@ import SceneManager from "./SceneManager.js";
 export default class RendererManager {
     private readonly spriteRenderer = new SpriteRenderer;
     private readonly backSpriteRenderer = new BackSpriteRenderer;
+    private readonly waterRenderer = new WaterRenderer;
     private readonly skyboxRenderer = new SkyboxRenderer;
     private readonly sdfRenderer = new SDFRenderer;
     private readonly lineRenderer = new LineRenderer;
@@ -38,6 +40,7 @@ export default class RendererManager {
         this.wireframeRenderer.setShaderName("Wireframe");
         this.gltfSkinMeshRenderer.setShaderName("SkinMesh");
         this.pointRenderer.setShaderName("Point");
+        this.waterRenderer.setShaderName("Water");
     }
     async load(): Promise<void> {
 
@@ -51,6 +54,7 @@ export default class RendererManager {
         await this.wireframeRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfSkinMeshRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.pointRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.waterRenderer.loadShaderTxtCache(this.getCacheManager());
 
     }
     setDevice(device: Device) {
@@ -77,6 +81,7 @@ export default class RendererManager {
             this.wireframeRenderer,
             this.sdfRenderer,
             this.skyboxRenderer,
+            this.waterRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getMainCamera());
             renderer.initShader(rc, this.getCacheManager());
@@ -88,6 +93,9 @@ export default class RendererManager {
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
         this.backSpriteRenderer.initShader(rc, this.getCacheManager());
         this.backSpriteRenderer.setSceneManager(this.getSceneManager());
+        // this.waterRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
+        // this.waterRenderer.initShader(rc, this.getCacheManager());
+        // this.waterRenderer.setSceneManager(this.getSceneManager());
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
         this.spriteRenderer.initShader(rc, this.getCacheManager());
         this.spriteRenderer.setSceneManager(this.getSceneManager());
@@ -101,6 +109,7 @@ export default class RendererManager {
             this.gltfMeshRenderer,
             this.wireframeRenderer,
             this.gltfSkinMeshRenderer,
+            this.waterRenderer,
             this.pointRenderer
         ].forEach(renderer => {
             if (renderer.getObjectList().length) {
@@ -128,6 +137,9 @@ export default class RendererManager {
     }
     getSkyboxRenderer() {
         return this.skyboxRenderer;
+    }
+    getWaterRenderer() {
+        return this.waterRenderer;
     }
     getSkinMeshRenderer() {
         return this.gltfSkinMeshRenderer;
