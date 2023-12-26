@@ -26,7 +26,9 @@ void main() {
     o_color = vec4(u_diffuse.rgb * light, u_diffuse.a);
     if(dot(plane, vec4(v_position, 1.0f)) < 0.0f) {
         o_refract = o_color;
+        o_reflect = vec4(0.0f);
     } else {
+        o_refract = vec4(0.0f);
         o_reflect = o_color;
     }
     o_pickColor = vec4(u_pickColor / 255.0f);
