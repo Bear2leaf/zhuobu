@@ -1,27 +1,33 @@
 
 import Matrix from "../geometry/Matrix.js";
-import { Vec3 } from "../geometry/Vector.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
 import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 
 
 export class MainCamera extends PerspectiveCamera {
-    private readonly normalView = Matrix.lookAt(new Vec3(0, 8, 8), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
-    private readonly reflectView = Matrix.lookAt(new Vec3(0, -8, 8), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
+    private reflected = false;
+    private readonly eye = new Vec4(0, 4, 8, 1);
     init(): void {
         super.init()
         const fov = Math.PI / 180 * 60;
         this.getProjection().set(Matrix.perspective(fov, this.getAspect(), 1, 30))
     }
     reflect(enable: boolean = false) {
-        if (enable) {
-            this.getView().set(this.reflectView)
+        this.reflected = enable;
+    }
+    getView(): Matrix {
+        if (this.reflected) {
+            return Matrix.lookAt(new Vec3(this.getEye().x, -this.getEye().y, this.getEye().z), new Vec3(0, 0, 0), new Vec3(0, 1, 0))
         } else {
-            this.getView().set(this.normalView)
+            return Matrix.lookAt(this.getEye(), new Vec3(0, 0, 0), new Vec3(0, 1, 0))
         }
     }
-    rotateViewPerFrame(delta: number) {
-        this.normalView.rotateY((Math.PI / 180 * delta)).rotateX((Math.PI / 180 * delta)).rotateZ((Math.PI / 180 * delta))
-        this.reflectView.rotateY((Math.PI / 180 * -delta)).rotateX((Math.PI / 180 * -delta)).rotateZ((Math.PI / 180 * -delta))
+    getEye(): Vec3 {
+        return this.eye;
+    }
+    rotateViewPerFrame(time: number) {
+        this.getEye().x = Math.sin(time) * 10;
+        this.getEye().z = Math.cos(time) * 4;
     }
 }

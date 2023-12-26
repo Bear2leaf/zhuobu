@@ -61,6 +61,7 @@ export default interface RenderingContext {
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
     switchNearestFilter(enable: boolean): void;
+    switchRepeat(enable: boolean): void;
     switchDepthTest(enable: boolean): void;
     switchDepthWrite(enable: boolean): void;
     switchBlend(enable: boolean): void;

@@ -4,22 +4,32 @@ precision highp float;
 in vec4 v_texcoord;
 in vec4 v_color;
 in vec4 v_clipspacePosition;
+in vec4 v_vetexToCameraVector;
+
 out vec4 color;
 
+uniform float u_frames;
 uniform sampler2D u_reflectTexture;
 uniform sampler2D u_refractTexture;
 uniform sampler2D u_distortionTexture;
 uniform sampler2D u_normalTexture;
 
+const float WAVE_STRENGTH = 0.02f;
+const float DISTORT_FACTOR = 0.1f;
+
 void main() {
     vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
     vec2 refractTexcoord = vec2(ndc.x, ndc.y);
     vec2 reflectTexcoord = vec2(ndc.x, 1.0f - ndc.y);
-    vec2 distortion = (texture(u_distortionTexture, v_texcoord.xy).rg * 2.0f - 1.0f);
-    // refractTexcoord += distortion * 0.1f;
-    // reflectTexcoord += distortion * 0.1f;
+    vec2 distortedTexCoords = texture(u_distortionTexture, vec2(v_texcoord.x + u_frames, v_texcoord.y)).rg * DISTORT_FACTOR;
+    distortedTexCoords = vec2(v_texcoord.xy) + vec2(distortedTexCoords.x, distortedTexCoords.y + u_frames);
+    vec2 totalDistortion = (texture(u_distortionTexture, distortedTexCoords).rg * 2.0f - 1.0f) * WAVE_STRENGTH;
+    refractTexcoord += totalDistortion;
+    reflectTexcoord += totalDistortion;
     vec4 refractColor = texture(u_refractTexture, refractTexcoord);
     vec4 reflectColor = texture(u_reflectTexture, reflectTexcoord);
-    color = mix(refractColor, reflectColor, 0.5f) * v_color;
+    vec4 viewVector = normalize(v_vetexToCameraVector);
+    float refractFactor = dot(viewVector, vec4(0.0f, 0.0f, 1.0f, 0.0f));
+    color = mix(refractColor, reflectColor, refractFactor) * v_color;
 
 }

@@ -110,16 +110,8 @@ export default class Renderer {
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            } else if (drawObject instanceof Skybox || drawObject instanceof Flowers || drawObject instanceof RenderMap || drawObject instanceof ReflectMap) {
+            } else if (drawObject instanceof Flowers || drawObject instanceof RenderMap || drawObject instanceof ReflectMap) {
                 this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
-            } else if (drawObject instanceof Water) {
-                drawObject.getReflectTexture().bind();
-                drawObject.getDistortionTexture().bind();
-                drawObject.getNormalTexture().bind();
-                this.getShader().setInteger("u_refractTexture", drawObject.getTexture().getBindIndex());
-                this.getShader().setInteger("u_reflectTexture", drawObject.getReflectTexture().getBindIndex());
-                this.getShader().setInteger("u_normalTexture", drawObject.getNormalTexture().getBindIndex());
-                this.getShader().setInteger("u_distortionTexture", drawObject.getDistortionTexture().getBindIndex());
             }
             drawObject.draw();
         });

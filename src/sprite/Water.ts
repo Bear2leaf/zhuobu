@@ -54,4 +54,11 @@ export default class Water extends DrawObject {
         this.updateEBO(new Uint16Array(indices));
         this.getEntity().get(Node).updateWorldMatrix();
     }
+    draw(): void {
+        this.getDistortionTexture().bind();
+        this.getRenderingContext().switchRepeat(true);
+        super.draw();
+        this.getRenderingContext().switchRepeat(false);
+
+    }
 }

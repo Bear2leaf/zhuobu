@@ -10,7 +10,7 @@ export default class CameraController extends AnimationController {
         if (!this.camera) {
             throw new Error("camera not set");
         }
-        // this.camera.rotateViewPerFrame(this.getDelta() * timeScale);
+        this.camera.rotateViewPerFrame(this.getTime() * timeScale);
     }
 
 }

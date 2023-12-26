@@ -5,11 +5,8 @@ import Camera from "./Camera.js";
 
 
 export class PerspectiveCamera extends Camera {
-    private view?: Matrix;
-    private projection?: Matrix;
     private width?: number;
     private height?: number;
-    
 
     init() {
         if (!this.width) {
@@ -18,10 +15,6 @@ export class PerspectiveCamera extends Camera {
         if (!this.height) {
             throw new Error("height not exist");
         }
-        const fov = Math.PI / 180 * 60;
-        const aspect = this.width / this.height;
-        this.view = Matrix.lookAt(new Vec3(0, 2, 8), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
-        this.projection = Matrix.perspective(fov, aspect, 1, 30);
     }
     setSize(width: number, height: number) {
         this.width = width;
@@ -37,15 +30,12 @@ export class PerspectiveCamera extends Camera {
         return this.width / this.height;
     }
     getView(): Matrix {
-        if (!this.view) {
-            throw new Error("view not exist");
-        }
-        return this.view;
+        return Matrix.lookAt(this.getEye(), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
+    }
+    getEye(): Vec3 {
+        return new Vec3(0, 4, 8);
     }
     getProjection(): Matrix {
-        if (!this.projection) {
-            throw new Error("projection not exist");
-        }
-        return this.projection;
+        return Matrix.perspective(Math.PI / 180 * 60, this.getAspect(), 1, 30);
     }
 }

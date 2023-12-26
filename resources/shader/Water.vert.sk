@@ -9,15 +9,18 @@ uniform Model {
 uniform Camera {
     mat4 u_viewInverse;
     mat4 u_projection;
+    vec4 u_cameraPosition;
 };
 
 out vec4 v_texcoord;
 out vec4 v_color;
 out vec4 v_clipspacePosition;
+out vec4 v_vetexToCameraVector;
 
 void main() {
     gl_Position = u_projection * u_viewInverse * u_world * a_position;
     v_texcoord = a_texcoord;
     v_color = a_color;
     v_clipspacePosition = gl_Position;
+    v_vetexToCameraVector = u_cameraPosition - (u_world * a_position);
 }

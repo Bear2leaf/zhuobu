@@ -6,10 +6,10 @@ import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 
 export class DebugCamera extends PerspectiveCamera {
-    init(): void {
-        super.init()
-        this.getView().set(Matrix.lookAt(new Vec3(5, 7, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0)).inverse())
-        const fov = Math.PI / 180 * 90;
-        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), 1, 50))
+    getView(): Matrix {
+        return Matrix.lookAt(new Vec3(5, 7, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
+    }
+    getProjection(): Matrix {
+        return Matrix.perspective(Math.PI / 180 * 90, this.getAspect(), 1, 50);
     }
 }
