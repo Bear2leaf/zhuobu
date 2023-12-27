@@ -153,6 +153,7 @@ export default class GLTF {
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
+                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
                 , this.getDataByAccessorIndex(weightslIndex) as Float32Array
                 , this.getDataByAccessorIndex(jointsIndex) as Uint16Array
                 , jointNodes
@@ -163,6 +164,7 @@ export default class GLTF {
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
+                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
             );
         }
         if (entity.has(GLTFAnimationController)) {

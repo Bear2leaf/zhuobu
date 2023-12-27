@@ -19,8 +19,8 @@ export default class SkinMesh extends Mesh {
         }
         return this.jointTexture;
     }
-    setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
-        this.setMeshData(indices, position, normal);
+    setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, texcoord: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
+        this.setMeshData(indices, position, normal, texcoord);
         this.jointNodes.splice(0, this.jointNodes.length, ...jointNodes);
         // create views for each joint and inverseBindMatrix
         for (let i = 0; i < this.jointNodes.length; ++i) {

@@ -6,6 +6,7 @@ import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
+import Terrian from "../drawobject/Terrian.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import TextureManager from "../manager/TextureManager.js";
@@ -62,6 +63,8 @@ export default class OnEntityInit extends Observer {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
             } else if (entity.has(Flowers)) {
                 entity.get(Flowers).setTexture(this.textureManager.flowerTexture);
+            } else if (entity.has(Terrian)) {
+                entity.get(Terrian).setTexture(this.textureManager.flowerTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
             } else if (entity.has(ReflectMap)) {
@@ -75,6 +78,7 @@ export default class OnEntityInit extends Observer {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
             } else if (entity.has(SkinMesh)) {
                 entity.get(SkinMesh).setJointTexture(this.textureManager.jointTexture);
+                entity.get(SkinMesh).setTexture(this.textureManager.flowerTexture);
             }
         }
         if (entity.has(SDFCharacter) && this.sdfCanvas) {
