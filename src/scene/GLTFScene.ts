@@ -18,7 +18,7 @@ export default class GLTFScene extends Scene {
         return [
             new CameraControllerObject()
             , new SkyboxObject()
-            // , new FlowersObject()
+            , new FlowersObject()
             , new RenderMapObject()
             , new ReflectMapObject()
             , new WaterObject()
