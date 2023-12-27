@@ -6,7 +6,8 @@ import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
 
 export default class Terrian extends DrawObject {
-    private readonly tileNumber = 5;
+    private readonly tileNumber = 10;
+    private readonly tileSize = 1;
     init() {
 
         super.init();
@@ -14,24 +15,56 @@ export default class Terrian extends DrawObject {
         const colors: Vec4[] = []
         const indices: number[] = []
         const texcoords: Vec4[] = []
-        for (let i = -this.tileNumber; i < this.tileNumber; i++) {
-            for (let j = -this.tileNumber; j < this.tileNumber; j++) {
+        const normals: Vec4[] = []
+        const heightMapData = new Array(this.tileNumber).fill(0).map(() => new Array(this.tileNumber).fill(0));
+        heightMapData.forEach((row, i) => row.forEach((_, j) => heightMapData[i][j] = Math.random() * 2 + 2));
+        for (let i = 0; i < this.tileNumber; i++) {
+            for (let j = 0; j < this.tileNumber; j++) {
+                const height0 = heightMapData[i][j];
+                const height1 = heightMapData[i + 1]?.[j] || 0;
+                const heigh2 = heightMapData[i + 1]?.[j + 1] || 0;
+                const heigh3 = heightMapData[i]?.[j + 1] || 0;
 
-                const quad = new HorizontalQuad(i, j, 10, 10);
-                quad.initTexCoords();
-                quad.appendTo(vertices, colors, indices, texcoords);
+                const heightLeft = heightMapData[i - 1]?.[j] || 0;
+                const heightRight = heightMapData[i + 1]?.[j] || 0;
+                const heightTop = heightMapData[i]?.[j - 1] || 0;
+                const heightBottom = heightMapData[i]?.[j + 1] || 0;
+                const normal = new Vec4(heightLeft - heightRight, 2, heightTop - heightBottom, 0).normalize();
+
+                vertices.push(new Vec4(j * this.tileSize, height0, i * this.tileSize, 1));
+                vertices.push(new Vec4(j * this.tileSize, height1, (i + 1) * this.tileSize, 1));
+                vertices.push(new Vec4((j + 1) * this.tileSize, heigh2, (i + 1) * this.tileSize, 1));
+                vertices.push(new Vec4((j + 1) * this.tileSize, heigh3, i * this.tileSize, 1));
+                colors.push(new Vec4(1, 1, 1, 1));
+                colors.push(new Vec4(1, 1, 1, 1));
+                colors.push(new Vec4(1, 1, 1, 1));
+                colors.push(new Vec4(1, 1, 1, 1));
+                indices.push((i * this.tileNumber + j) * 4 + 0);
+                indices.push((i * this.tileNumber + j) * 4 + 1);
+                indices.push((i * this.tileNumber + j) * 4 + 2);
+                indices.push((i * this.tileNumber + j) * 4 + 2);
+                indices.push((i * this.tileNumber + j) * 4 + 3);
+                indices.push((i * this.tileNumber + j) * 4 + 0);
+                texcoords.push(new Vec4(0, 0, 0, 0));
+                texcoords.push(new Vec4(0, 1, 0, 0));
+                texcoords.push(new Vec4(1, 1, 0, 0));
+                texcoords.push(new Vec4(1, 0, 0, 0));
+                normals.push(normal);
+                normals.push(normal);
+                normals.push(normal);
+                normals.push(normal);
             }
-        }
-        for(const texcoord of texcoords) {
-            texcoord.x *= 2;
-            texcoord.y *= 2;
         }
 
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(texcoords), 4);
+        this.createABO(ArrayBufferIndex.Normal, flatten(normals), 4);
         this.updateEBO(new Uint16Array(indices));
-        this.getEntity().get(TRS).getPosition().y = 2;
+        this.getEntity().get(TRS).getPosition().x = -this.tileNumber * this.tileSize / 2;
+        // this.getEntity().get(TRS).getPosition().y = -this.tileNumber * this.tileSize / 2;
+        this.getEntity().get(TRS).getPosition().z = -this.tileNumber * this.tileSize / 2;
+        // this.getEntity().get(TRS).getRotation().x = -Math.PI / 4;
         this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
