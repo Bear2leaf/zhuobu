@@ -25,16 +25,16 @@ export default class Terrian extends DrawObject {
                 const heigh2 = heightMapData[i + 1]?.[j + 1] || 0;
                 const heigh3 = heightMapData[i]?.[j + 1] || 0;
 
-                const heightLeft = heightMapData[i - 1]?.[j] || 0;
-                const heightRight = heightMapData[i + 1]?.[j] || 0;
-                const heightTop = heightMapData[i]?.[j - 1] || 0;
-                const heightBottom = heightMapData[i]?.[j + 1] || 0;
-                const normal = new Vec4(heightLeft - heightRight, 2, heightTop - heightBottom, 0).normalize();
 
                 vertices.push(new Vec4(j * this.tileSize, height0, i * this.tileSize, 1));
                 vertices.push(new Vec4(j * this.tileSize, height1, (i + 1) * this.tileSize, 1));
                 vertices.push(new Vec4((j + 1) * this.tileSize, heigh2, (i + 1) * this.tileSize, 1));
                 vertices.push(new Vec4((j + 1) * this.tileSize, heigh3, i * this.tileSize, 1));
+                const normal0 = vertices[vertices.length - 4].clone().subtract(vertices[vertices.length - 3]).cross(vertices[vertices.length - 4].clone().subtract(vertices[vertices.length - 1])).normalize();
+                const normal1 = vertices[vertices.length - 3].clone().subtract(vertices[vertices.length - 2]).cross(vertices[vertices.length - 3].clone().subtract(vertices[vertices.length - 4])).normalize();
+                const normal2 = vertices[vertices.length - 2].clone().subtract(vertices[vertices.length - 1]).cross(vertices[vertices.length - 2].clone().subtract(vertices[vertices.length - 3])).normalize();
+                const normal3 = vertices[vertices.length - 1].clone().subtract(vertices[vertices.length - 4]).cross(vertices[vertices.length - 1].clone().subtract(vertices[vertices.length - 2])).normalize();
+
                 colors.push(new Vec4(1, 1, 1, 1));
                 colors.push(new Vec4(1, 1, 1, 1));
                 colors.push(new Vec4(1, 1, 1, 1));
@@ -49,10 +49,10 @@ export default class Terrian extends DrawObject {
                 texcoords.push(new Vec4(0, 1, 0, 0));
                 texcoords.push(new Vec4(1, 1, 0, 0));
                 texcoords.push(new Vec4(1, 0, 0, 0));
-                normals.push(normal);
-                normals.push(normal);
-                normals.push(normal);
-                normals.push(normal);
+                normals.push(normal0);
+                normals.push(normal1);
+                normals.push(normal2);
+                normals.push(normal3);
             }
         }
 
