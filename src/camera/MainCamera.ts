@@ -7,7 +7,7 @@ import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 export class MainCamera extends PerspectiveCamera {
     private reflected = false;
-    private readonly eye = new Vec4(0, 8, 4, 1);
+    private readonly eye = new Vec4(0, 8, 8, 1);
     init(): void {
         super.init()
         const fov = Math.PI / 180 * 60;

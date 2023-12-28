@@ -3,6 +3,7 @@ precision highp float;
 
 in vec3 v_normal;
 in vec3 v_position;
+in vec4 v_lightSpacePosition;
 in vec2 v_texcoord;
 
 uniform vec4 u_pickColor;
@@ -22,12 +23,28 @@ layout(location = 2) out vec4 o_reflect;
 layout(location = 3) out vec4 o_refract;
 
 const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
+
+float shadowCalculation(vec4 fragPosLightSpace) {
+    // 执行透视除法
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // 变换到[0,1]的范围
+    projCoords = projCoords * 0.5f + 0.5f;
+    // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+    float closestDepth = texture(u_depthTexture, projCoords.xy).r; 
+    // 取得当前片段在光源视角下的深度
+    float currentDepth = projCoords.z;
+    // 检查当前片段是否在阴影中
+    float shadow = currentDepth > closestDepth ? 1.0f : 0.0f;
+
+    return shadow;
+}
+
 void main() {
     vec3 normal = normalize(v_normal);
-    float light = dot(u_lightDirection, normal) * .5f + .5f;
-    vec4 shadow = vec4(texture(u_depthTexture, vec2(v_texcoord.x, -v_texcoord.y)).rrr, 1.0f);
+    float shadow = shadowCalculation(v_lightSpacePosition);
+    float light = (dot(u_lightDirection, normal) * .5f + .5f) * (1.0f - shadow);
     vec4 texColor = texture(u_texture, vec2(v_texcoord.x, v_texcoord.y));
-    o_color = vec4(u_diffuse.rgb * light, u_diffuse.a) * shadow * texColor;
+    o_color = vec4(u_diffuse.rgb * light, u_diffuse.a) * texColor;
     if(dot(plane, vec4(v_position, 1.0f)) < 0.0f) {
         o_refract = o_color;
         o_reflect = vec4(0.0f);

@@ -8,7 +8,7 @@ import Texture from "../texture/Texture.js";
 export default class Terrian extends DrawObject {
     private readonly tileNumber = 10;
     private readonly tileSize = 1;
-    private readonly startHeight = 1;
+    private readonly startHeight = -0.5;
     private readonly height = 1;
     private depthTexture?: Texture;
     setDepthTexture(texture: Texture) {
@@ -87,9 +87,9 @@ export default class Terrian extends DrawObject {
     }
     draw(): void {
         this.getRenderingContext().switchBlend(true);
-        this.getRenderingContext().switchRepeat(true);
+        this.getRenderingContext().switchNearestFilter(true);
         super.draw();
-        this.getRenderingContext().switchRepeat(true);
+        this.getRenderingContext().switchNearestFilter(false);
         this.getRenderingContext().switchBlend(false);
 
 

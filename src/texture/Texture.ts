@@ -10,7 +10,7 @@ export enum TextureBindIndex {
   Skybox = 5,
   Joint = 6,
   OffscreenCanvas = 7,
-  Depth = 8,
+  Depth = 7,
 }
 
 export type SkyboxArray = readonly [

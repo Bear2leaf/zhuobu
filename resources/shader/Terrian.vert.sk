@@ -10,9 +10,14 @@ uniform Camera {
   mat4 u_viewInverse;
   mat4 u_projection;
 };
+uniform Shadow {
+    mat4 u_lightViewInverse;
+    mat4 u_lightProjection;
+};
 
 out vec3 v_normal;
 out vec3 v_position;
+out vec4 v_lightSpacePosition;
 out vec2 v_texcoord;
 
 void main() {
@@ -21,5 +26,6 @@ void main() {
   gl_Position = viewProjection * pos;
   v_normal = mat3(u_world) * a_normal;
   v_position = vec3(pos.xyz / pos.w);
+  v_lightSpacePosition = u_lightProjection * u_lightViewInverse * pos;
   v_texcoord = a_texcoord;
 }

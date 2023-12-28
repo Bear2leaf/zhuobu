@@ -14,7 +14,10 @@ import Terrian from "../drawobject/Terrian.js";
 export default class Renderer {
     private readonly uboMap: Map<UniformBinding, UniformBufferObject> = new Map();
     private readonly objectlist: DrawObject[] = [];
-    private readonly lightPosition = new Vec3(0, 1.0, 0.0001);
+    private readonly lightPosition = new Vec3(0.5, 0.5, -0.5);
+    private readonly lightTarget = new Vec3(0, 0, 0);
+    private readonly lightUp = new Vec3(0, 1.0, 0);
+    private readonly lightProjection = Matrix.ortho(-5, 5, -5, 5, -10.0, 10.0).getVertics();
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
@@ -68,12 +71,14 @@ export default class Renderer {
         this.uboMap.set(UniformBinding.SDF, rc.makeUniformBlockObject());
         this.uboMap.set(UniformBinding.Light, rc.makeUniformBlockObject());
         this.uboMap.set(UniformBinding.Material, rc.makeUniformBlockObject());
+        this.uboMap.set(UniformBinding.Shadow, rc.makeUniformBlockObject());
         this.updateUBO(UniformBinding.Camera, new Float32Array([...Matrix.identity().getVertics(), ...Matrix.identity().getVertics()]));
         this.updateUBO(UniformBinding.Model, Matrix.identity().getVertics());
         this.updateUBO(UniformBinding.Pick, new Vec4().toFloatArray());
         this.updateUBO(UniformBinding.SDF, new Vec4().toFloatArray());
         this.updateUBO(UniformBinding.Light, new Vec4().toFloatArray());
         this.updateUBO(UniformBinding.Material, new Vec4().toFloatArray());
+        this.updateUBO(UniformBinding.Shadow, new Float32Array([...Matrix.identity().getVertics(), ...Matrix.identity().getVertics()]));
     }
 
     bindUBOs() {
@@ -104,6 +109,9 @@ export default class Renderer {
         const camera = this.getCamera();
         const projection = camera.getProjection().getVertics();
         const viewInverse = camera.getView().inverse().getVertics();
+        const lightView = Matrix.lookAt(this.lightPosition.clone().normalize(), this.lightTarget.clone().normalize(), this.lightUp.clone().normalize());
+        const lightViewInverse = lightView.inverse().getVertics();
+        this.updateUBO(UniformBinding.Shadow, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
@@ -124,13 +132,9 @@ export default class Renderer {
     renderShadow() {
         this.getShader().use();
         this.bindUBOs();
-        const lightPos = this.lightPosition.normalize().clone();
-        const lightTarget = new Vec4(0, 0, 0, 0);
-        const lightUp = new Vec4(0, 1, 0, 0);
-        const lightView = Matrix.lookAt(lightPos, lightTarget, lightUp);
-        const lightProjection = Matrix.ortho(-5, 5, -5, 5, -10, 10).getVertics();
+        const lightView = Matrix.lookAt(this.lightPosition.clone().normalize(), this.lightTarget.clone().normalize(), this.lightUp.clone().normalize());
         const lightViewInverse = lightView.inverse().getVertics();
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...lightViewInverse, ...lightProjection]));
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
             drawObject.draw();
