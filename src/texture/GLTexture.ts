@@ -19,15 +19,13 @@ export default class GLTexture extends Texture {
         } else {
             rc.texImage2D_RGBA_RGBA_Image(data as HTMLImageElement);
         }
-        rc.bindTexture();
     }
     bind() {
         const rc = this.getContext();
+        rc.activeTexture(this.getBindIndex())
         if (this.getBindIndex() === TextureBindIndex.Skybox) {
-            rc.activeTexture(this.getBindIndex())
             rc.bindSkyboxTexture(this.getTextureIndex())
         } else {
-            rc.activeTexture(this.getBindIndex())
             rc.bindTexture(this.getTextureIndex());
 
         }

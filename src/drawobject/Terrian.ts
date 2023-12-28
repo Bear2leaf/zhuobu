@@ -1,15 +1,25 @@
 import { flatten, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import HorizontalQuad from "../geometry/HorizontalQuad.js";
 import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
+import Texture from "../texture/Texture.js";
 
 export default class Terrian extends DrawObject {
     private readonly tileNumber = 10;
     private readonly tileSize = 1;
-    private readonly startHeight = -2;
-    private readonly height = 2;
+    private readonly startHeight = 1;
+    private readonly height = 1;
+    private depthTexture?: Texture;
+    setDepthTexture(texture: Texture) {
+        this.depthTexture = texture;
+    }
+    getDepthTexture() {
+        if (!this.depthTexture) {
+            throw new Error("depthTexture is not set");
+        }
+        return this.depthTexture;
+    }
     init() {
 
         super.init();
@@ -47,14 +57,20 @@ export default class Terrian extends DrawObject {
                 indices.push((i * this.tileNumber + j) * 4 + 2);
                 indices.push((i * this.tileNumber + j) * 4 + 3);
                 indices.push((i * this.tileNumber + j) * 4 + 0);
-                texcoords.push(new Vec4(0, 0, 0, 0));
-                texcoords.push(new Vec4(0, 1, 0, 0));
-                texcoords.push(new Vec4(1, 1, 0, 0));
-                texcoords.push(new Vec4(1, 0, 0, 0));
+                texcoords.push(new Vec4(j / this.tileNumber, i / this.tileNumber, 0, 0));
+                texcoords.push(new Vec4(j / this.tileNumber, (i + 1) / this.tileNumber, 0, 0));
+                texcoords.push(new Vec4((j + 1) / this.tileNumber, (i + 1) / this.tileNumber, 0, 0));
+                texcoords.push(new Vec4((j + 1) / this.tileNumber, i / this.tileNumber, 0, 0));
                 normals.push(normal0);
                 normals.push(normal1);
                 normals.push(normal2);
                 normals.push(normal3);
+
+                // normals.push(new Vec4(0, 0, 1, 1));
+                // normals.push(new Vec4(0, 0, 1, 1));
+                // normals.push(new Vec4(0, 0, 1, 1));
+                // normals.push(new Vec4(0, 0, 1, 1));
+
             }
         }
 
@@ -70,13 +86,11 @@ export default class Terrian extends DrawObject {
         this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
-        this.getTexture().bind()
         this.getRenderingContext().switchBlend(true);
         this.getRenderingContext().switchRepeat(true);
         super.draw();
         this.getRenderingContext().switchRepeat(true);
         this.getRenderingContext().switchBlend(false);
-
 
 
     }

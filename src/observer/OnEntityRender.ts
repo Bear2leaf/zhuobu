@@ -45,7 +45,7 @@ export default class OnEntityRender extends Observer {
             } else if (entity.has(Flowers)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
             }  else if (entity.has(Terrian)) {
-                this.rendererManager.getMeshRenderer().addObject(entity.get(Terrian));
+                this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {

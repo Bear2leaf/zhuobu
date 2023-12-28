@@ -6,8 +6,8 @@ export default class WhaleMesh extends SkinMesh {
     init(): void {
         this.setNodeIndex(4);
         super.init();
-        this.getEntity().get(TRS).getPosition().set(0, 0.0, 0);
-        this.getEntity().get(TRS).getRotation().set(0, 0, 0);
+        this.getEntity().get(TRS).getPosition().set(0, 4.0, 0);
+        this.getEntity().get(TRS).getRotation().set(0, 0.0, 0);
         this.getEntity().get(Node).updateWorldMatrix();
     }
 }

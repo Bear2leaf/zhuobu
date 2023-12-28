@@ -15,4 +15,10 @@ export default class PickFrameBufferObject extends BaseFrameBufferObject {
         const pixel = this.getPixels();
         return [pixel[0], pixel[1], pixel[2]];
     }
+    bindRead(): void {
+        this.getGL().bindReadFramebuffer(this.getFBOIndex());
+    }
+    unbindRead(): void {
+        this.getGL().bindReadFramebuffer();
+    }
 }

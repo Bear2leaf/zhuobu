@@ -7,17 +7,14 @@ import DrawObject from "../drawobject/DrawObject.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
-import { Vec4 } from "../geometry/Vector.js";
-import Skybox from "../drawobject/Skybox.js";
-import Flowers from "../sprite/Flowers.js";
-import RenderMap from "../sprite/RenderMap.js";
-import ReflectMap from "../sprite/ReflectMap.js";
-import Water from "../sprite/Water.js";
+import { Vec3, Vec4 } from "../geometry/Vector.js";
+import Terrian from "../drawobject/Terrian.js";
 
 
 export default class Renderer {
     private readonly uboMap: Map<UniformBinding, UniformBufferObject> = new Map();
     private readonly objectlist: DrawObject[] = [];
+    private readonly lightPosition = new Vec3(0, 1.0, 0.0001);
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;
@@ -98,6 +95,9 @@ export default class Renderer {
     getObjectList() {
         return this.objectlist;
     }
+    prepareLight() {
+        this.updateUBO(UniformBinding.Light, this.lightPosition.normalize().toFloatArray());
+    }
     render(clear: boolean = true) {
         this.getShader().use();
         this.bindUBOs();
@@ -110,13 +110,30 @@ export default class Renderer {
             if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            } else if (drawObject instanceof Flowers || drawObject instanceof RenderMap || drawObject instanceof ReflectMap) {
-                this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
+            } else if (drawObject instanceof Terrian) {
+                drawObject.getDepthTexture().bind();
+                this.getShader().setInteger("u_depthTexture", drawObject.getDepthTexture().getBindIndex());
             }
+            this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             drawObject.draw();
         });
         if (clear) {
             this.objectlist.splice(0, this.objectlist.length);
         }
+    }
+    renderShadow() {
+        this.getShader().use();
+        this.bindUBOs();
+        const lightPos = this.lightPosition.normalize().clone();
+        const lightTarget = new Vec4(0, 0, 0, 0);
+        const lightUp = new Vec4(0, 1, 0, 0);
+        const lightView = Matrix.lookAt(lightPos, lightTarget, lightUp);
+        const lightProjection = Matrix.ortho(-5, 5, -5, 5, -10, 10).getVertics();
+        const lightViewInverse = lightView.inverse().getVertics();
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...lightViewInverse, ...lightProjection]));
+        this.objectlist.forEach(drawObject => {
+            drawObject.bind();
+            drawObject.draw();
+        });
     }
 }

@@ -6,8 +6,6 @@ import RendererManager from "./RendererManager.js";
 import EventManager from "./EventManager.js";
 import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
 import ReflectFrameBufferObject from "../framebuffer/ReflectFrameBufferObject.js";
-import { Vec3, Vec4 } from "../geometry/Vector.js";
-import Matrix from "../geometry/Matrix.js";
 
 
 export default class FrameBufferManager {
@@ -40,11 +38,8 @@ export default class FrameBufferManager {
 
         this.depthFrameBufferObject.attach(this.getTextureManager().depthTexture);
         this.pickFrameBufferObject.attach(this.getTextureManager().pickTexture);
-        this.pickFrameBufferObject.attach(this.getTextureManager().depthTexture);
         this.renderFrameBufferObject.attach(this.getTextureManager().renderTexture);
-        this.renderFrameBufferObject.attach(this.getTextureManager().depthTexture);
         this.reflectFrameBufferObject.attach(this.getTextureManager().reflectTexture);
-        this.reflectFrameBufferObject.attach(this.getTextureManager().depthTexture);
     }
     initObservers() {
         this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
@@ -57,6 +52,7 @@ export default class FrameBufferManager {
         this.getRendererManager().getSkyboxRenderer().render(false);
         this.getRendererManager().getSkinMeshRenderer().render(false);
         this.getRendererManager().getMeshRenderer().render(false);
+        this.getRendererManager().getTerrianRenderer().render(false);
         this.renderFrameBufferObject.unbind();
         this.reflectFrameBufferObject.bind();
         this.getEventManager().viewPortChange.notify();
@@ -64,11 +60,17 @@ export default class FrameBufferManager {
         this.getRendererManager().getSkyboxRenderer().render(false);
         this.getRendererManager().getSkinMeshRenderer().render(false);
         this.getRendererManager().getMeshRenderer().render(false);
+        this.getRendererManager().getTerrianRenderer().render(false);
         this.reflectFrameBufferObject.unbind();
         camera.reflect();
         this.pickFrameBufferObject.bind();
         this.getRendererManager().getSDFRenderer().render(false);
         this.pickFrameBufferObject.unbind();
+        this.depthFrameBufferObject.bind();
+        this.getEventManager().viewPortChange.notify();
+        this.getRendererManager().getSkinMeshRenderer().renderShadow();
+        this.getRendererManager().getMeshRenderer().renderShadow();
+        this.depthFrameBufferObject.unbind();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {
