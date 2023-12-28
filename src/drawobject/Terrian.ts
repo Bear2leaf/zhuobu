@@ -8,6 +8,8 @@ import Node from "../transform/Node.js";
 export default class Terrian extends DrawObject {
     private readonly tileNumber = 10;
     private readonly tileSize = 1;
+    private readonly startHeight = -2;
+    private readonly height = 2;
     init() {
 
         super.init();
@@ -17,13 +19,13 @@ export default class Terrian extends DrawObject {
         const texcoords: Vec4[] = []
         const normals: Vec4[] = []
         const heightMapData = new Array(this.tileNumber).fill(0).map(() => new Array(this.tileNumber).fill(0));
-        heightMapData.forEach((row, i) => row.forEach((_, j) => heightMapData[i][j] = Math.random() * 2 + 2));
+        heightMapData.forEach((row, i) => row.forEach((_, j) => heightMapData[i][j] = Math.random() * this.height + this.startHeight));
         for (let i = 0; i < this.tileNumber; i++) {
             for (let j = 0; j < this.tileNumber; j++) {
                 const height0 = heightMapData[i][j];
-                const height1 = heightMapData[i + 1]?.[j] || 0;
-                const heigh2 = heightMapData[i + 1]?.[j + 1] || 0;
-                const heigh3 = heightMapData[i]?.[j + 1] || 0;
+                const height1 = heightMapData[i + 1]?.[j] || this.startHeight;
+                const heigh2 = heightMapData[i + 1]?.[j + 1] || this.startHeight;
+                const heigh3 = heightMapData[i]?.[j + 1] || this.startHeight;
 
 
                 vertices.push(new Vec4(j * this.tileSize, height0, i * this.tileSize, 1));
@@ -69,9 +71,13 @@ export default class Terrian extends DrawObject {
     }
     draw(): void {
         this.getTexture().bind()
+        this.getRenderingContext().switchBlend(true);
         this.getRenderingContext().switchRepeat(true);
         super.draw();
         this.getRenderingContext().switchRepeat(true);
+        this.getRenderingContext().switchBlend(false);
+
+
 
     }
 }
