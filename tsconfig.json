@@ -1,4 +1,7 @@
 {
+    "exclude": [
+        "adr"
+    ],
     "compilerOptions": {
         "outDir": "dist",
         "rootDir": "src",

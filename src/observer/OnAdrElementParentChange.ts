@@ -19,35 +19,35 @@ export default class OnAdrElementParentChange extends AdrElementObserver {
     }
 
     public notify(): void {
-        const adrElement = this.getSubject().getElement();
-        if (adrElement.isDescendantOfById("notifications")) {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().y = this.notificationCounter++ * this.height;
-            adrElement.traverseChildren(child => {
-                this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
-                this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(child.getEntity());
-                child.getEntity().get(TRS).getPosition().y = this.notificationCounter++ * this.height;
-            });
-        } else if (adrElement.isDescendantOfById("event")) {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().y = this.eventCounter++ * this.height / 2;
-            adrElement.traverseChildren(child => {
-                this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
-                this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(child.getEntity());
-                child.getEntity().get(TRS).getPosition().y = this.eventCounter++ * this.height / 2;
-            });
-        } else if (adrElement.isDescendantOfById("content")) {
-            this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
-            this.getAdrManager().getSceneManager().getAdrScene().addEntity(adrElement.getEntity());
-            adrElement.getEntity().get(TRS).getPosition().y = this.contentCounter++ * -this.height;
-            adrElement.traverseChildren(child => {
-                this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
-                this.getAdrManager().getSceneManager().getAdrScene().addEntity(child.getEntity());
-                child.getEntity().get(TRS).getPosition().y = this.contentCounter++ * -this.height;
-            });
-        }
+        // const adrElement = this.getSubject().getElement();
+        // if (adrElement.isDescendantOfById("notifications")) {
+        //     this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
+        //     this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(adrElement.getEntity());
+        //     adrElement.getEntity().get(TRS).getPosition().y = this.notificationCounter++ * this.height;
+        //     adrElement.traverseChildren(child => {
+        //         this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
+        //         this.getAdrManager().getSceneManager().getAdrNotificationScene().addEntity(child.getEntity());
+        //         child.getEntity().get(TRS).getPosition().y = this.notificationCounter++ * this.height;
+        //     });
+        // } else if (adrElement.isDescendantOfById("event")) {
+        //     this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
+        //     this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(adrElement.getEntity());
+        //     adrElement.getEntity().get(TRS).getPosition().y = this.eventCounter++ * this.height / 2;
+        //     adrElement.traverseChildren(child => {
+        //         this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
+        //         this.getAdrManager().getSceneManager().getAdrEventScene().addEntity(child.getEntity());
+        //         child.getEntity().get(TRS).getPosition().y = this.eventCounter++ * this.height / 2;
+        //     });
+        // } else if (adrElement.isDescendantOfById("content")) {
+        //     this.getAdrManager().getSceneManager().getTmpScene().removeEntity(adrElement.getEntity());
+        //     this.getAdrManager().getSceneManager().getAdrScene().addEntity(adrElement.getEntity());
+        //     adrElement.getEntity().get(TRS).getPosition().y = this.contentCounter++ * -this.height;
+        //     adrElement.traverseChildren(child => {
+        //         this.getAdrManager().getSceneManager().getTmpScene().removeEntity(child.getEntity());
+        //         this.getAdrManager().getSceneManager().getAdrScene().addEntity(child.getEntity());
+        //         child.getEntity().get(TRS).getPosition().y = this.contentCounter++ * -this.height;
+        //     });
+        // }
     }
 
 }

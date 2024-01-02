@@ -24,11 +24,12 @@ export default class OnClickPickSayHello extends Observer {
         fbo.updatePixels(this.getSubject().getScreenX(), this.getSubject().getScreenY());
         fbo.unbindRead();
         const pixel = fbo.readPixel();
-        const element = this.getAdrManager().getRoot().getElementByPixel(pixel);
-        if (element) {
-            console.debug("Hello Pick! ", element.getEntity().get(AdrText).getChars().join(""));
-            element.dispatchEvent("click", true);
-        }
+        throw new Error("Not implemented")
+        // const element = this.getAdrManager().getRoot().getElementByPixel(pixel);
+        // if (element) {
+        //     console.debug("Hello Pick! ", element.getEntity().get(AdrText).getChars().join(""));
+        //     element.dispatchEvent("click", true);
+        // }
     }
 
 }

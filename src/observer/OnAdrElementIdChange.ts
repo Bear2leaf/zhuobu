@@ -18,41 +18,41 @@ export default class OnAdrElementIdChange extends AdrElementObserver {
     }
 
     public notify(): void {
-        const adrElement = this.getSubject().getElement();
-        const id = adrElement.getAttribute("id");
-        const entity = adrElement.getEntity();
-        const trs = entity.get(TRS);
-        const sceneManager = this.getAdrManager().getSceneManager();
-        if (id === 'notifications') {
-            sceneManager.getTmpScene().removeEntity(entity);
-            sceneManager.getAdrNotificationScene().addEntity(entity);
-            trs.getPosition().x = -400;
-            trs.getPosition().y = 100;
-            trs.getPosition().z = -1;
-            const comp = new AdrNotification();
-            comp.setEntity(entity);
-            entity.set(AdrText, comp);
-            sceneManager.getAdrNotificationScene().initEntity(entity);
-        } else if (id === 'event') {
-            sceneManager.getTmpScene().removeEntity(entity);
-            sceneManager.getAdrEventScene().addEntity(entity);
-            trs.getPosition().x = -400;
-            trs.getPosition().y = -200;
-            trs.getPosition().z = -1;
-            const comp = new AdrEvent();
-            comp.setEntity(entity);
-            entity.set(AdrText, comp);
-            sceneManager.getAdrEventScene().initEntity(entity);
-        } else if (id === 'content') {
-            sceneManager.getAdrScene().addEntity(entity);
-            trs.getPosition().y = 200;
-            trs.getPosition().x = 0;
-            trs.getPosition().z = -1;
-            const comp = new AdrContent();
-            comp.setEntity(entity);
-            entity.set(AdrText, comp);
-            sceneManager.getAdrScene().initEntity(entity);
-        }
+        // const adrElement = this.getSubject().getElement();
+        // const id = adrElement.getAttribute("id");
+        // const entity = adrElement.getEntity();
+        // const trs = entity.get(TRS);
+        // const sceneManager = this.getAdrManager().getSceneManager();
+        // if (id === 'notifications') {
+        //     sceneManager.getTmpScene().removeEntity(entity);
+        //     sceneManager.getAdrNotificationScene().addEntity(entity);
+        //     trs.getPosition().x = -400;
+        //     trs.getPosition().y = 100;
+        //     trs.getPosition().z = -1;
+        //     const comp = new AdrNotification();
+        //     comp.setEntity(entity);
+        //     entity.set(AdrText, comp);
+        //     sceneManager.getAdrNotificationScene().initEntity(entity);
+        // } else if (id === 'event') {
+        //     sceneManager.getTmpScene().removeEntity(entity);
+        //     sceneManager.getAdrEventScene().addEntity(entity);
+        //     trs.getPosition().x = -400;
+        //     trs.getPosition().y = -200;
+        //     trs.getPosition().z = -1;
+        //     const comp = new AdrEvent();
+        //     comp.setEntity(entity);
+        //     entity.set(AdrText, comp);
+        //     sceneManager.getAdrEventScene().initEntity(entity);
+        // } else if (id === 'content') {
+        //     sceneManager.getAdrScene().addEntity(entity);
+        //     trs.getPosition().y = 200;
+        //     trs.getPosition().x = 0;
+        //     trs.getPosition().z = -1;
+        //     const comp = new AdrContent();
+        //     comp.setEntity(entity);
+        //     entity.set(AdrText, comp);
+        //     sceneManager.getAdrScene().initEntity(entity);
+        // }
     }
 
 }

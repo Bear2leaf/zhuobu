@@ -40,7 +40,6 @@ export default abstract class Game {
         this.cameraManager.initCamera();
         this.rendererManager.initRenderer();
         this.framebufferManager.initFramebuffer();
-        this.adrManager.initAdr();
         this.audioManager.initAudio();
         this.sceneManager.initSceneEntities();
         device.createWorker('worker/main.js', this.workerManager.workerHandler.bind(this.workerManager));

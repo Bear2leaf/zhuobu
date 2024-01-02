@@ -16,12 +16,18 @@ class MessageProcessor {
             case "WorkerInit":
                 this.onWorkerInit(data);
                 break;
+            case "Refresh":
+                this.onRefresh();
+                break;
         }
     }
     onPong(data: WorkerResponse): void {
     }
     onWorkerInit(data: WorkerResponse): void {
         this.callback({ type: "Ping", args: ["Hello"] });
+    }
+    onRefresh() {
+        window.location.reload();
     }
 }
 

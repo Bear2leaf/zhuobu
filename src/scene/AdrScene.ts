@@ -1,6 +1,3 @@
-
-import AdrElement from "../adr/adapter/AdrElement.js";
-import AdrTextObject from "../entity/AdrTextObject.js";
 import Entity from "../entity/Entity.js";
 import Scene from "./Scene.js";
 
@@ -18,18 +15,6 @@ export default class AdrScene extends Scene {
     update(): void {
         super.update();
         this.getChildren().forEach(child => child.update());
-    }
-    createAdrElement(selector: string) {
-
-        const entity = new AdrTextObject();
-        entity.addDefaultComponents();
-        this.addEntity(entity);
-        this.registerComponents(entity);
-        this.initEntity(entity);
-        const adrElement = new AdrElement();
-        adrElement.tagName = selector;
-        adrElement.setEntity(entity);
-        return adrElement;
     }
 
 }
