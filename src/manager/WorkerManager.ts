@@ -1,4 +1,4 @@
-import { WorkerRequest, WorkerResponse, WorkerResponseType } from "../worker/MessageProcessor.js";
+import { WorkerRequest, WorkerResponse } from "../type/index.js";
 
 export type postMessageCallback = (data: WorkerRequest) => void;
 

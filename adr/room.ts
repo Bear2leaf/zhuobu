@@ -12,7 +12,7 @@ import Notifications from "./notifications";
 import Outside from "./outside";
 import Path from "./path";
 import StateManager from "./state_manager";
-import { Enum, EnumItem, RoomOptions, Craftables, Good, Item, TempEnum, FireEnum, TotalIncome, Mod, StateUpdateEvent } from "./types";
+import { Enum, EnumItem, RoomOptions, Craftables, Good, Item, TempEnum, FireEnum, TotalIncome, Mod, StateUpdateEvent } from "./type/index";
 
 
 function fromInt(this: Enum, value: number): EnumItem {

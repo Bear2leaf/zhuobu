@@ -5,4 +5,4 @@ Query.init();
 
 const server = new Server();
 server.init();
-
+console.log("inited")

@@ -5,22 +5,16 @@ import MoveCircleController from "../controller/MoveCircleController.js";
 import AdrText from "../drawobject/AdrText.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
-import ScriptManager from "../manager/ScriptManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
-import TRS from "../transform/TRS.js";
 import Observer from "./Observer.js";
 
 export default class OnEntityUpdate extends Observer {
 
     private cameraManager?: CameraManager;
     private animationManager?: AnimationManager;
-    private adrManager?: ScriptManager;
-    setAdrManager(adrManager: ScriptManager) {
-        this.adrManager = adrManager;
-    }
     setCameraManager(cameraManager: CameraManager) {
         this.cameraManager = cameraManager;
     }
@@ -55,11 +49,11 @@ export default class OnEntityUpdate extends Observer {
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();
         }
-        if (entity.has(AdrText) && this.adrManager) {
-            if (entity.get(Node).getRoot() === entity.get(Node)) {
-                entity.get(Node).updateWorldMatrix();
-            }
-        }
+        // if (entity.has(AdrText) && this.scriptManager) {
+        //     if (entity.get(Node).getRoot() === entity.get(Node)) {
+        //         entity.get(Node).updateWorldMatrix();
+        //     }
+        // }
     }
 
 }

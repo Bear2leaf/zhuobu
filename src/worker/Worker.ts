@@ -1,4 +1,4 @@
-import { WorkerRequest, WorkerResponse } from "./MessageProcessor.js";
+import { WorkerRequest, WorkerResponse } from "../type/index.js";
 import PingProcessor from "./PingProcessor.js";
 
 

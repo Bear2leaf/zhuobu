@@ -12,7 +12,7 @@ import Path from "./path";
 import Room from "./room";
 import Ship from "./ship";
 import StateManager from "./state_manager";
-import { Position, Weapon, WorldPos, StateResult, WorldOptions, $Event, MapMask, WorldMap, Adjacent } from "./types";
+import { Position, Weapon, WorldPos, StateResult, WorldOptions, $Event, MapMask, WorldMap, Adjacent } from "./type/index";
 
 export default class World {
   static hypoHeal = () => World.HYPO_HEAL;

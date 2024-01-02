@@ -13,7 +13,7 @@ import { Prestige } from "./prestige";
 import Room from "./room";
 import Ship from "./ship";
 import StateManager from "./state_manager";
-import { Topic, EngineInitOptions, EngineModule, langs, $Event, StateUpdateEvent } from "./types";
+import { Topic, EngineInitOptions, EngineModule, langs, $Event, StateUpdateEvent } from "./type/index";
 
 export default class Engine {
   static _incomeTimeout: number;

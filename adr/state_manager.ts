@@ -20,7 +20,7 @@ import Events from "./events";
 import Notifications from "./notifications";
 import Query from "./query";
 import Space from "./space";
-import { StateManagerOptions, StateResult, Mod, IncomeOptions, Stores, Craftables, StateUpdateEvent } from "./types";
+import { StateManagerOptions, StateResult, Mod, IncomeOptions, Stores, Craftables, StateUpdateEvent } from "./type/index";
 import World from "./world";
 
 

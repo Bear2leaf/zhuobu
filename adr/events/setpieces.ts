@@ -5,7 +5,7 @@ import { Prestige } from "../prestige";
 import StateManager from "../state_manager";
 import World from "../world";
 import { _LEAVE_COOLDOWN } from "./executioner";
-import { Setpieces } from "../types.js";
+import { Setpieces } from "../type/index.js";
 
 /**
  * Events that only occur at specific times. Launched manually.

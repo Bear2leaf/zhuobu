@@ -1,5 +1,5 @@
 import ConsoleProcessor from "./ConsoleProcessor.js";
-import { WorkerRequest } from "./MessageProcessor.js";
+import { WorkerRequest } from "../type/index.js";
 import Worker from "./Worker.js";
 
 

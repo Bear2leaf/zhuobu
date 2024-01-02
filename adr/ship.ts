@@ -10,7 +10,7 @@ import { Header } from "./header";
 import Notifications from "./notifications";
 import Space from "./space";
 import StateManager from "./state_manager";
-import { ShipOptions, $Event } from "./types";
+import { ShipOptions, $Event } from "./type/index";
 
 /**
  * Module that registers the starship!

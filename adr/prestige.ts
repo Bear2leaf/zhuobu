@@ -1,6 +1,6 @@
 import Score from "./scoring";
 import StateManager from "./state_manager";
-import { PrestigeOptions, Store } from "./types.js";
+import { PrestigeOptions, Store } from "./type/index.js";
 
 export const Prestige = {
 		

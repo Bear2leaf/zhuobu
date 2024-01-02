@@ -17,7 +17,7 @@ import Path from "./path";
 import StateManager from "./state_manager";
 import World from "./world";
 import AdrElement from "./adapter/AdrElementCollection";
-import { EventOptions, Position, ADREvent, StateUpdate, Special, Mod, LootList, $Event } from "./types";
+import { EventOptions, Position, ADREvent, StateUpdate, Special, Mod, LootList, $Event } from "./type/index";
 
 /**
  * Module that handles the random event system

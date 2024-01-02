@@ -12,7 +12,7 @@ import Notifications from "./notifications";
 import Room from "./room";
 import StateManager from "./state_manager";
 import World from "./world";
-import { Outfit, PathOptions, Store, StateUpdateEvent } from "./types";
+import { Outfit, PathOptions, Store, StateUpdateEvent } from "./type/index";
 
 export default class Path {
 	static outfit: Outfit;

@@ -3,7 +3,7 @@ import _ from "./translate";
 
 import Engine from "./engine";
 import StateManager from "./state_manager";
-import { ButtonOptions } from "./types.js";
+import { ButtonOptions } from "./type/index.js";
 
 export default class Button {
 	static data_cooldown: number;

@@ -12,7 +12,6 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import OffscreenCanvasManager from "../manager/OffscreenCanvasManager.js";
-import ScriptManager from "../manager/ScriptManager.js";
 import Device from "../device/Device.js";
 
 
@@ -32,7 +31,6 @@ export default abstract class Game {
     private readonly audioManager = new AudioManager;
     private readonly framebufferManager = new FrameBufferManager;
     private readonly workerManager = new WorkerManager;
-    private readonly adrManager = new ScriptManager;
     initManagers(device: Device): void {
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();
@@ -52,7 +50,6 @@ export default abstract class Game {
         await this.audioManager.load();
     }
     buildVars(device: Device) {
-        this.adrManager.setDevice(device);
         this.cacheManager.setDevice(device);
         this.timestepManager.setDevice(device);
         this.framebufferManager.setDevice(device);
@@ -69,7 +66,6 @@ export default abstract class Game {
         this.framebufferManager.initObservers();
         this.textureManager.initObservers();
         this.animationManager.initObservers();
-        this.adrManager.initObservers();
         this.offscreencanvasManager.initObservers();
         this.gltfManager.initObservers();
         this.gltfManager.setGLTFNames();
@@ -82,7 +78,6 @@ export default abstract class Game {
         this.rendererManager.setEventManager(this.eventManager);
         this.textureManager.setEventManager(this.eventManager);
         this.offscreencanvasManager.setEventManager(this.eventManager);
-        this.adrManager.setEventManager(this.eventManager);
         this.cameraManager.setEventManager(this.eventManager);
         this.inputManager.setEventManager(this.eventManager);
         this.animationManager.setEventManager(this.eventManager);
@@ -96,7 +91,6 @@ export default abstract class Game {
         this.rendererManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCameraManager(this.cameraManager);
         this.audioManager.setCacheManager(this.cacheManager);
-        this.adrManager.setSceneManager(this.sceneManager);
         this.gltfManager.setSceneManager(this.sceneManager);
         this.gltfManager.setCacheManager(this.cacheManager);
         this.timestepManager.setSceneManager(this.sceneManager);

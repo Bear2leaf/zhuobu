@@ -10,7 +10,7 @@ import { Header } from "./header";
 import Notifications from "./notifications";
 import Ship from "./ship";
 import StateManager from "./state_manager";
-import { Craftables, Mod } from "./types.js";
+import { Craftables, Mod } from "./type/index.js";
 
 /**
  * Module that registers the fabricator functionality

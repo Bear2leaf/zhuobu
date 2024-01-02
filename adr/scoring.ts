@@ -2,7 +2,7 @@ import Query  from "./query";
 import { Prestige } from "./prestige";
 import Ship from "./ship";
 import StateManager from "./state_manager";
-import { ScoreOptions } from "./types.js";
+import { ScoreOptions } from "./type/index.js";
 
 const Score = {
 

@@ -12,7 +12,7 @@ import Room from "./room";
 import Score from "./scoring";
 import Ship from "./ship";
 import StateManager from "./state_manager";
-import { SpaceOptions, $Event } from "./types";
+import { SpaceOptions, $Event } from "./type/index";
 
 /**
  * Module that registers spaaaaaaaaace!

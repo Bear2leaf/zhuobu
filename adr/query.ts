@@ -3,7 +3,7 @@ import AdrElementCollection from "./adapter/AdrElementCollection";
 import AdrRootElement from "./adapter/AdrRootElement";
 import AdrStyleSheetList from "./adapter/AdrStyleSheetList";
 import Engine from "./engine";
-import { Good, Craftable, Offset } from "./types";
+import { Good, Craftable, Offset } from "./type/index";
 
 const dataCache = new WeakMap<AdrElement, Record<string, any>>();
 

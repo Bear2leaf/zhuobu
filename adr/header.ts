@@ -1,7 +1,7 @@
 import Query  from "./query";
 
 import Engine from "./engine";
-import { HeaderOptions, EngineModule } from "./types";
+import { HeaderOptions, EngineModule } from "./type/index";
 
 /**
  * Module that takes care of header buttons

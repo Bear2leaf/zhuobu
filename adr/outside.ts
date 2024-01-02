@@ -10,7 +10,7 @@ import { Header } from "./header";
 import Notifications from "./notifications";
 import Room from "./room";
 import StateManager from "./state_manager";
-import { Incom, TrapDrop, OutsideOptions, Stores, StateUpdateEvent } from "./types.js";
+import { Incom, TrapDrop, OutsideOptions, Stores, StateUpdateEvent } from "./type/index.js";
 
 /**
  * Module that registers the outdoors functionality

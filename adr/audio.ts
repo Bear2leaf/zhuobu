@@ -1,7 +1,7 @@
 
 import { AudioLibrary } from "./audioLibrary";
 import Query from "./query";
-import { EffectAudio } from "./types";
+import { EffectAudio } from "./type/index";
 
 /**
  * Module that takes care of audio playback
