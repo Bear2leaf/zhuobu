@@ -6,25 +6,18 @@ import Scene from "./Scene.js";
 
 export default class AdrScene extends Scene {
     getDefaultEntities(): Entity[] { return []; };
-
-    private readonly children: AdrScene[] = [];
-    private parent?: AdrScene;
-
-    setParent(parent?: AdrScene): void {
-        this.parent = parent;
-    }
-    addChild(child: AdrScene): void {
-        if (this.children.indexOf(child) !== -1) throw new Error("Child already added");
-        this.children.push(child);
+    addChild(child: Scene): void {
+        if (this.getChildren().indexOf(child) !== -1) throw new Error("Child already added");
+        this.getChildren().push(child);
         child.setParent(this);
     }
     collectDrawObject(): void {
         super.collectDrawObject();
-        this.children.forEach(child => child.collectDrawObject());
+        this.getChildren().forEach(child => child.collectDrawObject());
     }
     update(): void {
         super.update();
-        this.children.forEach(child => child.update());
+        this.getChildren().forEach(child => child.update());
     }
     createAdrElement(selector: string) {
 

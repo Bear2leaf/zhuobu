@@ -5,7 +5,6 @@ import EntityRemove from "../subject/EntityRemove.js";
 import EntityRender from "../subject/EntityRender.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import EntityUpdate from "../subject/EntityUpdate.js";
-import ViewPortChange from "../subject/ViewPortChange.js";
 
 export default abstract class Scene {
     private readonly entities: Entity[] = [];
@@ -16,6 +15,16 @@ export default abstract class Scene {
     private entityRender?: EntityRender;
     private entityUpdate?: EntityUpdate;
     abstract getDefaultEntities(): Entity[];
+
+    private readonly children: Scene[] = [];
+    private parent?: Scene;
+
+    setParent(parent?: Scene): void {
+        this.parent = parent;
+    }
+    getChildren(): Scene[] {
+        return this.children;
+    }
     registerEntities(): void {
         this.getDefaultEntities().forEach(entity => {
             this.addEntity(entity);

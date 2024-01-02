@@ -5,7 +5,7 @@ import MoveCircleController from "../controller/MoveCircleController.js";
 import AdrText from "../drawobject/AdrText.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
-import AdrManager from "../manager/AdrManager.js";
+import ScriptManager from "../manager/ScriptManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
@@ -17,8 +17,8 @@ export default class OnEntityUpdate extends Observer {
 
     private cameraManager?: CameraManager;
     private animationManager?: AnimationManager;
-    private adrManager?: AdrManager;
-    setAdrManager(adrManager: AdrManager) {
+    private adrManager?: ScriptManager;
+    setAdrManager(adrManager: ScriptManager) {
         this.adrManager = adrManager;
     }
     setCameraManager(cameraManager: CameraManager) {

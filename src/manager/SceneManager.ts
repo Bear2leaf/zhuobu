@@ -16,6 +16,7 @@ export default class SceneManager {
         this.adrScene.addChild(this.adrNotificationScene);
         this.adrScene.addChild(this.adrEventScene);
         this.adrScene.addChild(this.tmpScene);
+        this.adrScene.addChild(this.gltfScene);
     }
     registerEntities(): void {
         this.gltfScene.registerEntities();
@@ -38,7 +39,7 @@ export default class SceneManager {
         this.current().collectDrawObject();
     }
     current() {
-        return this.gltfScene;
+        return this.adrScene;
     }
     getAdrEventScene() {
         return this.adrEventScene;
@@ -53,7 +54,6 @@ export default class SceneManager {
         return this.adrScene;
     }
     update() {
-        this.gltfScene.update();
         this.adrScene.update();
         this.emptyScene.update();
     }

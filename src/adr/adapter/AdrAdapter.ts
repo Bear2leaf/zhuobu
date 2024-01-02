@@ -1,4 +1,4 @@
-import AdrManager from "../../manager/AdrManager.js";
+import ScriptManager from "../../manager/ScriptManager.js";
 import Query from "../query.js";
 import AdrStyleSheetList from "./AdrStyleSheetList.js";
 import AdrElementCollection from "./AdrElementCollection.js";
@@ -8,15 +8,15 @@ import TRS from "../../transform/TRS.js";
 
 export default class AdrAdapter {
     private readonly store: LocalStorage = typeof localStorage === 'undefined' ? { clear: () => this.store.gameState = undefined } : localStorage;
-    private adrManager?: AdrManager;
+    private adrManager?: ScriptManager;
     State?: Record<string, any>;
     good?: Good;
     craftable?: Craftable;
-    getAdrManager(): AdrManager {
+    getAdrManager(): ScriptManager {
         if (!this.adrManager) throw new Error("AdrManager not set");
         return this.adrManager;
     }
-    setAdrManager(adrManager: AdrManager): void {
+    setAdrManager(adrManager: ScriptManager): void {
         this.adrManager = adrManager;
     }
     $(selector: string | AdrElement, context?: Query | string) {

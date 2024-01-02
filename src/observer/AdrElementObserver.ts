@@ -1,9 +1,9 @@
-import AdrManager from "../manager/AdrManager.js";
+import ScriptManager from "../manager/ScriptManager.js";
 import Observer from "./Observer.js";
 
 export default class AdrElementObserver extends Observer {
-    private adrManager?: AdrManager;
-    setAdrManager(adrManager: AdrManager) {
+    private adrManager?: ScriptManager;
+    setAdrManager(adrManager: ScriptManager) {
         this.adrManager = adrManager;
     }
     getAdrManager() {

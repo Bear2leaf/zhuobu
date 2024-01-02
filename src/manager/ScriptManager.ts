@@ -11,7 +11,7 @@ import AdrRootElement from "../adr/adapter/AdrRootElement.js";
 import Device from "../device/Device.js";
 import DomAdr from "../adr/adapter/DomAdr.js";
 
-export default class AdrManager {
+export default class ScriptManager {
     private sceneManager?: SceneManager;
     private eventManager?: EventManager;
     private device?: Device;

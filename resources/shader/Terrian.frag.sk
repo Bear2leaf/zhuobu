@@ -39,12 +39,13 @@ float shadowCalculation(vec4 fragPosLightSpace) {
     return shadow;
 }
 
+const float ambient = .5f;
 void main() {
     vec3 normal = normalize(v_normal);
     float shadow = shadowCalculation(v_lightSpacePosition);
-    float light = (dot(u_lightDirection, normal) * .5f + .5f) * (1.0f - shadow);
-    vec4 texColor = texture(u_texture, vec2(v_texcoord.x, v_texcoord.y));
-    o_color = vec4(u_diffuse.rgb * light, u_diffuse.a) * texColor;
+    float light = (dot(u_lightDirection, normal) * (1.0f - shadow) + 1.0f) * ambient;
+    vec4 textureColor = texture(u_texture, vec2(v_texcoord.x, v_texcoord.y));
+    o_color = vec4((u_diffuse * textureColor * light).rgb, 1.0f);
     if(dot(plane, vec4(v_position, 1.0f)) < 0.0f) {
         o_refract = o_color;
         o_reflect = vec4(0.0f);

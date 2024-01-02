@@ -12,7 +12,7 @@ import FrameBufferManager from "../manager/FrameBufferManager.js";
 import WorkerManager from "../manager/WorkerManager.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import OffscreenCanvasManager from "../manager/OffscreenCanvasManager.js";
-import AdrManager from "../manager/AdrManager.js";
+import ScriptManager from "../manager/ScriptManager.js";
 import Device from "../device/Device.js";
 
 
@@ -32,7 +32,7 @@ export default abstract class Game {
     private readonly audioManager = new AudioManager;
     private readonly framebufferManager = new FrameBufferManager;
     private readonly workerManager = new WorkerManager;
-    private readonly adrManager = new AdrManager;
+    private readonly adrManager = new ScriptManager;
     initManagers(device: Device): void {
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();

@@ -1,17 +1,17 @@
 import AdrText from "../drawobject/AdrText.js";
-import AdrManager from "../manager/AdrManager.js";
+import ScriptManager from "../manager/ScriptManager.js";
 import ClickPickSubject from "../subject/ClickPick.js";
 import Observer from "./Observer.js";
 
 export default class OnClickPickSayHello extends Observer {
-    private adrManager?: AdrManager;
+    private adrManager?: ScriptManager;
     getSubject(): ClickPickSubject {
         if (!(super.getSubject() instanceof ClickPickSubject)) {
             throw new Error("subject is not ClickPickSubject!");
         }
         return super.getSubject() as ClickPickSubject;
     }
-    setAdrManager(adrManager: AdrManager) {
+    setAdrManager(adrManager: ScriptManager) {
         this.adrManager = adrManager;
     }
     getAdrManager() {
