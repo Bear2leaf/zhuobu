@@ -1,6 +1,6 @@
 {
     "exclude": [
-        "adr"
+        "script"
     ],
     "compilerOptions": {
         "outDir": "dist",

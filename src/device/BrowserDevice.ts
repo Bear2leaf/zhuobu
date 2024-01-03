@@ -1,6 +1,6 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
-import { WorkerRequest } from "../type/index.js";
+import { WorkerRequest } from "../type.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 

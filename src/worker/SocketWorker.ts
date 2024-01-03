@@ -1,7 +1,7 @@
-import { WorkerRequest, WorkerResponse } from "../type/index.js";
+import { WorkerRequest, WorkerResponse } from "../type.js";
 import Worker from "./Worker.js";
 export default class SocketWorker extends Worker {
-    private readonly reconnectTimeout = 2000;
+    private readonly reconnectTimeout = 1000;
     constructor() {
         super();
         self.addEventListener("message", (event: { data: WorkerRequest }) => {
@@ -11,21 +11,23 @@ export default class SocketWorker extends Worker {
     }
     connectWebsocket() {
         try {
+            console.debug("connecting");
             const ws = new WebSocket('ws://localhost:4000');
             ws.onmessage = (event) => {
                 this.postMessage(JSON.parse(event.data))
             }
             ws.onopen = () => {
+                console.debug("onopen");
                 ws.send(JSON.stringify({
                     ping: "Hello World!"
                 }));
             }
             ws.onclose = () => {
-                console.log("onclose");
+                console.debug("onclose");
                 this.handleReconnect();
             }
             ws.onerror = () => {
-                console.log("onerror");
+                console.debug("onerror");
                 this.handleReconnect();
             }
         } catch (e) {
@@ -35,9 +37,9 @@ export default class SocketWorker extends Worker {
     }
     handleReconnect() {
 
-        console.log("reconnect in " + this.reconnectTimeout + " milliseconds...");
+        console.debug("reconnect in " + this.reconnectTimeout + " milliseconds...");
         setTimeout(() => {
-            this.postRefresh();
+            this.connectWebsocket();
         }, this.reconnectTimeout);
     }
     postMessage(data: WorkerResponse): void {

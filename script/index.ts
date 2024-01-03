@@ -1,8 +1,8 @@
 import Server from "./server";
-import Query from "./query";
 
-Query.init();
+// Query.init();
 
 const server = new Server();
+server.on('data', console.log)
 server.init();
-console.log("inited")
+console.log("inited..")

@@ -117,17 +117,13 @@ export default class Server extends EventEmitter {
 
         return result;
     }
+    on(type: 'data', callback: (message: string, reply: (data: Object) => void) => void) {
+        super.on(type, callback)
+    }
+    emit(type: 'data', data: Object, reply: (buffer: any) => void) {
+        super.emit(type, data, reply)
+    }
     init() {
-        //@ts-ignore
-        this.on('data', (message, reply) => {
-            if (!message) return;
-
-            const data = JSON.parse(message);
-            console.log('Message received:', data);
-            return reply({
-                pong: data
-            });
-        });
         //@ts-ignore
         this.on('headers', ({ headers }) => console.log(headers));
         //@ts-ignore
@@ -156,7 +152,6 @@ export default class Server extends EventEmitter {
             socket.on('close', () => console.log("closing socket...", socket));
             //@ts-ignore
             socket.on('data', (buffer) =>
-                //@ts-ignore
                 this.emit('data', this.parseFrame(buffer), (data) => socket.write(this.createFrame(data)))
             );
             socket.write(responseHeaders.concat('\r\n').join('\r\n'));
