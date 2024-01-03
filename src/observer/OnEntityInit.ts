@@ -64,7 +64,7 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(Flowers)) {
                 entity.get(Flowers).setTexture(this.textureManager.flowerTexture);
             } else if (entity.has(Terrian)) {
-                entity.get(Terrian).setTexture(this.textureManager.flowerTexture);
+                entity.get(Terrian).setTexture(this.textureManager.defaultTexture);
                 entity.get(Terrian).setDepthTexture(this.textureManager.depthTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);

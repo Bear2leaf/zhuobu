@@ -1,12 +1,13 @@
-import EmptyScene from "../scene/EmptyScene.js";
+import UIScene from "../scene/UIScene.js";
 import GLTFScene from "../scene/GLTFScene.js";
 import ViewPortChange from "../subject/ViewPortChange.js";
 import EventManager from "./EventManager.js";
+import Scene from "../scene/Scene.js";
 
 export default class SceneManager {
-    private readonly uiScene = new EmptyScene;
+    private readonly uiScene = new UIScene;
     private readonly gltfScene = new GLTFScene;
-    private current = this.gltfScene;
+    private current: Scene = this.gltfScene;
     private viewPortChange?: ViewPortChange;
     registerEntities(): void {
         this.gltfScene.registerEntities();
@@ -17,8 +18,19 @@ export default class SceneManager {
         this.uiScene.initEntities();
     }
     collectDrawObject(): void {
-        this.viewPortChange?.notify();
         this.current.collectDrawObject();
+    }
+    collectRefractFramebufferObject() {
+        this.gltfScene.collectRefractDrawObject();
+    }
+    collectReflectFramebufferObject() {
+        this.gltfScene.collectReflectDrawObject();
+    }
+    collectPickFramebufferObject() {
+        this.gltfScene.collectPickDrawObject();
+    }
+    collectDepthFramebufferObject() {
+        this.gltfScene.collectDepthDrawObject();
     }
     toggleUIScene() {
         if (this.uiScene === this.current) {

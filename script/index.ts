@@ -2,15 +2,17 @@ import Server from "./server";
 
 const server = new Server();
 server.init();
+let interval = 0;
 server.onMessage((data, reply) => {
     console.log("onMessage: ", data);
     if (!data) {
+        clearInterval(interval)
         return;
     }
     switch (data.type) {
         case "Game":
             reply({ type: "GameInit" });
-            setInterval(() => {
+            interval = setInterval(() => {
                 reply({ type: "ToggleUI" })
             }, 5000);
             break;

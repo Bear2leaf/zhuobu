@@ -103,7 +103,7 @@ export default class Renderer {
     prepareLight() {
         this.updateUBO(UniformBinding.Light, this.lightPosition.normalize().toFloatArray());
     }
-    render(clear: boolean = true) {
+    render() {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
@@ -125,9 +125,7 @@ export default class Renderer {
             this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             drawObject.draw();
         });
-        if (clear) {
-            this.objectlist.splice(0, this.objectlist.length);
-        }
+        this.objectlist.splice(0, this.objectlist.length);
     }
     renderShadow() {
         this.getShader().use();
@@ -139,5 +137,6 @@ export default class Renderer {
             drawObject.bind();
             drawObject.draw();
         });
+        this.objectlist.splice(0, this.objectlist.length);
     }
 }

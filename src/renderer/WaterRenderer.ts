@@ -4,7 +4,7 @@ import Renderer from "./Renderer.js";
 
 export default class WaterRenderer extends Renderer {
     private frames = 0;
-    render(clear: boolean = true): void {
+    render(): void {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
@@ -27,8 +27,6 @@ export default class WaterRenderer extends Renderer {
             this.getShader().setInteger("u_distortionTexture", drawObject.getDistortionTexture().getBindIndex());
             drawObject.draw();
         });
-        if (clear) {
-            objectList.splice(0, objectList.length);
-        }
+        objectList.splice(0, objectList.length);
     }
 }

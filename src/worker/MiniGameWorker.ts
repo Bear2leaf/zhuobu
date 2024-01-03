@@ -5,6 +5,7 @@ export type MiniGameWorkerType = { onMessage: (callback: (data: WorkerRequest) =
 export default class MiniGameWorker extends Worker {
     constructor(private readonly worker: MiniGameWorkerType) {
         super();
+        this.onMessage = console.log
         worker.onMessage((data: WorkerRequest) => {
 
             if (this.onMessage === undefined) {

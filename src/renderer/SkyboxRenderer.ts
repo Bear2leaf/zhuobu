@@ -14,7 +14,7 @@ export class SkyboxRenderer extends Renderer {
         }
         return camera;
     }
-    render(clear: boolean = true) {
+    render() {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
@@ -35,8 +35,6 @@ export class SkyboxRenderer extends Renderer {
             drawObject.updateModel();
             drawObject.draw();
         });
-        if (clear) {
-            objectList.splice(0, objectList.length);
-        }
+        objectList.splice(0, objectList.length);
     }
 }

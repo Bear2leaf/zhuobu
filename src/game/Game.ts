@@ -101,8 +101,15 @@ export default abstract class Game {
         this.timestepManager.tick();
         this.inputManager.process();
         this.sceneManager.update();
+        this.sceneManager.collectRefractFramebufferObject();
+        this.framebufferManager.processRefractFramebuffer();
+        this.sceneManager.collectReflectFramebufferObject();
+        this.framebufferManager.processReflectFramebuffer();
+        this.sceneManager.collectPickFramebufferObject();
+        this.framebufferManager.processPickFramebuffer();
+        this.sceneManager.collectDepthFramebufferObject();
+        this.framebufferManager.processDepthFramebuffer();
         this.sceneManager.collectDrawObject();
-        this.framebufferManager.processFramebuffer();
         this.rendererManager.render();
         this.rafId = requestAnimationFrame(this.update.bind(this));
     }

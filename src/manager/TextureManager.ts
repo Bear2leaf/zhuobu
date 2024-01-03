@@ -84,8 +84,8 @@ export default class TextureManager {
         this.waterNormalTexture.setBindIndex(TextureBindIndex.WaterNormal);
 
         const windowInfo = this.getDevice().getWindowInfo();
-        // this.defaultTexture.generate(new Float32Array(16).fill(1), 2, 2);
-        this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
+        this.defaultTexture.generate(new Float32Array(16).fill(1), 2, 2);
+        // this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
         this.waterNormalTexture.generate(this.getCacheManager().getImage("water_normal"));

@@ -45,29 +45,36 @@ export default class FrameBufferManager {
         this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
         this.getEventManager().onEntityRender.setFrameBufferManager(this);
     }
-    processFramebuffer(): void {
-        const camera = this.getRendererManager().getSkyboxRenderer().getCamera();
+    processRefractFramebuffer(): void {
         this.renderFrameBufferObject.bind();
-        this.getEventManager().viewPortChange.notify();
-        this.getRendererManager().getSkyboxRenderer().render(false);
-        this.getRendererManager().getSkinMeshRenderer().render(false);
-        this.getRendererManager().getMeshRenderer().render(false);
-        this.getRendererManager().getTerrianRenderer().render(false);
+        this.getEventManager().onViewPortChange.notify();
+        this.getRendererManager().getSkyboxRenderer().render();
+        this.getRendererManager().getSkinMeshRenderer().render();
+        this.getRendererManager().getMeshRenderer().render();
+        this.getRendererManager().getTerrianRenderer().render();
         this.renderFrameBufferObject.unbind();
-        this.reflectFrameBufferObject.bind();
-        this.getEventManager().viewPortChange.notify();
+    }
+    processReflectFramebuffer(): void {
+        const camera = this.getRendererManager().getSkyboxRenderer().getCamera();
         camera.reflect(true);
-        this.getRendererManager().getSkyboxRenderer().render(false);
-        this.getRendererManager().getSkinMeshRenderer().render(false);
-        this.getRendererManager().getMeshRenderer().render(false);
-        this.getRendererManager().getTerrianRenderer().render(false);
+        this.reflectFrameBufferObject.bind();
+        this.getEventManager().onViewPortChange.notify();
+        this.getRendererManager().getSkyboxRenderer().render();
+        this.getRendererManager().getSkinMeshRenderer().render();
+        this.getRendererManager().getMeshRenderer().render();
+        this.getRendererManager().getTerrianRenderer().render();
         this.reflectFrameBufferObject.unbind();
         camera.reflect();
+    }
+    processPickFramebuffer(): void {
         this.pickFrameBufferObject.bind();
-        this.getRendererManager().getSDFRenderer().render(false);
+        this.getEventManager().onViewPortChange.notify();
+        this.getRendererManager().getSDFRenderer().render();
         this.pickFrameBufferObject.unbind();
+    }
+    processDepthFramebuffer(): void {
         this.depthFrameBufferObject.bind();
-        this.getEventManager().viewPortChange.notify();
+        this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkinMeshRenderer().renderShadow();
         this.getRendererManager().getMeshRenderer().renderShadow();
         this.depthFrameBufferObject.unbind();

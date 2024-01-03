@@ -11,7 +11,7 @@ export default class SDFRenderer extends Renderer {
     setScale(scale: number) {
         this.scale = scale;
     }
-    render(clear: boolean = true) {
+    render() {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
@@ -20,7 +20,7 @@ export default class SDFRenderer extends Renderer {
         this.getShader().setInteger("u_texture", TextureBindIndex.OffscreenCanvas);
         this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
         this.updateUBO(UniformBinding.SDF, new Float32Array([this.buffer, this.outlineBuffer, this.gamma * 1.4142 / this.scale, 0]));
-        
+
         this.getObjectList().forEach(drawObject => {
             drawObject.bind();
             this.getShader().setBool("u_inner", 0);
@@ -29,9 +29,7 @@ export default class SDFRenderer extends Renderer {
             drawObject.draw();
 
         });
-        if (clear) {
-            this.getObjectList().splice(0, this.getObjectList().length);
-        }
+        this.getObjectList().splice(0, this.getObjectList().length);
     }
 
 }

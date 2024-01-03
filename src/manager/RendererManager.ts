@@ -106,6 +106,7 @@ export default class RendererManager {
         this.spriteRenderer.setSceneManager(this.getSceneManager());
     }
     render(): void {
+        this.getEventManager().onViewPortChange.notify();
         [
             this.skyboxRenderer,
             this.backSpriteRenderer,

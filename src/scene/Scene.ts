@@ -16,15 +16,6 @@ export default abstract class Scene {
     private entityUpdate?: EntityUpdate;
     abstract getDefaultEntities(): Entity[];
 
-    private readonly children: Scene[] = [];
-    private parent?: Scene;
-
-    setParent(parent?: Scene): void {
-        this.parent = parent;
-    }
-    getChildren(): Scene[] {
-        return this.children;
-    }
     registerEntities(): void {
         this.getDefaultEntities().forEach(entity => {
             this.addEntity(entity);
@@ -38,8 +29,8 @@ export default abstract class Scene {
             this.entityUpdate?.notify();
         });
     }
-    collectDrawObject(): void {
-        this.entities.forEach(entity => {
+    collectDrawObject(filter?: (entity: Entity) => boolean): void {
+        this.entities.filter(filter ? filter : () => true).forEach(entity => {
             this.entityRender?.setEntity(entity);
             this.entityRender?.notify();
         });
