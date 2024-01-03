@@ -1,27 +1,41 @@
 import Worker from "./Worker.js";
 export default class SocketWorker extends Worker {
+    private readonly messageQueue: WorkerRequest[] = [];
     private readonly reconnectTimeout = 1000;
     private reconnectCount = 0;
     constructor() {
         super();
         self.addEventListener("message", (event: { data: WorkerRequest }) => {
-            this.onMessage(event.data);
+            this.messageQueue.push(event.data);
         });
         this.connectWebsocket();
+        setInterval(() => this.processMessageQueue(), 100);
+    }
+    processMessageQueue() {
+        if (this.onMessage) {
+            while(this.messageQueue.length) {
+                const request = this.messageQueue.shift();
+                if (request === undefined) {
+                    throw new Error("message queue is empty.");
+                }
+                this.onMessage(request);
+            }
+        }
     }
     connectWebsocket() {
         try {
             console.debug("connecting");
             const ws = new WebSocket('ws://localhost:4000');
             ws.onmessage = (event) => {
+                console.debug("onmessage");
                 this.postMessage(JSON.parse(event.data))
             }
             ws.onopen = () => {
                 console.debug("onopen");
                 this.reconnectCount = 0;
-                ws.send(JSON.stringify({
-                    ping: "Hello World!"
-                }));
+                this.onMessage = (data: WorkerRequest) => {
+                    ws.send(JSON.stringify(data))
+                };
             }
             ws.onclose = () => {
                 console.debug("onclose");

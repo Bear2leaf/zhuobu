@@ -1,13 +1,16 @@
 import Server from "./server";
 
-// Query.init();
-
 const server = new Server();
 server.init();
-server.on('data',(data, reply) => {
-    console.log("onData: ", data);
-    setTimeout(() => {
-        reply({pong: "Got it!"})
-    }, 1000);
-}, );
-console.log("inited..")
+server.onMessage((data, reply) => {
+    console.log("onMessage: ", data);
+    switch (data.type) {
+        case "Join":
+            setTimeout(() => {
+                reply({ type: "WorkerInit" })
+            }, 1000);
+        case "Ping":
+        default:
+    }
+});
+console.log("inited.")

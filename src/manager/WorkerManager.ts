@@ -1,37 +1,25 @@
-
-class MessageProcessor {
-    private callback: PostMessageCallback = () => { throw new Error("callback is not set") };
-    setCallback(callback: PostMessageCallback) {
+export default class WorkerManager {
+    private callback?: (data: WorkerRequest) => void;
+    get postMessage() {
+        if (this.callback === undefined) {
+            throw new Error("callback is undefined");
+        }
+        return this.callback;
+    }
+    setCallback(callback: typeof this.callback) {
         this.callback = callback;
     }
-    onMessage(data: WorkerResponse): void {
-        // console.debug("Pong", data.args);
+    messageHandler(data: WorkerResponse): void {
+        console.log("messageHandler", data)
         switch (data.type) {
             case "Pong":
-                this.onPong(data);
                 break;
             case "WorkerInit":
-                this.onWorkerInit(data);
+                this.postMessage({ type: "Ping", args: ["Hello"] })
                 break;
             case "Refresh":
-                this.onRefresh();
+                window.location.reload();
                 break;
         }
-    }
-    onPong(data: WorkerResponse): void {
-    }
-    onWorkerInit(data: WorkerResponse): void {
-        this.callback({ type: "Ping", args: ["Hello"] });
-    }
-    onRefresh() {
-        window.location.reload();
-    }
-}
-
-export default class WorkerManager {
-    private readonly messageProcessor: MessageProcessor = new MessageProcessor();
-    workerHandler(postMessage: PostMessageCallback, data: WorkerResponse) {
-        this.messageProcessor.setCallback(postMessage);
-        this.messageProcessor.onMessage(data);
     }
 }

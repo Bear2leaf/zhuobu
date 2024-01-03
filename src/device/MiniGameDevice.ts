@@ -1,3 +1,4 @@
+import WorkerManager from "../manager/WorkerManager.js";
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
@@ -18,7 +19,7 @@ type MiniGameType = {
     loadSubpackage: Function
 }
 
-const wx = (globalThis as unknown as {wx: MiniGameType}).wx;
+const wx = (globalThis as unknown as { wx: MiniGameType }).wx;
 type MiniGameTouchInfo = { touches: { clientX: number, clientY: number }[] }
 
 export default class MiniGameDevice extends Device {
@@ -51,16 +52,16 @@ export default class MiniGameDevice extends Device {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "resources",
-                success(res: {errMsg: string}) {
+                success(res: { errMsg: string }) {
                     // console.debug("load resources success", res)
                     resolve(null)
                 },
-                fail(res: {errMsg: string}) {
+                fail(res: { errMsg: string }) {
                     console.error("load resources fail", res)
                 }
             })
 
-            task.onProgressUpdate((res: {[key: string]: number}) => {
+            task.onProgressUpdate((res: { [key: string]: number }) => {
                 // console.debug(`onProgressUpdate: ${Object.keys(res).map(key => `${key}: ${res[key]}`).join(", ")}`)
             })
         });
@@ -71,11 +72,10 @@ export default class MiniGameDevice extends Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    createWorker(path: string, handlerCallback: Function): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
         const worker = wx.createWorker(path);
-        worker.onMessage((data: { type: string, args: unknown[] }) => {
-            handlerCallback((message: WorkerRequest) => worker.postMessage(message), data);
-        })
+        setPostMessageCallback(worker.postMessage.bind(worker))
+        worker.onMessage((data: WorkerResponse) => onMessageCallback(data))
     }
     onTouchStart(listener: TouchInfoFunction): void {
         wx.onTouchStart((e: MiniGameTouchInfo) => {

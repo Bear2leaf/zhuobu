@@ -1,3 +1,4 @@
+import WorkerManager from "../manager/WorkerManager.js";
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
@@ -42,12 +43,10 @@ export default class BrowserDevice extends Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string, handlerCallback: Function): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
         const worker = new Worker(path, { type: "module" });
-        worker.onmessage =
-            (e: MessageEvent) => {
-                handlerCallback((message: WorkerRequest) => worker.postMessage(message), e.data)
-            }
+        setPostMessageCallback(worker.postMessage.bind(worker))
+        worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data)
     }
     onTouchStart(listener: TouchInfoFunction): void {
         this.canvas.onpointerdown = (e: PointerEvent) => {

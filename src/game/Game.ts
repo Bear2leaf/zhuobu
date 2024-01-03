@@ -40,7 +40,10 @@ export default abstract class Game {
         this.framebufferManager.initFramebuffer();
         this.audioManager.initAudio();
         this.sceneManager.initSceneEntities();
-        device.createWorker('worker/main.js', this.workerManager.workerHandler.bind(this.workerManager));
+        device.createWorker('worker/main.js', this.workerManager.messageHandler.bind(this.workerManager), this.workerManager.setCallback.bind(this.workerManager));
+        this.workerManager.postMessage({
+            type: "Join"
+        })
     }
     async load(device: Device): Promise<void> {
         await device.loadSubpackage();

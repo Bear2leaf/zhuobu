@@ -116,13 +116,13 @@ export default class Server extends EventEmitter {
 
         return result;
     }
-    on(type: 'data', callback: (message: string, reply: (data: Object) => void) => void): void {
-        super.on(type, callback)
-    }
     private emit(type: 'close'): void;
-    private emit(type: 'data', data: Object, reply: (buffer: any) => void): void;
-    private emit(type: 'data' | 'close', data?: Object, reply?: (buffer: any) => void) {
+    private emit(type: 'data', data: WorkerRequest, reply: (buffer: any) => void): void;
+    private emit(type: 'data' | 'close', data?: WorkerRequest, reply?: (buffer: any) => void) {
         super.emit(type, data, reply)
+    }
+    onMessage(callback: (data: WorkerRequest, reply: (data: WorkerResponse) => void) => void): void {
+        super.on("data", callback)
     }
     init() {
         //@ts-ignore
@@ -149,7 +149,7 @@ export default class Server extends EventEmitter {
             socket.on('close', () => console.log("closing socket...", socket));
             //@ts-ignore
             socket.on('data', (buffer) =>
-                this.emit('data', this.parseFrame(buffer), (data) => socket.write(this.createFrame(data)))
+                this.emit('data', JSON.parse(this.parseFrame(buffer)), (data) => socket.write(this.createFrame(data)))
             );
             socket.write(responseHeaders.concat('\r\n').join('\r\n'));
         });

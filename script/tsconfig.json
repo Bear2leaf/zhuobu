@@ -4,8 +4,6 @@
         "rootDir": ".",
         "strict": true,
         "target": "ES2015",
-        "types": [
-            "../src/type.d.ts"
-        ]
+        "types": ["./type.d.ts"]
     }
 }
