@@ -8,10 +8,15 @@ server.onMessage((data, reply) => {
         return;
     }
     switch (data.type) {
-        case "Join":
-            reply({ type: "WorkerInit" })
+        case "Game":
+            reply({ type: "GameInit" });
+            break;
         case "Ping":
+            reply({ type: "Pong", args: [1, 2, 3] })
+            break;
         default:
+            break;
+
     }
 });
 console.log("inited.")

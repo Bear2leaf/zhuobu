@@ -1,11 +1,11 @@
 declare type WorkerResponse =
-    { type: "WorkerInit"; }
+    { type: "GameInit"; }
     | { type: "Pong"; args: [1, 2, 3]; }
     | { type: "Refresh"; }
 
     | never;
 declare type WorkerRequest =
     { type: "Ping"; args: ["Hello"]; }
-    | {type: "Join"}
+    | {type: "Game"}
     
     | never;

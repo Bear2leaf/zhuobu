@@ -4,7 +4,8 @@ import { STATUS_CODES, createServer } from 'http';
 import { EventEmitter } from "stream";
 //@ts-ignore
 import { createHash } from "crypto";
-
+//@ts-ignore
+import { watch } from "fs";
 enum OPCODES {
     text = 0x01,
     close = 0x08

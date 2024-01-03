@@ -1,13 +1,30 @@
 import Device from "../device/Device.js";
 
 export default class WorkerManager {
+    private readonly workerPath = 'worker/main.js';
     private device?: Device;
     private callback?: (data: WorkerRequest) => void;
-    get postMessage() {
+    private get postMessage() {
         if (this.callback === undefined) {
             throw new Error("callback is undefined");
         }
         return this.callback;
+    }
+    private setCallback(callback: typeof this.callback) {
+        this.callback = callback;
+    }
+    private messageHandler(data: WorkerResponse): void {
+        console.log("messageHandler", data)
+        switch (data.type) {
+            case "Pong":
+                break;
+            case "GameInit":
+                this.postMessage({ type: "Ping", args: ["Hello"] })
+                break;
+            case "Refresh":
+                this.getDevice().reload();
+                break;
+        }
     }
     setDevice(device: Device) {
         this.device = device;
@@ -18,30 +35,12 @@ export default class WorkerManager {
         }
         return this.device;
     }
-    setCallback(callback: typeof this.callback) {
-        this.callback = callback;
-    }
-    messageHandler(data: WorkerResponse): void {
-        console.log("messageHandler", data)
-        switch (data.type) {
-            case "Pong":
-                break;
-            case "WorkerInit":
-                this.postMessage({ type: "Ping", args: ["Hello"] })
-                break;
-            case "Refresh":
-                this.getDevice().reload();
-                break;
-        }
-    }
     initWorker() {
         this.getDevice().createWorker(
-            'worker/main.js'
+            this.workerPath
             , this.messageHandler.bind(this)
             , this.setCallback.bind(this)
         );
-        this.postMessage({
-            type: "Join"
-        })
+        this.postMessage({ type: "Game" });
     }
 }
