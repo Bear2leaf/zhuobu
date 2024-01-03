@@ -1,8 +1,10 @@
 import Device from "../device/Device.js";
+import SceneManager from "./SceneManager.js";
 
 export default class WorkerManager {
     private readonly workerPath = 'worker/main.js';
     private device?: Device;
+    private sceneManager?: SceneManager;
     private callback?: (data: WorkerRequest) => void;
     private get postMessage() {
         if (this.callback === undefined) {
@@ -23,6 +25,8 @@ export default class WorkerManager {
                 break;
             case "Refresh":
                 this.getDevice().reload();
+            case "ToggleUI":
+                this.getSceneManager().toggleUIScene();
                 break;
         }
     }
@@ -42,5 +46,14 @@ export default class WorkerManager {
             , this.setCallback.bind(this)
         );
         this.postMessage({ type: "Game" });
+    }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
     }
 }

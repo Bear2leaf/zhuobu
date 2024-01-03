@@ -2,7 +2,7 @@
 import BrowserDevice from "../device/BrowserDevice.js";
 import Game from "./Game.js";
 
-export default class AdrGame extends Game {
+export default class BrowserGame extends Game {
     private readonly canvas: HTMLCanvasElement;
     private readonly offscreenCanvas: HTMLCanvasElement;
     private readonly sdfCanvas: HTMLCanvasElement;
@@ -19,7 +19,7 @@ export default class AdrGame extends Game {
         this.buildDependency();
         this.buildVars(device);
         this.load(device).then(() => {
-            this.initManagers(device);
+            this.initManagers();
             this.update();
         });
         this.appendToEl();

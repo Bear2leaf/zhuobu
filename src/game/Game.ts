@@ -31,7 +31,7 @@ export default abstract class Game {
     private readonly audioManager = new AudioManager;
     private readonly framebufferManager = new FrameBufferManager;
     private readonly workerManager = new WorkerManager;
-    initManagers(device: Device): void {
+    initManagers(): void {
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();
         this.inputManager.initInput();
@@ -90,6 +90,7 @@ export default abstract class Game {
         this.framebufferManager.setEventManager(this.eventManager);
         this.rendererManager.setCacheManager(this.cacheManager);
         this.rendererManager.setSceneManager(this.sceneManager);
+        this.workerManager.setSceneManager(this.sceneManager);
         this.rendererManager.setCameraManager(this.cameraManager);
         this.audioManager.setCacheManager(this.cacheManager);
         this.gltfManager.setSceneManager(this.sceneManager);

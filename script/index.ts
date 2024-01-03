@@ -10,6 +10,9 @@ server.onMessage((data, reply) => {
     switch (data.type) {
         case "Game":
             reply({ type: "GameInit" });
+            setInterval(() => {
+                reply({ type: "ToggleUI" })
+            }, 5000);
             break;
         case "Ping":
             reply({ type: "Pong", args: [1, 2, 3] })

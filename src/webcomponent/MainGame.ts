@@ -1,7 +1,7 @@
-import AdrGame from "../game/AdrGame.js";
+import BrowserGame from "../game/BrowserGame.js";
 
 export default class MainGame extends HTMLElement {
-    private readonly game: AdrGame;
+    private readonly game: BrowserGame;
     private readonly elChildren: HTMLElement[] = []
     addChildren(el: HTMLElement) {
         this.elChildren.push(el);
@@ -13,7 +13,7 @@ export default class MainGame extends HTMLElement {
 
     constructor() {
         super();
-        this.game = new AdrGame(this);
+        this.game = new BrowserGame(this);
     }
 
 }

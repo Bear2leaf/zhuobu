@@ -11,7 +11,7 @@ export default class MiniGame extends Game {
         this.buildDependency();
         this.buildVars(device);
         this.load(device).then(() => {
-            this.initManagers(device);
+            this.initManagers();
             this.update();
         });
     }
