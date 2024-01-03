@@ -2,6 +2,7 @@ import { WorkerRequest, WorkerResponse } from "../type.js";
 import Worker from "./Worker.js";
 export default class SocketWorker extends Worker {
     private readonly reconnectTimeout = 1000;
+    private reconnectCount = 0;
     constructor() {
         super();
         self.addEventListener("message", (event: { data: WorkerRequest }) => {
@@ -18,6 +19,7 @@ export default class SocketWorker extends Worker {
             }
             ws.onopen = () => {
                 console.debug("onopen");
+                this.reconnectCount = 0;
                 ws.send(JSON.stringify({
                     ping: "Hello World!"
                 }));
@@ -36,7 +38,10 @@ export default class SocketWorker extends Worker {
         }
     }
     handleReconnect() {
-
+        this.reconnectCount++;
+        if (this.reconnectCount > 10) {
+            throw new Error("reconnect count is too high")
+        }
         console.debug("reconnect in " + this.reconnectTimeout + " milliseconds...");
         setTimeout(() => {
             this.connectWebsocket();
@@ -44,12 +49,6 @@ export default class SocketWorker extends Worker {
     }
     postMessage(data: WorkerResponse): void {
         self.postMessage(data);
-    }
-    postRefresh() {
-        this.postMessage({
-            type: "Refresh",
-            args: []
-        })
     }
 
 }

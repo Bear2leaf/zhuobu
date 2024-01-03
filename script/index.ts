@@ -3,6 +3,11 @@ import Server from "./server";
 // Query.init();
 
 const server = new Server();
-server.on('data', console.log)
 server.init();
-console.log("inited..")
+server.on('data',(data, reply) => {
+    console.log("onData: ", data);
+    setTimeout(() => {
+        reply({pong: "Got it!"})
+    }, 1000);
+}, );
+console.log("inited...")

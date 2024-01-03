@@ -68,7 +68,6 @@ export default class Server extends EventEmitter {
         const opCode = firstByte & 0b00001111; // get last 4 bits of a byte
 
         if (opCode === OPCODES.close) {
-            //@ts-ignore
             this.emit('close');
             return null;
         } else if (opCode !== OPCODES.text) {
@@ -117,19 +116,17 @@ export default class Server extends EventEmitter {
 
         return result;
     }
-    on(type: 'data', callback: (message: string, reply: (data: Object) => void) => void) {
+    on(type: 'data', callback: (message: string, reply: (data: Object) => void) => void): void {
         super.on(type, callback)
     }
-    emit(type: 'data', data: Object, reply: (buffer: any) => void) {
+    private emit(type: 'close'): void;
+    private emit(type: 'data', data: Object, reply: (buffer: any) => void): void;
+    private emit(type: 'data' | 'close', data?: Object, reply?: (buffer: any) => void) {
         super.emit(type, data, reply)
     }
     init() {
         //@ts-ignore
-        this.on('headers', ({ headers }) => console.log(headers));
-        //@ts-ignore
         this.server.on('upgrade', (req, socket) => {
-            //@ts-ignore
-            this.emit('headers', req);
 
             if (req.headers.upgrade !== 'websocket') {
                 socket.end('HTTP/1.1 400 Bad Request');
