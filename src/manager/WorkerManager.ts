@@ -1,10 +1,7 @@
-import { WorkerRequest, WorkerResponse } from "../type.js";
-
-export type postMessageCallback = (data: WorkerRequest) => void;
 
 class MessageProcessor {
-    private callback: Function = () => { throw new Error("callback is not set") };
-    setCallback(callback: Function) {
+    private callback: PostMessageCallback = () => { throw new Error("callback is not set") };
+    setCallback(callback: PostMessageCallback) {
         this.callback = callback;
     }
     onMessage(data: WorkerResponse): void {
@@ -33,7 +30,7 @@ class MessageProcessor {
 
 export default class WorkerManager {
     private readonly messageProcessor: MessageProcessor = new MessageProcessor();
-    workerHandler(postMessage: postMessageCallback, data: WorkerResponse) {
+    workerHandler(postMessage: PostMessageCallback, data: WorkerResponse) {
         this.messageProcessor.setCallback(postMessage);
         this.messageProcessor.onMessage(data);
     }

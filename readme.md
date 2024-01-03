@@ -7,19 +7,20 @@ make sure you are in the root directory of this project.
 npx runtime and typescript compiler is required.
 
 ```bash
-# clean dist directory (keep game.js for minigame reload)
-find dist -type f -not -name 'game.js' -delete
-# update resource files
-cp -r resources project.config.json game.json index.html dist
+# clean dist directory
+find dist -delete && mkdir dist
+# link resource files
+ln -s ../resources ../index.html ./dist
 # compile typescript in watch mode (for development)
-npx tsc -w
+npx tsc
 # run http server
 python3 -m http.server -d dist
 
 # (Optional) or you can run all above commands with
-find dist -type f -not -name 'game.js' -delete  && \
-cp -r resources project.config.json game.json index.html dist  &&  \
-npx tsc -w & python3 -m http.server -d dist
+find dist -delete && mkdir dist && \
+ln -s ../resources ../index.html ./dist && \
+cp game.json project.config.json dist && npx tsc && \
+python3 -m http.server -d dist
 ```
 
 open http://localhost:8000/ in browser

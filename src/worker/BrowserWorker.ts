@@ -6,7 +6,7 @@ export default class BrowserWorker extends Worker {
             this.onMessage(event.data);
         });
     }
-    postMessage(data: {type: string, args: unknown[]}): void {
+    postMessage(data: WorkerResponse): void {
         self.postMessage(data);
     }
     

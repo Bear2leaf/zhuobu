@@ -1,5 +1,4 @@
 import Worker from "./Worker.js";
-import { WorkerRequest } from "../type.js"
 
 export default class MessageProcessor {
     private valid = false;
