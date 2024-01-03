@@ -34,6 +34,9 @@ export default class BrowserDevice extends Device {
     now(): number {
         return this.getPerformance().now();
     }
+    reload(): void {
+        window.location.reload();
+    }
     async loadSubpackage(): Promise<null> {
         return null;
     }

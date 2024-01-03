@@ -48,6 +48,9 @@ export default class MiniGameDevice extends Device {
     now(): number {
         return this.getPerformance().now() / this.divideTimeBy;
     }
+    reload(): void {
+        
+    }
     async loadSubpackage(): Promise<null> {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({

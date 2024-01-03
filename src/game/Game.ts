@@ -40,10 +40,7 @@ export default abstract class Game {
         this.framebufferManager.initFramebuffer();
         this.audioManager.initAudio();
         this.sceneManager.initSceneEntities();
-        device.createWorker('worker/main.js', this.workerManager.messageHandler.bind(this.workerManager), this.workerManager.setCallback.bind(this.workerManager));
-        this.workerManager.postMessage({
-            type: "Join"
-        })
+        this.workerManager.initWorker();
     }
     async load(device: Device): Promise<void> {
         await device.loadSubpackage();
@@ -53,6 +50,7 @@ export default abstract class Game {
         await this.audioManager.load();
     }
     buildVars(device: Device) {
+        this.workerManager.setDevice(device);
         this.cacheManager.setDevice(device);
         this.timestepManager.setDevice(device);
         this.framebufferManager.setDevice(device);

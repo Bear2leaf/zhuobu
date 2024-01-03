@@ -45,6 +45,7 @@ export default abstract class Device {
         break;
     }
   }
+  abstract reload(): void;
   abstract getPerformance(): Performance;
   abstract getWindowInfo(): WindowInfo;
   abstract getCanvasInfo(): WindowInfo;
