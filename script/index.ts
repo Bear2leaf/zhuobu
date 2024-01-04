@@ -1,3 +1,4 @@
+import Engine from "./adr/Engine";
 import Server from "./server";
 
 const server = new Server();
@@ -24,4 +25,9 @@ server.onMessage((data, reply) => {
 
     }
 });
+const engine = new Engine();
+engine.init();
+setTimeout(() => {
+    engine.room.lightFire();
+}, 1000);
 console.log("inited.")
