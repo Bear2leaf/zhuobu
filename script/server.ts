@@ -122,13 +122,12 @@ export default class Server extends EventEmitter {
     private emit(type: 'data' | 'close', data?: WorkerRequest, reply?: (buffer: any) => void) {
         super.emit(type, data, reply)
     }
-    onMessage(callback: (data: WorkerRequest, reply: (data: WorkerResponse | WorkerResponse[]) => void) => void): void {
+    onMessage(callback: (data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) => void): void {
         super.on("data", callback)
     }
     init() {
         //@ts-ignore
         this.server.on('upgrade', (req, socket) => {
-
             if (req.headers.upgrade !== 'websocket') {
                 socket.end('HTTP/1.1 400 Bad Request');
                 return;
@@ -147,11 +146,13 @@ export default class Server extends EventEmitter {
                 `Sec-WebSocket-Accept: ${acceptValue}`,
             ];
 
-            socket.on('close', () => console.log("closing socket...", socket));
+            socket.on('close', () => {
+                console.log("closing socket...", socket);
+            });
             //@ts-ignore
-            socket.on('data', (buffer) =>
+            socket.on('data', (buffer) => {
                 this.emit('data', JSON.parse(this.parseFrame(buffer)), (data) => socket.write(this.createFrame(data)))
-            );
+            });
             socket.write(responseHeaders.concat('\r\n').join('\r\n'));
         });
         this.server.listen(this.PORT);

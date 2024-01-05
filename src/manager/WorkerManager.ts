@@ -30,7 +30,7 @@ export default class WorkerManager {
             switch (workerResponse.type) {
                 case "Pong":
                     break;
-                case "GameInit":
+                case "WorkerInit":
                     this.postMessage({ type: "Ping", args: ["Hello"] })
                     break;
                 case "Refresh":
@@ -62,7 +62,7 @@ export default class WorkerManager {
             , this.messageHandler.bind(this)
             , this.setCallback.bind(this)
         );
-        this.postMessage({ type: "Game" });
+        this.postMessage({ type: "GameInit" });
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

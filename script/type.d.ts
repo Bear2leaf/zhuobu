@@ -1,5 +1,5 @@
 declare type WorkerResponse =
-    { type: "GameInit"; }
+    { type: "WorkerInit"; }
     | { type: "Pong"; args: [1, 2, 3]; }
     | { type: "Refresh"; }
     | { type: "ToggleUI"; }
@@ -8,6 +8,6 @@ declare type WorkerResponse =
     | never;
 declare type WorkerRequest =
     { type: "Ping"; args: ["Hello"]; }
-    | {type: "Game"}
+    | {type: "GameInit"; }
     
     | never;

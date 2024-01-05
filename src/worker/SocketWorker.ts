@@ -3,6 +3,7 @@ export default class SocketWorker extends Worker {
     private readonly messageQueue: WorkerRequest[] = [];
     private readonly reconnectTimeout = 1000;
     private reconnectCount = 0;
+    private timerId: number = 0;
     constructor() {
         super();
         self.addEventListener("message", (event: { data: WorkerRequest }) => {
@@ -12,14 +13,8 @@ export default class SocketWorker extends Worker {
         setInterval(() => this.processMessageQueue(), 100);
     }
     processMessageQueue() {
-        if (this.onMessage) {
-            while(this.messageQueue.length) {
-                const request = this.messageQueue.shift();
-                if (request === undefined) {
-                    throw new Error("message queue is empty.");
-                }
-                this.onMessage(request);
-            }
+        if (this.onMessage && this.messageQueue.length) {
+            this.onMessage(this.messageQueue.splice(0, this.messageQueue.length));
         }
     }
     connectWebsocket() {
@@ -32,8 +27,11 @@ export default class SocketWorker extends Worker {
             }
             ws.onopen = () => {
                 console.debug("onopen");
+                if (this.reconnectCount > 0) {
+                    this.postMessage([{ type: "Refresh" }]);
+                }
                 this.reconnectCount = 0;
-                this.onMessage = (data: WorkerRequest) => {
+                this.onMessage = (data: WorkerRequest[]) => {
                     ws.send(JSON.stringify(data))
                 };
             }
@@ -53,14 +51,15 @@ export default class SocketWorker extends Worker {
     handleReconnect() {
         this.reconnectCount++;
         if (this.reconnectCount > 10) {
-            throw new Error("reconnect count is too high, wait for double the reconnect timeout")
+            throw new Error("reconnect count is too high")
         }
         console.debug("reconnect in " + this.reconnectTimeout + " milliseconds...");
-        setTimeout(() => {
+        clearTimeout(this.timerId);
+        this.timerId = setTimeout(() => {
             this.connectWebsocket();
-        }, this.reconnectTimeout * 2);
+        }, this.reconnectTimeout);
     }
-    postMessage(data: WorkerResponse): void {
+    postMessage(data: WorkerResponse[]): void {
         self.postMessage(data);
     }
 
