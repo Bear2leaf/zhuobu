@@ -82,6 +82,10 @@ export default class Renderer {
     }
 
     bindUBOs() {
+        if (!this.getObjectList().length) {
+            // only bind ubos for valid objects
+            return;
+        }
         this.uboMap.forEach((ubo, index) => {
             this.getShader().bindUniform(index);
             ubo.bind(index);
