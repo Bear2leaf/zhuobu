@@ -1,6 +1,6 @@
 import Subject from "./Subject.js";
 
-export default abstract class BaseClickSubject extends Subject {
+export default abstract class InputSubject extends Subject {
     private pixelRatio = 1;
     private x = 0;
     private y = 0;

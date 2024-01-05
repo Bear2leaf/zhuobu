@@ -1,16 +1,16 @@
 import Pointer from "../drawobject/Pointer.js";
-import BaseClickSubject from "../subject/BaseClickSubject.js";
+import InputSubject from "../subject/InputSubject.js";
 import ClickPickSubject from "../subject/ClickPick.js";
 import Observer from "./Observer.js";
 
 export default class OnClick extends Observer {
     private pointer?: Pointer;
-    private next?: BaseClickSubject;
-    getSubject(): BaseClickSubject {
-        if (!(super.getSubject() instanceof BaseClickSubject)) {
+    private next?: InputSubject;
+    getSubject(): InputSubject {
+        if (!(super.getSubject() instanceof InputSubject)) {
             throw new Error("subject is not BaseClickSubject!");
         }
-        return super.getSubject() as BaseClickSubject;
+        return super.getSubject() as InputSubject;
     }
     setPointer(pointer: Pointer) {
         this.pointer = pointer;

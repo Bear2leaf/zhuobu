@@ -75,10 +75,10 @@ export default class MiniGameDevice extends Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext();
     }
-    createWorker(path: string, onMessageCallback: (data: WorkerResponse) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
         const worker = wx.createWorker(path);
         setPostMessageCallback(worker.postMessage.bind(worker))
-        worker.onMessage((data: WorkerResponse) => onMessageCallback(data))
+        worker.onMessage((data: WorkerResponse[]) => onMessageCallback(data))
     }
     onTouchStart(listener: TouchInfoFunction): void {
         wx.onTouchStart((e: MiniGameTouchInfo) => {

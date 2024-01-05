@@ -52,7 +52,7 @@ export default abstract class Device {
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;
-  abstract createWorker(path: string, onMessageCallback: (data: WorkerResponse) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void;
+  abstract createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void;
   abstract createWebAudioContext(): AudioContext;
   abstract onTouchStart(listener: TouchInfoFunction): void;
   abstract onTouchMove(listener: TouchInfoFunction): void;

@@ -88,8 +88,8 @@ export default class Room {
 		this.updateIncomeView();
 		this.updateBuildButtons();
 
-		this._fireTimer = this.engine.setTimeout(this.coolFire, this._FIRE_COOL_DELAY);
-		this._tempTimer = this.engine.setTimeout(this.adjustTemp, this._ROOM_WARM_DELAY);
+		this._fireTimer = this.engine.setTimeout(this.coolFire.bind(this), this._FIRE_COOL_DELAY);
+		this._tempTimer = this.engine.setTimeout(this.adjustTemp.bind(this), this._ROOM_WARM_DELAY);
 
 		/*
 		 * Builder states:
@@ -100,12 +100,12 @@ export default class Room {
 		 * 4 - Helping
 		 */
 		if (this.stateManager.get('game.builder.level') >= 0 && this.stateManager.get('game.builder.level') < 3) {
-			this._builderTimer = this.engine.setTimeout(this.updateBuilderState, this._BUILDER_STATE_DELAY);
+			this._builderTimer = this.engine.setTimeout(this.updateBuilderState.bind(this), this._BUILDER_STATE_DELAY);
 		}
 		if (this.stateManager.get('game.builder.level') === 1 && this.stateManager.get('stores.wood', true) < 0) {
-			this.engine.setTimeout(this.unlockForest, this._NEED_WOOD_DELAY);
+			this.engine.setTimeout(this.unlockForest.bind(this), this._NEED_WOOD_DELAY);
 		}
-		this.engine.setTimeout(this.stateManager.collectIncome, 1000);
+		this.engine.setTimeout(this.stateManager.collectIncome.bind(this), 1000);
 
 		this.notifications.printMessage(this.engine._("the room is {0}", this.TempEnum.fromInt(this.stateManager.get('game.temperature.value')).text));
 		this.notifications.printMessage(this.engine._("the fire is {0}", this.FireEnum.fromInt(this.stateManager.get('game.fire.value')).text));
@@ -171,10 +171,10 @@ export default class Room {
 		if (this.stateManager.get('game.fire.value') > 1 && this.stateManager.get('game.builder.level') < 0) {
 			this.stateManager.set('game.builder.level', 0);
 			this.notifications.printMessage(this.engine._("the light from the fire spills from the windows, out into the dark"));
-			this.engine.setTimeout(this.updateBuilderState, this._BUILDER_STATE_DELAY);
+			this.engine.setTimeout(this.updateBuilderState.bind(this), this._BUILDER_STATE_DELAY);
 		}
 		clearTimeout(this._fireTimer);
-		this._fireTimer = this.engine.setTimeout(this.coolFire, this._FIRE_COOL_DELAY);
+		this._fireTimer = this.engine.setTimeout(this.coolFire.bind(this), this._FIRE_COOL_DELAY);
 		this.updateButton();
 
 	};
@@ -189,7 +189,7 @@ export default class Room {
 		}
 		if (this.stateManager.get('game.fire.value') > 0) {
 			this.stateManager.set('game.fire', this.FireEnum.fromInt(this.stateManager.get('game.fire.value') - 1));
-			this._fireTimer = this.engine.setTimeout(this.coolFire, this._FIRE_COOL_DELAY);
+			this._fireTimer = this.engine.setTimeout(this.coolFire.bind(this), this._FIRE_COOL_DELAY);
 			this.onFireChange();
 		}
 	};
@@ -207,7 +207,7 @@ export default class Room {
 		if (this.stateManager.get('game.temperature.value') !== old) {
 			this.changed = true;
 		}
-		this._tempTimer = this.engine.setTimeout(this.adjustTemp, this._ROOM_WARM_DELAY);
+		this._tempTimer = this.engine.setTimeout(this.adjustTemp.bind(this), this._ROOM_WARM_DELAY);
 	};
 
 	unlockForest() {
@@ -222,7 +222,7 @@ export default class Room {
 		if (lBuilder === 0) {
 			this.notifications.printMessage(this.engine._("a ragged stranger stumbles through the door and collapses in the corner"));
 			lBuilder = this.stateManager.setget('game.builder.level', 1);
-			this.engine.setTimeout(this.unlockForest, this._NEED_WOOD_DELAY);
+			this.engine.setTimeout(this.unlockForest.bind(this), this._NEED_WOOD_DELAY);
 		}
 		else if (lBuilder < 3 && this.stateManager.get('game.temperature.value') >= this.TempEnum.Warm.value) {
 			let msg = "";
@@ -240,7 +240,7 @@ export default class Room {
 			}
 		}
 		if (lBuilder < 3) {
-			this.engine.setTimeout(this.updateBuilderState, this._BUILDER_STATE_DELAY);
+			this.engine.setTimeout(this.updateBuilderState.bind(this), this._BUILDER_STATE_DELAY);
 		}
 	};
 

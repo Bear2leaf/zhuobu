@@ -1,7 +1,7 @@
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
-import BaseClickSubject from "./BaseClickSubject.js";
+import InputSubject from "./InputSubject.js";
 
-export default class ClickPickSubject extends BaseClickSubject {
+export default class ClickPickSubject extends InputSubject {
     private frameBufferObject?: PickFrameBufferObject;
     
     getFrameBufferObject() {

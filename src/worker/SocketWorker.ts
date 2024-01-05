@@ -53,12 +53,12 @@ export default class SocketWorker extends Worker {
     handleReconnect() {
         this.reconnectCount++;
         if (this.reconnectCount > 10) {
-            throw new Error("reconnect count is too high")
+            throw new Error("reconnect count is too high, wait for double the reconnect timeout")
         }
         console.debug("reconnect in " + this.reconnectTimeout + " milliseconds...");
         setTimeout(() => {
             this.connectWebsocket();
-        }, this.reconnectTimeout);
+        }, this.reconnectTimeout * 2);
     }
     postMessage(data: WorkerResponse): void {
         self.postMessage(data);

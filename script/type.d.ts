@@ -3,6 +3,7 @@ declare type WorkerResponse =
     | { type: "Pong"; args: [1, 2, 3]; }
     | { type: "Refresh"; }
     | { type: "ToggleUI"; }
+    | { type: "CreateMessageUI"; }
 
     | never;
 declare type WorkerRequest =

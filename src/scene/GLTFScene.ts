@@ -37,8 +37,6 @@ export default class GLTFScene extends Scene {
             || entity instanceof MeshObject
         )
     }
-    collectPickDrawObject() {
-    }
     collectDepthDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject

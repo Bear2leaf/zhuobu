@@ -1,10 +1,11 @@
 import Device from "../device/Device.js";
-import SceneManager from "./SceneManager.js";
+import EventManager from "./EventManager.js";
 
 export default class WorkerManager {
     private readonly workerPath = 'worker/main.js';
+    private readonly workerResponseQueue: WorkerResponse[] = [];
     private device?: Device;
-    private sceneManager?: SceneManager;
+    private eventManager?: EventManager;
     private callback?: (data: WorkerRequest) => void;
     private get postMessage() {
         if (this.callback === undefined) {
@@ -15,19 +16,35 @@ export default class WorkerManager {
     private setCallback(callback: typeof this.callback) {
         this.callback = callback;
     }
-    private messageHandler(data: WorkerResponse): void {
+    private messageHandler(data: WorkerResponse[]): void {
         console.log("messageHandler", data)
-        switch (data.type) {
-            case "Pong":
-                break;
-            case "GameInit":
-                this.postMessage({ type: "Ping", args: ["Hello"] })
-                break;
-            case "Refresh":
-                this.getDevice().reload();
-            case "ToggleUI":
-                this.getSceneManager().toggleUIScene();
-                break;
+        this.workerResponseQueue.push(...data);
+    }
+    processMessage() {
+        while (this.workerResponseQueue.length > 0) {
+            const workerResponse = this.workerResponseQueue.shift();
+            if (workerResponse === undefined) {
+                throw new Error("workerResponse is undefined");
+            }
+
+            switch (workerResponse.type) {
+                case "Pong":
+                    break;
+                case "GameInit":
+                    this.postMessage({ type: "Ping", args: ["Hello"] })
+                    break;
+                case "Refresh":
+                    this.getDevice().reload();
+                    break;
+                case "ToggleUI":
+                    this.getEventManager().workerMessage.notifyToggleUI();
+                    break;
+                case "CreateMessageUI":
+                    this.getEventManager().workerMessage.notifyCreateMessageUI();
+                    break;
+                default:
+                    throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
+            }
         }
     }
     setDevice(device: Device) {
@@ -47,13 +64,13 @@ export default class WorkerManager {
         );
         this.postMessage({ type: "Game" });
     }
-    getSceneManager(): SceneManager {
-        if (this.sceneManager === undefined) {
-            throw new Error("sceneManager is undefined");
+    getEventManager(): EventManager {
+        if (this.eventManager === undefined) {
+            throw new Error("eventManager is undefined");
         }
-        return this.sceneManager;
+        return this.eventManager;
     }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
+    setEventManager(sceneManager: EventManager) {
+        this.eventManager = sceneManager;
     }
 }

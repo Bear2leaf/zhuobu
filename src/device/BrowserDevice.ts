@@ -46,7 +46,7 @@ export default class BrowserDevice extends Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string, onMessageCallback: (data: WorkerResponse) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
         const worker = new Worker(path, { type: "module" });
         setPostMessageCallback(worker.postMessage.bind(worker))
         worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data)

@@ -6,7 +6,6 @@ import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
-import FrameBufferManager from "../manager/FrameBufferManager.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
@@ -18,7 +17,6 @@ import Observer from "./Observer.js";
 
 export default class OnEntityRender extends Observer {
     private rendererManager?: RendererManager;
-    private framebufferManager?: FrameBufferManager;
     getSubject(): EntitySubject {
         const subject = super.getSubject();
         if (subject instanceof EntitySubject) {
@@ -31,14 +29,10 @@ export default class OnEntityRender extends Observer {
     setRendererManager(rendererManager: RendererManager) {
         this.rendererManager = rendererManager;
     }
-    setFrameBufferManager(framebufferManager: FrameBufferManager) {
-        this.framebufferManager = framebufferManager;
-    }
     public notify(): void {
         const entity = this.getSubject().getEntity();
         if (entity.has(DrawObject) && this.rendererManager) {
-            entity.get(DrawObject).updateModel();
-            if (entity.has(SDFCharacter) && this.framebufferManager) {
+            if (entity.has(SDFCharacter)) {
                 this.rendererManager.getSDFRenderer().addObject(entity.get(SDFCharacter));
             } else if (entity.has(DefaultSprite)) {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));

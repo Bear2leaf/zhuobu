@@ -361,7 +361,7 @@ export default class StateManager {
 		if (changed) {
 			this.fireUpdate('income');
 		}
-		this.engine._incomeTimeout = this.engine.setTimeout(this.collectIncome, 1000);
+		this.engine._incomeTimeout = this.engine.setTimeout(this.collectIncome.bind(this), 1000);
 	}
 
 

@@ -43,7 +43,6 @@ export default class FrameBufferManager {
     }
     initObservers() {
         this.getEventManager().clickPick.setFrameBufferObject(this.pickFrameBufferObject);
-        this.getEventManager().onEntityRender.setFrameBufferManager(this);
     }
     processRefractFramebuffer(): void {
         this.renderFrameBufferObject.bind();

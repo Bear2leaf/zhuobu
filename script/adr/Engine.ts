@@ -5,28 +5,28 @@ export default class Engine {
 
     readonly MAX_STORE = 99999999999999;
     readonly SAVE_DISPLAY = 30 * 1000;
-    _ = (template: string, ...args: any) => {
+    _incomeTimeout: number = 0;
+    _debug: boolean = false;
+    _log: boolean = false;
+    _saveTimer: number = 0;
+    _lastNotify: number = 0;
+    activeModule: Room | null = null;
+    State: Record<string, any> = {};
+    GAME_OVER = false;
+    dropbox: unknown;
+    options: Record<string, any> = {};
+    stateManager = new StateManager(this);
+    notifications = new Notifications(this);
+    room = new Room(this, this.stateManager, this.notifications);
+
+
+    _(template: string, ...args: any) {
         return template.replace(/\{(\d+)\}/g, function (match, number) {
             return typeof args[number] !== 'undefined'
                 ? args[number]
                 : match;
         });
     };
-    activeModule: Room | null = null;
-    State: Record<string, any> = {};
-    _incomeTimeout: number = 0;
-    GAME_OVER = false;
-    _debug: boolean = false;
-    _log: boolean = false;
-    dropbox: unknown;
-    options: Record<string, any> = {};
-    _saveTimer: number = 0;
-    _lastNotify: number = 0;
-    stateManager = new StateManager(this);
-    notifications = new Notifications(this);
-    room = new Room(this, this.stateManager, this.notifications);
-
-
     init(options?: Record<string, any>) {
         this.options = options || {
             state: {}

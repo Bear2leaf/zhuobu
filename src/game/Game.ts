@@ -72,7 +72,8 @@ export default abstract class Game {
         this.gltfManager.setGLTFNames();
         this.gltfManager.setBufferCaches();
         this.rendererManager.initShaderName();
-        this.sceneManager.initSubjects(this.eventManager);
+        this.sceneManager.initObservers();
+        this.sceneManager.initSubjects();
         this.sceneManager.registerEntities();
     }
     buildDependency() {
@@ -88,9 +89,10 @@ export default abstract class Game {
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setRendererManager(this.rendererManager);
         this.framebufferManager.setEventManager(this.eventManager);
+        this.sceneManager.setEventManager(this.eventManager);
         this.rendererManager.setCacheManager(this.cacheManager);
         this.rendererManager.setSceneManager(this.sceneManager);
-        this.workerManager.setSceneManager(this.sceneManager);
+        this.workerManager.setEventManager(this.eventManager);
         this.rendererManager.setCameraManager(this.cameraManager);
         this.audioManager.setCacheManager(this.cacheManager);
         this.gltfManager.setSceneManager(this.sceneManager);
@@ -99,6 +101,7 @@ export default abstract class Game {
     }
     update() {
         this.timestepManager.tick();
+        this.workerManager.processMessage();
         this.inputManager.process();
         this.sceneManager.update();
         this.sceneManager.collectRefractFramebufferObject();

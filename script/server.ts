@@ -122,7 +122,7 @@ export default class Server extends EventEmitter {
     private emit(type: 'data' | 'close', data?: WorkerRequest, reply?: (buffer: any) => void) {
         super.emit(type, data, reply)
     }
-    onMessage(callback: (data: WorkerRequest, reply: (data: WorkerResponse) => void) => void): void {
+    onMessage(callback: (data: WorkerRequest, reply: (data: WorkerResponse | WorkerResponse[]) => void) => void): void {
         super.on("data", callback)
     }
     init() {

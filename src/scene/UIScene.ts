@@ -1,4 +1,5 @@
 
+import SDFCharacter from "../drawobject/SDFCharacter.js";
 import Entity from "../entity/Entity.js";
 import FlowersObject from "../entity/FlowersObject.js";
 import PointerObject from "../entity/PointerObject.js";
@@ -16,6 +17,12 @@ export default class UIScene extends Scene {
             , new PointerObject()
             , new SpriteObject()
         ];
+    }
+    collectPickDrawObject() {
+        this.collectDrawObject((entity) =>
+            entity instanceof SDFCharacter
+            || false
+        )
     }
 
 }

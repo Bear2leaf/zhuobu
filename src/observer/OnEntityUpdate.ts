@@ -2,7 +2,7 @@ import AnimationController from "../controller/AnimationController.js";
 import CameraController from "../controller/CameraController.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import MoveCircleController from "../controller/MoveCircleController.js";
-import AdrText from "../drawobject/AdrText.js";
+import AdrText from "../drawobject/Message.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import AnimationManager from "../manager/AnimationManager.js";
@@ -10,6 +10,7 @@ import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
+import DrawObject from "../drawobject/DrawObject.js";
 
 export default class OnEntityUpdate extends Observer {
 
@@ -49,11 +50,9 @@ export default class OnEntityUpdate extends Observer {
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();
         }
-        // if (entity.has(AdrText) && this.scriptManager) {
-        //     if (entity.get(Node).getRoot() === entity.get(Node)) {
-        //         entity.get(Node).updateWorldMatrix();
-        //     }
-        // }
+        if (entity.has(DrawObject)) {
+            entity.get(DrawObject).updateModel();
+        }
     }
 
 }

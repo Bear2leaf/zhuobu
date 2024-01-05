@@ -111,8 +111,8 @@ export default class Renderer {
         const viewInverse = camera.getView().inverse().getVertics();
         const lightView = Matrix.lookAt(this.lightPosition.clone().normalize(), this.lightTarget.clone().normalize(), this.lightUp.clone().normalize());
         const lightViewInverse = lightView.inverse().getVertics();
-        this.updateUBO(UniformBinding.Shadow, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
+        this.updateUBO(UniformBinding.Shadow, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
             if (drawObject instanceof SkinMesh) {
