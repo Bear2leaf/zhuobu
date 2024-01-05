@@ -41,8 +41,8 @@ export default abstract class Entity {
     has<T extends Component>(ctor: new () => T): boolean {
         return this.objects.filter(m => m instanceof ctor).length !== 0;
     }
-    all<T extends Component>() {
-        return this.objects as T[];
+    all<T extends Component>(ctor?: new () => T) {
+        return this.objects.filter(m => !ctor || m instanceof ctor) as T[];
     }
 
 

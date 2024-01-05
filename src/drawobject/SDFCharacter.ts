@@ -2,6 +2,7 @@ import { flatten, Vec2, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { FontInfo } from "./Text.js";
+import Border from "./Border.js";
 
 export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 0.3, 0.3, 1];
@@ -21,13 +22,16 @@ export default class SDFCharacter extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
         this.create();
+        this.getEntity().get(Border).create();
     }
     getChars() {
         return this.chars;
     }
+    getBoundingSize() {
+        return this.textBoundingSize;
+    }
     create() {
         let { x, y } = new Vec2(0, 0);
-        const scale = new Vec2(1, -1);
         const { spacing, chars } = this;
         const texHeight = this.texSize.y;
         const texWidth = this.texSize.x;
@@ -40,10 +44,10 @@ export default class SDFCharacter extends DrawObject {
         const spaceScalar = 7;
         for (const c of chars) {
             const ch = this.fontInfo[c];
-            const xpos = x - ch.offsetX * scale.x;
-            const ypos = y - ch.offsetY * scale.y;
-            const w = ch.width * scale.x;
-            const h = ch.height * scale.y;
+            const xpos = x - ch.offsetX;
+            const ypos = y + ch.offsetY;
+            const w = ch.width;
+            const h = -ch.height;
             x += w + spacing;
             if (c === '\n') {
                 x = ox;
@@ -66,8 +70,10 @@ export default class SDFCharacter extends DrawObject {
             ];
             batch.push(...vertices);
             batchTexcoords.push(...texcoords);
-            this.textBoundingSize.x = Math.max(this.textBoundingSize.x, x);
-            this.textBoundingSize.y = y + h;
+            this.textBoundingSize.x = Math.min(this.textBoundingSize.x, xpos)
+            this.textBoundingSize.y = Math.max(this.textBoundingSize.y, ypos)
+            this.textBoundingSize.z = Math.max(this.textBoundingSize.z, xpos + w);
+            this.textBoundingSize.w = Math.min(this.textBoundingSize.w, h * 2 + ypos);
         }
         this.indices.splice(0, this.indices.length, ...new Array(batch.length).fill(0).map((_, index) => index))
         this.colors.splice(0, this.colors.length, ...new Array(batch.length).fill(0).map(() => new Vec4(this.color[0], this.color[1], this.color[2], this.color[3])));

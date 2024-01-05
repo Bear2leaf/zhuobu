@@ -85,6 +85,7 @@ export default class RendererManager {
             this.terrianRenderer,
             this.wireframeRenderer,
             this.sdfRenderer,
+            this.lineRenderer,
             this.skyboxRenderer,
             this.waterRenderer,
         ].forEach(renderer => {
@@ -111,6 +112,7 @@ export default class RendererManager {
             this.skyboxRenderer,
             this.backSpriteRenderer,
             this.spriteRenderer,
+            this.lineRenderer,
             this.sdfRenderer,
             this.gltfMeshRenderer,
             this.terrianRenderer,
@@ -119,13 +121,14 @@ export default class RendererManager {
             this.waterRenderer,
             this.pointRenderer
         ].forEach(renderer => {
-            if (renderer.getObjectList().length) {
-                renderer.render();
-            }
+            renderer.render();
         })
     }
     getSDFRenderer() {
         return this.sdfRenderer;
+    }
+    getLineRenderer() {
+        return this.lineRenderer;
     }
     getSpriteRenderer() {
         return this.spriteRenderer;

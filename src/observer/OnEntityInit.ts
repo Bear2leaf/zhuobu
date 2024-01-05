@@ -1,4 +1,5 @@
 import SDFCanvas from "../canvas/SDFCanvas.js";
+import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
@@ -55,10 +56,14 @@ export default class OnEntityInit extends Observer {
         const entity = this.getSubject().getEntity();
         // console.debug("OnEntityInit", entity);
         if (entity.has(DrawObject) && this.renderingContext) {
-            entity.get(DrawObject).setRenderingContext(this.renderingContext);
+            for (const drawobject of entity.all(DrawObject)) {
+                drawobject.setRenderingContext(this.renderingContext)
+            }
         }
         if (entity.has(DrawObject) && this.textureManager) {
-            entity.get(DrawObject).setTexture(this.textureManager.defaultTexture)
+            for (const drawobject of entity.all(DrawObject)) {
+                drawobject.setTexture(this.textureManager.defaultTexture)
+            }
             if (entity.has(SDFCharacter)) {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
             } else if (entity.has(Flowers)) {
@@ -90,7 +95,7 @@ export default class OnEntityInit extends Observer {
         }
         entity.get(Node).init();
         if (entity.has(DrawObject)) {
-            entity.get(DrawObject).init();
+            entity.all(DrawObject).forEach(drawobject => drawobject.init());
         }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {

@@ -58,9 +58,9 @@ export default class SceneManager {
         this.uiScene.initEntity(object);
         this.uiScene.addEntity(object);
         object.get(TRS).getScale().set(0.05, 0.05, 0.05);
-        object.get(TRS).getPosition().set(-5, 0, 0);
+        object.get(TRS).getPosition().set(-6, 0, 0);
         object.get(Node).updateWorldMatrix();
-        object.get(SDFCharacter).updateChars("Hello World!");
+        object.get(SDFCharacter).updateChars("Hello World! abc.\n123\n456");
     }
     update() {
         this.gltfScene.update();

@@ -1,4 +1,5 @@
 import AnimationController from "../controller/AnimationController.js";
+import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -34,6 +35,7 @@ export default class OnEntityRender extends Observer {
         if (entity.has(DrawObject) && this.rendererManager) {
             if (entity.has(SDFCharacter)) {
                 this.rendererManager.getSDFRenderer().addObject(entity.get(SDFCharacter));
+                this.rendererManager.getLineRenderer().addObject(entity.get(Border));
             } else if (entity.has(DefaultSprite)) {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {

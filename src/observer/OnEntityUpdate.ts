@@ -8,7 +8,6 @@ import Pointer from "../drawobject/Pointer.js";
 import AnimationManager from "../manager/AnimationManager.js";
 import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
-import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
 import DrawObject from "../drawobject/DrawObject.js";
 
@@ -51,7 +50,7 @@ export default class OnEntityUpdate extends Observer {
             entity.get(Pointer).update();
         }
         if (entity.has(DrawObject)) {
-            entity.get(DrawObject).updateModel();
+            entity.all(DrawObject).forEach(drawobject => drawobject.updateModel());
         }
     }
 
