@@ -52,6 +52,9 @@ export default class SkinMesh extends Mesh {
             Matrix.multiply(dst, this.inverseBindMatrices[j], dst);
         }
         const jointData = Matrix.flatten(this.jointMatrices);
+
+        this.getJointTexture().active();
+        this.getJointTexture().bind();
         this.getJointTexture().generate(jointData, 4, this.jointNodes.length);
     }
 

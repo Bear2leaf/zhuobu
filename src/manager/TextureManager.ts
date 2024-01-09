@@ -84,16 +84,37 @@ export default class TextureManager {
         this.waterNormalTexture.setBindIndex(TextureBindIndex.WaterNormal);
 
         const windowInfo = this.getDevice().getWindowInfo();
+        this.defaultTexture.active();
+        this.defaultTexture.bind();
         this.defaultTexture.generate(new Float32Array(16).fill(1), 2, 2);
         // this.defaultTexture.generate(new Float32Array([1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1]), 2, 2);
+        this.flowerTexture.active();
+        this.flowerTexture.bind();
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
+        this.skyboxTexture.active();
+        this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
+        this.waterNormalTexture.active();
+        this.waterNormalTexture.bind();
         this.waterNormalTexture.generate(this.getCacheManager().getImage("water_normal"));
+        this.waterDistortionTexture.active();
+        this.waterDistortionTexture.bind();
         this.waterDistortionTexture.generate(this.getCacheManager().getImage("water_distortion"));
+        this.pickTexture.active();
+        this.pickTexture.bind();
         this.pickTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+        this.renderTexture.active();
+        this.renderTexture.bind();
         this.renderTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
+        this.reflectTexture.active();
+        this.reflectTexture.bind();
         this.reflectTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
+        this.depthTexture.active();
+        this.depthTexture.bind();
         this.depthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
     }
     initObservers() {
 

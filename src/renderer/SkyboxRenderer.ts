@@ -24,6 +24,8 @@ export class SkyboxRenderer extends Renderer {
         const objectList = this.getObjectList();
         objectList.forEach(drawObject => {
             drawObject.bind();
+            drawObject.getTexture().active();
+            drawObject.getTexture().bind()
             drawObject.getEntity().get(TRS).getScale().set(2, 2, 2);
             const scale = new Vec4();
             const translation = new Vec4();

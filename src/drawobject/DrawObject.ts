@@ -70,7 +70,6 @@ export default class DrawObject extends Component {
         this.modelUBO.bind(UniformBinding.Model);
         this.pickUBO.bind(UniformBinding.Pick);
         this.vao.bind();
-        this.getTexture().bind()
     }
     getRenderingContext() {
         if (!this.renderingContext) {

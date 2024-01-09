@@ -12,10 +12,7 @@ export default class OffscreenCanvasTexture extends Texture {
     }
     return this.canvasContext;
   }
-  generate(data?: HTMLImageElement, width: number = 1, height: number = 1) {
-    if (!data) {
-      throw new Error("OffscreenCanvasTexture.generate: data is undefined");
-    }
+  generate(data: HTMLImageElement) {
     const glRC = this.getContext();
     glRC.bindTexture(this.getTextureIndex());
     glRC.texImage2D_RGBA_RGBA_Image(data);
@@ -26,5 +23,13 @@ export default class OffscreenCanvasTexture extends Texture {
     const rc = this.getContext();
     rc.activeTexture(this.getBindIndex())
     rc.bindTexture(this.getTextureIndex());
+  }
+  active() {
+      const rc = this.getContext();
+      rc.activeTexture(this.getBindIndex())
+  }
+  deactive() {
+      const rc = this.getContext();
+      rc.activeTexture(0)
   }
 }

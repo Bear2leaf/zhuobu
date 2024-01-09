@@ -2,15 +2,15 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 
 export enum TextureBindIndex {
   Default = 0,
+  Skybox = 0,
   Pick = 0,
-  Render = 1,
-  OffscreenCanvas = 1,
-  Reflect = 2,
-  WaterDistortion = 3,
-  WaterNormal = 4,
-  Skybox = 5,
-  Joint = 6,
-  Depth = 7,
+  OffscreenCanvas = 0,
+  Depth = 1,
+  Joint = 2,
+  Render = 2,
+  Reflect = 3,
+  WaterDistortion = 4,
+  WaterNormal = 5,
 }
 
 export type SkyboxArray = readonly [
@@ -53,4 +53,5 @@ export default abstract class Texture {
   }
   abstract generate(data?: ImageData | HTMLImageElement | SkyboxArray | Float32Array, width?: number, height?: number): void;
   abstract bind(): void;
+  abstract active(): void;
 }

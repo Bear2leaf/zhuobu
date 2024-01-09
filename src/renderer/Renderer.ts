@@ -119,10 +119,14 @@ export default class Renderer {
         this.updateUBO(UniformBinding.Shadow, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
+            drawObject.getTexture().active();
+            drawObject.getTexture().bind()
             if (drawObject instanceof SkinMesh) {
+                drawObject.getJointTexture().active();
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
             } else if (drawObject instanceof Terrian) {
+                drawObject.getDepthTexture().active();
                 drawObject.getDepthTexture().bind();
                 this.getShader().setInteger("u_depthTexture", drawObject.getDepthTexture().getBindIndex());
             }
@@ -139,6 +143,8 @@ export default class Renderer {
         this.updateUBO(UniformBinding.Camera, new Float32Array([...lightViewInverse, ...this.lightProjection]));
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
+            drawObject.getTexture().active();
+            drawObject.getTexture().bind()
             drawObject.draw();
         });
         this.objectlist.splice(0, this.objectlist.length);

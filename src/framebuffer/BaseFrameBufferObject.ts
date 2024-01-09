@@ -18,6 +18,8 @@ export default class BaseFrameBufferObject implements FrameBufferObject {
     }
     attach(texture: Texture): void {
         this.bind();
+        texture.active();
+        texture.bind();
         if (texture.getBindIndex() === TextureBindIndex.Depth) {
             this.getGL().framebufferDepthTexture2D(texture.getTextureIndex());
         } else if (texture.getBindIndex() === TextureBindIndex.Pick) {

@@ -14,7 +14,7 @@ server.onMessage((data, reply) => {
         }
         switch (message.type) {
             case "GameInit":
-                reply([{ type: "WorkerInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }]);
+                // reply([{ type: "WorkerInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }]);
                 engine.room.lightFire();
                 break;
             case "Ping":

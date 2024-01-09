@@ -17,9 +17,14 @@ export default class WaterRenderer extends Renderer {
                 throw new Error("drawObject is not water")
             }
             drawObject.bind();
+            drawObject.getTexture().active();
+            drawObject.getTexture().bind()
+            drawObject.getReflectTexture().active();
             drawObject.getReflectTexture().bind();
-            drawObject.getDistortionTexture().bind();
+            drawObject.getNormalTexture().active();
             drawObject.getNormalTexture().bind();
+            drawObject.getDistortionTexture().active();
+            drawObject.getDistortionTexture().bind();
             this.getShader().setFloat("u_frames", (this.frames++ / 1000) % 1.0);
             this.getShader().setInteger("u_refractTexture", drawObject.getTexture().getBindIndex());
             this.getShader().setInteger("u_reflectTexture", drawObject.getReflectTexture().getBindIndex());
