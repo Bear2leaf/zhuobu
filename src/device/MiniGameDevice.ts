@@ -49,7 +49,7 @@ export default class MiniGameDevice extends Device {
         return this.getPerformance().now() / this.divideTimeBy;
     }
     reload(): void {
-        
+
     }
     async loadSubpackage(): Promise<null> {
         return await new Promise<null>(resolve => {

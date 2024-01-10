@@ -13,7 +13,7 @@ export default class MiniGameWorker extends Worker {
             }
             this.onMessage(data);
         });
-        worker.postMessage([{ type: "WorkerInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }])
+        // worker.postMessage([{ type: "WorkerInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }])
     }
     postMessage(data: WorkerResponse[]): void {
         this.worker.postMessage(data);

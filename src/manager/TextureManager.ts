@@ -39,7 +39,6 @@ export default class TextureManager {
         await this.getCacheManager().loadImageCache("water_distortion");
         await this.getCacheManager().loadImageCache("water_normal");
         await this.getCacheManager().loadImageCache("flowers");
-        await this.getCacheManager().loadSkyboxCache("vz_clear");
         await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
         await this.getCacheManager().loadFontCache("boxy_bold_font");
     }

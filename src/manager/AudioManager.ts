@@ -15,7 +15,15 @@ export default class AudioManager {
     async load(): Promise<void> {
         await this.getCacheManager().getArrayBufferCache().load("resources/audio/bleep.wav");
         await this.getCacheManager().getArrayBufferCache().load("resources/midi/town_theme.bin");
-        this.bleepAudio.setBuffer(this.getCacheManager().getArrayBufferCache().get("resources/audio/bleep.wav"));
+        await this.getCacheManager().loadSoundFontCache("0000_GeneralUserGS");
+        await this.getCacheManager().loadSoundFontCache("0460_GeneralUserGS");
+        await this.getCacheManager().loadSoundFontCache("0730_GeneralUserGS");
+        const soundCache = {
+            "_tone_0000_GeneralUserGS_sf2_file": this.getCacheManager().getSoundfont("0000_GeneralUserGS"),
+            "_tone_0460_GeneralUserGS_sf2_file": this.getCacheManager().getSoundfont("0460_GeneralUserGS"),
+            "_tone_0730_GeneralUserGS_sf2_file": this.getCacheManager().getSoundfont("0730_GeneralUserGS"),
+        }
+        this.midiAudio.getInstance().setSoundCache(soundCache);
         this.midiAudio.setBuffer(this.getCacheManager().getArrayBufferCache().get("resources/midi/town_theme.bin"));
         await this.midiAudio.loadBuffer();
     }
@@ -26,6 +34,16 @@ export default class AudioManager {
             this.midiAudio
         ].forEach(clip => {
             clip.init();
+        });
+        this.bleepAudio.setBuffer(this.getCacheManager().getArrayBufferCache().get("resources/audio/bleep.wav"));
+    }
+    process() {
+        [
+            this.demoAudio,
+            this.bleepAudio,
+            this.midiAudio
+        ].forEach(clip => {
+            clip.update();
         });
     }
 

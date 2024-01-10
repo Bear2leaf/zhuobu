@@ -1,4 +1,3 @@
-import { SoundFontType } from "../soundfont/index.js";
 import { EventType } from "./MIDIType.js";
 import { MIDIEvents } from "./MIDIEvents.js";
 import { MIDIFileHeader } from "./MIDIFileHeader.js";
@@ -168,7 +167,7 @@ export default class MIDIFile {
             }
         }
     }
-    startNote(event: EventType, song: SoundFontType) {
+    startNote(event: EventType, song: Record<string, any>) {
         const track = this.takeTrack(event.channel, song);
         track.notes.push({
             when: event.playTime / 1000,
@@ -178,7 +177,7 @@ export default class MIDIFile {
             slides: []
         });
     }
-    closeNote(event: EventType, song: SoundFontType) {
+    closeNote(event: EventType, song: Record<string, any>) {
         const track = this.takeTrack(event.channel, song);
         for (let i = 0; i < track.notes.length; i++) {
             if (track.notes[i].duration == 0.0000001 //
@@ -189,7 +188,7 @@ export default class MIDIFile {
             }
         }
     }
-    addSlide(event: EventType, song: SoundFontType, pitchBendRange: number) {
+    addSlide(event: EventType, song: Record<string, any>, pitchBendRange: number) {
         const track = this.takeTrack(event.channel, song);
         for (let i = 0; i < track.notes.length; i++) {
             if (track.notes[i].duration == 0.0000001 //
@@ -201,13 +200,13 @@ export default class MIDIFile {
             }
         }
     }
-    startDrum(event: EventType, song: SoundFontType) {
+    startDrum(event: EventType, song: Record<string, any>) {
         const beat = this.takeBeat(event.param1, song);
         beat.notes.push({
             when: event.playTime / 1000
         });
     }
-    takeTrack(n: number, song: SoundFontType) {
+    takeTrack(n: number, song: Record<string, any>) {
         for (let i = 0; i < song.tracks.length; i++) {
             if (song.tracks[i].n == n) {
                 return song.tracks[i];
@@ -222,7 +221,7 @@ export default class MIDIFile {
         song.tracks.push(track);
         return track;
     }
-    takeBeat(n: number, song: SoundFontType) {
+    takeBeat(n: number, song: Record<string, any>) {
         for (let i = 0; i < song.beats.length; i++) {
             if (song.beats[i].n == n) {
                 return song.beats[i];

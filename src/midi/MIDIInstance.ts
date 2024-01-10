@@ -1,4 +1,3 @@
-import { SoundFontType } from "../soundfont/index.js";
 import MIDIFile from "./MIDIFile.js";
 import MIDIPlayer from "./MIDIPlayer.js";
 
@@ -81,6 +80,9 @@ export default class MidiInstance {
                 }
             }
         }
+    }
+    setSoundCache(soundCache: Record<string, any>) {
+        this.player.loader.setSoundCache(soundCache);
     }
     async startLoad() {
 

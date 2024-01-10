@@ -1,9 +1,7 @@
 import MIDIPlayer from "./MIDIPlayer.js";
-import * as sounds from "../soundfont/index.js";
 import { CachedPreset, NumPair, WavePreset, PresetInfo } from "./MIDIType.js";
 export default class SoundFontLoader {
-	private readonly soundCache: sounds.SoundFontType = {};
-	private readonly cached: CachedPreset[] = [];
+	private soundCache?: Record<string, any>;
 	private readonly player: MIDIPlayer;
 	private readonly instrumentKeyArray: string[] = [
 		'0000_JCLive_sf2_file', '0000_Aspirin_sf2_file', '0000_Chaos_sf2_file', '0000_FluidR3_GM_sf2_file', '0000_GeneralUserGS_sf2_file', '0000_SBLive_sf2', '0000_SoundBlasterOld_sf2'
@@ -397,50 +395,32 @@ export default class SoundFontLoader {
 		this.player = player;
 	}
 	getPresetByInstr(instr: string): WavePreset {
-		return this.soundCache[instr];
+		if (!this.soundCache) {
+			throw new Error('sound cache not set');
+		}
+		const preset: WavePreset = this.soundCache[instr];
+		if (!preset) {
+			throw new Error('preset not found: ' + instr);
+		}
+		return preset;
+	}
+	setSoundCache(soundCache: Record<string, any>) {
+		this.soundCache = soundCache;
 	}
 	async startLoad(audioContext: AudioContext, filePath: string, variableName: string) {
-		if (this.soundCache[variableName]) {
-			return;
-		}
-		for (let i = 0; i < this.cached.length; i++) {
-			if (this.cached[i].variableName == variableName) {
-				return;
-			}
-		}
-		this.cached.push({
-			filePath: filePath,
-			variableName: variableName
-		});
-		if (!(sounds as sounds.SoundFontType)[variableName]) {
-			throw new Error("ERROR: missing file " + filePath);
-		}
-		this.soundCache[variableName] = (sounds as sounds.SoundFontType)[variableName];
-		await this.player.adjustPreset(audioContext, this.soundCache[variableName]);
+		await this.player.adjustPreset(audioContext, this.getPresetByInstr(variableName));
 	};
 	loaded(variableName: string): boolean {
-		if (!(this.soundCache[variableName])) {
+		if (!(this.getPresetByInstr(variableName))) {
 			return false;
 		}
-		const preset: WavePreset = (this.soundCache[variableName]) as WavePreset;
+		const preset: WavePreset = this.getPresetByInstr(variableName);
 		for (let i = 0; i < preset.zones.length; i++) {
 			if (!(preset.zones[i].buffer)) {
 				return false;
 			}
 		}
 		return true;
-	};
-	progress(): number {
-		if (this.cached.length > 0) {
-			for (let k = 0; k < this.cached.length; k++) {
-				if (!this.loaded(this.cached[k].variableName)) {
-					return k / this.cached.length;
-				}
-			}
-			return 1;
-		} else {
-			return 1;
-		}
 	};
 	instrumentTitles(): string[] {
 		return this.instrumentNamesArray;

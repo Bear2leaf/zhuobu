@@ -33,6 +33,7 @@ export default class MidiAudio implements AudioClip {
         return this.instance;
     }
     init() {
+        this.playOnce();
     }
     async loadBuffer() {
         await this.getInstance().loadBuffer(this.getBuffer());

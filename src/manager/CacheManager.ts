@@ -58,6 +58,11 @@ export default class CacheManager {
         if (font === undefined) throw new Error(`fontCache resources/font/${name}.json not found`);
         return font;
     }
+    getSoundfont(name: string) {
+        const font = this.textCache.get(`resources/soundfont/${name}.json`);
+        if (font === undefined) throw new Error(`fontCache resources/soundfont/${name}.json not found`);
+        return JSON.parse(font);
+    }
 
 
     async loadImageCache(url: string) {
@@ -79,6 +84,9 @@ export default class CacheManager {
     async loadFontCache(name: string) {
         await this.jsonCache.load(`resources/font/${name}.json`)
         await this.imageCache.load(`resources/texture/${name}.png`);
+    }
+    async loadSoundFontCache(name: string) {
+        await this.textCache.load(`resources/soundfont/${name}.json`)
     }
 
     async loadShaderTxtCache(name: string) {
