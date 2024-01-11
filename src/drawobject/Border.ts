@@ -16,7 +16,6 @@ export default class Border extends DrawObject {
     create() {
         const textBoundingSize = this.getEntity().get(SDFCharacter).getBoundingSize();
         const { x, y, z, w } = textBoundingSize;
-        console.log("textBoundingSize", textBoundingSize);
         this.vertices[0].set(x, y, 0);
         this.vertices[1].set(x + z, y, 0);
         this.vertices[2].set(x + z, y + w, 0);

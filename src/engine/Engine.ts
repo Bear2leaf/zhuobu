@@ -15,7 +15,7 @@ import OffscreenCanvasManager from "../manager/OffscreenCanvasManager.js";
 import Device from "../device/Device.js";
 
 
-export default abstract class Game {
+export default abstract class Engine {
     private rafId: number = 0;
     private readonly cacheManager = new CacheManager;
     private readonly gltfManager = new GLTFManager;

@@ -1,2 +1,2 @@
-import MiniGame from "./game/MiniGame.js"
-new MiniGame();
+import MiniGameEngine from "./engine/MiniGameEngine.js"
+new MiniGameEngine();

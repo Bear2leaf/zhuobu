@@ -1,9 +1,10 @@
 {
+    
     "compilerOptions": {
-        "outDir": "../dist/adr",
+        "outDir": "./dist/",
+        "module": "commonjs",
         "rootDir": ".",
         "strict": true,
-        "target": "ES2015",
-        "types": ["./type.d.ts"]
+        "target": "ES2015"
     }
 }

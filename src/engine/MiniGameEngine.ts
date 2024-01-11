@@ -1,10 +1,10 @@
 
 
 import MiniGameDevice from "../device/MiniGameDevice.js";
-import Game from "./Game.js";
+import Engine from "./Engine.js";
 
 
-export default class MiniGame extends Game {
+export default class MiniGameEngine extends Engine {
     constructor() {
         super();
         const device = new MiniGameDevice();

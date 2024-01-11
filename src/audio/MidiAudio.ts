@@ -44,7 +44,7 @@ export default class MidiAudio implements AudioClip {
         await this.getInstance().loadBuffer(cacheManager.getMidi(this.midiName));
     }
     init() {
-        this.playOnce();
+        // this.playOnce();
     }
 
     update(): void {

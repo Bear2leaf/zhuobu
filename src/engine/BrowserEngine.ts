@@ -1,8 +1,8 @@
 
 import BrowserDevice from "../device/BrowserDevice.js";
-import Game from "./Game.js";
+import Engine from "./Engine.js";
 
-export default class BrowserGame extends Game {
+export default class BrowserEngine extends Engine {
     private readonly canvas: HTMLCanvasElement;
     private readonly offscreenCanvas: HTMLCanvasElement;
     private readonly sdfCanvas: HTMLCanvasElement;

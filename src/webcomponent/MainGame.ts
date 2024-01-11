@@ -1,7 +1,7 @@
-import BrowserGame from "../game/BrowserGame.js";
+import BrowserEngine from "../engine/BrowserEngine.js";
 
 export default class MainGame extends HTMLElement {
-    private readonly game: BrowserGame;
+    private readonly game: BrowserEngine;
     private readonly elChildren: HTMLElement[] = []
     addChildren(el: HTMLElement) {
         this.elChildren.push(el);
@@ -13,7 +13,7 @@ export default class MainGame extends HTMLElement {
 
     constructor() {
         super();
-        this.game = new BrowserGame(this);
+        this.game = new BrowserEngine(this);
     }
 
 }

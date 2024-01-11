@@ -1,19 +1,15 @@
+import Game from "./game/Game.js";
 import Worker from "./Worker.js";
 
-export type MiniGameWorkerType = { onMessage: (callback: (data: WorkerRequest[]) => void) => void, postMessage: (data: WorkerResponse[]) => void }
+export type MiniGameWorkerType = { onMessage: (callback: (data: WorkerRequest) => void) => void, postMessage: (data: WorkerResponse[]) => void }
 
 export default class MiniGameWorker extends Worker {
+    private readonly game = new Game();
     constructor(private readonly worker: MiniGameWorkerType) {
         super();
-        this.onMessage = console.log
-        worker.onMessage((data: WorkerRequest[]) => {
-
-            if (this.onMessage === undefined) {
-                throw new Error("onMessage is undefined");
-            }
-            this.onMessage(data);
+        worker.onMessage((data) => {
+            this.game.onMessage([data], this.postMessage.bind(this));
         });
-        // worker.postMessage([{ type: "WorkerInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }])
     }
     postMessage(data: WorkerResponse[]): void {
         this.worker.postMessage(data);
