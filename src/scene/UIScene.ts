@@ -24,5 +24,4 @@ export default class UIScene extends Scene {
             || false
         )
     }
-
 }

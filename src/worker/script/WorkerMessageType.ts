@@ -5,6 +5,7 @@ export type WorkerResponse =
     | { type: "Refresh"; }
     | { type: "ToggleUI"; }
     | { type: "CreateMessageUI"; }
+    | { type: "AddMessage"; args: [string] }
 
     | never;
 export type WorkerRequest =

@@ -46,6 +46,9 @@ export default class WorkerManager {
                 case "GameInit":
                     this.getEventManager().workerMessage.notifyEngineInit();
                     break;
+                case "AddMessage":
+                    this.getEventManager().workerMessage.notifyAddMessage(workerResponse.args[0]);
+                    break;
                 default:
                     throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
             }

@@ -12,7 +12,7 @@ export default class Game {
             }
             switch (message.type) {
                 case "EngineInit":
-                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }]);
+                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, {type: "AddMessage", args: ["Hello World!"]}]);
                     break;
                 case "Ping":
                     reply([{ type: "Pong", args: [1, 2, 3] }]);

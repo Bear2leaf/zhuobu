@@ -14,6 +14,7 @@ export default class SceneManager {
     private readonly emptyScene = new InitScene;
     private current: Scene = this.emptyScene;
     private eventManager?: EventManager;
+    private messageObject?: MessageObject
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {
             throw new Error("eventManager is undefined");
@@ -55,6 +56,12 @@ export default class SceneManager {
             this.current = this.uiScene;
         }
     }
+    addMessage(message: string) {
+        if (this.messageObject === undefined) {
+            throw new Error("messageObject is undefined");
+        }
+        this.messageObject.get(SDFCharacter).updateChars(message);
+    }
     loadInitScene() {
         this.current = this.gltfScene;
     }
@@ -68,6 +75,7 @@ export default class SceneManager {
         object.get(TRS).getPosition().set(-6, 0, 0);
         object.get(Node).updateWorldMatrix();
         object.get(SDFCharacter).updateChars("Hello World! abc.\n123\n456");
+        this.messageObject = object;
     }
     update() {
         this.emptyScene.update();
