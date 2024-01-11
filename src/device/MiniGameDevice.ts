@@ -109,7 +109,7 @@ export default class MiniGameDevice extends Device {
         });
     }
     readJson(file: string): Promise<Object> {
-        return new Promise(resolve => resolve(JSON.parse(String.fromCharCode(...new Uint8Array(wx.getFileSystemManager().readFileSync(file))))));
+        return new Promise(resolve => resolve(JSON.parse(wx.getFileSystemManager().readFileSync(file, 'utf-8'))));
     }
     readText(file: string): Promise<string> {
         return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')));

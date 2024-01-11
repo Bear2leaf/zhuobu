@@ -59,9 +59,19 @@ export default class CacheManager {
         return font;
     }
     getSoundfont(name: string) {
-        const font = this.textCache.get(`resources/soundfont/${name}.json`);
-        if (font === undefined) throw new Error(`fontCache resources/soundfont/${name}.json not found`);
-        return JSON.parse(font);
+        const font = this.jsonCache.get(`resources/soundfont/${name}.json`);
+        if (font === undefined) throw new Error(`soundfont resources/soundfont/${name}.json not found`);
+        return font;
+    }
+    getMidi(name: string) {
+        const midi = this.arrayBufferCache.get(`resources/midi/${name}.bin`);
+        if (midi === undefined) throw new Error(`fontCache resources/midi/${name}.bin not found`);
+        return midi;
+    }
+    getWav(name: string) {
+        const wav = this.arrayBufferCache.get(`resources/audio/${name}.wav`);
+        if (wav === undefined) throw new Error(`audio resources/audio/${name}.wav not found`);
+        return wav;
     }
 
 
@@ -86,7 +96,13 @@ export default class CacheManager {
         await this.imageCache.load(`resources/texture/${name}.png`);
     }
     async loadSoundFontCache(name: string) {
-        await this.textCache.load(`resources/soundfont/${name}.json`)
+        await this.jsonCache.load(`resources/soundfont/${name}.json`)
+    }
+    async loadWavCache(name: string) {
+        await this.arrayBufferCache.load(`resources/audio/${name}.wav`)
+    }
+    async loadMidiCache(name: string) {
+        await this.arrayBufferCache.load(`resources/midi/${name}.bin`)
     }
 
     async loadShaderTxtCache(name: string) {

@@ -59,7 +59,7 @@ export default abstract class Game {
         this.textureManager.setDevice(device);
         this.inputManager.setDevice(device);
         this.offscreencanvasManager.setDevice(device);
-        this.audioManager.setAudioContext(device.createWebAudioContext());
+        this.audioManager.setDevice(device);
         this.cameraManager.initObservers();
         this.inputManager.initObservers();
         this.eventManager.initObservers();
@@ -75,6 +75,7 @@ export default abstract class Game {
         this.sceneManager.initObservers();
         this.sceneManager.initSubjects();
         this.sceneManager.registerEntities();
+        this.audioManager.initAudioContext();
     }
     buildDependency() {
         this.rendererManager.setEventManager(this.eventManager);
