@@ -24,6 +24,11 @@ export default class SDFCharacter extends DrawObject {
         this.create();
         this.getEntity().get(Border).create();
     }
+    appendChars(chars: string) {
+        this.chars.push(...chars);
+        this.create();
+        this.getEntity().get(Border).create();
+    }
     getChars() {
         return this.chars;
     }

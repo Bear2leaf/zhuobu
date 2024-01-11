@@ -57,12 +57,18 @@ export default class SceneManager {
         }
     }
     addMessage(message: string) {
+        this.getMessageObject().get(SDFCharacter).appendChars(`\n${message}`);
+    }
+    getMessageObject(): MessageObject {
         if (this.messageObject === undefined) {
             throw new Error("messageObject is undefined");
         }
-        this.messageObject.get(SDFCharacter).updateChars(message);
+        return this.messageObject;
     }
     loadInitScene() {
+        if (this.messageObject) {
+            this.uiScene.removeEntity(this.getMessageObject());
+        }
         this.current = this.gltfScene;
     }
     createMessageUI() {

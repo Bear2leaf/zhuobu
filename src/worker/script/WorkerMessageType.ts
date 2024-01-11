@@ -3,6 +3,7 @@ export type WorkerResponse =
     | { type: "GameInit"; }
     | { type: "Pong"; args: [1, 2, 3]; }
     | { type: "Refresh"; }
+    | { type: "Reconnect"; }
     | { type: "ToggleUI"; }
     | { type: "CreateMessageUI"; }
     | { type: "AddMessage"; args: [string] }

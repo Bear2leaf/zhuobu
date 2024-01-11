@@ -37,6 +37,9 @@ export default class WorkerManager {
                 case "Refresh":
                     this.getDevice().reload();
                     break;
+                case "Reconnect":
+                    this.postMessage({ type: "EngineInit" });
+                    break;
                 case "ToggleUI":
                     this.getEventManager().workerMessage.notifyToggleUI();
                     break;
@@ -44,7 +47,7 @@ export default class WorkerManager {
                     this.getEventManager().workerMessage.notifyCreateMessageUI();
                     break;
                 case "GameInit":
-                    this.getEventManager().workerMessage.notifyEngineInit();
+                    this.getEventManager().workerMessage.notifyGameInit();
                     break;
                 case "AddMessage":
                     this.getEventManager().workerMessage.notifyAddMessage(workerResponse.args[0]);
