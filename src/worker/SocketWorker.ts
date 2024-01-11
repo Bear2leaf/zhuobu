@@ -20,14 +20,11 @@ export default class SocketWorker extends Worker {
     }
     connectWebsocket() {
         try {
-            console.debug("connecting");
             const ws = new WebSocket('ws://localhost:4000');
             ws.onmessage = (event) => {
-                console.debug("onmessage");
                 this.postMessage(JSON.parse(event.data))
             }
             ws.onopen = () => {
-                console.debug("onopen");
                 if (this.reconnectCount > 0) {
                     this.postMessage([{ type: "Refresh" }]);
                 }
@@ -37,11 +34,9 @@ export default class SocketWorker extends Worker {
                 };
             }
             ws.onclose = () => {
-                console.debug("onclose");
                 this.handleReconnect();
             }
             ws.onerror = () => {
-                console.debug("onerror");
                 this.handleReconnect();
             }
         } catch (e) {

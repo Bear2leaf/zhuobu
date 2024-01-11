@@ -1,10 +1,8 @@
-import { foo } from "./Foo.js";
 import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class Game {
     onMessage(data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) {
-        console.log("onMessage: ", data);
+        console.log("[WorkerReceive]", data);
         if (!data || data.length === 0) {
-            foo();
             return;
         }
         while (data.length) {
@@ -13,8 +11,8 @@ export default class Game {
                 throw new Error("message is undefined");
             }
             switch (message.type) {
-                case "GameInit":
-                    reply([{ type: "WorkerInit" }, { type: "EngineInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }]);
+                case "EngineInit":
+                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }]);
                     break;
                 case "Ping":
                     reply([{ type: "Pong", args: [1, 2, 3] }]);

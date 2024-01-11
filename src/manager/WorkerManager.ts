@@ -18,7 +18,7 @@ export default class WorkerManager {
         this.callback = callback;
     }
     private messageHandler(data: WorkerResponse[]): void {
-        console.log("messageHandler", data)
+        console.log("[EngineReceive]", data)
         this.workerResponseQueue.push(...data);
     }
     processMessage() {
@@ -43,7 +43,7 @@ export default class WorkerManager {
                 case "CreateMessageUI":
                     this.getEventManager().workerMessage.notifyCreateMessageUI();
                     break;
-                case "EngineInit":
+                case "GameInit":
                     this.getEventManager().workerMessage.notifyEngineInit();
                     break;
                 default:
@@ -66,7 +66,7 @@ export default class WorkerManager {
             , this.messageHandler.bind(this)
             , this.setCallback.bind(this)
         );
-        this.postMessage({ type: "GameInit" });
+        this.postMessage({ type: "EngineInit" });
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

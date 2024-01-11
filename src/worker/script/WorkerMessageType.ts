@@ -1,6 +1,6 @@
 export type WorkerResponse =
     { type: "WorkerInit"; }
-    | { type: "EngineInit"; }
+    | { type: "GameInit"; }
     | { type: "Pong"; args: [1, 2, 3]; }
     | { type: "Refresh"; }
     | { type: "ToggleUI"; }
@@ -9,6 +9,6 @@ export type WorkerResponse =
     | never;
 export type WorkerRequest =
     { type: "Ping"; args: ["Hello"]; }
-    | { type: "GameInit"; }
+    | { type: "EngineInit"; }
 
     | never;
