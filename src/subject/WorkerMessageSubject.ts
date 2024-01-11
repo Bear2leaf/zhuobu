@@ -2,6 +2,7 @@ import WorkerMessageCommand from "../command/WorkerMessageCommand.js";
 import ToggleUICommand from "../command/ToggleUICommand.js";
 import Subject from "./Subject.js";
 import CreateMessageUI from "../command/CreateMessageUI.js";
+import EngineInit from "../command/EngineInit.js";
 
 export default class WorkerMessageSubject extends Subject {
     private command?: WorkerMessageCommand;
@@ -20,6 +21,10 @@ export default class WorkerMessageSubject extends Subject {
     }
     notifyCreateMessageUI(): void {
         this.setCommand(new CreateMessageUI());
+        this.notify();
+    }
+    notifyEngineInit() {
+        this.setCommand(new EngineInit());
         this.notify();
     }
     public notify(): void {

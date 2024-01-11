@@ -1,4 +1,5 @@
 import Device from "../device/Device.js";
+import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
 import EventManager from "./EventManager.js";
 
 export default class WorkerManager {
@@ -41,6 +42,9 @@ export default class WorkerManager {
                     break;
                 case "CreateMessageUI":
                     this.getEventManager().workerMessage.notifyCreateMessageUI();
+                    break;
+                case "EngineInit":
+                    this.getEventManager().workerMessage.notifyEngineInit();
                     break;
                 default:
                     throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);

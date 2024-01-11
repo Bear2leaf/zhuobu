@@ -1,4 +1,4 @@
-import Game from "./game/Game.js";
+import Game from "../worker/script/Game.js";
 import Server from "./server.js";
 const server = new Server();
 server.init();

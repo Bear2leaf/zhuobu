@@ -1,11 +1,11 @@
 //@ts-ignore
 import { STATUS_CODES, createServer } from 'http';
 //@ts-ignore
-import { EventEmitter } from "stream";
+import { EventEmitter } from "node:events";
 //@ts-ignore
 import { createHash } from "crypto";
 //@ts-ignore
-import { watch } from "fs";
+import { WorkerRequest, WorkerResponse } from '../worker/script/WorkerMessageType.js';
 enum OPCODES {
     text = 0x01,
     close = 0x08

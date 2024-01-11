@@ -1,3 +1,4 @@
+import { WorkerRequest, WorkerResponse } from "./script/WorkerMessageType.js";
 
 
 

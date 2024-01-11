@@ -1,6 +1,7 @@
 import WorkerManager from "../manager/WorkerManager.js";
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
+import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 export type Rectangle = { left: number, top: number, width: number, height: number, right: number, bottom: number }
 

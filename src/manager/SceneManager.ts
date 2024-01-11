@@ -6,11 +6,13 @@ import MessageObject from "../entity/MessageObject.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
+import InitScene from "../scene/InitScene.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
     private readonly gltfScene = new GLTFScene;
-    private current: Scene = this.gltfScene;
+    private readonly emptyScene = new InitScene;
+    private current: Scene = this.emptyScene;
     private eventManager?: EventManager;
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {
@@ -22,10 +24,12 @@ export default class SceneManager {
         this.eventManager = eventManager;
     }
     registerEntities(): void {
+        this.emptyScene.registerEntities();
         this.gltfScene.registerEntities();
         this.uiScene.registerEntities();
     }
     initSceneEntities(): void {
+        this.emptyScene.initEntities();
         this.gltfScene.initEntities();
         this.uiScene.initEntities();
     }
@@ -51,6 +55,9 @@ export default class SceneManager {
             this.current = this.uiScene;
         }
     }
+    loadInitScene() {
+        this.current = this.gltfScene;
+    }
     createMessageUI() {
         const object = new MessageObject();
         object.addDefaultComponents();
@@ -63,6 +70,7 @@ export default class SceneManager {
         object.get(SDFCharacter).updateChars("Hello World! abc.\n123\n456");
     }
     update() {
+        this.emptyScene.update();
         this.gltfScene.update();
         this.uiScene.update();
     }
@@ -72,6 +80,14 @@ export default class SceneManager {
     }
     initSubjects() {
         const eventManager = this.getEventManager();
+        this.emptyScene.setEntitySubjects(
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
         this.gltfScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
