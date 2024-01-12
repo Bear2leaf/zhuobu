@@ -7,6 +7,7 @@ import Border from "./Border.js";
 export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 0.3, 0.3, 1];
     private spacing: number = 0;
+    private readonly lineBreakHeight = 32;
     private readonly chars: string[] = [];
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
@@ -46,7 +47,6 @@ export default class SDFCharacter extends DrawObject {
         this.textBoundingSize.set(0, 0, 0, 0);
         const batch = this.vertices;
         const batchTexcoords = this.texcoords;
-        const spaceScalar = 7;
         for (const c of chars) {
             const ch = this.fontInfo[c];
             const xpos = x - ch.offsetX;
@@ -56,7 +56,7 @@ export default class SDFCharacter extends DrawObject {
             x += w + spacing;
             if (c === '\n') {
                 x = ox;
-                y += h * spaceScalar + spacing;
+                y += -this.lineBreakHeight + spacing;
                 continue;
             } else if (c === ' ') {
                 continue;
