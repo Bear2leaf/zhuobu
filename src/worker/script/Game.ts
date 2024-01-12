@@ -1,3 +1,4 @@
+import SurvivalEngine from "./SurvivalEngine.js";
 import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class Game {
     onMessage(data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) {
@@ -24,5 +25,7 @@ export default class Game {
     }
     start() {
         console.log("game start");
+        const survivalEngine = new SurvivalEngine("Player");
+        survivalEngine.play();
     }
 }
