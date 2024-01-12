@@ -3,23 +3,23 @@ import SeedableRandom from "./SeedableRandom.js";
 export default class SurvivalEngine {
   private SRNG: SeedableRandom;
   private playerName: string;
-  private playerHealth: number;
   private playerHunger: number;
   private playerThirst: number;
   private resources: number;
   private days: number = 1;
+  private get playerHealth(): number {
+    return 100 - Math.max(this.playerHunger, this.playerThirst) ;
+  }
 
   constructor(playerName: string) {
     this.SRNG = new SeedableRandom();
     this.playerName = playerName;
-    this.playerHealth = 100;
     this.playerHunger = 0;
     this.playerThirst = 0;
     this.resources = 0;
   }
   private reset(): void {
     this.SRNG = new SeedableRandom();
-    this.playerHealth = 100;
     this.playerHunger = 0;
     this.playerThirst = 0;
     this.resources = 0;
@@ -29,12 +29,12 @@ export default class SurvivalEngine {
     console.log(message);
   }
   private printStatus(): void {
+    this.log('------------------------');
     this.log(`Player: ${this.playerName}`);
     this.log(`Health: ${this.playerHealth}`);
     this.log(`Hunger: ${this.playerHunger}`);
     this.log(`Thirst: ${this.playerThirst}`);
     this.log(`Resources: ${this.resources}`);
-    this.log('------------------------');
   }
 
   private explore(): void {
@@ -46,17 +46,27 @@ export default class SurvivalEngine {
     // Add logic for other exploration events, challenges, etc.
   }
 
-  private survive(): void {
-    this.log(`Surviving ${this.days++} Day...`);
+  private survival(): void {
+    this.log('------------------------');
+    this.log(`Survived ${this.days++} Day...`);
     this.playerHunger += 5;
     this.playerThirst += 5;
-    this.playerHealth -= 10;
 
     // Add logic for managing hunger, thirst, and other survival aspects.
   }
   private rest(): void {
     this.log('Resting...');
-    this.playerHealth += 5;
+    const consumedResources = Math.floor(this.SRNG.nextFloat() * 5) + 1; // Random resources consumed (adjust as needed)
+    if (this.resources >= consumedResources) {
+      this.log(`You consumed ${consumedResources} resources.`);
+      this.resources -= consumedResources;
+      const recoveredHunger = Math.floor(this.SRNG.nextFloat() * 10) + 5; // Random hunger recovered (adjust as needed)
+      this.log(`You recover ${recoveredHunger} hunger.`);
+      this.playerHunger -= recoveredHunger;
+      const recoveredThirst = Math.floor(this.SRNG.nextFloat() * 10) + 5; // Random thirst recovered (adjust as needed)
+      this.log(`You recover ${recoveredThirst} thirst.`);
+      this.playerThirst -= recoveredThirst;
+    }
 
     // Add logic for other effects of resting
   }
@@ -73,21 +83,18 @@ export default class SurvivalEngine {
       this.log('2. Rest');
 
       // User input
-      const choice: string = this.SRNG.choice(['1', '2']);
+      const choice: string = this.SRNG.choice(['1', '2', '3']);
       this.log(`You chose ${choice}.`);
 
       switch (choice) {
         case '1':
           this.explore();
           break;
-        case '2':
+        default:
           this.rest();
           break;
-        default:
-          this.log('Invalid choice. Please choose again.');
-          continue;
       }
-      this.survive();
+      this.survival();
       // Check if player has enough resources to survive
       if (this.resources >= 20) {
         this.log('You have enough resources to survive! Congratulations!');
