@@ -6,9 +6,10 @@ export default class SurvivalEngine {
   private playerHunger: number;
   private playerThirst: number;
   private resources: number;
-  private days: number = 1;
+  private days: number = 0;
+  private gameOver: boolean = false;
   private get playerHealth(): number {
-    return 100 - Math.max(this.playerHunger, this.playerThirst) ;
+    return 100 - Math.max(this.playerHunger, this.playerThirst);
   }
 
   constructor(playerName: string) {
@@ -24,9 +25,6 @@ export default class SurvivalEngine {
     this.playerThirst = 0;
     this.resources = 0;
     this.days = 1;
-  }
-  log: (message: string) => void = (message: string) => {
-    console.log(message);
   }
   private printStatus(): void {
     this.log('------------------------');
@@ -53,6 +51,18 @@ export default class SurvivalEngine {
     this.playerThirst += 5;
 
     // Add logic for managing hunger, thirst, and other survival aspects.
+    if (this.resources >= 20) {
+      // Check if player has enough resources to survive
+      this.log('You have enough resources to survive! Congratulations!');
+      this.gameOver = true;
+    } else if (this.playerHealth <= 0) {
+      // Check for game over condition
+      this.log('Game Over! Your character has died.');
+      this.gameOver = true;
+    } else {
+      this.gameOver = false;
+    }
+
   }
   private rest(): void {
     this.log('Resting...');
@@ -70,12 +80,15 @@ export default class SurvivalEngine {
 
     // Add logic for other effects of resting
   }
+  public log: (message: string) => void = (message: string) => {
+    console.log(message);
+  }
   public start(): void {
     this.reset();
     this.log('Welcome to the Survival Game!');
     this.log('------------------------');
 
-    while (true) {
+    while (!this.gameOver) {
       this.printStatus();
 
       // Player options
@@ -95,16 +108,6 @@ export default class SurvivalEngine {
           break;
       }
       this.survival();
-      // Check if player has enough resources to survive
-      if (this.resources >= 20) {
-        this.log('You have enough resources to survive! Congratulations!');
-        return;
-      }
-      // Check for game over condition
-      if (this.playerHealth <= 0) {
-        this.log('Game Over! Your character has died.');
-        return;
-      }
     }
   }
 }
