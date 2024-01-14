@@ -1,6 +1,7 @@
 import AnimationController from "../controller/AnimationController.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
@@ -50,6 +51,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {
                 this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
+            } else if (entity.has(HelloMultiMesh)) {
+                this.rendererManager.getMeshRenderer().addObject(entity.get(HelloMultiMesh));
             } else if (entity.has(Skybox)) {
                 this.rendererManager.getSkyboxRenderer().addObject(entity.get(Skybox));
             } else if (entity.has(Water)) {

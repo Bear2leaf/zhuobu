@@ -21,6 +21,7 @@ import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
+import HelloWireframe from "../drawobject/HelloWireframe.js";
 
 const glTypeToTypedArrayMap = {
     '5120': Int8Array,    // gl.BYTE
@@ -159,8 +160,15 @@ export default class GLTF {
                 , jointNodes
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
-        } else {
+        } else if (entity.has(HelloWireframe)) {
             entity.get(Mesh).setWireframeMeshData(
+                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
+                , this.getDataByAccessorIndex(positionIndex) as Float32Array
+                , this.getDataByAccessorIndex(normalIndex) as Float32Array
+                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
+            );
+        } else {
+            entity.get(Mesh).setMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array

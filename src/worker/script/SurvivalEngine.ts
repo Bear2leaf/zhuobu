@@ -37,7 +37,7 @@ export default class SurvivalEngine {
 
   private explore(): void {
     this.log('Exploring...');
-    const foundResources = Math.floor(this.SRNG.nextFloat() * 5) + 1; // Random resources (adjust as needed)
+    const foundResources = Math.floor(this.SRNG.nextFloat() * 10) + 2; // Random resources (adjust as needed)
     this.log(`You found ${foundResources} resources.`);
     this.resources += foundResources;
 
@@ -51,7 +51,7 @@ export default class SurvivalEngine {
     this.playerThirst += 5;
 
     // Add logic for managing hunger, thirst, and other survival aspects.
-    if (this.resources >= 20) {
+    if (this.resources >= 50) {
       // Check if player has enough resources to survive
       this.log('You have enough resources to survive! Congratulations!');
       this.gameOver = true;
@@ -66,7 +66,7 @@ export default class SurvivalEngine {
   }
   private rest(): void {
     this.log('Resting...');
-    const consumedResources = Math.floor(this.SRNG.nextFloat() * 5) + 1; // Random resources consumed (adjust as needed)
+    const consumedResources = Math.floor(this.SRNG.nextFloat() * 5) + 2; // Random resources consumed (adjust as needed)
     if (this.resources >= consumedResources) {
       this.log(`You consumed ${consumedResources} resources.`);
       this.resources -= consumedResources;

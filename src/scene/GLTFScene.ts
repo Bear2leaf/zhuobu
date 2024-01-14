@@ -1,6 +1,7 @@
 
 import CameraControllerObject from "../entity/CameraControllerObject.js";
 import Entity from "../entity/Entity.js";
+import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import MeshObject from "../entity/MeshObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
@@ -15,10 +16,10 @@ export default class GLTFScene extends Scene {
             new CameraControllerObject()
             , new SkyboxObject()
             , new WaterObject()
-            , new TerrianObject()
+            // , new TerrianObject()
             , new SkinMeshObject()
             , new MeshObject()
-            , new HelloWireframeObject()
+            , new HelloMultiMeshObject()
         ];
     }
     collectRefractDrawObject() {
@@ -27,6 +28,7 @@ export default class GLTFScene extends Scene {
             || entity instanceof TerrianObject
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
+            || entity instanceof HelloMultiMeshObject
         )
     }
     collectReflectDrawObject() {
@@ -35,12 +37,14 @@ export default class GLTFScene extends Scene {
             || entity instanceof TerrianObject
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
+            || entity instanceof HelloMultiMeshObject
         )
     }
     collectDepthDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject
             || entity instanceof MeshObject
+            || entity instanceof HelloMultiMeshObject
         )
     }
 

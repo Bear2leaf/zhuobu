@@ -19,11 +19,13 @@ export default class GLTFManager {
         await this.getCacheManager().loadGLTFCache("whale.CYCLES");
         await this.getCacheManager().loadGLTFCache("hello");
         await this.getCacheManager().loadGLTFCache("hello-multi");
+        await this.getCacheManager().loadGLTFCache("island");
     }
     setGLTFNames() {
         this.whaleGLTF.setName("whale.CYCLES");
         this.helloGLTF.setName("hello");
-        this.helloMultiGLTF.setName("hello-multi");
+        this.helloMultiGLTF.setName("island");
+        // this.helloMultiGLTF.setName("hello-multi");
 
     }
     setBufferCaches() {

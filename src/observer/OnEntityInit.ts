@@ -1,6 +1,6 @@
 import SDFCanvas from "../canvas/SDFCanvas.js";
-import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -104,6 +104,9 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(HelloWireframe)) {
                 this.gltfManager.initGLTF(this.gltfManager.helloGLTF);
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
+            } else if (entity.has(HelloMultiMesh)) {
+                this.gltfManager.initGLTF(this.gltfManager.helloMultiGLTF);
+                entity.get(HelloMultiMesh).setGLTF(this.gltfManager.helloMultiGLTF.clone());
             }
             entity.get(Mesh).initMesh();
         }
