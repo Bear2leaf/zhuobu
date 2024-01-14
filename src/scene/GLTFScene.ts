@@ -16,10 +16,10 @@ export default class GLTFScene extends Scene {
             new CameraControllerObject()
             , new SkyboxObject()
             , new WaterObject()
-            // , new TerrianObject()
-            , new SkinMeshObject()
-            , new MeshObject()
             , new HelloMultiMeshObject()
+            // , new TerrianObject()
+            , new MeshObject()
+            , new SkinMeshObject()
         ];
     }
     collectRefractDrawObject() {

@@ -10,6 +10,7 @@ import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 
 export default class OnEntityUpdate extends Observer {
 
@@ -42,9 +43,25 @@ export default class OnEntityUpdate extends Observer {
             } else if (entity.has(MoveCircleController)) {
                 this.animationManager.circleAnimator.animate(entity.get(MoveCircleController));
             } else if (entity.has(CameraController) && this.cameraManager) {
-                entity.get(CameraController).setCamera(this.cameraManager.getMainCamera())
+                entity.get(CameraController).setCamera(this.cameraManager.getMainCamera());
                 this.animationManager.cameraAnimator.animate(entity.get(CameraController));
             }
+        }
+        if ((entity.has(Mesh) ) && this.cameraManager) {
+
+            const gltf = entity.get(Mesh).getGLTF();
+            if (!gltf) {
+                throw new Error("gltf not found");
+            }
+            const node = gltf.getNodeByIndex(0);
+            if (!node) {
+                throw new Error("node not found");
+            }
+            const trs =node.getNode().getSource();
+            if (!trs) {
+                throw new Error("trs not found");
+            }
+            this.cameraManager.getMainCamera().fromGLTF(trs.getPosition(), trs.getRotation());
         }
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();
