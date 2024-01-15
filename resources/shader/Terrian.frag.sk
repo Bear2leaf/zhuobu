@@ -23,6 +23,7 @@ layout(location = 2) out vec4 o_reflect;
 layout(location = 3) out vec4 o_refract;
 
 const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
+const float bias = 0.001f;
 
 float shadowCalculation(vec4 fragPosLightSpace) {
     // 执行透视除法
@@ -30,7 +31,7 @@ float shadowCalculation(vec4 fragPosLightSpace) {
     // 变换到[0,1]的范围
     projCoords = projCoords * 0.5f + 0.5f;
     // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
-    float closestDepth = texture(u_depthTexture, projCoords.xy).r; 
+    float closestDepth = texture(u_depthTexture, projCoords.xy).r + bias; 
     // 取得当前片段在光源视角下的深度
     float currentDepth = projCoords.z;
     // 检查当前片段是否在阴影中

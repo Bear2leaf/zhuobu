@@ -9,6 +9,7 @@ import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import Terrian from "../drawobject/Terrian.js";
+import TerrianMesh from "../drawobject/TerrianMesh.js";
 
 
 export default class Renderer {
@@ -125,7 +126,7 @@ export default class Renderer {
                 drawObject.getJointTexture().active();
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            } else if (drawObject instanceof Terrian) {
+            } else if (drawObject instanceof TerrianMesh) {
                 drawObject.getDepthTexture().active();
                 drawObject.getDepthTexture().bind();
                 this.getShader().setInteger("u_depthTexture", drawObject.getDepthTexture().getBindIndex());

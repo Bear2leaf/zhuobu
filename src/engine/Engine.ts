@@ -35,6 +35,7 @@ export default abstract class Engine {
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();
         this.inputManager.initInput();
+        this.gltfManager.initGLTFs();
         this.cameraManager.initCamera();
         this.rendererManager.initRenderer();
         this.framebufferManager.initFramebuffer();
@@ -69,7 +70,6 @@ export default abstract class Engine {
         this.animationManager.initObservers();
         this.offscreencanvasManager.initObservers();
         this.gltfManager.initObservers();
-        this.gltfManager.setGLTFNames();
         this.gltfManager.setBufferCaches();
         this.rendererManager.initShaderName();
         this.sceneManager.initObservers();

@@ -16,8 +16,8 @@ export default class GLTFScene extends Scene {
             new CameraControllerObject()
             , new SkyboxObject()
             , new WaterObject()
-            , new HelloMultiMeshObject()
-            // , new TerrianObject()
+            // , new HelloMultiMeshObject()
+            , new TerrianObject()
             , new MeshObject()
             , new SkinMeshObject()
         ];
@@ -44,7 +44,7 @@ export default class GLTFScene extends Scene {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject
             || entity instanceof MeshObject
-            || entity instanceof HelloMultiMeshObject
+            || entity instanceof TerrianObject
         )
     }
 

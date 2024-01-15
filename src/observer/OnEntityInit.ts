@@ -8,6 +8,7 @@ import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
+import TerrianMesh from "../drawobject/TerrianMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import TextureManager from "../manager/TextureManager.js";
@@ -71,6 +72,9 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(Terrian)) {
                 entity.get(Terrian).setTexture(this.textureManager.defaultTexture);
                 entity.get(Terrian).setDepthTexture(this.textureManager.depthTexture);
+            }  else if (entity.has(TerrianMesh)) {
+                entity.get(TerrianMesh).setTexture(this.textureManager.defaultTexture);
+                entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
             } else if (entity.has(ReflectMap)) {
@@ -99,14 +103,13 @@ export default class OnEntityInit extends Observer {
         }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
-                this.gltfManager.initGLTF(this.gltfManager.whaleGLTF);
                 entity.get(WhaleMesh).setGLTF(this.gltfManager.whaleGLTF.clone());
             } else if (entity.has(HelloWireframe)) {
-                this.gltfManager.initGLTF(this.gltfManager.helloGLTF);
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             } else if (entity.has(HelloMultiMesh)) {
-                this.gltfManager.initGLTF(this.gltfManager.helloMultiGLTF);
                 entity.get(HelloMultiMesh).setGLTF(this.gltfManager.helloMultiGLTF.clone());
+            } else if (entity.has(TerrianMesh)) {
+                entity.get(TerrianMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
             }
             entity.get(Mesh).initMesh();
         }

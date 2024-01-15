@@ -8,6 +8,7 @@ import SDFCharacter from "../drawobject/SDFCharacter.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
+import TerrianMesh from "../drawobject/TerrianMesh.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
@@ -43,6 +44,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
             }  else if (entity.has(Terrian)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
+            }  else if (entity.has(TerrianMesh)) {
+                this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {

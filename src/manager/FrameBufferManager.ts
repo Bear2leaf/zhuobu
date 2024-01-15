@@ -48,9 +48,9 @@ export default class FrameBufferManager {
         this.renderFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
+        this.getRendererManager().getTerrianRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
-        this.getRendererManager().getTerrianRenderer().render();
         this.renderFrameBufferObject.unbind();
     }
     processReflectFramebuffer(): void {
@@ -59,9 +59,9 @@ export default class FrameBufferManager {
         this.reflectFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
+        this.getRendererManager().getTerrianRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
-        this.getRendererManager().getTerrianRenderer().render();
         this.reflectFrameBufferObject.unbind();
         camera.reflect();
     }
@@ -74,6 +74,7 @@ export default class FrameBufferManager {
     processDepthFramebuffer(): void {
         this.depthFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
+        this.getRendererManager().getTerrianRenderer().renderShadow();
         this.getRendererManager().getSkinMeshRenderer().renderShadow();
         this.getRendererManager().getMeshRenderer().renderShadow();
         this.depthFrameBufferObject.unbind();
