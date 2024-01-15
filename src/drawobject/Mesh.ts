@@ -34,7 +34,7 @@ export default class Mesh extends DrawObject {
         indices.forEach((index, j) => {
             aPosition[j] = new Vec3(position[3 * index], position[3 * index + 1], position[3 * index + 2]);
             aNormal[j] = new Vec3(normal[3 * index], normal[3 * index + 1], normal[3 * index + 2]);
-            aNormal[j] = new Vec2(texcoord[2 * index], texcoord[2 * index + 1]);
+            aTexcoord[j] = new Vec2(texcoord[2 * index], texcoord[2 * index + 1]);
             aBarycentrics[j] = new Vec3(j % 3 === 0 ? 1 : 0, j % 3 === 1 ? 1 : 0, j % 3 === 2 ? 1 : 0);
             newIndices[j] = j;
             if (indexMax < newIndices[j]) {
@@ -51,7 +51,7 @@ export default class Mesh extends DrawObject {
         this.updateEBO(indices);
         this.createABO(ArrayBufferIndex.Position, position, 3);
         this.createABO(ArrayBufferIndex.Normal, normal, 3);
-        this.createABO(ArrayBufferIndex.TextureCoord, normal, 3);
+        this.createABO(ArrayBufferIndex.TextureCoord, texcoord, 2);
     }
     update(): void {
         this.getEntity().get(Node).updateWorldMatrix()

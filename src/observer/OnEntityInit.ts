@@ -73,7 +73,7 @@ export default class OnEntityInit extends Observer {
                 entity.get(Terrian).setTexture(this.textureManager.defaultTexture);
                 entity.get(Terrian).setDepthTexture(this.textureManager.depthTexture);
             }  else if (entity.has(TerrianMesh)) {
-                entity.get(TerrianMesh).setTexture(this.textureManager.defaultTexture);
+                entity.get(TerrianMesh).setTexture(this.textureManager.terrianTexture);
                 entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);

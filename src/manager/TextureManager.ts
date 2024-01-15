@@ -15,12 +15,14 @@ import SkyboxTexture from "../texture/SkyboxTexture.js";
 import ReflectTexture from "../texture/ReflectTexture.js";
 import WaterNormalTexture from "../texture/WaterNormalTexture.js";
 import WaterDistortionTexture from "../texture/WaterDistortionTexture.js";
+import TerrianTexture from "../texture/TerrianTexture.js";
 
 
 export default class TextureManager {
     readonly defaultTexture = new DefaultTexture;
     readonly fontTexture = new FontTexture;
     readonly flowerTexture = new FlowerTexture;
+    readonly terrianTexture = new TerrianTexture;
     readonly waterNormalTexture = new WaterNormalTexture;
     readonly waterDistortionTexture = new WaterDistortionTexture;
     readonly jointTexture = new JointTexture;
@@ -38,9 +40,9 @@ export default class TextureManager {
         await this.getCacheManager().loadImageCache("flowers");
         await this.getCacheManager().loadImageCache("water_distortion");
         await this.getCacheManager().loadImageCache("water_normal");
-        await this.getCacheManager().loadImageCache("flowers");
         await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
         await this.getCacheManager().loadFontCache("boxy_bold_font");
+        await this.getCacheManager().loadImageCache("island sand");
     }
     setDevice(device: Device) {
         this.device = device;
@@ -55,6 +57,7 @@ export default class TextureManager {
 
         const glContext= this.getDevice().getRenderingContext();
         this.defaultTexture.setContext(glContext);
+        this.terrianTexture.setContext(glContext);
         this.fontTexture.setContext(glContext);
         this.flowerTexture.setContext(glContext);
         this.waterDistortionTexture.setContext(glContext);
@@ -90,6 +93,9 @@ export default class TextureManager {
         this.flowerTexture.active();
         this.flowerTexture.bind();
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
+        this.terrianTexture.active();
+        this.terrianTexture.bind();
+        this.terrianTexture.generate(this.getCacheManager().getImage("island sand"));
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));

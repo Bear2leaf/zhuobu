@@ -14,7 +14,7 @@ export default class TerrianMesh extends Mesh {
         return this.depthTexture;
     }
     init(): void {
-        this.setNodeIndex(3)
+        this.setNodeIndex(2)
         super.init();
         // this.getEntity().get(TRS).getPosition().y = -1;
         this.getEntity().get(TRS).getScale().multiply(5);
