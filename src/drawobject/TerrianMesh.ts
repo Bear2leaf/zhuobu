@@ -1,5 +1,4 @@
 import Texture from "../texture/Texture.js";
-import TRS from "../transform/TRS.js";
 import Mesh from "./Mesh.js";
 
 export default class TerrianMesh extends Mesh {
@@ -16,8 +15,6 @@ export default class TerrianMesh extends Mesh {
     init(): void {
         this.setNodeIndex(2)
         super.init();
-        // this.getEntity().get(TRS).getPosition().y = -1;
-        this.getEntity().get(TRS).getScale().multiply(5);
     }
     draw(): void {
         this.getRenderingContext().switchBlend(true);

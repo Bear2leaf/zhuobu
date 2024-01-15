@@ -171,6 +171,7 @@ export default class GLTF {
                 , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
             );
         } else if (entity.has(HelloWireframe)) {
+            entity.get(Node).setSource(node.getNode().getSource());
             entity.get(Mesh).setWireframeMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
@@ -178,6 +179,7 @@ export default class GLTF {
                 , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
             );
         } else {
+            entity.get(Node).setSource(node.getNode().getSource());
             entity.get(Mesh).setMeshData(
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array

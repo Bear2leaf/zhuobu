@@ -6,7 +6,7 @@ export enum TextureBindIndex {
   Pick = 0,
   OffscreenCanvas = 0,
   Depth = 1,
-  Joint = 2,
+  Joint = 6,
   Render = 2,
   Reflect = 3,
   WaterDistortion = 4,

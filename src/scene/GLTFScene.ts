@@ -44,7 +44,6 @@ export default class GLTFScene extends Scene {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject
             || entity instanceof MeshObject
-            || entity instanceof TerrianObject
         )
     }
 

@@ -62,7 +62,6 @@ export default class Water extends DrawObject {
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(texcoords), 4);
         this.updateEBO(new Uint16Array(indices));
-        this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
         this.getRenderingContext().switchBlend(true);

@@ -75,7 +75,6 @@ export default class FrameBufferManager {
     processDepthFramebuffer(): void {
         this.depthFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
-        this.getRendererManager().getTerrianRenderer().renderShadow();
         this.getRendererManager().getSkinMeshRenderer().renderShadow();
         this.getRendererManager().getMeshRenderer().renderShadow();
         this.depthFrameBufferObject.unbind();
