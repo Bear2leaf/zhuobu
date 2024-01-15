@@ -11,10 +11,12 @@ export class MainCamera extends PerspectiveCamera {
     private readonly target = new Vec4(0, 0, 0, 1);
     private readonly up = new Vec4(0, 1, 0, 1);
     private readonly projection = Matrix.identity();
+    private near = 1;
+    private far = 30;
     init(): void {
         super.init()
         const fov = Math.PI / 180 * 60;
-        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), 1, 30))
+        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), this.near, this.far))
         // this.fromGLTF(new Vec3(7.358891487121582, 4.958309173583984, 6.925790786743164), new Vec4(-0.20997299253940582, 0.3857799470424652, 0.09062844514846802, 0.8937962055206299));
     }
     reflect(enable: boolean = false) {
@@ -30,9 +32,17 @@ export class MainCamera extends PerspectiveCamera {
     getEye(): Vec3 {
         return this.eye;
     }
-    fromGLTF(position: Vec3, rotation: Vec4, aspect: number = 1.33333333333333337, fov: number = 0.5274236580593781, near: number = 0.10000000149011612, far: number = 100) {
-        // this.getProjection().set(Matrix.perspective(fov * Math.PI, aspect, near, far));
-        // this.eye.set(position.x, position.y, position.z, 1);
+    getNear() {
+        return this.near;
+    }
+    getFar() {
+        return this.far;
+    }
+    fromGLTF(position: Vec3, rotation: Vec4, aspect: number, fov: number, near: number, far: number) {
+        this.getProjection().set(Matrix.perspective(fov * Math.PI, this.getAspect(), near, far));
+        this.near = near;
+        this.far = far;
+        this.eye.set(position.x, position.y, position.z, 1);
     }
     rotateViewPerFrame(time: number) {
         this.getEye().x = Math.sin(time) * 10;

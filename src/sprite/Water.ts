@@ -10,6 +10,16 @@ export default class Water extends DrawObject {
     private reflectTexture?: Texture;
     private distortionTexture?: Texture;
     private normalTexture?: Texture;
+    private depthTexture?: Texture;
+    setDepthTexture(texture: Texture) {
+        this.depthTexture = texture;
+    }
+    getDepthTexture() {
+        if (!this.depthTexture) {
+            throw new Error("depthTexture is not set");
+        }
+        return this.depthTexture;
+    }
     setReflectTexture(texture: Texture) {
         this.reflectTexture = texture;
     }
@@ -55,11 +65,13 @@ export default class Water extends DrawObject {
         this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
+        this.getRenderingContext().switchBlend(true);
         this.getNormalTexture().bind();
         this.getRenderingContext().switchRepeat(true);
         this.getDistortionTexture().bind();
         this.getRenderingContext().switchRepeat(true);
         super.draw();
+        this.getRenderingContext().switchBlend(false);
 
     }
 }

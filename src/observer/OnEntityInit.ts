@@ -81,6 +81,7 @@ export default class OnEntityInit extends Observer {
                 entity.get(ReflectMap).setTexture(this.textureManager.reflectTexture);
             } else if (entity.has(Water)) {
                 entity.get(Water).setTexture(this.textureManager.renderTexture);
+                entity.get(Water).setDepthTexture(this.textureManager.waterDepthTexture);
                 entity.get(Water).setReflectTexture(this.textureManager.reflectTexture);
                 entity.get(Water).setDistortionTexture(this.textureManager.waterDistortionTexture);
                 entity.get(Water).setNormalTexture(this.textureManager.waterNormalTexture);

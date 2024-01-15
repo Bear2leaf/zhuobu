@@ -38,6 +38,7 @@ export default class FrameBufferManager {
 
         this.depthFrameBufferObject.attach(this.getTextureManager().depthTexture);
         this.pickFrameBufferObject.attach(this.getTextureManager().pickTexture);
+        this.renderFrameBufferObject.attach(this.getTextureManager().waterDepthTexture);
         this.renderFrameBufferObject.attach(this.getTextureManager().renderTexture);
         this.reflectFrameBufferObject.attach(this.getTextureManager().reflectTexture);
     }

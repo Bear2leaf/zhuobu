@@ -28,6 +28,7 @@ export default class TextureManager {
     readonly jointTexture = new JointTexture;
     readonly skyboxTexture = new SkyboxTexture;
     readonly depthTexture = new DepthTexture;
+    readonly waterDepthTexture = new DepthTexture;
     readonly pickTexture = new PickTexture;
     readonly renderTexture = new RenderTexture;
     readonly reflectTexture = new ReflectTexture;
@@ -62,6 +63,7 @@ export default class TextureManager {
         this.flowerTexture.setContext(glContext);
         this.waterDistortionTexture.setContext(glContext);
         this.waterNormalTexture.setContext(glContext);
+        this.waterDepthTexture.setContext(glContext);
         this.jointTexture.setContext(glContext);
         this.skyboxTexture.setContext(glContext);
         this.depthTexture.setContext(glContext);
@@ -77,6 +79,7 @@ export default class TextureManager {
         this.jointTexture.setBindIndex(TextureBindIndex.Joint);
         this.skyboxTexture.setBindIndex(TextureBindIndex.Skybox);
         this.depthTexture.setBindIndex(TextureBindIndex.Depth);
+        this.waterDepthTexture.setBindIndex(TextureBindIndex.Depth);
         this.pickTexture.setBindIndex(TextureBindIndex.Pick);
         this.renderTexture.setBindIndex(TextureBindIndex.Render);
         this.reflectTexture.setBindIndex(TextureBindIndex.Reflect);
@@ -119,6 +122,10 @@ export default class TextureManager {
         this.depthTexture.active();
         this.depthTexture.bind();
         this.depthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
+        this.waterDepthTexture.active();
+        this.waterDepthTexture.bind();
+        this.waterDepthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
 
     }
     initObservers() {

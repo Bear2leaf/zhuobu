@@ -11,6 +11,7 @@ import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
+import TerrianMesh from "../drawobject/TerrianMesh.js";
 
 export default class OnEntityUpdate extends Observer {
 
@@ -47,13 +48,19 @@ export default class OnEntityUpdate extends Observer {
                 this.animationManager.cameraAnimator.animate(entity.get(CameraController));
             }
         }
-        if ((entity.has(Mesh) ) && this.cameraManager) {
+        if ((entity.has(TerrianMesh) ) && this.cameraManager) {
 
-            const gltf = entity.get(Mesh).getGLTF();
+            const gltf = entity.get(TerrianMesh).getGLTF();
             if (!gltf) {
                 throw new Error("gltf not found");
             }
-            const node = gltf.getNodeByIndex(0);
+            const camera = gltf.getCameraByIndex(0);
+            const aspect = camera.getPerspective().getAspectRatio();
+            const fov = camera.getPerspective().getYFov();
+            const near = camera.getPerspective().getZNear();
+            const far = camera.getPerspective().getZFar();
+
+            const node = gltf.getNodeByIndex(1);
             if (!node) {
                 throw new Error("node not found");
             }
@@ -61,7 +68,7 @@ export default class OnEntityUpdate extends Observer {
             if (!trs) {
                 throw new Error("trs not found");
             }
-            this.cameraManager.getMainCamera().fromGLTF(trs.getPosition(), trs.getRotation());
+            this.cameraManager.getMainCamera().fromGLTF(trs.getPosition(), trs.getRotation(), aspect, fov, near, far);
         }
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();

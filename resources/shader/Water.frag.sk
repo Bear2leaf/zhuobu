@@ -9,6 +9,9 @@ in vec4 v_vetexToCameraVector;
 out vec4 color;
 
 uniform float u_frames;
+uniform float u_near;
+uniform float u_far;
+uniform sampler2D u_depthTexture;
 uniform sampler2D u_reflectTexture;
 uniform sampler2D u_refractTexture;
 uniform sampler2D u_distortionTexture;
@@ -20,13 +23,18 @@ const float shineDamper = 20.0f;
 const float reflectivity = 0.5f;
 
 void main() {
-    vec3 lightDirection = vec3(0.0f, 0.0f, 1.0f );
+    vec3 lightDirection = vec3(0.0f, 0.0f, 1.0f);
     vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
     vec2 refractTexcoord = vec2(ndc.x, ndc.y);
     vec2 reflectTexcoord = vec2(ndc.x, 1.0f - ndc.y);
+    float depth = texture(u_depthTexture, vec2(refractTexcoord.x,  refractTexcoord.y)).r;
+    float floorDistance = 2.0f * u_near * u_far / (u_far + u_near - (2.0f * depth - 1.0f) * (u_far - u_near));
+    float waterDistance = 2.0f * u_near * u_far / (u_far + u_near - (2.0f * gl_FragCoord.z - 1.0f) * (u_far - u_near));
+    float waterDepth = floorDistance - waterDistance;
+    float waterDepthFactor = clamp(waterDepth, 0.0f, 1.0f);
     vec2 distortedTexCoords = texture(u_distortionTexture, vec2(v_texcoord.x + u_frames, v_texcoord.y)).rg * DISTORT_FACTOR;
     distortedTexCoords = vec2(v_texcoord.xy) + vec2(distortedTexCoords.x, distortedTexCoords.y + u_frames);
-    vec2 totalDistortion = (texture(u_distortionTexture, distortedTexCoords).rg * 2.0f - 1.0f) * WAVE_STRENGTH;
+    vec2 totalDistortion = (texture(u_distortionTexture, distortedTexCoords).rg * 2.0f - 1.0f) * WAVE_STRENGTH * waterDepthFactor;
     refractTexcoord += totalDistortion;
     reflectTexcoord += totalDistortion;
     vec4 refractColor = texture(u_refractTexture, refractTexcoord);
@@ -37,9 +45,12 @@ void main() {
     vec3 reflectedLightDirection = reflect(lightDirection, normal);
     float specularFactor = max(dot(reflectedLightDirection, normalize(vec3(v_vetexToCameraVector))), 0.0f);
     specularFactor = pow(specularFactor, shineDamper);
-    vec3 specularColor = vec3(1.0f, 1.0f, 1.0f) * specularFactor * reflectivity;
+    vec3 specularColor = vec3(1.0f, 1.0f, 1.0f) * specularFactor * reflectivity * waterDepthFactor;
     vec4 viewVector = normalize(v_vetexToCameraVector);
-    float refractFactor = dot(viewVector, vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    float refractFactor = dot(viewVector, vec4(normal, 0.0f));
+    refractFactor = pow(refractFactor, 0.5f);
     color = mix(reflectColor, refractColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
+    color.a = waterDepthFactor;
+    // color = vec4(clamp(waterDepth , 0.0f, 1.0f));
 
 }

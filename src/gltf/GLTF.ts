@@ -81,6 +81,7 @@ export default class GLTF {
     }
     init(data: GLTF) {
         this.scene = data.scene;
+
         this.scenes = data.scenes?.map((scene) => new GLTFScene(scene));
         this.nodes = data.nodes?.map((node) => new GLTFNode(node));
         this.buffers = data.buffers?.map((buffer) => new GLTFBuffer(buffer));
@@ -91,7 +92,7 @@ export default class GLTF {
         this.textures = data.textures;
         this.materials = data.materials;
         this.meshes = data.meshes?.map((mesh) => new GLTFMesh(mesh));
-        this.cameras = data.cameras;
+        this.cameras = data.cameras?.map((camera) => new GLTFCamera(camera));
         this.animations = data.animations?.map((animation) => new GLTFAnimation(animation));
         this.skins = data.skins?.map((skin) => new GLTFSkin(skin));
         this.extensionsUsed = data.extensionsUsed;
@@ -99,7 +100,16 @@ export default class GLTF {
         this.extensions = data.extensions;
         this.extras = data.extras;
     }
-
+    getCameraByIndex(index: number) {
+        if (!this.cameras) {
+            throw new Error("cameras not found");
+        }
+        const camera = this.cameras[index];
+        if (!camera) {
+            throw new Error(`camera not found: ${index}`);
+        }
+        return camera;
+    }
     getSkinByIndex(index: number) {
         if (!this.skins) {
             throw new Error("skins not found");
