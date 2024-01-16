@@ -26,6 +26,7 @@ export default class GLTFManager {
         this.helloGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.helloMultiGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.terrianGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
+        this.terrianGLTF.setImageCache(this.getCacheManager().getImageCache());
     }
     initObservers() {
         this.getEventManager().onEntityInit.setGLTFManager(this);

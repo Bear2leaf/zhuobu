@@ -1,12 +1,8 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
-import JSONCache from "../cache/JSONCache.js";
-import GLTFAnimator from "../animator/GLTFAnimator.js";
 import Node from "../transform/Node.js";
-import TRS from "../transform/TRS.js";
 import Mesh from "../drawobject/Mesh.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Entity from "../entity/Entity.js";
-import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -22,6 +18,7 @@ import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
+import ImageCache from "../cache/ImageCache.js";
 
 const glTypeToTypedArrayMap = {
     '5120': Int8Array,    // gl.BYTE
@@ -64,6 +61,13 @@ export default class GLTF {
 
     private name?: string;
     private bufferCache?: ArrayBufferCache;
+    private imageCache?: ImageCache;
+    setImageCache(imageCache: ImageCache) {
+        this.imageCache = imageCache;
+    }
+    getImageCache(): ImageCache | undefined {
+        return this.imageCache;
+    }
 
     setName(name: string) {
         this.name = name;
@@ -71,6 +75,10 @@ export default class GLTF {
     getName() {
         if (this.name === undefined) throw new Error("name is not set");
         return this.name;
+    }
+    getImages() {
+        if (this.images === undefined) throw new Error("images is not set");
+        return this.images;
     }
     setBufferCache(cahce: ArrayBufferCache) {
         this.bufferCache = cahce;
@@ -87,10 +95,10 @@ export default class GLTF {
         this.buffers = data.buffers?.map((buffer) => new GLTFBuffer(buffer));
         this.bufferViews = data.bufferViews?.map((bufferView) => new GLTFBufferView(bufferView));
         this.accessors = data.accessors?.map((accessor) => new GLTFAccessor(accessor));
-        this.images = data.images;
+        this.images = data.images?.map((image) => new GLTFImage(image));
         this.samplers = data.samplers;
-        this.textures = data.textures;
-        this.materials = data.materials;
+        this.textures = data.textures?.map((texture) => new GLTFTexture(texture));
+        this.materials = data.materials?.map((material) => new GLTFMaterial(material));
         this.meshes = data.meshes?.map((mesh) => new GLTFMesh(mesh));
         this.cameras = data.cameras?.map((camera) => new GLTFCamera(camera));
         this.animations = data.animations?.map((animation) => new GLTFAnimation(animation));
@@ -99,6 +107,7 @@ export default class GLTF {
         this.extensionsRequired = data.extensionsRequired;
         this.extensions = data.extensions;
         this.extras = data.extras;
+        this.buildTextureImages();
     }
     getCameraByIndex(index: number) {
         if (!this.cameras) {
@@ -130,15 +139,51 @@ export default class GLTF {
         if (!this.buffers) {
             throw new Error("buffers not found");
         }
-        if (!this.bufferCache) {
-            throw new Error("bufferCache not found");
-        }
         const accessor = this.accessors[index];
         const bufferView = this.bufferViews[accessor.getBufferView()];
         const buffer = this.buffers[bufferView.getBuffer()];
         const typedArray = glTypeToTypedArray(accessor.getComponentType());
-        const data = new typedArray(buffer.getBufferData(this.bufferCache), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
+        const data = new typedArray(buffer.getBufferData(this.getBufferCache()), bufferView.getByteOffset(), accessor.getCount() * accessor.getNumComponents());
         return data;
+    }
+    buildTextureImages() {
+
+        if (!this.meshes) {
+            throw new Error("nodes not found");
+        }
+        for (const mesh of this.meshes) {
+            const primitive = mesh.getPrimitiveByIndex(0);
+            const materialIndex = primitive.getMaterial();
+            if (this.materials) {
+                const material = this.materials[materialIndex];
+                if (material !== undefined) {
+
+                    const baseColorTexture = material.getPbrMetallicRoughness().getBaseColorTexture();
+                    if (baseColorTexture) {
+
+                        const textureIndex = baseColorTexture.index;
+                        const texture = this.textures && this.textures[textureIndex];
+                        const imageIndex = texture && texture.getSource();
+                        if (imageIndex === undefined) {
+                            throw new Error(`imageIndex is undefined: ${textureIndex}`);
+                        }
+                        const image = this.images && this.images[imageIndex];
+                        if (image === undefined) {
+                            throw new Error(`image is undefined: ${imageIndex}`);
+                        }
+                        const uri = image.getUri();
+
+                        if (uri === undefined) {
+                            throw new Error(`uri is undefined: ${imageIndex}`);
+                        }
+                        if (this.imageCache === undefined) {
+                            throw new Error(`imageCache is undefined`);
+                        }
+                        image.setImage(this.imageCache.get(`resources/${uri.replace("../", "")}`));
+                    }
+                }
+            }
+        }
     }
     buildMesh(entity: Entity, nodeIndex: number = 0) {
         if (!this.nodes) {
@@ -232,6 +277,7 @@ export default class GLTF {
         const gltf = new GLTF();
         gltf.setName(this.getName());
         gltf.bufferCache = this.getBufferCache();
+        gltf.imageCache = this.getImageCache();
         gltf.init(JSON.parse(JSON.stringify(this)));
         return gltf;
     }

@@ -32,10 +32,10 @@ export default abstract class Engine {
     private readonly framebufferManager = new FrameBufferManager;
     private readonly workerManager = new WorkerManager;
     initManagers(): void {
+        this.gltfManager.initGLTFs();
         this.textureManager.initTextures();
         this.offscreencanvasManager.initOffscreenCanvas();
         this.inputManager.initInput();
-        this.gltfManager.initGLTFs();
         this.cameraManager.initCamera();
         this.rendererManager.initRenderer();
         this.framebufferManager.initFramebuffer();
@@ -86,6 +86,7 @@ export default abstract class Engine {
         this.animationManager.setEventManager(this.eventManager);
         this.gltfManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
+        this.textureManager.setGLTFManager(this.gltfManager);
         this.offscreencanvasManager.setTextureManager(this.textureManager);
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setRendererManager(this.rendererManager);

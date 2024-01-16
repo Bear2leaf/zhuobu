@@ -16,6 +16,7 @@ import ReflectTexture from "../texture/ReflectTexture.js";
 import WaterNormalTexture from "../texture/WaterNormalTexture.js";
 import WaterDistortionTexture from "../texture/WaterDistortionTexture.js";
 import TerrianTexture from "../texture/TerrianTexture.js";
+import GLTFManager from "./GLTFManager.js";
 
 
 export default class TextureManager {
@@ -37,6 +38,7 @@ export default class TextureManager {
     private device?: Device;
     private cacheManager?: CacheManager;
     private eventManager?: EventManager;
+    private gltfManager?: GLTFManager;
     async load(): Promise<void> {
         await this.getCacheManager().loadImageCache("flowers");
         await this.getCacheManager().loadImageCache("water_distortion");
@@ -97,7 +99,7 @@ export default class TextureManager {
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.terrianTexture.active();
         this.terrianTexture.bind();
-        this.terrianTexture.generate(this.getCacheManager().getImage("island_sand"));
+        this.terrianTexture.generate(this.getGLTFManager().terrianGLTF.getImages()[0].getImage());
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
@@ -136,6 +138,15 @@ export default class TextureManager {
             throw new Error("eventManager is undefined");
         }
         return this.eventManager;
+    }
+    setGLTFManager(gltfManager: GLTFManager) {
+        this.gltfManager = gltfManager;
+    }
+    getGLTFManager(): GLTFManager {
+        if (this.gltfManager === undefined) {
+            throw new Error("gltfManager is undefined");
+        }
+        return this.gltfManager;
     }
     setEventManager(eventManager: EventManager) {
         this.eventManager = eventManager;

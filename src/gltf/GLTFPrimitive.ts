@@ -21,5 +21,8 @@ export default class GLTFPrimitive {
     getAttributes() {
         return this.attributes;
     }
+    getMaterial() {
+        return this.material;
+    }
 
 }

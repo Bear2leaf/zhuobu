@@ -24,6 +24,9 @@ export default class CacheManager {
     getArrayBufferCache(): ArrayBufferCache {
         return this.arrayBufferCache;
     }
+    getImageCache(): ImageCache {
+        return this.imageCache;
+    }
     getVertShaderTxt(name: string) {
         return this.textCache.get(`resources/shader/${name}.vert.sk`);
     }
