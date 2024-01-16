@@ -97,7 +97,7 @@ export default class TextureManager {
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.terrianTexture.active();
         this.terrianTexture.bind();
-        this.terrianTexture.generate(this.getCacheManager().getGLTFImage("island_sand"));
+        this.terrianTexture.generate(this.getCacheManager().getImage("island_sand"));
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));

@@ -43,9 +43,6 @@ export default class CacheManager {
     getImage(name: string) {
         return this.imageCache.get(`resources/texture/${name}.png`);
     }
-    getGLTFImage(name: string) {
-        return this.imageCache.get(`resources/gltf/../texture/${name}.png`);
-    }
     getSkybox(name: string): SkyboxArray {
         return [
             this.imageCache.get(`resources/texture/skybox/${name}_back.png`),
@@ -95,7 +92,7 @@ export default class CacheManager {
         const images = (this.getGLTF(name) as GLTF)['images'];
         if (images !== undefined) {
             for (const image of images) {
-                await this.imageCache.load(`resources/gltf/${image["uri"]}`);
+                await this.imageCache.load(`resources/${image["uri"].replace("../", "")}`);
             }
         }
         await this.arrayBufferCache.load(`resources/gltf/${name}.bin`)
