@@ -151,8 +151,8 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"island sand",
-			"uri":"../texture/island%20sand.png"
+			"name":"island_sand",
+			"uri":"../texture/island_sand.png"
 		}
 	],
 	"accessors":[

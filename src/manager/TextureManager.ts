@@ -43,7 +43,6 @@ export default class TextureManager {
         await this.getCacheManager().loadImageCache("water_normal");
         await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
         await this.getCacheManager().loadFontCache("boxy_bold_font");
-        await this.getCacheManager().loadImageCache("island sand");
     }
     setDevice(device: Device) {
         this.device = device;
@@ -98,7 +97,7 @@ export default class TextureManager {
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.terrianTexture.active();
         this.terrianTexture.bind();
-        this.terrianTexture.generate(this.getCacheManager().getImage("island sand"));
+        this.terrianTexture.generate(this.getCacheManager().getGLTFImage("island_sand"));
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));

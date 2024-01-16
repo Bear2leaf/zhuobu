@@ -4,8 +4,6 @@ import HelloMultiGLTF from "../model/HelloMultiGLTF.js";
 import CacheManager from "./CacheManager.js";
 import SceneManager from "./SceneManager.js";
 import EventManager from "./EventManager.js";
-import OnEntityInit from "../observer/OnEntityInit.js";
-import GLTF from "../gltf/GLTF.js";
 import TerrianGLTF from "../model/TerrianGLTF.js";
 
 
