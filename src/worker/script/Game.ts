@@ -27,8 +27,11 @@ export default class Game {
                     // reply([{ type: "GameInit" }]);
                     reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, { type: "AddMessage", args: ["Hello World!!"] }]);
 
-                    this.getEngine().log = (message: string) => {
+                    this.getEngine().addMessage = (message: string) => {
                         reply([{ type: "AddMessage", args: [message] }]);
+                    }
+                    this.getEngine().updateStatus = (message: string) => {
+                        reply([{ type: "UpdateStatus", args: [message] }]);
                     }
                     this.getEngine().start();
                     break;

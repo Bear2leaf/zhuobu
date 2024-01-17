@@ -10,12 +10,14 @@ import InitScene from "../scene/InitScene.js";
 import Border from "../drawobject/Border.js";
 import InformationText from "../drawobject/InformationText.js";
 import InformationObject from "../entity/InformationObject.js";
+import Message from "../drawobject/Message.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
     private readonly gltfScene = new GLTFScene;
     private readonly emptyScene = new InitScene;
     private current: Scene = this.emptyScene;
+    private backup: Scene = this.emptyScene;
     private eventManager?: EventManager;
     private messageObject?: MessageObject
     getEventManager(): EventManager {
@@ -39,6 +41,7 @@ export default class SceneManager {
     }
     collectDrawObject(): void {
         this.current.collectDrawObject();
+        this.backup.collectDrawObject();
     }
     collectRefractFramebufferObject() {
         this.gltfScene.collectRefractDrawObject();
@@ -53,15 +56,22 @@ export default class SceneManager {
         this.gltfScene.collectDepthDrawObject();
     }
     toggleUIScene() {
-        if (this.uiScene === this.current) {
-            this.current = this.gltfScene;
+        if (this.uiScene === this.backup) {
+            this.backup = this.emptyScene;
         } else {
-            this.current = this.uiScene;
+            this.backup = this.uiScene;
         }
     }
     addMessage(message: string) {
         const object = this.uiScene.getInformationObject();
         object.get(InformationText).updateChars(`${message}`);
+        object.get(Border).create();
+    }
+    updateStatus(message: string) {
+        const object = this.uiScene.getMessageObject();
+        object.get(Message).updateChars(`${message}`);
+        object.get(TRS).getPosition().set(0, object.get(SDFCharacter).getOffsetHeight(), 0);
+        object.get(Node).updateWorldMatrix();
         object.get(Border).create();
     }
     getInformationObject(): InformationObject {

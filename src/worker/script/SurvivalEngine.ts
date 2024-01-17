@@ -32,6 +32,13 @@ export default class SurvivalEngine {
     this.log(`Hunger: ${this.playerHunger}`);
     this.log(`Thirst: ${this.playerThirst}`);
     this.log(`Resources: ${this.resources}`);
+    this.updateStatus([
+    `Player: ${this.playerName}`,
+    `Health: ${this.playerHealth}`,
+    `Hunger: ${this.playerHunger}`,
+    `Thirst: ${this.playerThirst}`,
+    `Resources: ${this.resources}`,
+    ].join('\n'));
   }
 
   private explore(): void {
@@ -64,15 +71,18 @@ export default class SurvivalEngine {
     }
     this.log('------------------------');
     this.log(`Survived ${this.days++} Day...`);
+    this.addMessage(`Survived ${this.days++} Day...`);
     this.playerHunger += 5;
     this.playerThirst += 5;
 
     // Add logic for managing hunger, thirst, and other survival aspects.
     if (this.resources >= 50) {
       // Check if player has enough resources to survive
+      this.addMessage('You have enough resources to survive! Congratulations!');
       this.log('You have enough resources to survive! Congratulations!');
     } else if (this.playerHealth <= 0) {
       // Check for game over condition
+      this.addMessage('Game Over! Your character has died.');
       this.log('Game Over! Your character has died.');
     }
 
@@ -96,9 +106,16 @@ export default class SurvivalEngine {
   public log: (message: string) => void = (message: string) => {
     console.log(message);
   }
+  public addMessage: (message: string) => void = (message: string) => {
+    console.log(message);
+  }
+  public updateStatus: (message: string) => void = (message: string) => {
+    console.log(message);
+  }
   public start(): void {
     this.reset();
     this.log('Welcome to the Survival Game!');
+    this.addMessage('Welcome to the Survival Game!');
     this.log('------------------------');
 
   }

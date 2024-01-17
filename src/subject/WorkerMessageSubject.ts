@@ -5,6 +5,7 @@ import CreateMessageUI from "../command/CreateMessageUI.js";
 import GameInit from "../command/GameInit.js";
 import AddMessage from "../command/AddMessage.js";
 import SceneManager from "../manager/SceneManager.js";
+import UpdateStatus from "../command/UpdateStatus.js";
 
 export default class WorkerMessageSubject extends Subject {
     private command?: WorkerMessageCommand;
@@ -41,6 +42,10 @@ export default class WorkerMessageSubject extends Subject {
     }
     notifyAddMessage(message: string) {
         this.setCommand(new AddMessage(message));
+        this.notify();
+    }
+    notifyUpdateStatus(message: string) {
+        this.setCommand(new UpdateStatus(message));
         this.notify();
     }
     public notify(): void {

@@ -2,7 +2,6 @@ import { flatten, Vec2, Vec4 } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import { FontInfo } from "./Text.js";
-import Border from "./Border.js";
 
 export default class SDFCharacter extends DrawObject {
     private color: [number, number, number, number] = [1, 0.3, 0.3, 1];
@@ -25,7 +24,7 @@ export default class SDFCharacter extends DrawObject {
         this.create();
     }
     getOffsetHeight() {
-        return - (this.textBoundingSize.w - this.textBoundingSize.y);
+        return - (this.textBoundingSize.w + this.textBoundingSize.y);
     }
     appendChars(chars: string) {
         this.chars.push(...chars);

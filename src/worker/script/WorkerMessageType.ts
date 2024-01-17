@@ -7,6 +7,7 @@ export type WorkerResponse =
     | { type: "ToggleUI"; }
     | { type: "CreateMessageUI"; }
     | { type: "AddMessage"; args: [string] }
+    | { type: "UpdateStatus"; args: [string] }
 
     | never;
 export type WorkerRequest =

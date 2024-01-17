@@ -116,12 +116,12 @@ export default class RendererManager {
             this.backSpriteRenderer,
             this.spriteRenderer,
             this.lineRenderer,
-            this.sdfRenderer,
             this.terrianRenderer,
             this.gltfMeshRenderer,
             this.wireframeRenderer,
             this.gltfSkinMeshRenderer,
             this.waterRenderer,
+            this.sdfRenderer,
             this.pointRenderer
         ].forEach(renderer => {
             renderer.render();
