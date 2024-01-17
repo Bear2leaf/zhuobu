@@ -1,4 +1,5 @@
 import SDFCanvas from "../canvas/SDFCanvas.js";
+import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
@@ -117,6 +118,11 @@ export default class OnEntityInit extends Observer {
         if (entity.has(SDFCharacter)) {
             entity.get(SDFCharacter).create();
         }
+        
+        if (entity.has(Border)) {
+            entity.get(Border).create();
+        }
+        
 
     }
 

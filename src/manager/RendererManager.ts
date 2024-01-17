@@ -84,12 +84,18 @@ export default class RendererManager {
             this.gltfMeshRenderer,
             this.terrianRenderer,
             this.wireframeRenderer,
-            this.sdfRenderer,
-            this.lineRenderer,
             this.skyboxRenderer,
             this.waterRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getMainCamera());
+            renderer.initShader(rc, this.getCacheManager());
+            renderer.setSceneManager(this.getSceneManager());
+        });
+        [
+            this.sdfRenderer,
+            this.lineRenderer,
+        ].forEach(renderer => {
+            renderer.setCamera(this.getCameraManager().getFrontgroundCamera());
             renderer.initShader(rc, this.getCacheManager());
             renderer.setSceneManager(this.getSceneManager());
         });
@@ -99,9 +105,6 @@ export default class RendererManager {
         this.backSpriteRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
         this.backSpriteRenderer.initShader(rc, this.getCacheManager());
         this.backSpriteRenderer.setSceneManager(this.getSceneManager());
-        // this.waterRenderer.setCamera(this.getCameraManager().getBackgroundCamera());
-        // this.waterRenderer.initShader(rc, this.getCacheManager());
-        // this.waterRenderer.setSceneManager(this.getSceneManager());
         this.spriteRenderer.setCamera(this.getCameraManager().getFrontgroundCamera());
         this.spriteRenderer.initShader(rc, this.getCacheManager());
         this.spriteRenderer.setSceneManager(this.getSceneManager());

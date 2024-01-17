@@ -11,7 +11,6 @@ export default class BrowserEngine extends Engine {
         this.canvas = document.createElement("canvas");
         this.canvas.width = 800;
         this.canvas.height = 600;
-        this.canvas.style.width = "100%";
         this.offscreenCanvas = document.createElement("canvas");
         this.sdfCanvas = document.createElement("canvas");
         this.offscreenCanvas.style.display = "none";

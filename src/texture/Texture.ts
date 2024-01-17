@@ -3,7 +3,7 @@ import RenderingContext from "../renderingcontext/RenderingContext.js";
 export enum TextureBindIndex {
   Default = 0,
   Skybox = 0,
-  Pick = 0,
+  Pick = 7,
   OffscreenCanvas = 0,
   Depth = 1,
   Joint = 6,

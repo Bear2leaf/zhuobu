@@ -1,4 +1,3 @@
-import Camera from "../camera/Camera.js";
 import { MainCamera } from "../camera/MainCamera.js";
 import { FrontgroundCamera } from "../camera/FrontgroundCamera.js";
 import { DebugCamera } from "../camera/DebugCamera.js";

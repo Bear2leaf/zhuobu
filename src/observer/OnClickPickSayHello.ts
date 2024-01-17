@@ -10,15 +10,13 @@ export default class OnClickPickSayHello extends Observer {
     }
     public notify(): void {
         const fbo = this.getSubject().getFrameBufferObject();
+        const uiScene = this.getSubject().getUIScene();
         fbo.bindRead();
         fbo.updatePixels(this.getSubject().getScreenX(), this.getSubject().getScreenY());
         fbo.unbindRead();
-        // const pixel = fbo.readPixel();
-        // const element = this.getAdrManager().getRoot().getElementByPixel(pixel);
-        // if (element) {
-        //     console.debug("Hello Pick! ", element.getEntity().get(AdrText).getChars().join(""));
-        //     element.dispatchEvent("click", true);
-        // }
+        const pixel = fbo.readPixel();
+        const message = uiScene.messagePicked(...pixel);
+        console.log(pixel, message);
     }
 
 }

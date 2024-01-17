@@ -24,8 +24,8 @@ export default class Game {
             switch (message.type) {
                 case "EngineInit":
                     this.initEngine();
-                    reply([{ type: "GameInit" }]);
-                    // reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, {type: "AddMessage", args: ["Hello World!!"]}]);
+                    // reply([{ type: "GameInit" }]);
+                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, {type: "AddMessage", args: ["Hello World!!"]}]);
 
                     // this.getEngine().log = (message: string) => {
                     //     reply([{ type: "AddMessage", args: [message] }]);

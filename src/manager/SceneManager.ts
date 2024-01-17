@@ -7,6 +7,7 @@ import SDFCharacter from "../drawobject/SDFCharacter.js";
 import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
 import InitScene from "../scene/InitScene.js";
+import Border from "../drawobject/Border.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
@@ -58,6 +59,7 @@ export default class SceneManager {
     }
     addMessage(message: string) {
         this.getMessageObject().get(SDFCharacter).appendChars(`\n${message}`);
+        this.getMessageObject().get(Border).create();
     }
     getMessageObject(): MessageObject {
         if (this.messageObject === undefined) {
@@ -77,10 +79,11 @@ export default class SceneManager {
         this.uiScene.registerComponents(object);
         this.uiScene.initEntity(object);
         this.uiScene.addEntity(object);
-        object.get(TRS).getScale().set(0.05, 0.05, 0.05);
-        object.get(TRS).getPosition().set(-6, 0, 0);
+        const chars = "Hello World! abc.\n123\n456";
+        object.get(SDFCharacter).updateChars(chars);
+        object.get(Border).create();
+        object.get(TRS).getPosition().set(0, object.get(SDFCharacter).getOffsetHeight(), 0);
         object.get(Node).updateWorldMatrix();
-        object.get(SDFCharacter).updateChars("Hello World! abc.\n123\n456");
         this.messageObject = object;
     }
     update() {
@@ -90,7 +93,8 @@ export default class SceneManager {
     }
     initObservers() {
         const eventManager = this.getEventManager();
-        eventManager.onWorkerMessage.setSceneManager(this);
+        eventManager.clickPick.setUIScene(this.uiScene);
+        eventManager.workerMessage.setSceneManager(this);
     }
     initSubjects() {
         const eventManager = this.getEventManager();

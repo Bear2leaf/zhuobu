@@ -23,12 +23,13 @@ export default class SDFCharacter extends DrawObject {
     updateChars(chars: string) {
         this.chars.splice(0, this.chars.length, ...chars);
         this.create();
-        this.getEntity().get(Border).create();
+    }
+    getOffsetHeight() {
+        return - (this.textBoundingSize.w - this.textBoundingSize.y);
     }
     appendChars(chars: string) {
         this.chars.push(...chars);
         this.create();
-        this.getEntity().get(Border).create();
     }
     getChars() {
         return this.chars;
