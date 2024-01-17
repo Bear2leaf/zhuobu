@@ -43,7 +43,7 @@ export default class SurvivalEngine {
 
   private explore(): void {
     this.log('Exploring...');
-    const foundResources = Math.floor(this.SRNG.nextFloat() * 10) + 2; // Random resources (adjust as needed)
+    const foundResources = Math.floor(this.SRNG.nextFloat() * 5); // Random resources (adjust as needed)
     this.log(`You found ${foundResources} resources.`);
     this.resources += foundResources;
 
@@ -70,7 +70,7 @@ export default class SurvivalEngine {
         break;
     }
     this.log('------------------------');
-    this.log(`Survived ${this.days++} Day...`);
+    this.log(`Survived ${this.days} Day...`);
     this.addMessage(`Survived ${this.days++} Day...`);
     this.playerHunger += 5;
     this.playerThirst += 5;
@@ -93,12 +93,15 @@ export default class SurvivalEngine {
     if (this.resources >= consumedResources) {
       this.log(`You consumed ${consumedResources} resources.`);
       this.resources -= consumedResources;
+      this.resources = Math.max(this.resources, 0);
       const recoveredHunger = Math.floor(this.SRNG.nextFloat() * 10) + 5; // Random hunger recovered (adjust as needed)
       this.log(`You recover ${recoveredHunger} hunger.`);
       this.playerHunger -= recoveredHunger;
+      this.playerHunger = Math.max(this.playerHunger, 0);
       const recoveredThirst = Math.floor(this.SRNG.nextFloat() * 10) + 5; // Random thirst recovered (adjust as needed)
       this.log(`You recover ${recoveredThirst} thirst.`);
       this.playerThirst -= recoveredThirst;
+      this.playerThirst = Math.max(this.playerThirst, 0);
     }
 
     // Add logic for other effects of resting

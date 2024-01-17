@@ -57,7 +57,7 @@ export default class SceneManager {
     }
     toggleUIScene() {
         if (this.uiScene === this.backup) {
-            this.backup = this.emptyScene;
+            // this.backup = this.emptyScene;
         } else {
             this.backup = this.uiScene;
         }
