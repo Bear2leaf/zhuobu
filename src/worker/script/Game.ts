@@ -25,15 +25,21 @@ export default class Game {
                 case "EngineInit":
                     this.initEngine();
                     // reply([{ type: "GameInit" }]);
-                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, {type: "AddMessage", args: ["Hello World!!"]}]);
+                    reply([{ type: "GameInit" }, { type: "ToggleUI" }, { type: "CreateMessageUI" }, { type: "AddMessage", args: ["Hello World!!"] }]);
 
-                    // this.getEngine().log = (message: string) => {
-                    //     reply([{ type: "AddMessage", args: [message] }]);
-                    // }
+                    this.getEngine().log = (message: string) => {
+                        reply([{ type: "AddMessage", args: [message] }]);
+                    }
                     this.getEngine().start();
                     break;
                 case "Ping":
                     reply([{ type: "Pong", args: [1, 2, 3] }]);
+                    break;
+                case "Explore":
+                    this.getEngine().survival('1');
+                    break;
+                case "Rest":
+                    this.getEngine().survival('2');
                     break;
                 default:
                     break;

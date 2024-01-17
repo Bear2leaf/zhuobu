@@ -12,5 +12,7 @@ export type WorkerResponse =
 export type WorkerRequest =
     { type: "Ping"; args: ["Hello"]; }
     | { type: "EngineInit"; }
+    | { type: "Explore"; }
+    | { type: "Rest"; }
 
     | never;

@@ -74,6 +74,15 @@ export default class WorkerManager {
         );
         this.postMessage({ type: "EngineInit" });
     }
+    initObservers() {
+        this.getEventManager().clickPick.setWorkerManager(this);
+    }
+    onExplorePicked() {
+        this.postMessage({ type: "Explore" });
+    }
+    onRestPicked() {
+        this.postMessage({ type: "Rest" });
+    }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {
             throw new Error("eventManager is undefined");

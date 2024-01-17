@@ -8,6 +8,8 @@ import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
 import InitScene from "../scene/InitScene.js";
 import Border from "../drawobject/Border.js";
+import InformationText from "../drawobject/InformationText.js";
+import InformationObject from "../entity/InformationObject.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
@@ -58,18 +60,17 @@ export default class SceneManager {
         }
     }
     addMessage(message: string) {
-        this.getMessageObject().get(SDFCharacter).appendChars(`\n${message}`);
-        this.getMessageObject().get(Border).create();
+        const object = this.uiScene.getInformationObject();
+        object.get(InformationText).updateChars(`${message}`);
+        object.get(Border).create();
     }
-    getMessageObject(): MessageObject {
-        if (this.messageObject === undefined) {
-            throw new Error("messageObject is undefined");
-        }
-        return this.messageObject;
+    getInformationObject(): InformationObject {
+        return this.uiScene.getInformationObject();
     }
     loadInitScene() {
         if (this.messageObject) {
-            this.uiScene.removeEntity(this.getMessageObject());
+            this.uiScene.removeEntity(this.messageObject);
+            this.messageObject = undefined;
         }
         this.current = this.gltfScene;
     }

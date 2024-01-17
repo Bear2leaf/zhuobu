@@ -72,6 +72,7 @@ export default abstract class Engine {
         this.gltfManager.initObservers();
         this.gltfManager.setBufferCaches();
         this.rendererManager.initShaderName();
+        this.workerManager.initObservers();
         this.sceneManager.initObservers();
         this.sceneManager.initSubjects();
         this.sceneManager.registerEntities();

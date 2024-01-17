@@ -1,7 +1,7 @@
 import ClickPickSubject from "../subject/ClickPick.js";
 import Observer from "./Observer.js";
 
-export default class OnClickPickSayHello extends Observer {
+export default class OnClickPick extends Observer {
     getSubject(): ClickPickSubject {
         if (!(super.getSubject() instanceof ClickPickSubject)) {
             throw new Error("subject is not ClickPickSubject!");
@@ -15,8 +15,19 @@ export default class OnClickPickSayHello extends Observer {
         fbo.updatePixels(this.getSubject().getScreenX(), this.getSubject().getScreenY());
         fbo.unbindRead();
         const pixel = fbo.readPixel();
-        const message = uiScene.messagePicked(...pixel);
-        console.log(pixel, message);
+        const messagePicked = uiScene.messagePicked(...pixel);
+        const explorePicked = uiScene.explorePicked(...pixel);
+        const restPicked = uiScene.restPicked(...pixel);
+        console.log({
+            messagePicked,
+            explorePicked,
+            restPicked
+        });
+        if (explorePicked) {
+            this.getSubject().getWorkerManager().onExplorePicked();
+        } else if (restPicked) {
+            this.getSubject().getWorkerManager().onRestPicked();
+        }
     }
 
 }

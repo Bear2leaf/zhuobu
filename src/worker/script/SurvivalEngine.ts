@@ -7,7 +7,6 @@ export default class SurvivalEngine {
   private playerThirst: number;
   private resources: number;
   private days: number = 0;
-  private gameOver: boolean = false;
   private get playerHealth(): number {
     return 100 - Math.max(this.playerHunger, this.playerThirst);
   }
@@ -44,7 +43,25 @@ export default class SurvivalEngine {
     // Add logic for other exploration events, challenges, etc.
   }
 
-  private survival(): void {
+  survival(choice: '1' | '2'): void {
+    this.printStatus();
+
+    // Player options
+    this.log('1. Explore');
+    this.log('2. Rest');
+
+    // User input
+    // const choice: string = this.SRNG.choice(['1', '2', '3']);
+    this.log(`You chose ${choice}.`);
+
+    switch (choice) {
+      case '1':
+        this.explore();
+        break;
+      default:
+        this.rest();
+        break;
+    }
     this.log('------------------------');
     this.log(`Survived ${this.days++} Day...`);
     this.playerHunger += 5;
@@ -54,13 +71,9 @@ export default class SurvivalEngine {
     if (this.resources >= 50) {
       // Check if player has enough resources to survive
       this.log('You have enough resources to survive! Congratulations!');
-      this.gameOver = true;
     } else if (this.playerHealth <= 0) {
       // Check for game over condition
       this.log('Game Over! Your character has died.');
-      this.gameOver = true;
-    } else {
-      this.gameOver = false;
     }
 
   }
@@ -88,27 +101,6 @@ export default class SurvivalEngine {
     this.log('Welcome to the Survival Game!');
     this.log('------------------------');
 
-    while (!this.gameOver) {
-      this.printStatus();
-
-      // Player options
-      this.log('1. Explore');
-      this.log('2. Rest');
-
-      // User input
-      const choice: string = this.SRNG.choice(['1', '2', '3']);
-      this.log(`You chose ${choice}.`);
-
-      switch (choice) {
-        case '1':
-          this.explore();
-          break;
-        default:
-          this.rest();
-          break;
-      }
-      this.survival();
-    }
   }
 }
 

@@ -11,7 +11,7 @@ import EntityUpdate from "../subject/EntityUpdate.js";
 import EntityRemove from "../subject/EntityRemove.js";
 import OnEntityRender from "../observer/OnEntityRender.js";
 import OnEntityUpdate from "../observer/OnEntityUpdate.js";
-import OnClickPickSayHello from "../observer/OnClickPickSayHello.js";
+import OnClickPick from "../observer/OnClickPick.js";
 import OnEntityRegisterComponents from "../observer/OnEntityRegisterComponents.js";
 import OnViewPortChange from "../observer/OnViewPortChange.js";
 import OnClick from "../observer/OnClick.js";
@@ -37,7 +37,7 @@ export default class EventManager {
     readonly onEntityAdd = new OnEntityAdd;
     readonly onEntityInit = new OnEntityInit;
     readonly onClick = new OnClick;
-    readonly onClickPick = new OnClickPickSayHello;
+    readonly onClickPick = new OnClickPick;
     readonly onViewPortChange = new OnViewPortChange;
     readonly onWorkerMessage = new OnWorkerMessage;
 
