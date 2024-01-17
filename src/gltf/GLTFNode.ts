@@ -4,6 +4,7 @@ import GLTF from "./GLTF.js";
 
 export default class GLTFNode {
     private readonly name: string;
+    private readonly camera?: number;
     private readonly mesh?: number;
     private readonly skin?: number;
     private readonly children?: number[];
@@ -14,6 +15,7 @@ export default class GLTFNode {
     private readonly node: Node;
     constructor(gltfNode: GLTFNode) {
         this.name = gltfNode.name;
+        this.camera = gltfNode.camera;
         this.mesh = gltfNode.mesh;
         this.skin = gltfNode.skin;
         this.children = gltfNode.children;
@@ -40,6 +42,12 @@ export default class GLTFNode {
         } else {
             return this.children.map((index) => gltf.getNodeByIndex(index));
         }
+    }
+    getCamera(): number {
+        if (this.camera === undefined) {
+            throw new Error("camera not found");
+        }
+        return this.camera;
     }
     getNode() {
         if (this.node === undefined) {

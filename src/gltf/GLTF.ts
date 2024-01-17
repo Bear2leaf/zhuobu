@@ -62,7 +62,7 @@ export default class GLTF {
     private name?: string;
     private bufferCache?: ArrayBufferCache;
     private imageCache?: ImageCache;
-    setImageCache(imageCache: ImageCache) {
+    setImageCache(imageCache?: ImageCache) {
         this.imageCache = imageCache;
     }
     getImageCache(): ImageCache | undefined {
@@ -119,6 +119,36 @@ export default class GLTF {
         }
         return camera;
     }
+    getMaterialByIndex(materialIndex: number) {
+        if (!this.materials) {
+            throw new Error("materials not found");
+        }
+        const material = this.materials[materialIndex];
+        if (!material) {
+            throw new Error(`material not found: ${materialIndex}`);
+        }
+        return material;
+    }
+    getImageByIndex(source: number) {
+        if (!this.images) {
+            throw new Error("images not found");
+        }
+        const image = this.images[source];
+        if (!image) {
+            throw new Error(`image not found: ${source}`);
+        }
+        return image;
+    }
+    getTextureByIndex(index: number) {
+        if (!this.textures) {
+            throw new Error("textures not found");
+        }
+        const texture = this.textures[index];
+        if (!texture) {
+            throw new Error(`texture not found: ${index}`);
+        }
+        return texture;
+    }
     getSkinByIndex(index: number) {
         if (!this.skins) {
             throw new Error("skins not found");
@@ -161,7 +191,7 @@ export default class GLTF {
                     const baseColorTexture = material.getPbrMetallicRoughness().getBaseColorTexture();
                     if (baseColorTexture) {
 
-                        const textureIndex = baseColorTexture.index;
+                        const textureIndex = baseColorTexture.getIndex();
                         const texture = this.textures && this.textures[textureIndex];
                         const imageIndex = texture && texture.getSource();
                         if (imageIndex === undefined) {
@@ -241,6 +271,13 @@ export default class GLTF {
             );
         }
         node.getNode().setParent(entity.get(Node));
+    }
+    getDefaultNode() {
+        if (!this.nodes) {
+            throw new Error("nodes not found");
+        }
+        const node = this.getNodeByIndex(0);
+        return node;
     }
     buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();

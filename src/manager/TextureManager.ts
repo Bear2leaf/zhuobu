@@ -99,7 +99,16 @@ export default class TextureManager {
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.terrianTexture.active();
         this.terrianTexture.bind();
-        this.terrianTexture.generate(this.getGLTFManager().terrianGLTF.getImages()[0].getImage());
+        const terrianNode = this.getGLTFManager().terrianGLTF.getDefaultNode();
+        const meshIndex = terrianNode.getMesh();
+        const materialIndex = this.getGLTFManager().terrianGLTF.getMeshByIndex(meshIndex).getDefaultPrimitive().getMaterial();
+        const baseColorTexture = this.getGLTFManager().terrianGLTF.getMaterialByIndex(materialIndex).getPbrMetallicRoughness().getBaseColorTexture();
+        if (baseColorTexture === undefined) throw new Error("baseColorTexture is undefined");
+        baseColorTexture.setTexture(this.terrianTexture);
+        const baseColorTextureIndex = baseColorTexture.getIndex();
+        const baseColorTextureSourceIndex = this.getGLTFManager().terrianGLTF.getTextureByIndex(baseColorTextureIndex).getSource();
+        const baseColorTextureImage = this.getGLTFManager().terrianGLTF.getImageByIndex(baseColorTextureSourceIndex).getImage();
+        this.terrianTexture.generate(baseColorTextureImage);
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));

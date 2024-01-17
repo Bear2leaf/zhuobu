@@ -2,7 +2,6 @@ import AnimationController from "../controller/AnimationController.js";
 import CameraController from "../controller/CameraController.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import MoveCircleController from "../controller/MoveCircleController.js";
-import AdrText from "../drawobject/Message.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import AnimationManager from "../manager/AnimationManager.js";
@@ -10,7 +9,6 @@ import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
 
 export default class OnEntityUpdate extends Observer {
@@ -51,20 +49,17 @@ export default class OnEntityUpdate extends Observer {
         if ((entity.has(TerrianMesh) ) && this.cameraManager) {
 
             const gltf = entity.get(TerrianMesh).getGLTF();
-            if (!gltf) {
-                throw new Error("gltf not found");
+            const cameraNode = gltf.getDefaultCameraNode();
+            if (!cameraNode) {
+                throw new Error("camera node not found");
             }
-            const camera = gltf.getCameraByIndex(0);
+            const camera = gltf.getCameraByIndex(cameraNode.getCamera());
             const aspect = camera.getPerspective().getAspectRatio();
             const fov = camera.getPerspective().getYFov();
             const near = camera.getPerspective().getZNear();
             const far = camera.getPerspective().getZFar();
 
-            const node = gltf.getNodeByIndex(1);
-            if (!node) {
-                throw new Error("node not found");
-            }
-            const trs =node.getNode().getSource();
+            const trs =cameraNode.getNode().getSource();
             if (!trs) {
                 throw new Error("trs not found");
             }
