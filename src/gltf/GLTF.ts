@@ -264,7 +264,7 @@ export default class GLTF {
         }
         if (entity.has(GLTFAnimationController)) {
 
-            const animation = this.getAnimationByIndex(0);
+            const animation = this.getDefaultAnimation();
             animation.createBuffers(this);
             entity.get(GLTFAnimationController).setAnimationData(
                 animation
@@ -278,6 +278,13 @@ export default class GLTF {
         }
         const node = this.getNodeByIndex(0);
         return node;
+    }
+    getDefaultAnimation() {
+        if (!this.animations) {
+            throw new Error("animations not found");
+        }
+        const animation = this.getAnimationByIndex(0);
+        return animation;
     }
     buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();
