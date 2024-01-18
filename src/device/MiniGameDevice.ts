@@ -39,8 +39,8 @@ export default class MiniGameDevice extends Device {
     getWindowInfo(): WindowInfo {
         return wx.getWindowInfo();
     }
-    getCanvasInfo(): WindowInfo {
-        return wx.getWindowInfo();
+    getMiniGameWindowInfo(): WindowInfo {
+        return this.getWindowInfo();
     }
     getPerformance(): Performance {
         return wx.getPerformance();

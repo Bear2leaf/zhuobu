@@ -9,13 +9,14 @@ export default class BrowserEngine extends Engine {
     constructor(private readonly el: HTMLElement) {
         super();
         this.canvas = document.createElement("canvas");
-        this.canvas.width = 800;
-        this.canvas.height = 600;
         this.offscreenCanvas = document.createElement("canvas");
         this.sdfCanvas = document.createElement("canvas");
         this.offscreenCanvas.style.display = "none";
         this.sdfCanvas.style.display = "none";
         const device = new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas);
+        this.canvas.width = 480 * device.getWindowInfo().pixelRatio;
+        this.canvas.height = 960 * device.getWindowInfo().pixelRatio;
+        this.canvas.style.height = "100%";
         this.buildDependency();
         this.buildVars(device);
         this.load(device).then(() => {

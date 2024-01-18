@@ -49,7 +49,7 @@ export default abstract class Device {
   abstract reload(): void;
   abstract getPerformance(): Performance;
   abstract getWindowInfo(): WindowInfo;
-  abstract getCanvasInfo(): WindowInfo;
+  abstract getMiniGameWindowInfo(): WindowInfo;
   abstract now(): number;
   abstract loadSubpackage(): Promise<null>;
   abstract createImage(): HTMLImageElement;

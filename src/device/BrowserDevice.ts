@@ -16,16 +16,16 @@ export default class BrowserDevice extends Device {
     }
     getWindowInfo(): WindowInfo {
         return {
-            windowWidth: this.canvas.width,
-            windowHeight: this.canvas.height,
-            pixelRatio: 1
+            windowWidth: this.canvas.width / window.devicePixelRatio,
+            windowHeight: this.canvas.height / window.devicePixelRatio,
+            pixelRatio: window.devicePixelRatio
         }
     }
-    getCanvasInfo(): WindowInfo {
+    getMiniGameWindowInfo(): WindowInfo {
         return {
-            windowWidth: this.offscreenCanvas.width,
-            windowHeight: this.offscreenCanvas.height,
-            pixelRatio: 1
+            windowWidth: 414,
+            windowHeight: 896,
+            pixelRatio: 3
         }
     }
     getPerformance(): Performance {
@@ -52,32 +52,40 @@ export default class BrowserDevice extends Device {
         worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data)
     }
     onTouchStart(listener: TouchInfoFunction): void {
+        const windowInfo = this.getWindowInfo();
         this.canvas.onpointerdown = (e: PointerEvent) => {
             this.isMouseDown = true;
             const rect = this.canvas.getBoundingClientRect();
-            listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            const scaleRatio = windowInfo.windowWidth / rect.width;
+            listener({ x: e.clientX * scaleRatio - rect.left, y: e.clientY * scaleRatio - rect.top });
         };
     }
     onTouchMove(listener: TouchInfoFunction): void {
+        const windowInfo = this.getWindowInfo();
         this.canvas.onpointermove = (e: PointerEvent) => {
             if (this.isMouseDown) {
                 const rect = this.canvas.getBoundingClientRect();
-                listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                const scaleRatio = windowInfo.windowWidth / rect.width;
+                listener({ x: e.clientX * scaleRatio - rect.left, y: e.clientY * scaleRatio - rect.top });
             }
         };
     }
     onTouchEnd(listener: TouchInfoFunction): void {
+        const windowInfo = this.getWindowInfo();
         this.canvas.onpointerup = (e: PointerEvent) => {
             this.isMouseDown = false;
             const rect = this.canvas.getBoundingClientRect();
-            listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            const scaleRatio = windowInfo.windowWidth / rect.width;
+            listener({ x: e.clientX * scaleRatio - rect.left, y: e.clientY * scaleRatio - rect.top });
         }
     }
     onTouchCancel(listener: TouchInfoFunction): void {
+        const windowInfo = this.getWindowInfo();
         this.canvas.onpointercancel = (e: PointerEvent) => {
             this.isMouseDown = false;
             const rect = this.canvas.getBoundingClientRect();
-            listener({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            const scaleRatio = windowInfo.windowWidth / rect.width;
+            listener({ x: e.clientX * scaleRatio - rect.left, y: e.clientY * scaleRatio - rect.top });
         }
     }
     async readJson(file: string): Promise<Object> {

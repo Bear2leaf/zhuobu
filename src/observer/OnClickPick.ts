@@ -12,17 +12,20 @@ export default class OnClickPick extends Observer {
         const fbo = this.getSubject().getFrameBufferObject();
         const uiScene = this.getSubject().getUIScene();
         fbo.bindRead();
-        fbo.updatePixels(this.getSubject().getScreenX(), this.getSubject().getScreenY());
+        const x = this.getSubject().getScreenX();
+        const y = this.getSubject().getScreenY();
+        fbo.updatePixels(x, y);
         fbo.unbindRead();
         const pixel = fbo.readPixel();
         const messagePicked = uiScene.messagePicked(...pixel);
         const explorePicked = uiScene.explorePicked(...pixel);
         const restPicked = uiScene.restPicked(...pixel);
-        console.log({
-            messagePicked,
-            explorePicked,
-            restPicked
-        });
+        // console.log({
+        //     x, y,
+        //     messagePicked,
+        //     explorePicked,
+        //     restPicked
+        // });
         if (explorePicked) {
             this.getSubject().getWorkerManager().onExplorePicked();
         } else if (restPicked) {

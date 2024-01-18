@@ -65,9 +65,8 @@ export default class Hamburger extends Layout {
         return this.content2;
     }
     layout() {
-        console.log("Hamburger.layout");
-        console.log(this.getWindowInfo(), this.getTop(), this.getBottom(), this.getContent1(), this.getContent2());
         const height = this.getWindowInfo().windowHeight;
+        const width = this.getWindowInfo().windowWidth;
         const topTRS = this.getTop().getSource();
         if (!topTRS) throw new Error("topTRS is not set");
         const topOffsetHeight =  this.getTop().getEntity().get(SDFCharacter).getBoundingSize().y;
@@ -88,7 +87,7 @@ export default class Hamburger extends Layout {
         if (!content2TRS) throw new Error("content2TRS is not set");
         content2TRS.getPosition().x = this.paddingHorizntal;
         content2TRS.getPosition().y = height / 2 - 50;
-
+        this.getEntity().get(TRS).getPosition().x = 240 - width / 2;
         this.getEntity().get(Node).updateWorldMatrix();
     }
 }

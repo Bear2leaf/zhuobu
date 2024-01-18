@@ -72,7 +72,7 @@ export default class RendererManager {
     }
     initObservers() {
         this.getEventManager().onEntityInit.setRenderingContext(this.getDevice().getRenderingContext())
-        this.getEventManager().onEntityInit.setWindowInfo(this.getDevice().getWindowInfo())
+        this.getEventManager().onEntityInit.setWindowInfo(this.getDevice().getMiniGameWindowInfo())
         this.getEventManager().onEntityRender.setRendererManager(this);
         this.getEventManager().onViewPortChange.setDevice(this.getDevice());
 
