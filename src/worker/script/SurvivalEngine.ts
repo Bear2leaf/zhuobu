@@ -73,16 +73,18 @@ export default class SurvivalEngine {
     this.log(`Survived ${this.days} Day...`);
     this.addMessage(`Survived ${this.days++} Day...`);
     this.playerHunger += 5;
+    this.playerHunger = Math.min(this.playerHunger, 100);
     this.playerThirst += 5;
+    this.playerThirst = Math.min(this.playerThirst, 100);
 
     // Add logic for managing hunger, thirst, and other survival aspects.
     if (this.resources >= 50) {
       // Check if player has enough resources to survive
-      this.addMessage('You have enough resources to survive! Congratulations!');
+      this.addMessage('You have enough resources\nto survive!\nCongratulations!');
       this.log('You have enough resources to survive! Congratulations!');
     } else if (this.playerHealth <= 0) {
       // Check for game over condition
-      this.addMessage('Game Over! Your character has died.');
+      this.addMessage('Game Over!\nYour character has died.');
       this.log('Game Over! Your character has died.');
     }
 
@@ -118,7 +120,7 @@ export default class SurvivalEngine {
   public start(): void {
     this.reset();
     this.log('Welcome to the Survival Game!');
-    this.addMessage('Welcome to the Survival Game!');
+    this.addMessage('Welcome to\nthe Survival Game!');
     this.log('------------------------');
 
   }

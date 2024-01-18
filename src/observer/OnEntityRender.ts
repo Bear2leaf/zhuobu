@@ -9,6 +9,7 @@ import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
+import Hamburger from "../layout/Hamburger.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
 import Flowers from "../sprite/Flowers.js";
@@ -37,6 +38,8 @@ export default class OnEntityRender extends Observer {
         if (entity.has(DrawObject) && this.rendererManager) {
             if (entity.has(SDFCharacter)) {
                 this.rendererManager.getSDFRenderer().addObject(entity.get(SDFCharacter));
+                this.rendererManager.getLineRenderer().addObject(entity.get(Border));
+            } else if (entity.has(Hamburger)) {
                 this.rendererManager.getLineRenderer().addObject(entity.get(Border));
             } else if (entity.has(DefaultSprite)) {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));

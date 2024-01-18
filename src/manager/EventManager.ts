@@ -17,6 +17,8 @@ import OnViewPortChange from "../observer/OnViewPortChange.js";
 import OnClick from "../observer/OnClick.js";
 import WorkerMessageSubject from "../subject/WorkerMessageSubject.js";
 import OnWorkerMessage from "../observer/OnWorkerMessage.js";
+import UILayout from "../subject/UILayout.js";
+import OnUILayout from "../observer/OnUILayout.js";
 
 
 export default class EventManager {
@@ -30,6 +32,7 @@ export default class EventManager {
     readonly click = new Click;
     readonly clickPick = new ClickPickSubject;
     readonly workerMessage = new WorkerMessageSubject;
+    readonly uiLayout = new UILayout;
     
     readonly onEntityRegisterComponents = new OnEntityRegisterComponents;
     readonly onEntityUpdate = new OnEntityUpdate;
@@ -40,6 +43,7 @@ export default class EventManager {
     readonly onClickPick = new OnClickPick;
     readonly onViewPortChange = new OnViewPortChange;
     readonly onWorkerMessage = new OnWorkerMessage;
+    readonly onUILayout = new OnUILayout;
 
 
 
@@ -57,5 +61,6 @@ export default class EventManager {
         this.onClickPick.setSubject(this.clickPick);
         this.onViewPortChange.setSubject(this.viewPortChange);
         this.onWorkerMessage.setSubject(this.workerMessage);
+        this.onUILayout.setSubject(this.uiLayout);
     }
 }

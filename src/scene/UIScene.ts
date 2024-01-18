@@ -4,31 +4,28 @@ import Message from "../drawobject/Message.js";
 import RestText from "../drawobject/RestText.js";
 import Entity from "../entity/Entity.js";
 import ExploreButtonObject from "../entity/ExploreButtonObject.js";
-import FlowersObject from "../entity/FlowersObject.js";
+import HamburgerObject from "../entity/HamburgerObject.js";
 import InformationObject from "../entity/InformationObject.js";
 import MessageObject from "../entity/MessageObject.js";
 import PointerObject from "../entity/PointerObject.js";
-import ReflectMapObject from "../entity/ReflectMapObject.js";
-import RenderMapObject from "../entity/RenderMapObject.js";
 import RestButtonObject from "../entity/RestButtonObject.js";
-import SpriteObject from "../entity/SpriteObject.js";
 import Scene from "./Scene.js";
 
 export default class UIScene extends Scene {
+    private hamburgerObject?: HamburgerObject;
     private messageObject?: MessageObject;
     private restButtonObject?: RestButtonObject;
     private exploreButtonObject?: ExploreButtonObject;
     private informationObject?: InformationObject;
     getDefaultEntities(): Entity[] {
         return [
-            new RenderMapObject()
-            , new ReflectMapObject()
-            , new FlowersObject()
-            , new PointerObject()
-            , new SpriteObject()
+            new PointerObject()
+            , new HamburgerObject()
             , new RestButtonObject()
             , new ExploreButtonObject()
             , new InformationObject()
+            , new MessageObject()
+            
         ];
     }
     collectPickDrawObject() {
@@ -56,6 +53,10 @@ export default class UIScene extends Scene {
         if (!this.exploreButtonObject) throw new Error("exploreButtonObject is not set!");
         return this.exploreButtonObject;
     }
+    getHamburgerObject() {
+        if (!this.hamburgerObject) throw new Error("hamburgerObject is not set!");
+        return this.hamburgerObject;
+    }
     addEntity(entity: Entity): void {
         super.addEntity(entity);
         if (entity instanceof MessageObject) {
@@ -66,6 +67,8 @@ export default class UIScene extends Scene {
             this.exploreButtonObject = entity;
         } else if (entity instanceof InformationObject) {
             this.informationObject = entity;
+        } else if (entity instanceof HamburgerObject) {
+            this.hamburgerObject = entity;
         }
     }
     messagePicked(r: number, g: number, b: number) {

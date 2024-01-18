@@ -4,6 +4,7 @@ import { Vec4, flatten } from "../geometry/Vector.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 import Node from "../transform/Node.js";
+import TRS from "../transform/TRS.js";
 
 
 export default class Water extends DrawObject {
@@ -50,18 +51,23 @@ export default class Water extends DrawObject {
     init() {
 
         super.init();
-        const quad = new HorizontalQuad(-5, -5, 10, 10);
+        const quad = new HorizontalQuad(-1, -1, 2, 2);
+        const scale = 5;
         quad.initTexCoords();
         const vertices: Vec4[] = []
         const colors: Vec4[] = []
         const indices: number[] = []
         const texcoords: Vec4[] = []
         quad.appendTo(vertices, colors, indices, texcoords);
-
+        texcoords.forEach((texcoord, i) => {
+            texcoords[i] = texcoord.multiply(scale);
+        });
         this.createABO(ArrayBufferIndex.Position, flatten(vertices), 4);
         this.createABO(ArrayBufferIndex.Color, flatten(colors), 4);
         this.createABO(ArrayBufferIndex.TextureCoord, flatten(texcoords), 4);
         this.updateEBO(new Uint16Array(indices));
+        this.getEntity().get(TRS).getScale().multiply(scale);
+        this.getEntity().get(Node).updateWorldMatrix();
     }
     draw(): void {
         this.getRenderingContext().switchBlend(true);

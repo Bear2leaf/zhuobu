@@ -1,4 +1,5 @@
 import SDFCanvas from "../canvas/SDFCanvas.js";
+import { WindowInfo } from "../device/Device.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
@@ -11,6 +12,7 @@ import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
+import Hamburger from "../layout/Hamburger.js";
 import GLTFManager from "../manager/GLTFManager.js";
 import TextureManager from "../manager/TextureManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
@@ -29,6 +31,7 @@ export default class OnEntityInit extends Observer {
     private textureManager?: TextureManager;
     private renderingContext?: RenderingContext;
     private onClick?: OnClick;
+    private windowInfo?: WindowInfo;
 
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
@@ -44,6 +47,9 @@ export default class OnEntityInit extends Observer {
     }
     setGLTFManager(gltfManager: GLTFManager) {
         this.gltfManager = gltfManager;
+    }
+    setWindowInfo(windowInfo: WindowInfo) {
+        this.windowInfo = windowInfo;
     }
     getSubject(): EntitySubject {
         const subject = super.getSubject();
@@ -73,7 +79,7 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(Terrian)) {
                 entity.get(Terrian).setTexture(this.textureManager.defaultTexture);
                 entity.get(Terrian).setDepthTexture(this.textureManager.depthTexture);
-            }  else if (entity.has(TerrianMesh)) {
+            } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setTexture(this.textureManager.terrianTexture);
                 entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
             } else if (entity.has(RenderMap)) {
@@ -118,11 +124,16 @@ export default class OnEntityInit extends Observer {
         if (entity.has(SDFCharacter)) {
             entity.get(SDFCharacter).create();
         }
-        
-        if (entity.has(Border)) {
-            entity.get(Border).create();
+
+        if (entity.has(SDFCharacter)) {
+            entity.get(Border).createFromSDFCharacter();
         }
-        
+        if (entity.has(Hamburger)) {
+            if (this.windowInfo === undefined) throw new Error("windowInfo is undefined");
+            entity.get(Hamburger).setWindowInfo(this.windowInfo);
+            entity.get(Border).createFromHamburger(entity.get(Hamburger).getPadding());
+        }
+
 
     }
 

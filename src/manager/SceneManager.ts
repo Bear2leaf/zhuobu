@@ -2,7 +2,6 @@ import UIScene from "../scene/UIScene.js";
 import GLTFScene from "../scene/GLTFScene.js";
 import EventManager from "./EventManager.js";
 import Scene from "../scene/Scene.js";
-import MessageObject from "../entity/MessageObject.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
@@ -11,6 +10,7 @@ import Border from "../drawobject/Border.js";
 import InformationText from "../drawobject/InformationText.js";
 import InformationObject from "../entity/InformationObject.js";
 import Message from "../drawobject/Message.js";
+import Hamburger from "../layout/Hamburger.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
@@ -19,7 +19,6 @@ export default class SceneManager {
     private current: Scene = this.emptyScene;
     private backup: Scene = this.emptyScene;
     private eventManager?: EventManager;
-    private messageObject?: MessageObject
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {
             throw new Error("eventManager is undefined");
@@ -38,6 +37,7 @@ export default class SceneManager {
         this.emptyScene.initEntities();
         this.gltfScene.initEntities();
         this.uiScene.initEntities();
+        this.getEventManager().uiLayout.notify();
     }
     collectDrawObject(): void {
         this.current.collectDrawObject();
@@ -65,37 +65,23 @@ export default class SceneManager {
     addMessage(message: string) {
         const object = this.uiScene.getInformationObject();
         object.get(InformationText).updateChars(`${message}`);
-        object.get(Border).create();
+        object.get(Border).createFromSDFCharacter();
+        this.uiScene.getHamburgerObject().get(Hamburger).layout();
     }
     updateStatus(message: string) {
         const object = this.uiScene.getMessageObject();
         object.get(Message).updateChars(`${message}`);
-        object.get(TRS).getPosition().set(0, object.get(SDFCharacter).getOffsetHeight(), 0);
-        object.get(Node).updateWorldMatrix();
-        object.get(Border).create();
+        object.get(Border).createFromSDFCharacter();
+        this.uiScene.getHamburgerObject().get(Hamburger).layout();
     }
     getInformationObject(): InformationObject {
         return this.uiScene.getInformationObject();
     }
     loadInitScene() {
-        if (this.messageObject) {
-            this.uiScene.removeEntity(this.messageObject);
-            this.messageObject = undefined;
-        }
         this.current = this.gltfScene;
     }
     createMessageUI() {
-        const object = new MessageObject();
-        object.addDefaultComponents();
-        this.uiScene.registerComponents(object);
-        this.uiScene.initEntity(object);
-        this.uiScene.addEntity(object);
-        const chars = "Hello World! abc.\n123\n456";
-        object.get(SDFCharacter).updateChars(chars);
-        object.get(Border).create();
-        object.get(TRS).getPosition().set(0, object.get(SDFCharacter).getOffsetHeight(), 0);
-        object.get(Node).updateWorldMatrix();
-        this.messageObject = object;
+        console.log("createMessageUI");
     }
     update() {
         this.emptyScene.update();
@@ -106,6 +92,7 @@ export default class SceneManager {
         const eventManager = this.getEventManager();
         eventManager.clickPick.setUIScene(this.uiScene);
         eventManager.workerMessage.setSceneManager(this);
+        eventManager.uiLayout.setUIScene(this.uiScene);
     }
     initSubjects() {
         const eventManager = this.getEventManager();
