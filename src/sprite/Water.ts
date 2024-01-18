@@ -52,7 +52,7 @@ export default class Water extends DrawObject {
 
         super.init();
         const quad = new HorizontalQuad(-1, -1, 2, 2);
-        const scale = 5;
+        const scale = 100;
         quad.initTexCoords();
         const vertices: Vec4[] = []
         const colors: Vec4[] = []

@@ -1,17 +1,16 @@
 import { WindowInfo } from "../device/Device.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import Node from "../transform/Node.js";
-import TRS from "../transform/TRS.js";
 import Layout from "./Layout.js";
 
 export default class Hamburger extends Layout {
     private readonly paddingVertical: number = 40;
     private readonly paddingHorizntal: number = 10;
     private windowInfo?: WindowInfo;
-    private top?: Node;
-    private bottom?: Node;
-    private content1?: Node;
-    private content2?: Node;
+    private info?: Node;
+    private status?: Node;
+    private explore?: Node;
+    private rest?: Node;
     getPadding(): [number, number] {
         return [this.paddingVertical, this.paddingHorizntal];
     }
@@ -24,70 +23,72 @@ export default class Hamburger extends Layout {
         }
         return this.windowInfo;
     }
-    setTop(node: Node): void {
-        this.top = node;
+    setInfo(node: Node): void {
+        this.info = node;
         node.setParent(this.getEntity().get(Node));
     }
-    setBottom(node: Node): void {
-        this.bottom = node;
+    setStatus(node: Node): void {
+        this.status = node;
         node.setParent(this.getEntity().get(Node));
     }
-    setContent1(node: Node): void {
-        this.content1 = node;
+    setExplore(node: Node): void {
+        this.explore = node;
         node.setParent(this.getEntity().get(Node));
     }
-    setContent2(node: Node): void {
-        this.content2 = node;
+    setRest(node: Node): void {
+        this.rest = node;
         node.setParent(this.getEntity().get(Node));
     }
-    getTop(): Node {
-        if (!this.top) {
-            throw new Error("Top is not set");
+    getInfo(): Node {
+        if (!this.info) {
+            throw new Error("Info is not set");
         }
-        return this.top;
+        return this.info;
     }
-    getBottom(): Node {
-        if (!this.bottom) {
-            throw new Error("Bottom is not set");
+    getStatus(): Node {
+        if (!this.status) {
+            throw new Error("Status is not set");
         }
-        return this.bottom;
+        return this.status;
     }
-    getContent1(): Node {
-        if (!this.content1) {
-            throw new Error("Content1 is not set");
+    getExplore(): Node {
+        if (!this.explore) {
+            throw new Error("Explore is not set");
         }
-        return this.content1;
+        return this.explore;
     }
-    getContent2(): Node {
-        if (!this.content2) {
-            throw new Error("Content2 is not set");
+    getRest(): Node {
+        if (!this.rest) {
+            throw new Error("Rest is not set");
         }
-        return this.content2;
+        return this.rest;
     }
     layout() {
         const height = this.getWindowInfo().windowHeight;
         const width = this.getWindowInfo().windowWidth;
-        const topTRS = this.getTop().getSource();
+        const topTRS = this.getInfo().getSource();
         if (!topTRS) throw new Error("topTRS is not set");
-        const topOffsetHeight =  this.getTop().getEntity().get(SDFCharacter).getBoundingSize().y;
-        topTRS.getPosition().y = height - topOffsetHeight - this.paddingVertical;
+        const topOffsetHeight = this.getInfo().getEntity().get(SDFCharacter).getBoundingSize().y;
         topTRS.getPosition().x = this.paddingHorizntal;
-        const bottomTRS = this.getBottom().getSource();
+        topTRS.getPosition().y = height - topOffsetHeight - this.paddingVertical;
+        const bottomTRS = this.getStatus().getSource();
         if (!bottomTRS) throw new Error("bottomTRS is not set");
-        const bottomOffsetHeight =  this.getBottom().getEntity().get(SDFCharacter).getOffsetHeight();
-        bottomTRS.getPosition().y = bottomOffsetHeight + this.paddingVertical;
+        const bottomOffsetHeight = this.getStatus().getEntity().get(SDFCharacter).getOffsetHeight();
         bottomTRS.getPosition().x = this.paddingHorizntal;
+        bottomTRS.getPosition().y = bottomOffsetHeight + this.paddingVertical;
 
-        const content1TRS = this.getContent1().getSource();
+        const content1TRS = this.getExplore().getSource();
         if (!content1TRS) throw new Error("content1TRS is not set");
-        content1TRS.getPosition().x = this.paddingHorizntal;
-        content1TRS.getPosition().y = height / 2;
 
-        const content2TRS = this.getContent2().getSource();
+        const content1OffsetHeight = this.getExplore().getEntity().get(SDFCharacter).getOffsetHeight();
+        content1TRS.getPosition().x = width - this.paddingHorizntal - this.getExplore().getEntity().get(SDFCharacter).getBoundingSize().z;
+        content1TRS.getPosition().y = content1OffsetHeight + this.paddingVertical + 50;
+
+        const content2TRS = this.getRest().getSource();
         if (!content2TRS) throw new Error("content2TRS is not set");
-        content2TRS.getPosition().x = this.paddingHorizntal;
-        content2TRS.getPosition().y = height / 2 - 50;
-        this.getEntity().get(TRS).getPosition().x = 240 - width / 2;
+        const content2OffsetHeight = this.getRest().getEntity().get(SDFCharacter).getOffsetHeight();
+        content2TRS.getPosition().x = width - this.paddingHorizntal - this.getRest().getEntity().get(SDFCharacter).getBoundingSize().z;
+        content2TRS.getPosition().y = content2OffsetHeight + this.paddingVertical;
         this.getEntity().get(Node).updateWorldMatrix();
     }
 }

@@ -51,7 +51,6 @@ export default class SurvivalEngine {
   }
 
   survival(choice: '1' | '2'): void {
-    this.printStatus();
 
     // Player options
     this.log('1. Explore');
@@ -77,10 +76,11 @@ export default class SurvivalEngine {
     this.playerThirst += 5;
     this.playerThirst = Math.min(this.playerThirst, 100);
 
+    this.printStatus();
     // Add logic for managing hunger, thirst, and other survival aspects.
     if (this.resources >= 50) {
       // Check if player has enough resources to survive
-      this.addMessage('You have enough resources\nto survive!\nCongratulations!');
+      this.addMessage('You have enough\nresources to survive!\nCongratulations!');
       this.log('You have enough resources to survive! Congratulations!');
     } else if (this.playerHealth <= 0) {
       // Check for game over condition

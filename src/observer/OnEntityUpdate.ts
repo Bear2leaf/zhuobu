@@ -54,6 +54,7 @@ export default class OnEntityUpdate extends Observer {
                 throw new Error("camera node not found");
             }
             const camera = gltf.getCameraByIndex(cameraNode.getCamera());
+            const cameraTarget = gltf.getCameraTarget();
             const aspect = camera.getPerspective().getAspectRatio();
             const fov = camera.getPerspective().getYFov();
             const near = camera.getPerspective().getZNear();
@@ -63,7 +64,11 @@ export default class OnEntityUpdate extends Observer {
             if (!trs) {
                 throw new Error("trs not found");
             }
-            this.cameraManager.getMainCamera().fromGLTF(trs.getPosition(), trs.getRotation(), aspect, fov, near, far);
+            const targetSource = cameraTarget.getNode().getSource();
+            if (!targetSource) {
+                throw new Error("targetSource not found");
+            }
+            this.cameraManager.getMainCamera().fromGLTF(targetSource.getPosition(), trs.getPosition(), fov, near, far);
         }
         if (entity.has(Pointer)) {
             entity.get(Pointer).update();

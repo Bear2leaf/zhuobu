@@ -12,10 +12,10 @@ export default class OnUILayout extends Observer {
     public notify(): void {
         const uiScene = this.getSubject().getUIScene();
         const hamburger = uiScene.getHamburgerObject().get(Hamburger);
-        hamburger.setBottom(uiScene.getMessageObject().get(Node));
-        hamburger.setTop(uiScene.getInformationObject().get(Node));
-        hamburger.setContent1(uiScene.getExploreButtonObject().get(Node));
-        hamburger.setContent2(uiScene.getRestButtonObject().get(Node));
+        hamburger.setStatus(uiScene.getMessageObject().get(Node));
+        hamburger.setInfo(uiScene.getInformationObject().get(Node));
+        hamburger.setExplore(uiScene.getExploreButtonObject().get(Node));
+        hamburger.setRest(uiScene.getRestButtonObject().get(Node));
         hamburger.layout();
     }
 

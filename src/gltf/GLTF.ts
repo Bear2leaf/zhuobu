@@ -119,6 +119,16 @@ export default class GLTF {
         }
         return camera;
     }
+    getCameraTarget() {
+        if (!this.nodes) {
+            throw new Error("nodes not found");
+        }
+        const cameraTarget = this.nodes.find((node) => node.getName() === "CameraTarget");
+        if (!cameraTarget) {
+            throw new Error("cameraTarget not found");
+        }
+        return cameraTarget;
+    }
     getMaterialByIndex(materialIndex: number) {
         if (!this.materials) {
             throw new Error("materials not found");
