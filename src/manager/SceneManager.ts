@@ -1,23 +1,17 @@
 import UIScene from "../scene/UIScene.js";
-import GLTFScene from "../scene/GLTFScene.js";
+import IslandScene from "../scene/IslandScene.js";
 import EventManager from "./EventManager.js";
-import Scene from "../scene/Scene.js";
-import SDFCharacter from "../drawobject/SDFCharacter.js";
-import TRS from "../transform/TRS.js";
-import Node from "../transform/Node.js";
-import InitScene from "../scene/InitScene.js";
 import Border from "../drawobject/Border.js";
 import InformationText from "../drawobject/InformationText.js";
 import InformationObject from "../entity/InformationObject.js";
 import Message from "../drawobject/Message.js";
 import Hamburger from "../layout/Hamburger.js";
+import EnvironmentScene from "../scene/EnvironmentScene.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
-    private readonly gltfScene = new GLTFScene;
-    private readonly emptyScene = new InitScene;
-    private current: Scene = this.emptyScene;
-    private backup: Scene = this.emptyScene;
+    private readonly islandScene = new IslandScene;
+    private readonly environmentScene = new EnvironmentScene;
     private eventManager?: EventManager;
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {
@@ -29,38 +23,38 @@ export default class SceneManager {
         this.eventManager = eventManager;
     }
     registerEntities(): void {
-        this.emptyScene.registerEntities();
-        this.gltfScene.registerEntities();
+        this.islandScene.registerEntities();
         this.uiScene.registerEntities();
+        this.environmentScene.registerEntities();
     }
     initSceneEntities(): void {
-        this.emptyScene.initEntities();
-        this.gltfScene.initEntities();
+        this.islandScene.initEntities();
         this.uiScene.initEntities();
+        this.environmentScene.initEntities();
         this.getEventManager().uiLayout.notify();
     }
     collectDrawObject(): void {
-        this.current.collectDrawObject();
-        this.backup.collectDrawObject();
+        this.islandScene.collectDrawObject();
+        this.environmentScene.collectDrawObject();
+        this.uiScene.collectDrawObject();
     }
     collectRefractFramebufferObject() {
-        this.gltfScene.collectRefractDrawObject();
+        this.islandScene.collectRefractDrawObject();
+        this.environmentScene.collectRefractDrawObject();
     }
     collectReflectFramebufferObject() {
-        this.gltfScene.collectReflectDrawObject();
+        this.islandScene.collectReflectDrawObject();
+        this.environmentScene.collectReflectDrawObject();
     }
     collectPickFramebufferObject() {
         this.uiScene.collectPickDrawObject();
     }
     collectDepthFramebufferObject() {
-        this.gltfScene.collectDepthDrawObject();
+        this.islandScene.collectDepthDrawObject();
+        this.environmentScene.collectDepthDrawObject();
     }
     toggleUIScene() {
-        if (this.uiScene === this.backup) {
-            // this.backup = this.emptyScene;
-        } else {
-            this.backup = this.uiScene;
-        }
+        console.log("toggleUIScene");
     }
     addMessage(message: string) {
         const object = this.uiScene.getInformationObject();
@@ -78,14 +72,14 @@ export default class SceneManager {
         return this.uiScene.getInformationObject();
     }
     loadInitScene() {
-        this.current = this.gltfScene;
+        console.log("loadInitScene");
     }
     createMessageUI() {
         console.log("createMessageUI");
     }
     update() {
-        this.emptyScene.update();
-        this.gltfScene.update();
+        this.islandScene.update();
+        this.environmentScene.update();
         this.uiScene.update();
     }
     initObservers() {
@@ -96,7 +90,7 @@ export default class SceneManager {
     }
     initSubjects() {
         const eventManager = this.getEventManager();
-        this.emptyScene.setEntitySubjects(
+        this.islandScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,
@@ -104,7 +98,7 @@ export default class SceneManager {
             eventManager.entityUpdate,
             eventManager.entityRemove
         );
-        this.gltfScene.setEntitySubjects(
+        this.environmentScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,

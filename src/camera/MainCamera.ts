@@ -24,7 +24,7 @@ export class MainCamera extends PerspectiveCamera {
     }
     getView(): Matrix {
         if (this.reflected) {
-            return Matrix.lookAt(new Vec3(this.getEye().x, -this.getEye().y, this.getEye().z), this.target.clone(), this.up)
+            return Matrix.lookAt(new Vec3(this.getEye().x, -this.getEye().y, this.getEye().z), new Vec3(this.target.x, -this.target.y, this.target.z), this.up)
         } else {
             return Matrix.lookAt(this.getEye(), this.target.clone(), this.up)
         }

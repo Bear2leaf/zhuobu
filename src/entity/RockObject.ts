@@ -2,14 +2,14 @@ import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
-import EnvironmentMesh from "../drawobject/EnvironmentMesh.js";
+import RockMesh from "../drawobject/RockMesh.js";
 
-export default class EnvironmentObject extends Entity {
+export default class RockObject extends Entity {
     addDefaultComponents(): void {
         [
             TRS,
             Node,
-            EnvironmentMesh
+            RockMesh
         ].forEach(ctor => {
             this.add<Component>(ctor);
             

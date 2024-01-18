@@ -1,7 +1,7 @@
 import AnimationController from "../controller/AnimationController.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import EnvironmentMesh from "../drawobject/EnvironmentMesh.js";
+import RockMesh from "../drawobject/RockMesh.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -46,12 +46,12 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
-            }  else if (entity.has(Terrian)) {
+            } else if (entity.has(Terrian)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
-            }  else if (entity.has(TerrianMesh)) {
+            } else if (entity.has(TerrianMesh)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
-            }   else if (entity.has(EnvironmentMesh)) {
-                this.rendererManager.getMeshRenderer().addObject(entity.get(EnvironmentMesh));
+            } else if (entity.has(RockMesh)) {
+                this.rendererManager.getMeshRenderer().addObject(entity.get(RockMesh));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {

@@ -1,7 +1,7 @@
 
 import CameraControllerObject from "../entity/CameraControllerObject.js";
 import Entity from "../entity/Entity.js";
-import EnvironmentObject from "../entity/EnvironmentObject.js";
+import RockObject from "../entity/RockObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import MeshObject from "../entity/MeshObject.js";
@@ -11,15 +11,13 @@ import TerrianObject from "../entity/TerrianObject.js";
 import WaterObject from "../entity/WaterObject.js";
 import Scene from "./Scene.js";
 
-export default class GLTFScene extends Scene {
+export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new CameraControllerObject()
             , new SkyboxObject()
             , new WaterObject()
-            // , new HelloMultiMeshObject()
             , new TerrianObject()
-            , new EnvironmentObject()
             , new MeshObject()
             , new SkinMeshObject()
         ];

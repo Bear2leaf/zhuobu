@@ -2,7 +2,7 @@ import { Vec4 } from "../geometry/Vector.js";
 import RockGLTF from "../model/RockGLTF.js";
 import Mesh from "./Mesh.js";
 
-export default class EnvironmentMesh extends Mesh {
+export default class RockMesh extends Mesh {
     getGLTF(): RockGLTF {
         const gltf = super.getGLTF();
         if (!(gltf instanceof RockGLTF)) {
@@ -19,14 +19,5 @@ export default class EnvironmentMesh extends Mesh {
         const baseColor =  material.getPbrMetallicRoughness().getBaseColorFactor();
         this.setDiffuseColor(new Vec4(...baseColor));
         this.updateMaterial();
-    }
-    draw(): void {
-        this.getRenderingContext().switchBlend(true);
-        this.getRenderingContext().switchNearestFilter(true);
-        super.draw();
-        this.getRenderingContext().switchNearestFilter(false);
-        this.getRenderingContext().switchBlend(false);
-
-
     }
 }

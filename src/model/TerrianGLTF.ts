@@ -7,11 +7,11 @@ export default class TerrianGLTF extends GLTF {
         this.setName("island");
     }
     getDefaultNode(): GLTFNode {
-        const node = this.getNodeByIndex(3);
+        const node = this.getNodeByIndex(1);
         return node;
     }
     getDefaultCameraNode() {
-        const node = this.getNodeByIndex(2);
+        const node = this.getNodeByIndex(0);
         return node;
     }
     clone(): TerrianGLTF {
