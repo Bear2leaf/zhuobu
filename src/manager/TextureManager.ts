@@ -17,6 +17,7 @@ import WaterNormalTexture from "../texture/WaterNormalTexture.js";
 import WaterDistortionTexture from "../texture/WaterDistortionTexture.js";
 import TerrianTexture from "../texture/TerrianTexture.js";
 import GLTFManager from "./GLTFManager.js";
+import EagleJointTexture from "../texture/EagleJointTexture.js";
 
 
 export default class TextureManager {
@@ -27,6 +28,7 @@ export default class TextureManager {
     readonly waterNormalTexture = new WaterNormalTexture;
     readonly waterDistortionTexture = new WaterDistortionTexture;
     readonly jointTexture = new JointTexture;
+    readonly eagleJointTexture = new EagleJointTexture;
     readonly skyboxTexture = new SkyboxTexture;
     readonly depthTexture = new DepthTexture;
     readonly waterDepthTexture = new DepthTexture;
@@ -66,6 +68,7 @@ export default class TextureManager {
         this.waterNormalTexture.setContext(glContext);
         this.waterDepthTexture.setContext(glContext);
         this.jointTexture.setContext(glContext);
+        this.eagleJointTexture.setContext(glContext);
         this.skyboxTexture.setContext(glContext);
         this.depthTexture.setContext(glContext);
         this.pickTexture.setContext(glContext);
@@ -78,6 +81,7 @@ export default class TextureManager {
         this.sdfTexture.setCanvasContext(this.getDevice().getSDFCanvasRenderingContext());
 
         this.jointTexture.setBindIndex(TextureBindIndex.Joint);
+        this.eagleJointTexture.setBindIndex(TextureBindIndex.Joint);
         this.skyboxTexture.setBindIndex(TextureBindIndex.Skybox);
         this.depthTexture.setBindIndex(TextureBindIndex.Depth);
         this.waterDepthTexture.setBindIndex(TextureBindIndex.Depth);

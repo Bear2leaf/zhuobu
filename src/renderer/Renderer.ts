@@ -8,7 +8,6 @@ import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
-import Terrian from "../drawobject/Terrian.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
 
 

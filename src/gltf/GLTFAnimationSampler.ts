@@ -4,7 +4,6 @@ export default class GLTFAnimationSampler {
     private readonly output: number;
     private inputBuffer?: Float32Array;
     private outputBuffer?: Float32Array;
-    private inputRange?: readonly [readonly number[], readonly number[]];
 
     constructor(sampler: GLTFAnimationSampler) {
         this.input = sampler.input;
@@ -39,13 +38,17 @@ export default class GLTFAnimationSampler {
         return this.outputBuffer;
     }
     getNearestIndexFromTime(time: number): number {
-        const localTime = time % this.getInputBuffer()[this.getInputBuffer().length - 1];
         const input = this.getInputBuffer();
         if (input.length > 1) {
             for (let i = 0; i < input.length - 1; ++i) {
-                if (localTime >= input[i] && localTime < input[i + 1]) {
+                if (time >= input[i] && time < input[i + 1]) {
+                    return i;
+                } else if (time >= input[i] && time >= input[i + 1] && i === input.length - 2) {
+                    return i;
+                } else if (time < input[i] && time < input[i + 1] && i === 0) {
                     return i;
                 }
+
             }
         }
         throw new Error("index not found");

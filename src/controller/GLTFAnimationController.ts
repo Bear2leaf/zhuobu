@@ -1,3 +1,4 @@
+import WhaleMesh from "../drawobject/WhaleMesh.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";
@@ -27,11 +28,12 @@ export default class GLTFAnimationController extends AnimationController {
             const outputBuffer = sampler.getOutputBuffer();
             const localTime = (this.getTime() / 1000) % inputBuffer[inputBuffer.length - 1];
             // find the nearest index
-            const bufferIndex = sampler.getNearestIndexFromTime(localTime);
+            let bufferIndex = sampler.getNearestIndexFromTime(localTime);
             // get the value from the output buffer
             const previousTime = inputBuffer[bufferIndex];
             const nextTime = inputBuffer[bufferIndex + 1];
-            const interpolationValue = (localTime - previousTime) / (nextTime - previousTime);
+
+            let interpolationValue = (localTime - previousTime) / (nextTime - previousTime);
             // if there is no matrix saved for this joint
             const trs = node.getSource();
             if (!trs) {
@@ -45,16 +47,23 @@ export default class GLTFAnimationController extends AnimationController {
                 trs.getPosition().from(currentTranslation);
             } else if (path === "rotation") {
                 const currentBuffer = [...outputBuffer.slice(bufferIndex * 4, bufferIndex * 4 + 8)]
-                const previousRotation = new Vec4(...currentBuffer.slice(0, 4));
-                const nextRotation = new Vec4(...currentBuffer.slice(4, 8));
-                const currentRotation = this.slerp(previousRotation, nextRotation, interpolationValue);
-                trs.getRotation().from(currentRotation);
+                const previous = new Vec4(...currentBuffer.slice(0, 4));
+                const next = new Vec4(...currentBuffer.slice(4, 8));
+                const current = next.subtract(previous).multiply(interpolationValue).add(previous);
+                trs.getRotation().from(current);
+            } else if (path === "scale") {
+                const currentBuffer = [...outputBuffer.slice(bufferIndex * 3, bufferIndex * 3 + 6)]
+                const previous = new Vec3(...currentBuffer.slice(0, 3));
+                const next = new Vec3(...currentBuffer.slice(3, 6));
+                const current = next.subtract(previous).multiply(interpolationValue).add(previous);
+                trs.getScale().from(current);
             } else {
                 throw new Error("path not found");
             }
         });
     }
     slerp(a: Vec4, b: Vec4, t: number): Vec4 {
+        // we use slerp before, in fact we can use lerp here.
         let dot = a.clone().dot(b);
         if (dot < 0.0) {
             b.multiply(-1);
@@ -76,6 +85,18 @@ export default class GLTFAnimationController extends AnimationController {
         if (isNaN(result.x)) {
             console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
             throw new Error("result.x is NaN");
+        }
+        if (isNaN(result.y)) {
+            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
+            throw new Error("result.y is NaN");
+        }
+        if (isNaN(result.z)) {
+            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
+            throw new Error("result.z is NaN");
+        }
+        if (isNaN(result.w)) {
+            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
+            throw new Error("result.w is NaN");
         }
         return result;
     }

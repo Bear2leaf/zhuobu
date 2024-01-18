@@ -23,7 +23,7 @@ layout(location = 2) out vec4 o_reflect;
 layout(location = 3) out vec4 o_refract;
 
 const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
-const float bias = 0.005f;
+const float bias = 0.0f;
 
 float shadowCalculation(vec4 fragPosLightSpace) {
     // 执行透视除法

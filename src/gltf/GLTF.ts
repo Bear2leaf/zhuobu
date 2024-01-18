@@ -149,6 +149,16 @@ export default class GLTF {
         }
         return image;
     }
+    getNodeByName(name: string) {
+        if (!this.nodes) {
+            throw new Error("nodes not found");
+        }
+        const node = this.nodes.find((node) => node.getName() === name);
+        if (!node) {
+            throw new Error(`node not found: ${name}`);
+        }
+        return node;
+    }
     getTextureByIndex(index: number) {
         if (!this.textures) {
             throw new Error("textures not found");
@@ -192,7 +202,7 @@ export default class GLTF {
             throw new Error("nodes not found");
         }
         for (const mesh of this.meshes) {
-            const primitive = mesh.getPrimitiveByIndex(0);
+            const primitive = mesh.getDefaultPrimitive();
             const materialIndex = primitive.getMaterial();
             if (this.materials) {
                 const material = this.materials[materialIndex];
@@ -231,15 +241,22 @@ export default class GLTF {
         }
         const node = this.getDefaultNode();
         const mesh = this.getMeshByIndex(node.getMesh());
-        const primitive = mesh.getPrimitiveByIndex(0);
+        const primitive = mesh.getDefaultPrimitive();
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
         if (entity.has(SkinMesh)) {
             const skin = this.getSkinByIndex(node.getSkin());
-            const skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
-            this.buildNodeTree(skeletonRootNode);
+            let skeletonRootNode;
+            if (skin.getSkeleton() === undefined) {
+                skeletonRootNode = this.getNodeByName(skin.getName());
+                this.buildNodeTree(skeletonRootNode);
+            } else {
+
+                skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
+                this.buildNodeTree(skeletonRootNode);
+            }
             skeletonRootNode.getNode().setParent(node.getNode());
             const jointNodes = skin.getJoints().map((joint) => this.getNodeByIndex(joint).getNode());
             const weightslIndex = primitive.getAttributes().getWeights();

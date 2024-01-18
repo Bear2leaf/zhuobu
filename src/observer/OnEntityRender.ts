@@ -19,6 +19,9 @@ import RenderMap from "../sprite/RenderMap.js";
 import Water from "../sprite/Water.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
+import EagleMesh from "../drawobject/EagleMesh.js";
+import GLTFAnimationController from "../controller/GLTFAnimationController.js";
+import Mesh from "../drawobject/Mesh.js";
 
 export default class OnEntityRender extends Observer {
     private rendererManager?: RendererManager;
@@ -50,8 +53,6 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
             } else if (entity.has(TerrianMesh)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
-            } else if (entity.has(RockMesh)) {
-                this.rendererManager.getMeshRenderer().addObject(entity.get(RockMesh));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {
@@ -60,18 +61,14 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {
                 this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
-            } else if (entity.has(HelloMultiMesh)) {
-                this.rendererManager.getMeshRenderer().addObject(entity.get(HelloMultiMesh));
             } else if (entity.has(Skybox)) {
                 this.rendererManager.getSkyboxRenderer().addObject(entity.get(Skybox));
             } else if (entity.has(Water)) {
                 this.rendererManager.getWaterRenderer().addObject(entity.get(Water));
-            } else if (entity.has(SkinMesh)) {
-                if (entity.has(AnimationController)) {
-                    this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));
-                } else {
-                    this.rendererManager.getMeshRenderer().addObject(entity.get(SkinMesh));
-                }
+            } else if (entity.has(GLTFAnimationController)) {
+                this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));
+            } else if (entity.has(Mesh)) {
+                this.rendererManager.getMeshRenderer().addObject(entity.get(Mesh));
             }
         }
     }

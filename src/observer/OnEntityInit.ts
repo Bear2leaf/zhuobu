@@ -25,6 +25,7 @@ import EntitySubject from "../subject/EntitySubject.js";
 import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
 import OnClick from "./OnClick.js";
+import EagleMesh from "../drawobject/EagleMesh.js";
 
 export default class OnEntityInit extends Observer {
     private gltfManager?: GLTFManager;
@@ -97,9 +98,12 @@ export default class OnEntityInit extends Observer {
                 entity.get(Water).setNormalTexture(this.textureManager.waterNormalTexture);
             } else if (entity.has(Skybox)) {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
-            } else if (entity.has(SkinMesh)) {
-                entity.get(SkinMesh).setJointTexture(this.textureManager.jointTexture);
-                entity.get(SkinMesh).setTexture(this.textureManager.flowerTexture);
+            } else if (entity.has(EagleMesh)) {
+                entity.get(EagleMesh).setJointTexture(this.textureManager.eagleJointTexture);
+                entity.get(EagleMesh).setTexture(this.textureManager.flowerTexture);
+            } else if (entity.has(WhaleMesh)) {
+                entity.get(WhaleMesh).setJointTexture(this.textureManager.jointTexture);
+                entity.get(WhaleMesh).setTexture(this.textureManager.flowerTexture);
             }
         }
         if (entity.has(SDFCharacter) && this.sdfCanvas) {
@@ -124,6 +128,8 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setGLTF(this.gltfManager.rockGLTF.clone());
                 entity.get(RockMesh).getGLTF().setIndex(Math.floor(Math.random() * 7 + 4));
+            } else if (entity.has(EagleMesh)) {
+                entity.get(EagleMesh).setGLTF(this.gltfManager.eagleGLTF.clone());
             }
             entity.get(Mesh).initMesh();
         }

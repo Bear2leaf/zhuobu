@@ -1,9 +1,8 @@
 
 import CameraControllerObject from "../entity/CameraControllerObject.js";
+import EagleObject from "../entity/EagleObject.js";
 import Entity from "../entity/Entity.js";
-import RockObject from "../entity/RockObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
-import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import MeshObject from "../entity/MeshObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
 import SkyboxObject from "../entity/SkyboxObject.js";
@@ -20,6 +19,7 @@ export default class IslandScene extends Scene {
             , new TerrianObject()
             , new MeshObject()
             , new SkinMeshObject()
+            , new EagleObject()
         ];
     }
     collectRefractDrawObject() {
@@ -29,6 +29,7 @@ export default class IslandScene extends Scene {
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
             || entity instanceof HelloMultiMeshObject
+            || entity instanceof EagleObject
         )
     }
     collectReflectDrawObject() {
@@ -38,12 +39,14 @@ export default class IslandScene extends Scene {
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
             || entity instanceof HelloMultiMeshObject
+            || entity instanceof EagleObject
         )
     }
     collectDepthDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject
             || entity instanceof MeshObject
+            || entity instanceof EagleObject
         )
     }
 
