@@ -2,6 +2,7 @@ import SDFCanvas from "../canvas/SDFCanvas.js";
 import { WindowInfo } from "../device/Device.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import EnvironmentMesh from "../drawobject/EnvironmentMesh.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
@@ -82,6 +83,8 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setTexture(this.textureManager.terrianTexture);
                 entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
+            }  else if (entity.has(EnvironmentMesh)) {
+                entity.get(EnvironmentMesh).setTexture(this.textureManager.terrianTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
             } else if (entity.has(ReflectMap)) {
@@ -118,6 +121,8 @@ export default class OnEntityInit extends Observer {
                 entity.get(HelloMultiMesh).setGLTF(this.gltfManager.helloMultiGLTF.clone());
             } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
+            } else if (entity.has(EnvironmentMesh)) {
+                entity.get(EnvironmentMesh).setGLTF(this.gltfManager.rockGLTF.clone());
             }
             entity.get(Mesh).initMesh();
         }

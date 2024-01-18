@@ -20,10 +20,6 @@ export default class TerrianMesh extends Mesh {
         }
         return gltf;
     }
-    init(): void {
-        this.setNodeIndex(2)
-        super.init();
-    }
     draw(): void {
         this.getRenderingContext().switchBlend(true);
         this.getRenderingContext().switchNearestFilter(true);

@@ -225,11 +225,11 @@ export default class GLTF {
             }
         }
     }
-    buildMesh(entity: Entity, nodeIndex: number = 0) {
+    buildMesh(entity: Entity) {
         if (!this.nodes) {
             throw new Error("nodes not found");
         }
-        const node = this.nodes[nodeIndex];
+        const node = this.getDefaultNode();
         const mesh = this.getMeshByIndex(node.getMesh());
         const primitive = mesh.getPrimitiveByIndex(0);
         const positionIndex = primitive.getAttributes().getPosition();
@@ -249,7 +249,7 @@ export default class GLTF {
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
-                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
+                , texcoordIndex === undefined ? this.getDataByAccessorIndex(positionIndex) as Float32Array : this.getDataByAccessorIndex(texcoordIndex) as Float32Array
                 , this.getDataByAccessorIndex(weightslIndex) as Float32Array
                 , this.getDataByAccessorIndex(jointsIndex) as Uint16Array
                 , jointNodes
@@ -269,7 +269,7 @@ export default class GLTF {
                 this.getDataByAccessorIndex(indicesIndex) as Uint16Array
                 , this.getDataByAccessorIndex(positionIndex) as Float32Array
                 , this.getDataByAccessorIndex(normalIndex) as Float32Array
-                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
+                , texcoordIndex === undefined ? this.getDataByAccessorIndex(positionIndex) as Float32Array : this.getDataByAccessorIndex(texcoordIndex) as Float32Array
             );
         }
         if (entity.has(GLTFAnimationController)) {
@@ -282,12 +282,8 @@ export default class GLTF {
         }
         node.getNode().setParent(entity.get(Node));
     }
-    getDefaultNode() {
-        if (!this.nodes) {
-            throw new Error("nodes not found");
-        }
-        const node = this.getNodeByIndex(0);
-        return node;
+    getDefaultNode(): GLTFNode {
+        throw new Error("Method not implemented.");
     }
     getDefaultAnimation() {
         if (!this.animations) {

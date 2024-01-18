@@ -1,6 +1,7 @@
 
 import CameraControllerObject from "../entity/CameraControllerObject.js";
 import Entity from "../entity/Entity.js";
+import EnvironmentObject from "../entity/EnvironmentObject.js";
 import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import MeshObject from "../entity/MeshObject.js";
@@ -18,6 +19,7 @@ export default class GLTFScene extends Scene {
             , new WaterObject()
             // , new HelloMultiMeshObject()
             , new TerrianObject()
+            , new EnvironmentObject()
             , new MeshObject()
             , new SkinMeshObject()
         ];

@@ -84,6 +84,7 @@ export default class Terrian extends DrawObject {
         this.getEntity().get(TRS).getPosition().z = -this.tileNumber * this.tileSize / 2;
         // this.getEntity().get(TRS).getRotation().x = -Math.PI / 4;
         this.getEntity().get(Node).updateWorldMatrix();
+        this.updateMaterial();
     }
     draw(): void {
         this.getRenderingContext().switchBlend(true);

@@ -1,6 +1,7 @@
 import AnimationController from "../controller/AnimationController.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
+import EnvironmentMesh from "../drawobject/EnvironmentMesh.js";
 import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -49,6 +50,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
             }  else if (entity.has(TerrianMesh)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
+            }   else if (entity.has(EnvironmentMesh)) {
+                this.rendererManager.getMeshRenderer().addObject(entity.get(EnvironmentMesh));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {

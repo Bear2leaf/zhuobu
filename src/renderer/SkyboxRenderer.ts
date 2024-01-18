@@ -34,7 +34,6 @@ export class SkyboxRenderer extends Renderer {
             drawObject.getEntity().get(TRS).getPosition().from(translation);
             drawObject.getEntity().get(Node).updateWorldMatrix();
             this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
-            drawObject.updateModel();
             drawObject.draw();
         });
         objectList.splice(0, objectList.length);

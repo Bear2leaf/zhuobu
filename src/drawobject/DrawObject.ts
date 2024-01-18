@@ -11,7 +11,9 @@ import Node from "../transform/Node.js";
 
 export default class DrawObject extends Component {
     private readonly aboMap: Map<ArrayBufferIndex, ArrayBufferObject> = new Map();
+    private readonly diffuseColor: Vec4 = new Vec4(1, 1, 1, 1);
     private modelUBO?: UniformBufferObject;
+    private materialUBO?: UniformBufferObject;
     private pickUBO?: UniformBufferObject;
     private vao?: VertexArrayObject;
     private ebo?: ArrayBufferObject;
@@ -41,6 +43,9 @@ export default class DrawObject extends Component {
         }
         return this.primitive;
     }
+    setDiffuseColor(color: Vec4) {
+        this.diffuseColor.from(color);
+    }
     init() {
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         this.vao = this.getRenderingContext().makeVertexArrayObject();
@@ -50,9 +55,11 @@ export default class DrawObject extends Component {
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);
         this.pickColor.set(...this.getRenderingContext().generatePickColor());
         this.modelUBO = this.getRenderingContext().makeUniformBlockObject();
+        this.materialUBO = this.getRenderingContext().makeUniformBlockObject();
         this.pickUBO = this.getRenderingContext().makeUniformBlockObject();
         this.pickUBO.updateBuffer(this.getPickColor().toFloatArray());
         this.ebo = this.getRenderingContext().makeElementBufferObject(new Uint16Array(0));
+        this.updateMaterial();
     }
     draw() {
         this.getRenderingContext().draw(this.getPrimitive().getMode(), this.count);
@@ -67,7 +74,11 @@ export default class DrawObject extends Component {
         if (!this.pickUBO) {
             throw new Error("pickUBO is not set");
         }
+        if (!this.materialUBO) {
+            throw new Error("pickUBO is not set");
+        }
         this.modelUBO.bind(UniformBinding.Model);
+        this.materialUBO.bind(UniformBinding.Material);
         this.pickUBO.bind(UniformBinding.Pick);
         this.vao.bind();
     }
@@ -79,6 +90,12 @@ export default class DrawObject extends Component {
     }
     setRenderingContext(renderingContext: RenderingContext) {
         this.renderingContext = renderingContext;
+    }
+    updateMaterial() {
+        if (!this.materialUBO) {
+            throw new Error("materialUBO is not set");
+        }
+        this.materialUBO.updateBuffer(this.diffuseColor.toFloatArray());
     }
     updateModel() {
         if (!this.modelUBO) {

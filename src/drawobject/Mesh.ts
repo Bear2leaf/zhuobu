@@ -6,12 +6,8 @@ import { Vec2, Vec3, flatten } from "../geometry/Vector.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
-    private nodeIndex?: number;
-    setNodeIndex(nodeIndex: number) {
-        this.nodeIndex = nodeIndex;
-    }
     initMesh() {
-        this.getGLTF().buildMesh(this.getEntity(), this.nodeIndex);
+        this.getGLTF().buildMesh(this.getEntity());
     }
     setGLTF(gltf: GLTF) {
         this.gltf = gltf;
