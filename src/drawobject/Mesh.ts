@@ -3,11 +3,37 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import GLTF from "../gltf/GLTF.js";
 import Node from "../transform/Node.js";
 import { Vec2, Vec3, flatten } from "../geometry/Vector.js";
+import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
     initMesh() {
-        this.getGLTF().buildMesh(this.getEntity());
+        const gltf = this.getGLTF();
+        const entity = this.getEntity();
+        const node = gltf.getDefaultNode();
+        const mesh = gltf.getMeshByIndex(node.getMesh());
+        const primitive = mesh.getPrimitiveByIndex(0);
+        const positionIndex = primitive.getAttributes().getPosition();
+        const texcoordIndex = primitive.getAttributes().getTexCoord();
+        const normalIndex = primitive.getAttributes().getNormal();
+        const indicesIndex = primitive.getIndices();
+        entity.get(Node).setSource(node.getNode().getSource());
+        this.bind();
+        entity.get(Mesh).setMeshData(
+            gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
+            , gltf.getDataByAccessorIndex(positionIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
+            , texcoordIndex === undefined ? gltf.getDataByAccessorIndex(positionIndex) as Float32Array : gltf.getDataByAccessorIndex(texcoordIndex) as Float32Array
+        );
+        if (entity.has(GLTFAnimationController)) {
+
+            const animation = gltf.getDefaultAnimation();
+            animation.createBuffers(gltf);
+            entity.get(GLTFAnimationController).setAnimationData(
+                animation
+            );
+        }
+        node.getNode().setParent(entity.get(Node));
     }
     setGLTF(gltf: GLTF) {
         this.gltf = gltf;

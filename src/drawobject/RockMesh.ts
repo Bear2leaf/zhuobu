@@ -14,7 +14,7 @@ export default class RockMesh extends Mesh {
         super.initMesh();
         const meshIndex = this.getGLTF().getDefaultNode().getMesh();
         const mesh = this.getGLTF().getMeshByIndex(meshIndex);
-        const primitive = mesh.getDefaultPrimitive();
+        const primitive = mesh.getPrimitiveByIndex(0);
         const material = this.getGLTF().getMaterialByIndex(primitive.getMaterial());
         const baseColor =  material.getPbrMetallicRoughness().getBaseColorFactor();
         this.setDiffuseColor(new Vec4(...baseColor));

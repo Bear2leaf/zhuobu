@@ -105,7 +105,7 @@ export default class TextureManager {
         this.terrianTexture.bind();
         const terrianNode = this.getGLTFManager().terrianGLTF.getDefaultNode();
         const meshIndex = terrianNode.getMesh();
-        const materialIndex = this.getGLTFManager().terrianGLTF.getMeshByIndex(meshIndex).getDefaultPrimitive().getMaterial();
+        const materialIndex = this.getGLTFManager().terrianGLTF.getMeshByIndex(meshIndex).getPrimitiveByIndex(0).getMaterial();
         const baseColorTexture = this.getGLTFManager().terrianGLTF.getMaterialByIndex(materialIndex).getPbrMetallicRoughness().getBaseColorTexture();
         if (baseColorTexture === undefined) throw new Error("baseColorTexture is undefined");
         baseColorTexture.setTexture(this.terrianTexture);

@@ -99,8 +99,11 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(Skybox)) {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
             } else if (entity.has(EagleMesh)) {
-                entity.get(EagleMesh).setJointTexture(this.textureManager.eagleJointTexture);
-                entity.get(EagleMesh).setTexture(this.textureManager.flowerTexture);
+                const allMeshs = entity.all(EagleMesh);
+                for (const mesh of allMeshs) {
+                    mesh.setJointTexture(this.textureManager.eagleJointTexture);
+                    mesh.setTexture(this.textureManager.flowerTexture);
+                }
             } else if (entity.has(WhaleMesh)) {
                 entity.get(WhaleMesh).setJointTexture(this.textureManager.jointTexture);
                 entity.get(WhaleMesh).setTexture(this.textureManager.flowerTexture);
@@ -129,9 +132,13 @@ export default class OnEntityInit extends Observer {
                 entity.get(RockMesh).setGLTF(this.gltfManager.rockGLTF.clone());
                 entity.get(RockMesh).getGLTF().setIndex(Math.floor(Math.random() * 7 + 4));
             } else if (entity.has(EagleMesh)) {
-                entity.get(EagleMesh).setGLTF(this.gltfManager.eagleGLTF.clone());
+                const allMeshs = entity.all(EagleMesh);
+                for (const mesh of allMeshs) {
+                    mesh.setGLTF(this.gltfManager.eagleGLTF.clone());
+                    mesh.getGLTF().setPrimitiveIndex(allMeshs.indexOf(mesh));
+                }
             }
-            entity.get(Mesh).initMesh();
+            entity.all(Mesh).forEach(mesh => mesh.initMesh());
         }
         if (entity.has(SDFCharacter)) {
             entity.get(SDFCharacter).create();

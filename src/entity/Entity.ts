@@ -4,10 +4,6 @@ export default abstract class Entity {
     private readonly objects: Component[] = [];
     abstract addDefaultComponents(): void;
     add<T extends Component>(ctor: new () => T): void {
-        const object = this.objects.filter(m => m instanceof ctor);
-        if (object.length !== 0) {
-            throw new Error(`add object error, object ${ctor.name} already exist`);
-        }
         this.objects.push(new ctor());
 
     }

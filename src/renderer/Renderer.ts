@@ -9,6 +9,7 @@ import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
+import EagleMesh from "../drawobject/EagleMesh.js";
 
 
 export default class Renderer {
@@ -121,7 +122,11 @@ export default class Renderer {
             drawObject.bind();
             drawObject.getTexture().active();
             drawObject.getTexture().bind()
-            if (drawObject instanceof SkinMesh) {
+            if (drawObject instanceof EagleMesh) {
+                drawObject.getJointTexture().active();
+                drawObject.getJointTexture().bind();
+                this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
+            } else if (drawObject instanceof SkinMesh) {
                 drawObject.getJointTexture().active();
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
@@ -144,7 +149,13 @@ export default class Renderer {
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
             drawObject.getTexture().active();
-            drawObject.getTexture().bind()
+            drawObject.getTexture().bind();
+            if (drawObject instanceof SkinMesh) {
+                drawObject.getJointTexture().active();
+                drawObject.getJointTexture().bind();
+                this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
+            }
+            this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             drawObject.draw();
         });
         this.objectlist.splice(0, this.objectlist.length);

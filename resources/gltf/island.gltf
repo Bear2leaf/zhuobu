@@ -2566,22 +2566,58 @@
 		{
 			"doubleSided":true,
 			"name":"Wings.001",
-			"pbrMetallicRoughness":{}
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.04518621414899826,
+					0.017641935497522354,
+					0.009134061634540558,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		},
 		{
 			"doubleSided":true,
 			"name":"Beak.001",
-			"pbrMetallicRoughness":{}
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.799102783203125,
+					0.47353115677833557,
+					0.09530762583017349,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		},
 		{
 			"doubleSided":true,
 			"name":"Head.001",
-			"pbrMetallicRoughness":{}
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.7991020679473877,
+					0.799102246761322,
+					0.7991029620170593,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		},
 		{
 			"doubleSided":true,
 			"name":"Claws.001",
-			"pbrMetallicRoughness":{}
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.002124686259776354,
+					0.002124686958268285,
+					0.002124688820913434,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		}
 	],
 	"meshes":[

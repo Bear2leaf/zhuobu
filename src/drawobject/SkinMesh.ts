@@ -4,6 +4,8 @@ import Matrix from "../geometry/Matrix.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 import AnimationController from "../controller/AnimationController.js";
+import GLTFAnimationController from "../controller/GLTFAnimationController.js";
+import GLTFPrimitive from "../gltf/GLTFPrimitive.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
@@ -18,6 +20,57 @@ export default class SkinMesh extends Mesh {
             throw new Error("jointTexture is not set");
         }
         return this.jointTexture;
+    }
+    getDefaultPrimitive(): GLTFPrimitive {
+        const gltf = this.getGLTF();
+        const node = gltf.getDefaultNode();
+        const primitive = gltf.getMeshByIndex(node.getMesh()).getPrimitiveByIndex(0);
+        return primitive;
+    }
+    initMesh(): void {
+        
+        const gltf = this.getGLTF();
+        const entity = this.getEntity();
+        const node = gltf.getDefaultNode();
+        const primitive = this.getDefaultPrimitive();
+        const positionIndex = primitive.getAttributes().getPosition();
+        const texcoordIndex = primitive.getAttributes().getTexCoord();
+        const normalIndex = primitive.getAttributes().getNormal();
+        const indicesIndex = primitive.getIndices();
+        const skin = gltf.getSkinByIndex(node.getSkin());
+        let skeletonRootNode;
+        if (skin.getSkeleton() === undefined) {
+            skeletonRootNode = gltf.getNodeByName(skin.getName());
+            gltf.buildNodeTree(skeletonRootNode);
+        } else {
+            skeletonRootNode = gltf.getNodeByIndex(skin.getSkeleton());
+            gltf.buildNodeTree(skeletonRootNode);
+        }
+        skeletonRootNode.getNode().setParent(node.getNode());
+        const jointNodes = skin.getJoints().map((joint) => gltf.getNodeByIndex(joint).getNode());
+        const weightslIndex = primitive.getAttributes().getWeights();
+        const jointsIndex = primitive.getAttributes().getJoints();
+        const inverseBindMatrixIndex = skin.getInverseBindMatrices();
+        this.bind();
+        this.setSkinData(
+            gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
+            , gltf.getDataByAccessorIndex(positionIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(normalIndex) as Float32Array
+            , texcoordIndex === undefined ? gltf.getDataByAccessorIndex(positionIndex) as Float32Array : gltf.getDataByAccessorIndex(texcoordIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(weightslIndex) as Float32Array
+            , gltf.getDataByAccessorIndex(jointsIndex) as Uint16Array
+            , jointNodes
+            , gltf.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
+        );
+        if (entity.has(GLTFAnimationController)) {
+
+            const animation = gltf.getDefaultAnimation();
+            animation.createBuffers(gltf);
+            entity.get(GLTFAnimationController).setAnimationData(
+                animation
+            );
+        }
+        node.getNode().setParent(entity.get(Node));
     }
     setSkinData(indices: Uint16Array, position: Float32Array, normal: Float32Array, texcoord: Float32Array, weights: Float32Array, joints: Uint16Array, jointNodes: Node[], inverseBindMatrixData: Float32Array) {
         this.setMeshData(indices, position, normal, texcoord);

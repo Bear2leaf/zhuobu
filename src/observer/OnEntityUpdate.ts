@@ -33,7 +33,7 @@ export default class OnEntityUpdate extends Observer {
     public notify(): void {
         const entity = this.getSubject().getEntity();
         if (entity.has(Mesh)) {
-            entity.get(Mesh).update();
+            entity.all(Mesh).forEach(mesh => mesh.update());
         }
         if (entity.has(AnimationController) && this.animationManager) {
             entity.get(AnimationController).update();

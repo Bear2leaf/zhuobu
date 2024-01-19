@@ -11,6 +11,9 @@ export default class EagleObject extends Entity {
             TRS,
             Node,
             EagleMesh,
+            EagleMesh,
+            EagleMesh,
+            EagleMesh,
             GLTFAnimationController,
         ].forEach(ctor => {
             this.add<Component>(ctor);

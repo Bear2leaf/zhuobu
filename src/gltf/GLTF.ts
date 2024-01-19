@@ -202,102 +202,39 @@ export default class GLTF {
             throw new Error("nodes not found");
         }
         for (const mesh of this.meshes) {
-            const primitive = mesh.getDefaultPrimitive();
-            const materialIndex = primitive.getMaterial();
-            if (this.materials) {
-                const material = this.materials[materialIndex];
-                if (material !== undefined) {
+            for (const primitive of mesh.getPrimitives()) {
+                const materialIndex = primitive.getMaterial();
+                if (this.materials) {
+                    const material = this.materials[materialIndex];
+                    if (material !== undefined) {
 
-                    const baseColorTexture = material.getPbrMetallicRoughness().getBaseColorTexture();
-                    if (baseColorTexture) {
+                        const baseColorTexture = material.getPbrMetallicRoughness().getBaseColorTexture();
+                        if (baseColorTexture) {
 
-                        const textureIndex = baseColorTexture.getIndex();
-                        const texture = this.textures && this.textures[textureIndex];
-                        const imageIndex = texture && texture.getSource();
-                        if (imageIndex === undefined) {
-                            throw new Error(`imageIndex is undefined: ${textureIndex}`);
-                        }
-                        const image = this.images && this.images[imageIndex];
-                        if (image === undefined) {
-                            throw new Error(`image is undefined: ${imageIndex}`);
-                        }
-                        const uri = image.getUri();
+                            const textureIndex = baseColorTexture.getIndex();
+                            const texture = this.textures && this.textures[textureIndex];
+                            const imageIndex = texture && texture.getSource();
+                            if (imageIndex === undefined) {
+                                throw new Error(`imageIndex is undefined: ${textureIndex}`);
+                            }
+                            const image = this.images && this.images[imageIndex];
+                            if (image === undefined) {
+                                throw new Error(`image is undefined: ${imageIndex}`);
+                            }
+                            const uri = image.getUri();
 
-                        if (uri === undefined) {
-                            throw new Error(`uri is undefined: ${imageIndex}`);
+                            if (uri === undefined) {
+                                throw new Error(`uri is undefined: ${imageIndex}`);
+                            }
+                            if (this.imageCache === undefined) {
+                                throw new Error(`imageCache is undefined`);
+                            }
+                            image.setImage(this.imageCache.get(`resources/${uri.replace("../", "")}`));
                         }
-                        if (this.imageCache === undefined) {
-                            throw new Error(`imageCache is undefined`);
-                        }
-                        image.setImage(this.imageCache.get(`resources/${uri.replace("../", "")}`));
                     }
                 }
             }
         }
-    }
-    buildMesh(entity: Entity) {
-        if (!this.nodes) {
-            throw new Error("nodes not found");
-        }
-        const node = this.getDefaultNode();
-        const mesh = this.getMeshByIndex(node.getMesh());
-        const primitive = mesh.getDefaultPrimitive();
-        const positionIndex = primitive.getAttributes().getPosition();
-        const texcoordIndex = primitive.getAttributes().getTexCoord();
-        const normalIndex = primitive.getAttributes().getNormal();
-        const indicesIndex = primitive.getIndices();
-        if (entity.has(SkinMesh)) {
-            const skin = this.getSkinByIndex(node.getSkin());
-            let skeletonRootNode;
-            if (skin.getSkeleton() === undefined) {
-                skeletonRootNode = this.getNodeByName(skin.getName());
-                this.buildNodeTree(skeletonRootNode);
-            } else {
-
-                skeletonRootNode = this.getNodeByIndex(skin.getSkeleton());
-                this.buildNodeTree(skeletonRootNode);
-            }
-            skeletonRootNode.getNode().setParent(node.getNode());
-            const jointNodes = skin.getJoints().map((joint) => this.getNodeByIndex(joint).getNode());
-            const weightslIndex = primitive.getAttributes().getWeights();
-            const jointsIndex = primitive.getAttributes().getJoints();
-            const inverseBindMatrixIndex = skin.getInverseBindMatrices();
-            entity.get(SkinMesh).setSkinData(
-                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
-                , this.getDataByAccessorIndex(positionIndex) as Float32Array
-                , this.getDataByAccessorIndex(normalIndex) as Float32Array
-                , texcoordIndex === undefined ? this.getDataByAccessorIndex(positionIndex) as Float32Array : this.getDataByAccessorIndex(texcoordIndex) as Float32Array
-                , this.getDataByAccessorIndex(weightslIndex) as Float32Array
-                , this.getDataByAccessorIndex(jointsIndex) as Uint16Array
-                , jointNodes
-                , this.getDataByAccessorIndex(inverseBindMatrixIndex) as Float32Array
-            );
-        } else if (entity.has(HelloWireframe)) {
-            entity.get(Node).setSource(node.getNode().getSource());
-            entity.get(Mesh).setWireframeMeshData(
-                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
-                , this.getDataByAccessorIndex(positionIndex) as Float32Array
-                , this.getDataByAccessorIndex(normalIndex) as Float32Array
-                , this.getDataByAccessorIndex(texcoordIndex) as Float32Array
-            );
-        } else {
-            entity.get(Node).setSource(node.getNode().getSource());
-            entity.get(Mesh).setMeshData(
-                this.getDataByAccessorIndex(indicesIndex) as Uint16Array
-                , this.getDataByAccessorIndex(positionIndex) as Float32Array
-                , this.getDataByAccessorIndex(normalIndex) as Float32Array
-                , texcoordIndex === undefined ? this.getDataByAccessorIndex(positionIndex) as Float32Array : this.getDataByAccessorIndex(texcoordIndex) as Float32Array
-            );
-        }
-        if (entity.has(GLTFAnimationController)) {
-
-            const animation = this.getDefaultAnimation();
-            animation.createBuffers(this);
-            entity.get(GLTFAnimationController).setAnimationData(
-                animation
-            );
-        }
-        node.getNode().setParent(entity.get(Node));
     }
     getDefaultNode(): GLTFNode {
         throw new Error("Method not implemented.");

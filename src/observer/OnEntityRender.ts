@@ -1,12 +1,8 @@
-import AnimationController from "../controller/AnimationController.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import RockMesh from "../drawobject/RockMesh.js";
-import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
@@ -19,7 +15,6 @@ import RenderMap from "../sprite/RenderMap.js";
 import Water from "../sprite/Water.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
-import EagleMesh from "../drawobject/EagleMesh.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import Mesh from "../drawobject/Mesh.js";
 
@@ -66,7 +61,10 @@ export default class OnEntityRender extends Observer {
             } else if (entity.has(Water)) {
                 this.rendererManager.getWaterRenderer().addObject(entity.get(Water));
             } else if (entity.has(GLTFAnimationController)) {
-                this.rendererManager.getSkinMeshRenderer().addObject(entity.get(SkinMesh));
+                const allMeshs = entity.all(Mesh);
+                for (const mesh of allMeshs) {
+                    this.rendererManager.getSkinMeshRenderer().addObject(mesh);
+                }
             } else if (entity.has(Mesh)) {
                 this.rendererManager.getMeshRenderer().addObject(entity.get(Mesh));
             }
