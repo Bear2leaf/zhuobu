@@ -46,7 +46,7 @@ export default class OnEntityUpdate extends Observer {
                 this.animationManager.cameraAnimator.animate(entity.get(CameraController));
             }
         }
-        if ((entity.has(TerrianMesh) ) && this.cameraManager) {
+        if ((entity.has(TerrianMesh)) && this.cameraManager) {
 
             const gltf = entity.get(TerrianMesh).getGLTF();
             const cameraNode = gltf.getNodeByName("Camera");

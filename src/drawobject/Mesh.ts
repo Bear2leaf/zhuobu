@@ -33,7 +33,7 @@ export default class Mesh extends DrawObject {
         const indicesIndex = primitive.getIndices();
         entity.get(Node).setSource(node.getNode().getSource());
         this.bind();
-        entity.get(Mesh).setMeshData(
+        this.setMeshData(
             gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
             , gltf.getDataByAccessorIndex(positionIndex) as Float32Array
             , gltf.getDataByAccessorIndex(normalIndex) as Float32Array

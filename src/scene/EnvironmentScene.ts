@@ -1,10 +1,12 @@
 import EagleMesh from "../drawobject/EagleMesh.js";
 import RockMesh from "../drawobject/RockMesh.js";
+import ShipMesh from "../drawobject/ShipMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import EagleObject from "../entity/EagleObject.js";
 import Entity from "../entity/Entity.js";
 import MeshObject from "../entity/MeshObject.js";
 import RockObject from "../entity/RockObject.js";
+import ShipObject from "../entity/ShipObject.js";
 import SkinMeshObject from "../entity/SkinMeshObject.js";
 import Scene from "./Scene.js";
 
@@ -21,11 +23,17 @@ export default class EnvironmentScene extends Scene {
     private readonly eagles: EagleObject[] = [
         new EagleObject()
     ]
-    private readonly whales: [MeshObject, SkinMeshObject] =
-        [
-            new MeshObject()
-            , new SkinMeshObject()
-        ]
+    private readonly whales: [MeshObject, SkinMeshObject] = [
+        new MeshObject()
+        , new SkinMeshObject()
+    ];
+    private readonly shipParts: ShipObject[] = [
+        new ShipObject()
+        , new ShipObject()
+        , new ShipObject()
+        , new ShipObject()
+        , new ShipObject()
+    ]
     private visibleRocksNumber = this.rocks.length;
     private currentVisibleRocksNumber = 0;
     private showEagle = false;
@@ -34,7 +42,8 @@ export default class EnvironmentScene extends Scene {
         return [
             ...this.rocks,
             ...this.eagles,
-            ...this.whales
+            ...this.whales,
+            ...this.shipParts
         ];
     }
     collectDrawObject(): void {
@@ -46,6 +55,8 @@ export default class EnvironmentScene extends Scene {
         } else if (entity.has(EagleMesh)) {
             return this.showEagle;
         } else if (entity.has(WhaleMesh)) {
+            return this.showWhales;
+        } else if (entity.has(ShipMesh)) {
             return this.showWhales;
         }
         return true

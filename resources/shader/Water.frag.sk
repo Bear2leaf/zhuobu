@@ -50,6 +50,6 @@ void main() {
     float refractFactor = clamp(dot(viewVector, normal), 0.0f, 1.0f);
     refractFactor = pow(refractFactor, 0.5f);
     color = mix(reflectColor, refractColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
-    color.a = waterDepthFactor;
+    color.a = pow(waterDepthFactor, 0.5f);;
 
 }

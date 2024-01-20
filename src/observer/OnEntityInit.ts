@@ -25,6 +25,7 @@ import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
 import OnClick from "./OnClick.js";
 import EagleMesh from "../drawobject/EagleMesh.js";
+import ShipMesh from "../drawobject/ShipMesh.js";
 
 export default class OnEntityInit extends Observer {
     private gltfManager?: GLTFManager;
@@ -34,6 +35,7 @@ export default class OnEntityInit extends Observer {
     private onClick?: OnClick;
     private windowInfo?: WindowInfo;
     private rockCounter = 4;
+    private shipCounter = 37;
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
@@ -83,7 +85,7 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setTexture(this.textureManager.terrianTexture);
                 entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
-            }  else if (entity.has(RockMesh)) {
+            } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setTexture(this.textureManager.defaultTexture);
             } else if (entity.has(RenderMap)) {
                 entity.get(RenderMap).setTexture(this.textureManager.renderTexture);
@@ -97,6 +99,11 @@ export default class OnEntityInit extends Observer {
                 entity.get(Water).setNormalTexture(this.textureManager.waterNormalTexture);
             } else if (entity.has(Skybox)) {
                 entity.get(Skybox).setTexture(this.textureManager.skyboxTexture);
+            } else if (entity.has(ShipMesh)) {
+                const allMeshs = entity.all(ShipMesh);
+                for (const mesh of allMeshs) {
+                    mesh.setTexture(this.textureManager.defaultTexture);
+                }
             } else if (entity.has(EagleMesh)) {
                 const allMeshs = entity.all(EagleMesh);
                 for (const mesh of allMeshs) {
@@ -132,6 +139,18 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
                 entity.get(RockMesh).setNodeIndex(this.rockCounter++);
+            } else if (entity.has(ShipMesh)) {
+                const counter  = this.shipCounter++;
+                const gltf = this.gltfManager.terrianGLTF;
+                entity.all(ShipMesh).forEach((mesh, index) => {
+                    const primitives = gltf.getMeshByIndex(gltf.getNodeByIndex(counter).getMesh()).getPrimitives();
+                    if (index < primitives.length) {
+                        mesh.setPrimitiveIndex(index);
+                    }
+                    mesh.setGLTF(gltf.clone());
+                    mesh.setNodeIndex(counter);
+                });
+                
             } else if (entity.has(EagleMesh)) {
                 const allMeshs = entity.all(EagleMesh);
                 for (const mesh of allMeshs) {

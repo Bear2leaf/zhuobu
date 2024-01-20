@@ -66,7 +66,10 @@ export default class OnEntityRender extends Observer {
                     this.rendererManager.getSkinMeshRenderer().addObject(mesh);
                 }
             } else if (entity.has(Mesh)) {
-                this.rendererManager.getMeshRenderer().addObject(entity.get(Mesh));
+                const allMeshs = entity.all(Mesh);
+                for (const mesh of allMeshs) {
+                    this.rendererManager.getMeshRenderer().addObject(mesh);
+                }
             }
         }
     }
