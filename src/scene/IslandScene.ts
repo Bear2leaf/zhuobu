@@ -17,8 +17,6 @@ export default class IslandScene extends Scene {
             , new SkyboxObject()
             , new WaterObject()
             , new TerrianObject()
-            , new MeshObject()
-            , new SkinMeshObject()
         ];
     }
     collectRefractDrawObject() {

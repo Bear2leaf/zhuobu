@@ -33,6 +33,15 @@ export default class Game {
                     this.getEngine().updateStatus = (message: string) => {
                         reply([{ type: "UpdateStatus", args: [message] }]);
                     }
+                    this.getEngine().updateEagleVisible = (visible: boolean) => {
+                        reply([{ type: "UpdateEagleVisible", args: [visible] }]);
+                    }
+                    this.getEngine().updateWhalesVisible = (visible: boolean) => {
+                        reply([{ type: "UpdateWhalesVisible", args: [visible] }]);
+                    }
+                    this.getEngine().updateResourceProgres = (progress: number) => {
+                        reply([{ type: "UpdateResourceProgress", args: [progress] }]);
+                    }
                     this.getEngine().start();
                     break;
                 case "Ping":

@@ -6,6 +6,9 @@ import GameInit from "../command/GameInit.js";
 import AddMessage from "../command/AddMessage.js";
 import SceneManager from "../manager/SceneManager.js";
 import UpdateStatus from "../command/UpdateStatus.js";
+import UpdateEagleVisible from "../command/UpdateEagleVisible.js";
+import UpdateResourceProgress from "../command/UpdateResourceProgress.js";
+import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
 
 export default class WorkerMessageSubject extends Subject {
     private command?: WorkerMessageCommand;
@@ -46,6 +49,18 @@ export default class WorkerMessageSubject extends Subject {
     }
     notifyUpdateStatus(message: string) {
         this.setCommand(new UpdateStatus(message));
+        this.notify();
+    }
+    notifyUpdateResourceProgress(progress: number) {
+        this.setCommand(new UpdateResourceProgress(progress));
+        this.notify();
+    }
+    notifyUpdateEagleVisible(visible: boolean) {
+        this.setCommand(new UpdateEagleVisible(visible));
+        this.notify();
+    }
+    notifyUpdateWhalesVisible(visible: boolean) {
+        this.setCommand(new UpdateWhalesVisible(visible));
         this.notify();
     }
     public notify(): void {

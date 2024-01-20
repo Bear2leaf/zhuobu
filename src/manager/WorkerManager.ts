@@ -55,6 +55,15 @@ export default class WorkerManager {
                 case "UpdateStatus":
                     this.getEventManager().workerMessage.notifyUpdateStatus(workerResponse.args[0]);
                     break;
+                case "UpdateEagleVisible":
+                    this.getEventManager().workerMessage.notifyUpdateEagleVisible(workerResponse.args[0]);
+                    break;
+                case "UpdateWhalesVisible":
+                    this.getEventManager().workerMessage.notifyUpdateWhalesVisible(workerResponse.args[0]);
+                    break;
+                case "UpdateResourceProgress":
+                    this.getEventManager().workerMessage.notifyUpdateResourceProgress(workerResponse.args[0]);
+                    break;
                 default:
                     throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
             }

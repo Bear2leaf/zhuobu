@@ -8,6 +8,9 @@ export type WorkerResponse =
     | { type: "CreateMessageUI"; }
     | { type: "AddMessage"; args: [string] }
     | { type: "UpdateStatus"; args: [string] }
+    | { type: "UpdateEagleVisible"; args: [boolean] }
+    | { type: "UpdateWhalesVisible"; args: [boolean] }
+    | { type: "UpdateResourceProgress"; args: [number] }
 
     | never;
 export type WorkerRequest =

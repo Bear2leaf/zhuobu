@@ -71,6 +71,9 @@ export default class SceneManager {
     getInformationObject(): InformationObject {
         return this.uiScene.getInformationObject();
     }
+    getEnvironmentScene() {
+        return this.environmentScene;
+    }
     loadInitScene() {
         console.log("loadInitScene");
     }
