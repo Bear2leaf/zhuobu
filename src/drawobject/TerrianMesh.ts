@@ -1,4 +1,4 @@
-import TerrianGLTF from "../model/TerrianGLTF.js";
+import IslandGLTF from "../model/IslandGLTF.js";
 import Texture from "../texture/Texture.js";
 import Mesh from "./Mesh.js";
 
@@ -13,9 +13,9 @@ export default class TerrianMesh extends Mesh {
         }
         return this.depthTexture;
     }
-    getGLTF(): TerrianGLTF {
+    getGLTF(): IslandGLTF {
         const gltf = super.getGLTF();
-        if (!(gltf instanceof TerrianGLTF)) {
+        if (!(gltf instanceof IslandGLTF)) {
             throw new Error("gltf is not set");
         }
         return gltf;

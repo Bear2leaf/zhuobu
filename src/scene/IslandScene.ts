@@ -19,7 +19,6 @@ export default class IslandScene extends Scene {
             , new TerrianObject()
             , new MeshObject()
             , new SkinMeshObject()
-            , new EagleObject()
         ];
     }
     collectRefractDrawObject() {
@@ -28,8 +27,6 @@ export default class IslandScene extends Scene {
             || entity instanceof TerrianObject
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
-            || entity instanceof HelloMultiMeshObject
-            || entity instanceof EagleObject
         )
     }
     collectReflectDrawObject() {
@@ -38,15 +35,12 @@ export default class IslandScene extends Scene {
             || entity instanceof TerrianObject
             || entity instanceof SkinMeshObject
             || entity instanceof MeshObject
-            || entity instanceof HelloMultiMeshObject
-            || entity instanceof EagleObject
         )
     }
     collectDepthDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkinMeshObject
             || entity instanceof MeshObject
-            || entity instanceof EagleObject
         )
     }
 

@@ -4,9 +4,7 @@ import HelloMultiGLTF from "../model/HelloMultiGLTF.js";
 import CacheManager from "./CacheManager.js";
 import SceneManager from "./SceneManager.js";
 import EventManager from "./EventManager.js";
-import TerrianGLTF from "../model/TerrianGLTF.js";
-import RockGLTF from "../model/RockGLTF.js";
-import EagleGLTF from "../model/EagleGLTF.js";
+import IslandGLTF from "../model/IslandGLTF.js";
 
 
 export default class GLTFManager {
@@ -16,9 +14,7 @@ export default class GLTFManager {
     readonly whaleGLTF: WhaleGLTF = new WhaleGLTF();
     readonly helloGLTF: HelloGLTF = new HelloGLTF();
     readonly helloMultiGLTF: HelloMultiGLTF = new HelloMultiGLTF();
-    readonly terrianGLTF: TerrianGLTF = new TerrianGLTF();
-    readonly rockGLTF: RockGLTF = new RockGLTF();
-    readonly eagleGLTF: EagleGLTF = new EagleGLTF();
+    readonly terrianGLTF: IslandGLTF = new IslandGLTF();
     async load(): Promise<void> {
         await this.getCacheManager().loadGLTFCache(this.whaleGLTF.getName());
         await this.getCacheManager().loadGLTFCache(this.helloGLTF.getName());
@@ -31,10 +27,6 @@ export default class GLTFManager {
         this.helloMultiGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.terrianGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.terrianGLTF.setImageCache(this.getCacheManager().getImageCache());
-        this.rockGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
-        this.rockGLTF.setImageCache(this.getCacheManager().getImageCache());
-        this.eagleGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
-        this.eagleGLTF.setImageCache(this.getCacheManager().getImageCache());
     }
     initObservers() {
         this.getEventManager().onEntityInit.setGLTFManager(this);
@@ -44,8 +36,6 @@ export default class GLTFManager {
         this.helloGLTF.init(this.getCacheManager().getGLTF(this.helloGLTF.getName()))
         this.helloMultiGLTF.init(this.getCacheManager().getGLTF(this.helloMultiGLTF.getName()))
         this.terrianGLTF.init(this.getCacheManager().getGLTF(this.terrianGLTF.getName()))
-        this.rockGLTF.init(this.getCacheManager().getGLTF(this.rockGLTF.getName()))
-        this.eagleGLTF.init(this.getCacheManager().getGLTF(this.eagleGLTF.getName()))
 
     }
     setCacheManager(cacheManager: CacheManager) {

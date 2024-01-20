@@ -9,7 +9,7 @@ export default class RockObject extends Entity {
         [
             TRS,
             Node,
-            RockMesh
+            RockMesh,
         ].forEach(ctor => {
             this.add<Component>(ctor);
             

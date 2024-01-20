@@ -236,9 +236,6 @@ export default class GLTF {
             }
         }
     }
-    getDefaultNode(): GLTFNode {
-        throw new Error("Method not implemented.");
-    }
     getDefaultAnimation() {
         if (!this.animations) {
             throw new Error("animations not found");

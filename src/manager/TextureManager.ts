@@ -103,7 +103,7 @@ export default class TextureManager {
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
         this.terrianTexture.active();
         this.terrianTexture.bind();
-        const terrianNode = this.getGLTFManager().terrianGLTF.getDefaultNode();
+        const terrianNode = this.getGLTFManager().terrianGLTF.getNodeByIndex(1);
         const meshIndex = terrianNode.getMesh();
         const materialIndex = this.getGLTFManager().terrianGLTF.getMeshByIndex(meshIndex).getPrimitiveByIndex(0).getMaterial();
         const baseColorTexture = this.getGLTFManager().terrianGLTF.getMaterialByIndex(materialIndex).getPbrMetallicRoughness().getBaseColorTexture();

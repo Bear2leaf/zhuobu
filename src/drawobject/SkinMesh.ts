@@ -5,7 +5,6 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 import AnimationController from "../controller/AnimationController.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
-import GLTFPrimitive from "../gltf/GLTFPrimitive.js";
 
 export default class SkinMesh extends Mesh {
     private readonly jointNodes: Node[] = [];
@@ -21,18 +20,12 @@ export default class SkinMesh extends Mesh {
         }
         return this.jointTexture;
     }
-    getDefaultPrimitive(): GLTFPrimitive {
-        const gltf = this.getGLTF();
-        const node = gltf.getDefaultNode();
-        const primitive = gltf.getMeshByIndex(node.getMesh()).getPrimitiveByIndex(0);
-        return primitive;
-    }
     initMesh(): void {
         
         const gltf = this.getGLTF();
         const entity = this.getEntity();
-        const node = gltf.getDefaultNode();
-        const primitive = this.getDefaultPrimitive();
+        const node = gltf.getNodeByIndex(this.getNodeIndex());
+        const primitive = gltf.getMeshByIndex(node.getMesh()).getPrimitiveByIndex(this.getPrimitiveIndex());
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();

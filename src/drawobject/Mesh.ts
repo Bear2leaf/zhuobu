@@ -7,12 +7,26 @@ import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
 export default class Mesh extends DrawObject {
     private gltf?: GLTF;
+    private nodeIndex: number = 0;
+    private primitiveIndex: number = 0;
+    setNodeIndex(index: number) {
+        this.nodeIndex = index;
+    }
+    setPrimitiveIndex(index: number) {
+        this.primitiveIndex = index;
+    }
+    getNodeIndex() {
+        return this.nodeIndex;
+    }
+    getPrimitiveIndex() {
+        return this.primitiveIndex;
+    }
     initMesh() {
         const gltf = this.getGLTF();
         const entity = this.getEntity();
-        const node = gltf.getDefaultNode();
+        const node = gltf.getNodeByIndex(this.nodeIndex);
         const mesh = gltf.getMeshByIndex(node.getMesh());
-        const primitive = mesh.getPrimitiveByIndex(0);
+        const primitive = mesh.getPrimitiveByIndex(this.primitiveIndex);
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();

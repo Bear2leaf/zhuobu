@@ -8,7 +8,6 @@ import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
 import Skybox from "../drawobject/Skybox.js";
 import Terrian from "../drawobject/Terrian.js";
 import TerrianMesh from "../drawobject/TerrianMesh.js";
@@ -34,7 +33,7 @@ export default class OnEntityInit extends Observer {
     private renderingContext?: RenderingContext;
     private onClick?: OnClick;
     private windowInfo?: WindowInfo;
-
+    private rockCounter = 4;
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
@@ -122,20 +121,23 @@ export default class OnEntityInit extends Observer {
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 entity.get(WhaleMesh).setGLTF(this.gltfManager.whaleGLTF.clone());
+                entity.get(WhaleMesh).setNodeIndex(4);
             } else if (entity.has(HelloWireframe)) {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
             } else if (entity.has(HelloMultiMesh)) {
                 entity.get(HelloMultiMesh).setGLTF(this.gltfManager.helloMultiGLTF.clone());
             } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
+                entity.get(TerrianMesh).setNodeIndex(1);
             } else if (entity.has(RockMesh)) {
-                entity.get(RockMesh).setGLTF(this.gltfManager.rockGLTF.clone());
-                entity.get(RockMesh).getGLTF().setIndex(Math.floor(Math.random() * 7 + 4));
+                entity.get(RockMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
+                entity.get(RockMesh).setNodeIndex(this.rockCounter++);
             } else if (entity.has(EagleMesh)) {
                 const allMeshs = entity.all(EagleMesh);
                 for (const mesh of allMeshs) {
-                    mesh.setGLTF(this.gltfManager.eagleGLTF.clone());
-                    mesh.getGLTF().setPrimitiveIndex(allMeshs.indexOf(mesh));
+                    mesh.setGLTF(this.gltfManager.terrianGLTF.clone());
+                    mesh.setPrimitiveIndex(allMeshs.indexOf(mesh));
+                    mesh.setNodeIndex(35);
                 }
             }
             entity.all(Mesh).forEach(mesh => mesh.initMesh());

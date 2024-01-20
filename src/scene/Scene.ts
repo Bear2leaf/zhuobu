@@ -79,4 +79,13 @@ export default abstract class Scene {
         this.entityInit?.setEntity(entity);
         this.entityInit?.notify();
     }
+    collectRefractDrawObject() {
+        this.collectDrawObject()
+    }
+    collectReflectDrawObject() {
+        this.collectDrawObject()
+    }
+    collectDepthDrawObject() {
+        this.collectDrawObject()
+    }
 }

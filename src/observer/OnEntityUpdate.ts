@@ -49,7 +49,7 @@ export default class OnEntityUpdate extends Observer {
         if ((entity.has(TerrianMesh) ) && this.cameraManager) {
 
             const gltf = entity.get(TerrianMesh).getGLTF();
-            const cameraNode = gltf.getDefaultCameraNode();
+            const cameraNode = gltf.getNodeByName("Camera");
             if (!cameraNode) {
                 throw new Error("camera node not found");
             }

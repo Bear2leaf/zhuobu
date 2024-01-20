@@ -8,9 +8,9 @@ export default class HelloWireframe extends Mesh {
         
         const gltf = this.getGLTF();
         const entity = this.getEntity();
-        const node = gltf.getDefaultNode();
-        const mesh = gltf.getMeshByIndex(node.getMesh());
-        const primitive = mesh.getPrimitiveByIndex(0);
+        const node = gltf.getNodeByIndex(this.getNodeIndex());
+        const primitive = gltf.getMeshByIndex(node.getMesh()).getPrimitiveByIndex(this.getPrimitiveIndex());
+        const material = this.getGLTF().getMaterialByIndex(primitive.getMaterial());
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
