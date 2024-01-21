@@ -2,8 +2,8 @@ import TRS from "../transform/TRS.js";
 import Text from "./Text.js";
 
 export default class FramesText extends Text {
-    init(): void {
-        super.init();
+    initContextObjects(): void {
+        super.initContextObjects();
 
         const scale = 2;
         this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);

@@ -5,7 +5,7 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Point from "../geometry/Point.js";
 
 export default class XYZAxis extends DrawObject {
-    init() {
+    initContextObjects() {
         const from = new Point();
         const to = new Point(1, 0, 0);
         const others: Point[] = [

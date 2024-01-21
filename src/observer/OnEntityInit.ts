@@ -25,6 +25,7 @@ import Observer from "./Observer.js";
 import OnClick from "./OnClick.js";
 import EagleMesh from "../drawobject/EagleMesh.js";
 import ShipMesh from "../drawobject/ShipMesh.js";
+import TRS from "../transform/TRS.js";
 
 export default class OnEntityInit extends Observer {
     private gltfManager?: GLTFManager;
@@ -120,9 +121,9 @@ export default class OnEntityInit extends Observer {
         if (entity.has(Pointer) && this.onClick) {
             this.onClick.setPointer(entity.get(Pointer));
         }
-        entity.get(Node).init();
+        entity.get(Node).setSource(entity.get(TRS));
         if (entity.has(DrawObject)) {
-            entity.all(DrawObject).forEach(drawobject => drawobject.init());
+            entity.all(DrawObject).forEach(drawobject => drawobject.initContextObjects());
         }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {

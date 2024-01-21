@@ -4,8 +4,8 @@ import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 
 export default class Skybox extends DrawObject {
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();

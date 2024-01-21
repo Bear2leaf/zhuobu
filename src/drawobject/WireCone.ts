@@ -4,8 +4,8 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import DrawObject from "./DrawObject.js";
 
 export default class WireCone extends DrawObject {
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const cone = new Cone();
         const lines = cone.getLines();
         const points = cone.getPoints();

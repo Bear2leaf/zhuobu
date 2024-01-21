@@ -4,8 +4,8 @@ import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Cube from "../geometry/Cube.js";
 
 export default class WireCube extends DrawObject {
-    init(){
-        super.init();
+    initContextObjects(){
+        super.initContextObjects();
         const cube = new Cube();
         const lines = cube.getLines();
         const points = cube.getPoints();

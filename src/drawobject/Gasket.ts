@@ -10,8 +10,8 @@ import TRS from "../transform/TRS.js";
 
 export default class Gasket extends DrawObject {
     private frame = 0;
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const pA = new Point(0, 0, 1);
         const pB = new Point(0, 1, -1);
         const pC = new Point(1, -1, -1);

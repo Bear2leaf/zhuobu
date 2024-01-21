@@ -48,9 +48,9 @@ export default class Water extends DrawObject {
         }
         return this.normalTexture;
     }
-    init() {
+    initContextObjects() {
 
-        super.init();
+        super.initContextObjects();
         const quad = new HorizontalQuad(-1, -1, 2, 2);
         const scale = 100;
         quad.initTexCoords();

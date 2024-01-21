@@ -9,8 +9,8 @@ import Hamburger from "../layout/Hamburger.js";
 export default class Border extends DrawObject {
     private readonly indices: number[] = [0, 1, 1, 2, 2, 3, 3, 0];
     private readonly vertices: [Vec4, Vec4, Vec4, Vec4] = [new Vec4, new Vec4, new Vec4, new Vec4];
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.LINES));
         this.updateABO(ArrayBufferIndex.Position, flatten(this.vertices));
         this.updateEBO(new Uint16Array(this.indices));

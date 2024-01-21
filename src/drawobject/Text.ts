@@ -11,8 +11,8 @@ export default class Text extends DrawObject {
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
     private readonly texcoords: Vec4[] = []
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         this.createABO(ArrayBufferIndex.Position, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.Color, new Float32Array(0), 4)
         this.createABO(ArrayBufferIndex.TextureCoord, new Float32Array(0), 4);

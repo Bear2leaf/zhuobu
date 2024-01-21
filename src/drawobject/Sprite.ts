@@ -8,9 +8,9 @@ export default class Sprite extends DrawObject {
     getRect(): Vec4 {
         return this.rect;
     }
-    init() {
+    initContextObjects() {
 
-        super.init();
+        super.initContextObjects();
         const quad = new Quad(this.rect.x, this.rect.y, this.rect.z, this.rect.w);
         quad.initTexCoords();
         const vertices: Vec4[] = []

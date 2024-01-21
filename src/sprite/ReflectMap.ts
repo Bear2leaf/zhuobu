@@ -2,10 +2,10 @@ import Sprite from "../drawobject/Sprite.js";
 
 
 export default class ReflectMap extends Sprite {
-    init(): void {
+    initContextObjects(): void {
         this.getRect().x = 0;
         this.getRect().z = 300;
         this.getRect().w = 300;
-        super.init();
+        super.initContextObjects();
     }
 }

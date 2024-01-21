@@ -46,7 +46,7 @@ export default class DrawObject extends Component {
     setDiffuseColor(color: Vec4) {
         this.diffuseColor.from(color);
     }
-    init() {
+    initContextObjects() {
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES));
         this.vao = this.getRenderingContext().makeVertexArrayObject();
         this.vao.bind();

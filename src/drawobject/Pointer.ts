@@ -5,8 +5,8 @@ import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 
 export default class Pointer extends DrawObject {
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
 
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.POINTS));
 

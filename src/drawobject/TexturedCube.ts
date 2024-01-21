@@ -8,8 +8,8 @@ import TRS from "../transform/TRS.js";
 
 export default class TexturedCube extends DrawObject {
     private frame = 0;
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const cube = new Cube();
         const triangles = cube.getTriangles();
         const points = cube.getPoints();

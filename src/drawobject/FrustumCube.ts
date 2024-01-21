@@ -4,9 +4,9 @@ import Matrix from "../geometry/Matrix.js";
 import WireCube from "./WireCube.js";
 
 export default class FrustumCube extends WireCube {
-    init() {
+    initContextObjects() {
 
-        super.init();
+        super.initContextObjects();
         const localMatrix = Matrix.copy(this.getEntity().get(VisualizeCamera).getFrustumTransformMatrix());
         this.getEntity().get(Node).setLocalMatrix(localMatrix)
         this.getEntity().get(Node).setSource();

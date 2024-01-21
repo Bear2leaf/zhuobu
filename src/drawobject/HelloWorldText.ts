@@ -5,8 +5,8 @@ import { Vec4 } from "../geometry/Vector.js";
 import Text from "./Text.js";
 
 export default class HelloWorldText extends Text {
-    init(): void {
-        super.init();
+    initContextObjects(): void {
+        super.initContextObjects();
         this.updateChars("Hello world!");
         const scale = 3;
         this.getEntity().get(TRS).getScale().set(scale, -scale, scale, 1);

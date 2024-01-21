@@ -9,8 +9,8 @@ export default class Histogram extends DrawObject {
     private readonly colors: Vec4[] = [];
     private readonly indices: number[] = [];
     private readonly vertices: Vec4[] = [];
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const width = 100;
         const height = 100;
         const hisY = 0;

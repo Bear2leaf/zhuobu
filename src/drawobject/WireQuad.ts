@@ -5,8 +5,8 @@ import Quad from "../geometry/Quad.js";
 
 export default class WireQuad extends DrawObject {
     private rect: Vec4 = new Vec4();
-    init() {
-        super.init();
+    initContextObjects() {
+        super.initContextObjects();
         const quad = new Quad(0, 0, 1, 1);
         const colors: Vec4[] = [];
         const indices: number[] = [];

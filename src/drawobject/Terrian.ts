@@ -20,9 +20,9 @@ export default class Terrian extends DrawObject {
         }
         return this.depthTexture;
     }
-    init() {
+    initContextObjects() {
 
-        super.init();
+        super.initContextObjects();
         const vertices: Vec4[] = []
         const colors: Vec4[] = []
         const indices: number[] = []
