@@ -8,6 +8,8 @@ import HamburgerObject from "../entity/HamburgerObject.js";
 import InformationObject from "../entity/InformationObject.js";
 import MessageObject from "../entity/MessageObject.js";
 import PointerObject from "../entity/PointerObject.js";
+import ReflectMapObject from "../entity/ReflectMapObject.js";
+import RenderMapObject from "../entity/RenderMapObject.js";
 import RestButtonObject from "../entity/RestButtonObject.js";
 import Scene from "./Scene.js";
 
@@ -25,7 +27,8 @@ export default class UIScene extends Scene {
             , new ExploreButtonObject()
             , new InformationObject()
             , new MessageObject()
-            
+            // , new ReflectMapObject()
+            // , new RenderMapObject()
         ];
     }
     collectPickDrawObject() {

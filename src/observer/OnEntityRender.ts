@@ -49,9 +49,9 @@ export default class OnEntityRender extends Observer {
             } else if (entity.has(TerrianMesh)) {
                 this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
             } else if (entity.has(RenderMap)) {
-                this.rendererManager.getBackSpriteRenderer().addObject(entity.get(RenderMap));
+                this.rendererManager.getSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {
-                this.rendererManager.getBackSpriteRenderer().addObject(entity.get(ReflectMap));
+                this.rendererManager.getSpriteRenderer().addObject(entity.get(ReflectMap));
             } else if (entity.has(Pointer)) {
                 this.rendererManager.getPointRenderer().addObject(entity.get(Pointer));
             } else if (entity.has(HelloWireframe)) {

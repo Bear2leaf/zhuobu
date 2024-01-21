@@ -18,15 +18,15 @@ export class SkyboxRenderer extends Renderer {
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
-        const projection = camera.getProjection().getVertics();
         const viewInverse = camera.getView().inverse().getVertics();
+        const projection = Matrix.perspective(Math.PI / 4, camera.getAspect(), 0.1, 1000).getVertics();
         this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
         const objectList = this.getObjectList();
         objectList.forEach(drawObject => {
             drawObject.bind();
             drawObject.getTexture().active();
             drawObject.getTexture().bind()
-            drawObject.getEntity().get(TRS).getScale().set(2, 2, 2);
+            drawObject.getEntity().get(TRS).getScale().set(100, 100, 100);
             const scale = new Vec4();
             const translation = new Vec4();
             const rotation = new Vec4();

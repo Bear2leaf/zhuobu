@@ -11,22 +11,23 @@ export class MainCamera extends PerspectiveCamera {
     private readonly target = new Vec4(0, 0, 0, 1);
     private readonly up = new Vec4(0, 1, 0, 1);
     private readonly projection = Matrix.identity();
-    private near = 1;
-    private far = 30;
+    private fov = Math.PI / 180 * 60;
+    private near = 0.1;
+    private far = 100;
     init(): void {
         super.init()
-        const fov = Math.PI / 180 * 60;
-        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), this.near, this.far))
+        this.getProjection().set(Matrix.perspective(this.fov, this.getAspect(), this.near, this.far))
         // this.fromGLTF(new Vec3(7.358891487121582, 4.958309173583984, 6.925790786743164), new Vec4(-0.20997299253940582, 0.3857799470424652, 0.09062844514846802, 0.8937962055206299));
     }
     reflect(enable: boolean = false) {
         this.reflected = enable;
     }
     getView(): Matrix {
+        const eye = this.getEye();
         if (this.reflected) {
-            return Matrix.lookAt(new Vec3(this.getEye().x, -this.getEye().y, this.getEye().z), new Vec3(this.target.x, -this.target.y, this.target.z), this.up)
+            return Matrix.lookAt(new Vec3(eye.x, -eye.y, eye.z), new Vec3(this.target.x, -this.target.y, this.target.z), this.up)
         } else {
-            return Matrix.lookAt(this.getEye(), this.target.clone(), this.up)
+            return Matrix.lookAt(eye, this.target.clone(), this.up)
         }
     }
     getEye(): Vec3 {
@@ -38,10 +39,14 @@ export class MainCamera extends PerspectiveCamera {
     getFar() {
         return this.far;
     }
+    getFov() {
+        return this.fov;
+    }
     fromGLTF(target: Vec3, position: Vec3, fov: number, near: number, far: number) {
         this.near = near;
         this.far = far;
-        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), this.near, this.far));
+        this.fov = fov;
+        this.getProjection().set(Matrix.perspective(this.fov, this.getAspect(), this.near, this.far));
         this.eye.set(position.x, position.y, position.z, 1);
         this.target.set(target.x, target.y, target.z, 1);
     }
