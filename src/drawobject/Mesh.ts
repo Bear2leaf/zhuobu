@@ -9,6 +9,13 @@ export default class Mesh extends DrawObject {
     private gltf?: GLTF;
     private nodeIndex: number = 0;
     private primitiveIndex: number = 0;
+    private animationIndex: number = 0;
+    setAnimationIndex(index: number) {
+        this.animationIndex = index;
+    }
+    getAnimationIndex() {
+        return this.animationIndex;
+    }
     setNodeIndex(index: number) {
         this.nodeIndex = index;
     }
@@ -25,13 +32,13 @@ export default class Mesh extends DrawObject {
         const gltf = this.getGLTF();
         const entity = this.getEntity();
         const node = gltf.getNodeByIndex(this.nodeIndex);
+        entity.set(Node, node.getNode());
         const mesh = gltf.getMeshByIndex(node.getMesh());
         const primitive = mesh.getPrimitiveByIndex(this.primitiveIndex);
         const positionIndex = primitive.getAttributes().getPosition();
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
-        entity.get(Node).setSource(node.getNode().getSource());
         this.bind();
         this.setMeshData(
             gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
@@ -41,13 +48,12 @@ export default class Mesh extends DrawObject {
         );
         if (entity.has(GLTFAnimationController)) {
 
-            const animation = gltf.getDefaultAnimation();
+            const animation = gltf.getAnimationByIndex(this.getAnimationIndex());
             animation.createBuffers(gltf);
             entity.get(GLTFAnimationController).setAnimationData(
                 animation
             );
         }
-        node.getNode().setParent(entity.get(Node));
     }
     setGLTF(gltf: GLTF) {
         this.gltf = gltf;

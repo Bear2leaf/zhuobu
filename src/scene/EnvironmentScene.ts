@@ -7,7 +7,7 @@ import Entity from "../entity/Entity.js";
 import MeshObject from "../entity/MeshObject.js";
 import RockObject from "../entity/RockObject.js";
 import ShipObject from "../entity/ShipObject.js";
-import SkinMeshObject from "../entity/SkinMeshObject.js";
+import WhaleObject from "../entity/WhaleObject.js";
 import Scene from "./Scene.js";
 
 export default class EnvironmentScene extends Scene {
@@ -23,9 +23,8 @@ export default class EnvironmentScene extends Scene {
     private readonly eagles: EagleObject[] = [
         new EagleObject()
     ]
-    private readonly whales: [MeshObject, SkinMeshObject] = [
-        new MeshObject()
-        , new SkinMeshObject()
+    private readonly whales: [WhaleObject] = [
+        new WhaleObject()
     ];
     private readonly shipParts: ShipObject[] = [
         new ShipObject()

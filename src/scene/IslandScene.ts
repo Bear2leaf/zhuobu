@@ -1,10 +1,8 @@
 
 import CameraControllerObject from "../entity/CameraControllerObject.js";
-import EagleObject from "../entity/EagleObject.js";
 import Entity from "../entity/Entity.js";
-import HelloMultiMeshObject from "../entity/HelloMultiMeshObject.js";
 import MeshObject from "../entity/MeshObject.js";
-import SkinMeshObject from "../entity/SkinMeshObject.js";
+import WhaleObject from "../entity/WhaleObject.js";
 import SkyboxObject from "../entity/SkyboxObject.js";
 import TerrianObject from "../entity/TerrianObject.js";
 import WaterObject from "../entity/WaterObject.js";
@@ -23,7 +21,7 @@ export default class IslandScene extends Scene {
         this.collectDrawObject((entity) =>
             entity instanceof SkyboxObject
             || entity instanceof TerrianObject
-            || entity instanceof SkinMeshObject
+            || entity instanceof WhaleObject
             || entity instanceof MeshObject
         )
     }
@@ -31,13 +29,13 @@ export default class IslandScene extends Scene {
         this.collectDrawObject((entity) =>
             entity instanceof SkyboxObject
             || entity instanceof TerrianObject
-            || entity instanceof SkinMeshObject
+            || entity instanceof WhaleObject
             || entity instanceof MeshObject
         )
     }
     collectDepthDrawObject() {
         this.collectDrawObject((entity) =>
-            entity instanceof SkinMeshObject
+            entity instanceof WhaleObject
             || entity instanceof MeshObject
         )
     }

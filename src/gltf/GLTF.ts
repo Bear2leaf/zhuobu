@@ -236,13 +236,6 @@ export default class GLTF {
             }
         }
     }
-    getDefaultAnimation() {
-        if (!this.animations) {
-            throw new Error("animations not found");
-        }
-        const animation = this.getAnimationByIndex(0);
-        return animation;
-    }
     buildNodeTree(gltfNode: GLTFNode) {
         const childrenIndices = gltfNode.getChildrenIndices();
         if (childrenIndices && childrenIndices.length > 0) {

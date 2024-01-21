@@ -1,4 +1,3 @@
-import WhaleGLTF from "../model/WhaleGLTF.js";
 import HelloGLTF from "../model/HelloGLTF.js";
 import HelloMultiGLTF from "../model/HelloMultiGLTF.js";
 import CacheManager from "./CacheManager.js";
@@ -11,31 +10,23 @@ export default class GLTFManager {
     private cacheManager?: CacheManager;
     private sceneManager?: SceneManager;
     private eventManager?: EventManager;
-    readonly whaleGLTF: WhaleGLTF = new WhaleGLTF();
     readonly helloGLTF: HelloGLTF = new HelloGLTF();
-    readonly helloMultiGLTF: HelloMultiGLTF = new HelloMultiGLTF();
-    readonly terrianGLTF: IslandGLTF = new IslandGLTF();
+    readonly islandGLTF: IslandGLTF = new IslandGLTF();
     async load(): Promise<void> {
-        await this.getCacheManager().loadGLTFCache(this.whaleGLTF.getName());
         await this.getCacheManager().loadGLTFCache(this.helloGLTF.getName());
-        await this.getCacheManager().loadGLTFCache(this.helloMultiGLTF.getName());
-        await this.getCacheManager().loadGLTFCache(this.terrianGLTF.getName());
+        await this.getCacheManager().loadGLTFCache(this.islandGLTF.getName());
     }
     setBufferCaches() {
-        this.whaleGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
         this.helloGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
-        this.helloMultiGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
-        this.terrianGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
-        this.terrianGLTF.setImageCache(this.getCacheManager().getImageCache());
+        this.islandGLTF.setBufferCache(this.getCacheManager().getArrayBufferCache());
+        this.islandGLTF.setImageCache(this.getCacheManager().getImageCache());
     }
     initObservers() {
         this.getEventManager().onEntityInit.setGLTFManager(this);
     }
     initGLTFs(): void {
-        this.whaleGLTF.init(this.getCacheManager().getGLTF(this.whaleGLTF.getName()))
         this.helloGLTF.init(this.getCacheManager().getGLTF(this.helloGLTF.getName()))
-        this.helloMultiGLTF.init(this.getCacheManager().getGLTF(this.helloMultiGLTF.getName()))
-        this.terrianGLTF.init(this.getCacheManager().getGLTF(this.terrianGLTF.getName()))
+        this.islandGLTF.init(this.getCacheManager().getGLTF(this.islandGLTF.getName()))
 
     }
     setCacheManager(cacheManager: CacheManager) {

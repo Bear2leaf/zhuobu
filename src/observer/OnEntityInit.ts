@@ -3,7 +3,6 @@ import { WindowInfo } from "../device/Device.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import RockMesh from "../drawobject/RockMesh.js";
-import HelloMultiMesh from "../drawobject/HelloMultiMesh.js";
 import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
@@ -34,8 +33,8 @@ export default class OnEntityInit extends Observer {
     private renderingContext?: RenderingContext;
     private onClick?: OnClick;
     private windowInfo?: WindowInfo;
-    private rockCounter = 4;
-    private shipCounter = 37;
+    private rockCounter = 41;
+    private shipCounter = 36;
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
@@ -127,21 +126,20 @@ export default class OnEntityInit extends Observer {
         }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
-                entity.get(WhaleMesh).setGLTF(this.gltfManager.whaleGLTF.clone());
-                entity.get(WhaleMesh).setNodeIndex(4);
+                entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF.clone());
+                entity.get(WhaleMesh).setNodeIndex(34);
+                entity.get(WhaleMesh).setAnimationIndex(2)
             } else if (entity.has(HelloWireframe)) {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
-            } else if (entity.has(HelloMultiMesh)) {
-                entity.get(HelloMultiMesh).setGLTF(this.gltfManager.helloMultiGLTF.clone());
             } else if (entity.has(TerrianMesh)) {
-                entity.get(TerrianMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
-                entity.get(TerrianMesh).setNodeIndex(1);
+                entity.get(TerrianMesh).setGLTF(this.gltfManager.islandGLTF.clone());
+                entity.get(TerrianMesh).setNodeIndex(0);
             } else if (entity.has(RockMesh)) {
-                entity.get(RockMesh).setGLTF(this.gltfManager.terrianGLTF.clone());
+                entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF.clone());
                 entity.get(RockMesh).setNodeIndex(this.rockCounter++);
             } else if (entity.has(ShipMesh)) {
                 const counter  = this.shipCounter++;
-                const gltf = this.gltfManager.terrianGLTF;
+                const gltf = this.gltfManager.islandGLTF;
                 entity.all(ShipMesh).forEach((mesh, index) => {
                     const primitives = gltf.getMeshByIndex(gltf.getNodeByIndex(counter).getMesh()).getPrimitives();
                     if (index < primitives.length) {
@@ -154,9 +152,9 @@ export default class OnEntityInit extends Observer {
             } else if (entity.has(EagleMesh)) {
                 const allMeshs = entity.all(EagleMesh);
                 for (const mesh of allMeshs) {
-                    mesh.setGLTF(this.gltfManager.terrianGLTF.clone());
+                    mesh.setGLTF(this.gltfManager.islandGLTF.clone());
                     mesh.setPrimitiveIndex(allMeshs.indexOf(mesh));
-                    mesh.setNodeIndex(35);
+                    mesh.setNodeIndex(26);
                 }
             }
             entity.all(Mesh).forEach(mesh => mesh.initMesh());

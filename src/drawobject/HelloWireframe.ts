@@ -15,7 +15,6 @@ export default class HelloWireframe extends Mesh {
         const texcoordIndex = primitive.getAttributes().getTexCoord();
         const normalIndex = primitive.getAttributes().getNormal();
         const indicesIndex = primitive.getIndices();
-        entity.get(Node).setSource(node.getNode().getSource());
         entity.get(Mesh).setWireframeMeshData(
             gltf.getDataByAccessorIndex(indicesIndex) as Uint16Array
             , gltf.getDataByAccessorIndex(positionIndex) as Float32Array
@@ -24,13 +23,12 @@ export default class HelloWireframe extends Mesh {
         );
         if (entity.has(GLTFAnimationController)) {
 
-            const animation = gltf.getDefaultAnimation();
+            const animation = gltf.getAnimationByIndex(this.getAnimationIndex());
             animation.createBuffers(gltf);
             entity.get(GLTFAnimationController).setAnimationData(
                 animation
             );
         }
-        node.getNode().setParent(entity.get(Node));
     }
     draw(): void {
         this.updateRootTRSFromFirstChild();

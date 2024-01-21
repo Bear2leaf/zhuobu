@@ -62,44 +62,6 @@ export default class GLTFAnimationController extends AnimationController {
             }
         });
     }
-    slerp(a: Vec4, b: Vec4, t: number): Vec4 {
-        // we use slerp before, in fact we can use lerp here.
-        let dot = a.clone().dot(b);
-        if (dot < 0.0) {
-            b.multiply(-1);
-            dot = -dot;
-        }
-        if (dot > 1.000000) {
-            return a.clone().add((b.clone().subtract(a.clone()).multiply(t)).normalize());
-        }
-        const theta = Math.acos(dot);
-        const sinTheta = Math.sin(theta);
-        const sinThetaInv = 1.0 / sinTheta;
-        const c0 = Math.sin((1 - t) * theta) * sinThetaInv;
-        const c1 = Math.sin(t * theta) * sinThetaInv;
-        const result = new Vec4();
-        result.x = a.x * c0 + b.x * c1;
-        result.y = a.y * c0 + b.y * c1;
-        result.z = a.z * c0 + b.z * c1;
-        result.w = a.w * c0 + b.w * c1;
-        if (isNaN(result.x)) {
-            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
-            throw new Error("result.x is NaN");
-        }
-        if (isNaN(result.y)) {
-            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
-            throw new Error("result.y is NaN");
-        }
-        if (isNaN(result.z)) {
-            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
-            throw new Error("result.z is NaN");
-        }
-        if (isNaN(result.w)) {
-            console.log("a", a, "b", b, "t", t, "dot", dot, "theta", theta, "sinTheta", sinTheta, "sinThetaInv", sinThetaInv, "c0", c0, "c1", c1, "result", result);
-            throw new Error("result.w is NaN");
-        }
-        return result;
-    }
     getSamplerByIndex(index: number): GLTFAnimationSampler {
         const sampler = this.getAnimationData().getSamplers()[index];
         if (sampler === undefined) {

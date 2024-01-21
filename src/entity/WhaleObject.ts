@@ -5,7 +5,7 @@ import WhaleMesh from "../drawobject/WhaleMesh.js";
 import Entity from "./Entity.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 
-export default class SkinMeshObject extends Entity {
+export default class WhaleObject extends Entity {
     addDefaultComponents(): void {
         [
             TRS,
