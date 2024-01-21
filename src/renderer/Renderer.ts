@@ -18,7 +18,7 @@ export default class Renderer {
     private readonly lightPosition = new Vec3(0.5, 0.5, -0.5);
     private readonly lightTarget = new Vec3(0, 0, 0);
     private readonly lightUp = new Vec3(0, 1.0, 0);
-    private readonly lightProjection = Matrix.ortho(-5, 5, -5, 5, -10.0, 10.0).getVertics();
+    private readonly lightProjection = Matrix.ortho(-1, 1, -1, 1, -10.0, 10.0).getVertics();
     private camera?: Camera;
     private shader?: Shader;
     private shaderName?: string;

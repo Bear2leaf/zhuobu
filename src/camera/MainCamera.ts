@@ -39,9 +39,9 @@ export class MainCamera extends PerspectiveCamera {
         return this.far;
     }
     fromGLTF(target: Vec3, position: Vec3, fov: number, near: number, far: number) {
-        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), near, far));
         this.near = near;
         this.far = far;
+        this.getProjection().set(Matrix.perspective(fov, this.getAspect(), this.near, this.far));
         this.eye.set(position.x, position.y, position.z, 1);
         this.target.set(target.x, target.y, target.z, 1);
     }

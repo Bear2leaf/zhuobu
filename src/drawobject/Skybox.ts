@@ -2,8 +2,6 @@ import Cube from "../geometry/Cube.js";
 import { Vec4, flatten } from "../geometry/Vector.js";
 import DrawObject from "./DrawObject.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
-import TRS from "../transform/TRS.js";
-import Node from "../transform/Node.js";
 
 export default class Skybox extends DrawObject {
     init() {

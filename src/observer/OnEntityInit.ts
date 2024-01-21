@@ -33,8 +33,8 @@ export default class OnEntityInit extends Observer {
     private renderingContext?: RenderingContext;
     private onClick?: OnClick;
     private windowInfo?: WindowInfo;
-    private rockCounter = 41;
-    private shipCounter = 36;
+    private rockCounter = 6;
+    private shipCounter = 1;
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
@@ -127,13 +127,13 @@ export default class OnEntityInit extends Observer {
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(WhaleMesh).setNodeIndex(34);
+                entity.get(WhaleMesh).setNodeIndex(47);
                 entity.get(WhaleMesh).setAnimationIndex(2)
             } else if (entity.has(HelloWireframe)) {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF);
             } else if (entity.has(TerrianMesh)) {
                 entity.get(TerrianMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(TerrianMesh).setNodeIndex(0);
+                entity.get(TerrianMesh).setNodeIndex(49);
             } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF);
                 entity.get(RockMesh).setNodeIndex(this.rockCounter++);
@@ -154,7 +154,7 @@ export default class OnEntityInit extends Observer {
                 for (const mesh of allMeshs) {
                     mesh.setGLTF(this.gltfManager.islandGLTF);
                     mesh.setPrimitiveIndex(allMeshs.indexOf(mesh));
-                    mesh.setNodeIndex(26);
+                    mesh.setNodeIndex(39);
                 }
             }
             entity.all(Mesh).forEach(mesh => mesh.initMesh());
