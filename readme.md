@@ -8,15 +8,14 @@ npx runtime and typescript compiler is required.
 
 ```bash
 # you can run all above commands with
-rm -rf dist script/dist script/game && \
-npx tsc && \
-ln -s ../src/worker/game ./script && \
-cp -r ./resources ./index.html game.json project.config.json dist && \
-npx tsc -p script && \
-python3 -m http.server -d dist
+rm -rf dist && mkdir dist && cp -r resources game.json index.html project.config.json dist && tsc && echo '{"type": "module"}' > dist/package.json && touch dist/resources/game.js
 
 # update resources
-# cp -r ./resources ./index.html game.json project.config.json dist
+cp -r resources game.json index.html project.config.json dist
+
+# start http server
+python3 -m http.server -d dist
+
 ```
 open http://localhost:8000/ in browser
 

@@ -1,7 +1,6 @@
 import DefaultTexture from "../texture/DefaultTexture.js";
 import DepthTexture from "../texture/DepthTexture.js";
 import FlowerTexture from "../texture/FlowerTexture.js";
-import FontTexture from "../texture/FontTexture.js";
 import JointTexture from "../texture/JointTexture.js";
 import PickTexture from "../texture/PickTexture.js";
 import RenderTexture from "../texture/RenderTexture.js";
@@ -22,7 +21,6 @@ import EagleJointTexture from "../texture/EagleJointTexture.js";
 
 export default class TextureManager {
     readonly defaultTexture = new DefaultTexture;
-    readonly fontTexture = new FontTexture;
     readonly flowerTexture = new FlowerTexture;
     readonly terrianTexture = new TerrianTexture;
     readonly waterNormalTexture = new WaterNormalTexture;
@@ -46,7 +44,6 @@ export default class TextureManager {
         await this.getCacheManager().loadImageCache("water_distortion");
         await this.getCacheManager().loadImageCache("water_normal");
         await this.getCacheManager().loadSkyboxCache("vz_clear_ocean");
-        await this.getCacheManager().loadFontCache("boxy_bold_font");
     }
     setDevice(device: Device) {
         this.device = device;
@@ -62,7 +59,6 @@ export default class TextureManager {
         const glContext= this.getDevice().getRenderingContext();
         this.defaultTexture.setContext(glContext);
         this.terrianTexture.setContext(glContext);
-        this.fontTexture.setContext(glContext);
         this.flowerTexture.setContext(glContext);
         this.waterDistortionTexture.setContext(glContext);
         this.waterNormalTexture.setContext(glContext);

@@ -56,11 +56,6 @@ export default class CacheManager {
             this.imageCache.get(`resources/texture/skybox/${name}_up.png`)
         ]
     }
-    getFontInfo(name: string) {
-        const font = this.jsonCache.get(`resources/font/${name}.json`);
-        if (font === undefined) throw new Error(`fontCache resources/font/${name}.json not found`);
-        return font;
-    }
     getSoundfont(name: string) {
         const font = this.jsonCache.get(`resources/soundfont/${name}.json`);
         if (font === undefined) throw new Error(`soundfont resources/soundfont/${name}.json not found`);
@@ -99,10 +94,6 @@ export default class CacheManager {
             }
         }
         await this.arrayBufferCache.load(`resources/gltf/${name}.bin`)
-    }
-    async loadFontCache(name: string) {
-        await this.jsonCache.load(`resources/font/${name}.json`)
-        await this.imageCache.load(`resources/texture/${name}.png`);
     }
     async loadSoundFontCache(name: string) {
         await this.jsonCache.load(`resources/soundfont/${name}.json`)
