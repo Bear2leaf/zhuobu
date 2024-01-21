@@ -4,7 +4,6 @@ import ShipMesh from "../drawobject/ShipMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import EagleObject from "../entity/EagleObject.js";
 import Entity from "../entity/Entity.js";
-import MeshObject from "../entity/MeshObject.js";
 import RockObject from "../entity/RockObject.js";
 import ShipObject from "../entity/ShipObject.js";
 import WhaleObject from "../entity/WhaleObject.js";

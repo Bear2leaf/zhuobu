@@ -8,14 +8,39 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0
+				0,
+				1
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cube"
+			"name":"Cube",
+			"rotation":[
+				0,
+				0,
+				-1,
+				0
+			],
+			"scale":[
+				0.048951976001262665,
+				0.048951976001262665,
+				0.048951972275972366
+			],
+			"translation":[
+				0.10000002384185791,
+				0.5,
+				0
+			]
+		},
+		{
+			"name":"CameraTarget",
+			"translation":[
+				0.03331510350108147,
+				0.23318293690681458,
+				0.23068416118621826
+			]
 		}
 	],
 	"animations":[
@@ -25,18 +50,18 @@
 					"sampler":0,
 					"target":{
 						"node":0,
-						"path":"rotation"
+						"path":"translation"
 					}
 				},
 				{
 					"sampler":1,
 					"target":{
 						"node":0,
-						"path":"translation"
+						"path":"rotation"
 					}
 				}
 			],
-			"name":"CubeAction",
+			"name":"CubeAction.002",
 			"samplers":[
 				{
 					"input":4,
@@ -134,13 +159,13 @@
 			"bufferView":5,
 			"componentType":5126,
 			"count":49,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
 			"count":49,
-			"type":"VEC3"
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
@@ -175,13 +200,13 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":784,
+			"byteLength":588,
 			"byteOffset":1036
 		},
 		{
 			"buffer":0,
-			"byteLength":588,
-			"byteOffset":1820
+			"byteLength":784,
+			"byteOffset":1624
 		}
 	],
 	"buffers":[

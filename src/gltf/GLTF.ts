@@ -1,8 +1,4 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
-import Node from "../transform/Node.js";
-import Mesh from "../drawobject/Mesh.js";
-import SkinMesh from "../drawobject/SkinMesh.js";
-import Entity from "../entity/Entity.js";
 import GLTFAccessor from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
@@ -16,8 +12,6 @@ import GLTFSampler from "./GLTFSampler.js";
 import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
-import GLTFAnimationController from "../controller/GLTFAnimationController.js";
-import HelloWireframe from "../drawobject/HelloWireframe.js";
 import ImageCache from "../cache/ImageCache.js";
 
 const glTypeToTypedArrayMap = {
@@ -266,14 +260,6 @@ export default class GLTF {
             throw new Error(`node not found: ${index}`);
         }
         return node;
-    }
-    clone() {
-        const gltf = new GLTF();
-        gltf.setName(this.getName());
-        gltf.bufferCache = this.getBufferCache();
-        gltf.imageCache = this.getImageCache();
-        gltf.init(JSON.parse(JSON.stringify(this)));
-        return gltf;
     }
 }
 

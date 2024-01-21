@@ -7,6 +7,7 @@ import SkyboxObject from "../entity/SkyboxObject.js";
 import TerrianObject from "../entity/TerrianObject.js";
 import WaterObject from "../entity/WaterObject.js";
 import Scene from "./Scene.js";
+import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 
 export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
@@ -15,6 +16,7 @@ export default class IslandScene extends Scene {
             , new SkyboxObject()
             , new WaterObject()
             , new TerrianObject()
+            , new HelloWireframeObject()
         ];
     }
     collectRefractDrawObject() {

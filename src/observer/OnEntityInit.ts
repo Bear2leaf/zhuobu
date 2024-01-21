@@ -126,16 +126,16 @@ export default class OnEntityInit extends Observer {
         }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
-                entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF.clone());
+                entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF);
                 entity.get(WhaleMesh).setNodeIndex(34);
                 entity.get(WhaleMesh).setAnimationIndex(2)
             } else if (entity.has(HelloWireframe)) {
-                entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF.clone());
+                entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF);
             } else if (entity.has(TerrianMesh)) {
-                entity.get(TerrianMesh).setGLTF(this.gltfManager.islandGLTF.clone());
+                entity.get(TerrianMesh).setGLTF(this.gltfManager.islandGLTF);
                 entity.get(TerrianMesh).setNodeIndex(0);
             } else if (entity.has(RockMesh)) {
-                entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF.clone());
+                entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF);
                 entity.get(RockMesh).setNodeIndex(this.rockCounter++);
             } else if (entity.has(ShipMesh)) {
                 const counter  = this.shipCounter++;
@@ -145,14 +145,14 @@ export default class OnEntityInit extends Observer {
                     if (index < primitives.length) {
                         mesh.setPrimitiveIndex(index);
                     }
-                    mesh.setGLTF(gltf.clone());
+                    mesh.setGLTF(gltf);
                     mesh.setNodeIndex(counter);
                 });
                 
             } else if (entity.has(EagleMesh)) {
                 const allMeshs = entity.all(EagleMesh);
                 for (const mesh of allMeshs) {
-                    mesh.setGLTF(this.gltfManager.islandGLTF.clone());
+                    mesh.setGLTF(this.gltfManager.islandGLTF);
                     mesh.setPrimitiveIndex(allMeshs.indexOf(mesh));
                     mesh.setNodeIndex(26);
                 }

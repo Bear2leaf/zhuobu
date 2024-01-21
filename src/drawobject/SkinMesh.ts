@@ -33,7 +33,7 @@ export default class SkinMesh extends Mesh {
         const skin = gltf.getSkinByIndex(node.getSkin());
         const skeletonRootNode = gltf.getNodeByName(skin.getName());
         gltf.buildNodeTree(skeletonRootNode);
-        entity.set(Node, skeletonRootNode.getNode())
+        entity.set(Node, skeletonRootNode.getNode());
         const jointNodes = skin.getJoints().map((joint) => gltf.getNodeByIndex(joint).getNode());
         const weightslIndex = primitive.getAttributes().getWeights();
         const jointsIndex = primitive.getAttributes().getJoints();

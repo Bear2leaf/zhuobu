@@ -1,5 +1,4 @@
 import HelloGLTF from "../model/HelloGLTF.js";
-import HelloMultiGLTF from "../model/HelloMultiGLTF.js";
 import CacheManager from "./CacheManager.js";
 import SceneManager from "./SceneManager.js";
 import EventManager from "./EventManager.js";
