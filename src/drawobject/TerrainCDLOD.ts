@@ -57,7 +57,6 @@ export default class TerrainCDLOD extends DrawObject {
         ];
         renderer.getShader().updateUniform("u_model", model);
         const context = this.getRenderingContext();
-        context.clear();
         this.bind();
         for (let i = 0; i < this.tiles; i++) {
             const scale = this.scales[i];

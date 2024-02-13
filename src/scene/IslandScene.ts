@@ -16,8 +16,8 @@ export default class IslandScene extends Scene {
             new CameraControllerObject()
             , new SkyboxObject()
             , new WaterObject()
-            // , new TerrainCDLODObject()
             , new TerrainObject()
+            , new TerrainCDLODObject()
             , new HelloWireframeObject()
         ];
     }

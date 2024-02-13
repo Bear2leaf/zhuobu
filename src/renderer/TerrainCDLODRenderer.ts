@@ -10,5 +10,6 @@ export default class TerrainCDLODRenderer extends Renderer {
         objects.forEach(object => {
             object.drawByRenderer(this)
         })
+        objects.splice(0, objects.length);
     }
 }
