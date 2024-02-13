@@ -19,6 +19,7 @@ import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import Mesh from "../drawobject/Mesh.js";
 import TerrainDepth from "../drawobject/TerrainDepth.js";
 import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
+import Sky from "../drawobject/Sky.js";
 
 export default class OnEntityRender extends Observer {
     private rendererManager?: RendererManager;
@@ -64,6 +65,8 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getWireframeRenderer().addObject(entity.get(HelloWireframe));
             } else if (entity.has(Skybox)) {
                 this.rendererManager.getSkyboxRenderer().addObject(entity.get(Skybox));
+            } else if (entity.has(Sky)) {
+                this.rendererManager.getSkyRenderer().addObject(entity.get(Sky));
             } else if (entity.has(Water)) {
                 this.rendererManager.getWaterRenderer().addObject(entity.get(Water));
             } else if (entity.has(GLTFAnimationController)) {

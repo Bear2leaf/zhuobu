@@ -5,6 +5,7 @@ import GLTFSkinMeshRenderer from "../renderer/GLTFSkinMeshRenderer.js";
 import { LineRenderer } from "../renderer/LineRenderer.js";
 import { PointRenderer } from "../renderer/PointRenderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
+import { SkyRenderer } from "../renderer/SkyRenderer.js";
 import { SkyboxRenderer } from "../renderer/SkyboxRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
 import TerrainCDLODRenderer from "../renderer/TerrainCDLODRenderer.js";
@@ -22,6 +23,7 @@ export default class RendererManager {
     private readonly backSpriteRenderer = new BackSpriteRenderer;
     private readonly waterRenderer = new WaterRenderer;
     private readonly skyboxRenderer = new SkyboxRenderer;
+    private readonly skyRenderer = new SkyRenderer;
     private readonly sdfRenderer = new SDFRenderer;
     private readonly lineRenderer = new LineRenderer;
     private readonly gltfMeshRenderer = new GLTFMeshRenderer;
@@ -40,6 +42,7 @@ export default class RendererManager {
         this.spriteRenderer.setShaderName("Sprite");
         this.backSpriteRenderer.setShaderName("Sprite");
         this.skyboxRenderer.setShaderName("Skybox");
+        this.skyRenderer.setShaderName("Sky");
         this.sdfRenderer.setShaderName("SDF");
         this.lineRenderer.setShaderName("Line");
         this.gltfMeshRenderer.setShaderName("Mesh");
@@ -57,6 +60,7 @@ export default class RendererManager {
         await this.spriteRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.backSpriteRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.skyboxRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.skyRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.sdfRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.lineRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfMeshRenderer.loadShaderTxtCache(this.getCacheManager());
@@ -95,6 +99,7 @@ export default class RendererManager {
             this.terrainCDLODRenderer,
             this.wireframeRenderer,
             this.skyboxRenderer,
+            this.skyRenderer,
             this.waterRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getMainCamera());
@@ -124,6 +129,7 @@ export default class RendererManager {
         this.getEventManager().onViewPortChange.notify();
         [
             this.skyboxRenderer,
+            this.skyRenderer,
             this.backSpriteRenderer,
             this.spriteRenderer,
             this.lineRenderer,
@@ -172,6 +178,9 @@ export default class RendererManager {
     }
     getSkyboxRenderer() {
         return this.skyboxRenderer;
+    }
+    getSkyRenderer() {
+        return this.skyRenderer;
     }
     getWaterRenderer() {
         return this.waterRenderer;

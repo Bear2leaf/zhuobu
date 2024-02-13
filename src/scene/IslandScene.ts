@@ -9,12 +9,13 @@ import CameraControllerObject from "../entity/CameraControllerObject.js";
 import HelloWireframeObject from "../entity/HelloWireframeObject.js";
 import WaterObject from "../entity/WaterObject.js";
 import TerrainObject from "../entity/TerrainObject.js";
+import SkyObject from "../entity/SkyObject.js";
 
 export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new CameraControllerObject()
-            , new SkyboxObject()
+            , new SkyObject()
             , new WaterObject()
             , new TerrainObject()
             , new TerrainCDLODObject()
