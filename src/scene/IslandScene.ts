@@ -5,15 +5,20 @@ import WhaleObject from "../entity/WhaleObject.js";
 import SkyboxObject from "../entity/SkyboxObject.js";
 import Scene from "./Scene.js";
 import TerrainCDLODObject from "../entity/TerrainCDLODObject.js";
+import CameraControllerObject from "../entity/CameraControllerObject.js";
+import HelloWireframeObject from "../entity/HelloWireframeObject.js";
+import WaterObject from "../entity/WaterObject.js";
+import TerrainObject from "../entity/TerrainObject.js";
 
 export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
-            // new CameraControllerObject()
-            // , new SkyboxObject()
-            // , new WaterObject()
-            new TerrainCDLODObject()
-            // , new HelloWireframeObject()
+            new CameraControllerObject()
+            , new SkyboxObject()
+            , new WaterObject()
+            // , new TerrainCDLODObject()
+            , new TerrainObject()
+            , new HelloWireframeObject()
         ];
     }
     collectRefractDrawObject() {

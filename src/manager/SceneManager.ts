@@ -39,23 +39,23 @@ export default class SceneManager {
     }
     collectDrawObject(): void {
         this.islandScene.collectDrawObject();
-        // this.environmentScene.collectDrawObject();
-        // this.uiScene.collectDrawObject();
+        this.environmentScene.collectDrawObject();
+        this.uiScene.collectDrawObject();
     }
     collectRefractFramebufferObject() {
         this.islandScene.collectRefractDrawObject();
-        // this.environmentScene.collectRefractDrawObject();
+        this.environmentScene.collectRefractDrawObject();
     }
     collectReflectFramebufferObject() {
         this.islandScene.collectReflectDrawObject();
-        // this.environmentScene.collectReflectDrawObject();
+        this.environmentScene.collectReflectDrawObject();
     }
     collectPickFramebufferObject() {
-        // this.uiScene.collectPickDrawObject();
+        this.uiScene.collectPickDrawObject();
     }
     collectShadowFramebufferObject() {
         this.islandScene.collectDepthDrawObject();
-        // this.environmentScene.collectDepthDrawObject();
+        this.environmentScene.collectDepthDrawObject();
     }
     collecTerrainFramebufferObject() {
         this.islandDepthScene.collectDrawObject();

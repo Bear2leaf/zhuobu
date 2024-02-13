@@ -105,10 +105,10 @@ export default abstract class Engine {
     update() {
         this.timestepManager.tick();
         this.workerManager.processMessage();
-        if (this.rafId) {
-            this.rafId = requestAnimationFrame(this.update.bind(this));
-            return;
-        }
+        // if (this.rafId) {
+        //     this.rafId = requestAnimationFrame(this.update.bind(this));
+        //     return;
+        // }
         this.inputManager.process();
         this.sceneManager.update();
         this.sceneManager.collectRefractFramebufferObject();
