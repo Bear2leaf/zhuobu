@@ -15,7 +15,8 @@ export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new CameraControllerObject()
-            , new SkyObject()
+            , new SkyboxObject()
+            // , new SkyObject()
             , new WaterObject()
             , new TerrainObject()
             , new TerrainCDLODObject()
@@ -25,6 +26,7 @@ export default class IslandScene extends Scene {
     collectRefractDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkyboxObject
+            || entity instanceof TerrainObject
             || entity instanceof TerrainCDLODObject
             || entity instanceof WhaleObject
             || entity instanceof MeshObject
@@ -33,6 +35,7 @@ export default class IslandScene extends Scene {
     collectReflectDrawObject() {
         this.collectDrawObject((entity) =>
             entity instanceof SkyboxObject
+            || entity instanceof TerrainObject
             || entity instanceof TerrainCDLODObject
             || entity instanceof WhaleObject
             || entity instanceof MeshObject

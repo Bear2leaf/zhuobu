@@ -38,7 +38,7 @@ export default class TerrainCDLOD extends DrawObject {
         const up: Tuple<number, 3> = [0, 1, 0];
         const target: Tuple<number, 3> = [0, 0, 0];
         // const eye: Tuple<number, 3> = [0 , 0.0, -1 ];
-        const eye: Tuple<number, 3> = [1, 0.5, 1];
+        const eye: Tuple<number, 3> = [1, 0, 1];
         this.updatePerspective(renderer, ...perspective);
         this.updateLookAt(renderer, eye, target, up);
         renderer.getShader().updateUniform("u_resolution", this.TILE_RESOLUTION);
