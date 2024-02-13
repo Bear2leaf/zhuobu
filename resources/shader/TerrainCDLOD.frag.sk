@@ -1,0 +1,43 @@
+#version 300 es
+precision highp float;
+in vec3 v_color;
+in vec2 v_position;
+
+uniform sampler2D u_texture;
+uniform sampler2D u_texture7;
+uniform vec3 u_lightDirection;
+uniform float u_resolution;
+uniform float u_scale;
+
+const float ambient = 0.1f;
+out vec4 color;
+
+vec3 getNormalSingleSample() {
+    vec2 position = v_position * 0.5f + 0.5f;
+    float sampleDistance = u_scale / u_resolution;
+    float u = texture(u_texture7, position + vec2(0.0f, sampleDistance)).r;
+    float r = texture(u_texture7, position + vec2(sampleDistance, 0.0f)).r;
+    float l = texture(u_texture7, position + vec2(-sampleDistance, 0.0f)).r;
+    float d = texture(u_texture7, position + vec2(0.0f, -sampleDistance)).r;
+    vec3 n;
+    n.z = u - d;
+    n.x = r - l;
+    n.y = sampleDistance * 2.0f;
+    return normalize(n);
+}
+float getLight() {
+    vec3 normal = getNormalSingleSample();
+    vec3 lightDirection = normalize(u_lightDirection);
+    float light = max(dot(normal, lightDirection), 0.0f);
+    return light;
+}
+vec3 getDiffuse() {
+    // return vec3(1.0f);
+    return texture(u_texture, v_position / 2.0f + 0.5f).rgb;
+}
+
+void main() {
+    color = vec4(getDiffuse() * (ambient + (1.0f - ambient) * getLight()), 1.0f);
+    // color = vec4(1.0f);
+    // color = vec4(texture(u_texture7, v_position / 2.0 + 0.5).rrr * v_color , 1.0f);
+}

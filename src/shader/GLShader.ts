@@ -39,6 +39,44 @@ export default class GLShader implements Shader {
         }
         this.program = program;
     }
+    updateUniform(key: string, value: number): void;
+    updateUniform(key: "u_isortho", value: boolean): void;
+    updateUniform(key: "u_offset" | "u_worldOffset", value: [number, number]): void;
+    updateUniform(key: "u_eye" | "u_target" | "u_up" | "u_lightDirection" | "sunPosition" | "cameraPosition", value: [number, number, number]): void;
+    updateUniform(key: "u_perspective", value: [number, number, number, number]): void;
+    updateUniform(key: "u_model" | "modelMatrix", value: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]): void;
+    updateUniform(key: string, value: number | boolean | [number, number, number, number] | [number, number] | [number, number, number] | [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]): void {
+
+        let loc = this.locMap.get(key);
+        if (loc !== undefined) {
+        } else {
+            loc = this.gl.getUniformLocation(this.program, key);
+            this.locMap.set(key, loc);
+        }
+        const context = this.gl;
+        const uniformLocation = loc;
+        if (typeof value === "boolean") {
+            context.uniform1i(uniformLocation, value ? 1 : 0);
+        } else if (typeof value === "number") {
+            if (key.startsWith("u_texture")) {
+                context.uniform1i(uniformLocation, value);
+            } else if (key === "u_edge") {
+                context.uniform1i(uniformLocation, value);
+            } else {
+                context.uniform1f(uniformLocation, value);
+            }
+        } else if (value instanceof Array && value.length === 4) {
+            context.uniform4fv(uniformLocation, value);
+        } else if (value instanceof Array && value.length === 2) {
+            context.uniform2fv(uniformLocation, value);
+        } else if (value instanceof Array && value.length === 3) {
+            context.uniform3fv(uniformLocation, value);
+        } else if (value instanceof Array && value.length === 16) {
+            context.uniformMatrix4fv(uniformLocation, false, value);
+        } else {
+            throw new Error("Invalid uniform value");
+        }
+    }
     setMatrix4fv(name: string, data: Float32Array) {
         let loc = this.locMap.get(name);
         if (loc !== undefined) {
@@ -100,8 +138,8 @@ export default class GLShader implements Shader {
         let blockIndex = this.blockIndexMap.get(index);
         if (blockIndex === undefined) {
             blockIndex = this.gl.getUniformBlockIndex(this.program, UniformBinding[index]);
+            this.blockIndexMap.set(index, blockIndex);
             if (blockIndex !== this.invalidBlockIndex) {
-                this.blockIndexMap.set(index, blockIndex);
                 this.gl.uniformBlockBinding(this.program, blockIndex, index);
             }
         }

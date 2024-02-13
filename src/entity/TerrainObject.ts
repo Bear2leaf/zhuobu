@@ -2,14 +2,15 @@ import Component from "./Component.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
 import Entity from "./Entity.js";
-import TerrianMesh from "../drawobject/TerrianMesh.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
+import Terrain from "../drawobject/Terrain.js";
 
-export default class TerrianObject extends Entity {
+export default class TerrainObject extends Entity {
     addDefaultComponents(): void {
         [
             TRS,
             Node,
-            TerrianMesh
+            Terrain
         ].forEach(ctor => {
             this.add<Component>(ctor);
             

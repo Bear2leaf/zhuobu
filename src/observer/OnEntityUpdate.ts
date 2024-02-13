@@ -9,7 +9,7 @@ import CameraManager from "../manager/CameraManager.js";
 import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import TerrianMesh from "../drawobject/TerrianMesh.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
 
 export default class OnEntityUpdate extends Observer {
 
@@ -46,9 +46,9 @@ export default class OnEntityUpdate extends Observer {
                 this.animationManager.cameraAnimator.animate(entity.get(CameraController));
             }
         }
-        if ((entity.has(TerrianMesh)) && this.cameraManager) {
+        if ((entity.has(TerrainMesh)) && this.cameraManager) {
 
-            const gltf = entity.get(TerrianMesh).getGLTF();
+            const gltf = entity.get(TerrainMesh).getGLTF();
             const cameraNode = gltf.getNodeByName("Camera");
             if (!cameraNode) {
                 throw new Error("camera node not found");

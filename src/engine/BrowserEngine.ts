@@ -14,9 +14,9 @@ export default class BrowserEngine extends Engine {
         this.offscreenCanvas.style.display = "none";
         this.sdfCanvas.style.display = "none";
         const device = new BrowserDevice(this.canvas, this.offscreenCanvas, this.sdfCanvas);
-        this.canvas.width = 480 * device.getWindowInfo().pixelRatio;
-        this.canvas.height = 960 * device.getWindowInfo().pixelRatio;
-        this.canvas.style.height = "100%";
+        this.canvas.width = 512 * device.getWindowInfo().pixelRatio;
+        this.canvas.height = 512 * device.getWindowInfo().pixelRatio;
+        this.canvas.style.width = "100%";
         this.buildDependency();
         this.buildVars(device);
         this.load(device).then(() => {

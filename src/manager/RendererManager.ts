@@ -7,7 +7,9 @@ import { PointRenderer } from "../renderer/PointRenderer.js";
 import SDFRenderer from "../renderer/SDFRenderer.js";
 import { SkyboxRenderer } from "../renderer/SkyboxRenderer.js";
 import SpriteRenderer from "../renderer/SpriteRenderer.js";
-import TerrianRenderer from "../renderer/TerrianRenderer.js";
+import TerrainCDLODRenderer from "../renderer/TerrainCDLODRenderer.js";
+import TerrainDepthRenderer from "../renderer/TerrainDepthRenderer.js";
+import TerrainRenderer from "../renderer/TerrainRenderer.js";
 import WaterRenderer from "../renderer/WaterRenderer.js";
 import WireframeRenderer from "../renderer/WireframeRenderer.js";
 import CacheManager from "./CacheManager.js";
@@ -23,7 +25,9 @@ export default class RendererManager {
     private readonly sdfRenderer = new SDFRenderer;
     private readonly lineRenderer = new LineRenderer;
     private readonly gltfMeshRenderer = new GLTFMeshRenderer;
-    private readonly terrianRenderer = new TerrianRenderer;
+    private readonly terrainRenderer = new TerrainRenderer;
+    private readonly terrainDepthRenderer = new TerrainDepthRenderer;
+    private readonly terrainCDLODRenderer = new TerrainCDLODRenderer;
     private readonly wireframeRenderer = new WireframeRenderer;
     private readonly gltfSkinMeshRenderer = new GLTFSkinMeshRenderer;
     private readonly pointRenderer = new PointRenderer;
@@ -39,7 +43,9 @@ export default class RendererManager {
         this.sdfRenderer.setShaderName("SDF");
         this.lineRenderer.setShaderName("Line");
         this.gltfMeshRenderer.setShaderName("Mesh");
-        this.terrianRenderer.setShaderName("Terrian");
+        this.terrainRenderer.setShaderName("Terrain");
+        this.terrainDepthRenderer.setShaderName("TerrainDepth");
+        this.terrainCDLODRenderer.setShaderName("TerrainCDLOD");
         this.wireframeRenderer.setShaderName("Wireframe");
         this.gltfSkinMeshRenderer.setShaderName("SkinMesh");
         this.pointRenderer.setShaderName("Point");
@@ -54,7 +60,9 @@ export default class RendererManager {
         await this.sdfRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.lineRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfMeshRenderer.loadShaderTxtCache(this.getCacheManager());
-        await this.terrianRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.terrainRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.terrainDepthRenderer.loadShaderTxtCache(this.getCacheManager());
+        await this.terrainCDLODRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.wireframeRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.gltfSkinMeshRenderer.loadShaderTxtCache(this.getCacheManager());
         await this.pointRenderer.loadShaderTxtCache(this.getCacheManager());
@@ -83,7 +91,8 @@ export default class RendererManager {
         [
             this.gltfSkinMeshRenderer,
             this.gltfMeshRenderer,
-            this.terrianRenderer,
+            this.terrainRenderer,
+            this.terrainCDLODRenderer,
             this.wireframeRenderer,
             this.skyboxRenderer,
             this.waterRenderer,
@@ -94,6 +103,7 @@ export default class RendererManager {
         });
         [
             this.sdfRenderer,
+            this.terrainDepthRenderer,
             this.lineRenderer,
         ].forEach(renderer => {
             renderer.setCamera(this.getCameraManager().getFrontgroundCamera());
@@ -117,7 +127,9 @@ export default class RendererManager {
             this.backSpriteRenderer,
             this.spriteRenderer,
             this.lineRenderer,
-            this.terrianRenderer,
+            this.terrainRenderer,
+            this.terrainDepthRenderer,
+            this.terrainCDLODRenderer,
             this.gltfMeshRenderer,
             this.wireframeRenderer,
             this.gltfSkinMeshRenderer,
@@ -146,8 +158,14 @@ export default class RendererManager {
     getMeshRenderer() {
         return this.gltfMeshRenderer;
     }
-    getTerrianRenderer() {
-        return this.terrianRenderer;
+    getTerrainRenderer() {
+        return this.terrainRenderer;
+    }
+    getTerrainDepthRenderer() {
+        return this.terrainDepthRenderer;
+    }
+    getTerrainCDLODRenderer() {
+        return this.terrainCDLODRenderer;
     }
     getWireframeRenderer() {
         return this.wireframeRenderer;

@@ -14,21 +14,25 @@ import SkyboxTexture from "../texture/SkyboxTexture.js";
 import ReflectTexture from "../texture/ReflectTexture.js";
 import WaterNormalTexture from "../texture/WaterNormalTexture.js";
 import WaterDistortionTexture from "../texture/WaterDistortionTexture.js";
-import TerrianTexture from "../texture/TerrianTexture.js";
+import TerrainTexture from "../texture/TerrainTexture.js";
 import GLTFManager from "./GLTFManager.js";
 import EagleJointTexture from "../texture/EagleJointTexture.js";
+import TerrainHeightTexture from "../texture/TerrainHeightTexture.js";
+import TerrainDiffuseTexture from "../texture/TerrainDiffuseTexture.js";
 
 
 export default class TextureManager {
     readonly defaultTexture = new DefaultTexture;
     readonly flowerTexture = new FlowerTexture;
-    readonly terrianTexture = new TerrianTexture;
+    readonly terrainTexture = new TerrainTexture;
     readonly waterNormalTexture = new WaterNormalTexture;
     readonly waterDistortionTexture = new WaterDistortionTexture;
     readonly jointTexture = new JointTexture;
     readonly eagleJointTexture = new EagleJointTexture;
     readonly skyboxTexture = new SkyboxTexture;
     readonly depthTexture = new DepthTexture;
+    readonly terrainHeightTexture = new TerrainHeightTexture;
+    readonly terrainDiffuseTexture = new TerrainDiffuseTexture;
     readonly waterDepthTexture = new DepthTexture;
     readonly pickTexture = new PickTexture;
     readonly renderTexture = new RenderTexture;
@@ -58,7 +62,9 @@ export default class TextureManager {
 
         const glContext= this.getDevice().getRenderingContext();
         this.defaultTexture.setContext(glContext);
-        this.terrianTexture.setContext(glContext);
+        this.terrainTexture.setContext(glContext);
+        this.terrainHeightTexture.setContext(glContext);
+        this.terrainDiffuseTexture.setContext(glContext);
         this.flowerTexture.setContext(glContext);
         this.waterDistortionTexture.setContext(glContext);
         this.waterNormalTexture.setContext(glContext);
@@ -80,6 +86,8 @@ export default class TextureManager {
         this.eagleJointTexture.setBindIndex(TextureBindIndex.Joint);
         this.skyboxTexture.setBindIndex(TextureBindIndex.Skybox);
         this.depthTexture.setBindIndex(TextureBindIndex.Depth);
+        this.terrainHeightTexture.setBindIndex(TextureBindIndex.Depth);
+        this.terrainDiffuseTexture.setBindIndex(TextureBindIndex.Default);
         this.waterDepthTexture.setBindIndex(TextureBindIndex.Depth);
         this.pickTexture.setBindIndex(TextureBindIndex.Pick);
         this.renderTexture.setBindIndex(TextureBindIndex.Render);
@@ -97,18 +105,18 @@ export default class TextureManager {
         this.flowerTexture.active();
         this.flowerTexture.bind();
         this.flowerTexture.generate(this.getCacheManager().getImage("flowers"));
-        this.terrianTexture.active();
-        this.terrianTexture.bind();
-        const terrianNode = this.getGLTFManager().islandGLTF.getNodeByIndex(49);
-        const meshIndex = terrianNode.getMesh();
+        this.terrainTexture.active();
+        this.terrainTexture.bind();
+        const terrainNode = this.getGLTFManager().islandGLTF.getNodeByIndex(49);
+        const meshIndex = terrainNode.getMesh();
         const materialIndex = this.getGLTFManager().islandGLTF.getMeshByIndex(meshIndex).getPrimitiveByIndex(0).getMaterial();
         const baseColorTexture = this.getGLTFManager().islandGLTF.getMaterialByIndex(materialIndex).getPbrMetallicRoughness().getBaseColorTexture();
         if (baseColorTexture === undefined) throw new Error("baseColorTexture is undefined");
-        baseColorTexture.setTexture(this.terrianTexture);
+        baseColorTexture.setTexture(this.terrainTexture);
         const baseColorTextureIndex = baseColorTexture.getIndex();
         const baseColorTextureSourceIndex = this.getGLTFManager().islandGLTF.getTextureByIndex(baseColorTextureIndex).getSource();
         const baseColorTextureImage = this.getGLTFManager().islandGLTF.getImageByIndex(baseColorTextureSourceIndex).getImage();
-        this.terrianTexture.generate(baseColorTextureImage);
+        this.terrainTexture.generate(baseColorTextureImage);
         this.skyboxTexture.active();
         this.skyboxTexture.bind();
         this.skyboxTexture.generate(this.getCacheManager().getSkybox("vz_clear_ocean"));
@@ -136,6 +144,14 @@ export default class TextureManager {
         this.waterDepthTexture.active();
         this.waterDepthTexture.bind();
         this.waterDepthTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
+        this.terrainHeightTexture.active();
+        this.terrainHeightTexture.bind();
+        this.terrainHeightTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
+
+        this.terrainDiffuseTexture.active();
+        this.terrainDiffuseTexture.bind();
+        this.terrainDiffuseTexture.generate(undefined, windowInfo.windowWidth * windowInfo.pixelRatio, windowInfo.windowHeight * windowInfo.pixelRatio);
 
     }
     initObservers() {

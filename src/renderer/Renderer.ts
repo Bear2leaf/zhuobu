@@ -8,8 +8,9 @@ import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
-import TerrianMesh from "../drawobject/TerrianMesh.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
 import EagleMesh from "../drawobject/EagleMesh.js";
+import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
 
 
 export default class Renderer {
@@ -130,10 +131,14 @@ export default class Renderer {
                 drawObject.getJointTexture().active();
                 drawObject.getJointTexture().bind();
                 this.getShader().setInteger("u_jointTexture", drawObject.getJointTexture().getBindIndex());
-            } else if (drawObject instanceof TerrianMesh) {
+            } else if (drawObject instanceof TerrainMesh) {
                 drawObject.getDepthTexture().active();
                 drawObject.getDepthTexture().bind();
                 this.getShader().setInteger("u_depthTexture", drawObject.getDepthTexture().getBindIndex());
+            } else if (drawObject instanceof TerrainCDLOD) {
+                drawObject.getDepthTexture().active();
+                drawObject.getDepthTexture().bind();
+                this.getShader().setInteger("u_texture7", drawObject.getDepthTexture().getBindIndex());
             }
             this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             drawObject.draw();

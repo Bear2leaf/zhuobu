@@ -4,8 +4,8 @@ import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import Skybox from "../drawobject/Skybox.js";
-import Terrian from "../drawobject/Terrian.js";
-import TerrianMesh from "../drawobject/TerrianMesh.js";
+import Terrain from "../drawobject/Terrain.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
 import Hamburger from "../layout/Hamburger.js";
 import RendererManager from "../manager/RendererManager.js";
 import DefaultSprite from "../sprite/DefaultSprite.js";
@@ -17,6 +17,8 @@ import EntitySubject from "../subject/EntitySubject.js";
 import Observer from "./Observer.js";
 import GLTFAnimationController from "../controller/GLTFAnimationController.js";
 import Mesh from "../drawobject/Mesh.js";
+import TerrainDepth from "../drawobject/TerrainDepth.js";
+import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
 
 export default class OnEntityRender extends Observer {
     private rendererManager?: RendererManager;
@@ -44,10 +46,14 @@ export default class OnEntityRender extends Observer {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(DefaultSprite));
             } else if (entity.has(Flowers)) {
                 this.rendererManager.getBackSpriteRenderer().addObject(entity.get(Flowers));
-            } else if (entity.has(Terrian)) {
-                this.rendererManager.getTerrianRenderer().addObject(entity.get(Terrian));
-            } else if (entity.has(TerrianMesh)) {
-                this.rendererManager.getTerrianRenderer().addObject(entity.get(TerrianMesh));
+            } else if (entity.has(Terrain)) {
+                this.rendererManager.getTerrainRenderer().addObject(entity.get(Terrain));
+            } else if (entity.has(TerrainDepth)) {
+                this.rendererManager.getTerrainDepthRenderer().addObject(entity.get(TerrainDepth));
+            } else if (entity.has(TerrainCDLOD)) {
+                this.rendererManager.getTerrainCDLODRenderer().addObject(entity.get(TerrainCDLOD));
+            } else if (entity.has(TerrainMesh)) {
+                this.rendererManager.getTerrainRenderer().addObject(entity.get(TerrainMesh));
             } else if (entity.has(RenderMap)) {
                 this.rendererManager.getSpriteRenderer().addObject(entity.get(RenderMap));
             } else if (entity.has(ReflectMap)) {

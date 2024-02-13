@@ -37,6 +37,7 @@ export default interface RenderingContext {
     clearRect(x: number, y: number, width: number, height: number): void;
     putText(text: string): void;
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void;
+    texImage2D_DEPTH32_Float_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void;
     texImage2D_RGBA_RGBA_Image(data: HTMLImageElement): void;
     texImage2D_RGBA_RGBA_Skybox(data: SkyboxArray): void;
@@ -44,6 +45,7 @@ export default interface RenderingContext {
     framebufferDepthTexture2D(textureIndex: number): void;
     framebufferPickTexture2D(textureIndex: number): void;
     framebufferRenderTexture2D(textureIndex: number): void;
+    framebufferDefaultTexture2D(textureIndex: number): void;
     framebufferReflectTexture2D(textureIndex: number): void;
     readPixels(x: number, y: number, width: number, height: number): Uint8Array;
     createFramebuffer(): number;

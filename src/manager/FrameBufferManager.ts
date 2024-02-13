@@ -4,12 +4,14 @@ import RenderFrameBufferObject from "../framebuffer/RenderFrameBufferObject.js";
 import Device from "../device/Device.js";
 import RendererManager from "./RendererManager.js";
 import EventManager from "./EventManager.js";
-import DepthFrameBufferObject from "../framebuffer/DepthFrameBufferObject.js";
+import ShadowFrameBufferObject from "../framebuffer/ShadowFrameBufferObject.js";
 import ReflectFrameBufferObject from "../framebuffer/ReflectFrameBufferObject.js";
+import TerrainFrameBufferObject from "../framebuffer/TerrainFrameBufferObject.js";
 
 
 export default class FrameBufferManager {
-    private readonly depthFrameBufferObject = new DepthFrameBufferObject;
+    private readonly shadowFrameBufferObject = new ShadowFrameBufferObject;
+    private readonly terrainFrameBufferObject = new TerrainFrameBufferObject;
     private readonly pickFrameBufferObject = new PickFrameBufferObject;
     private readonly renderFrameBufferObject = new RenderFrameBufferObject;
     private readonly reflectFrameBufferObject = new ReflectFrameBufferObject;
@@ -28,7 +30,8 @@ export default class FrameBufferManager {
     }
     initFramebuffer(): void {
         [
-            this.depthFrameBufferObject,
+            this.shadowFrameBufferObject,
+            this.terrainFrameBufferObject,
             this.pickFrameBufferObject,
             this.renderFrameBufferObject,
             this.reflectFrameBufferObject,
@@ -36,7 +39,9 @@ export default class FrameBufferManager {
             fbo.create(this.getDevice().getRenderingContext());
         });
 
-        this.depthFrameBufferObject.attach(this.getTextureManager().depthTexture);
+        this.shadowFrameBufferObject.attach(this.getTextureManager().depthTexture);
+        this.terrainFrameBufferObject.attach(this.getTextureManager().terrainHeightTexture);
+        this.terrainFrameBufferObject.attach(this.getTextureManager().terrainDiffuseTexture);
         this.pickFrameBufferObject.attach(this.getTextureManager().pickTexture);
         this.renderFrameBufferObject.attach(this.getTextureManager().waterDepthTexture);
         this.renderFrameBufferObject.attach(this.getTextureManager().renderTexture);
@@ -49,7 +54,7 @@ export default class FrameBufferManager {
         this.renderFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
-        this.getRendererManager().getTerrianRenderer().render();
+        this.getRendererManager().getTerrainRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
         this.renderFrameBufferObject.unbind();
@@ -60,7 +65,7 @@ export default class FrameBufferManager {
         this.reflectFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
-        this.getRendererManager().getTerrianRenderer().render();
+        this.getRendererManager().getTerrainRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
         this.reflectFrameBufferObject.unbind();
@@ -72,12 +77,18 @@ export default class FrameBufferManager {
         this.getRendererManager().getSDFRenderer().render();
         this.pickFrameBufferObject.unbind();
     }
-    processDepthFramebuffer(): void {
-        this.depthFrameBufferObject.bind();
+    processShadowFramebuffer(): void {
+        this.shadowFrameBufferObject.bind();
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkinMeshRenderer().renderShadow();
         this.getRendererManager().getMeshRenderer().renderShadow();
-        this.depthFrameBufferObject.unbind();
+        this.shadowFrameBufferObject.unbind();
+    }
+    processTerrainFramebuffer(): void {
+        this.terrainFrameBufferObject.bind();
+        this.getEventManager().onViewPortChange.notify();
+        this.getRendererManager().getTerrainDepthRenderer().render();
+        this.terrainFrameBufferObject.unbind();
     }
     getTextureManager() {
         if (this.textureManager === undefined) {

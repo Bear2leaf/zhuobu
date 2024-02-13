@@ -1,6 +1,27 @@
 import Game from "../worker/script/Game.js";
+import { WorkerResponse } from "../worker/script/WorkerMessageType.js";
 import Server from "./server.js";
+//@ts-ignore
+import { watch } from "fs";
 const server = new Server();
 server.init();
 const game = new Game();
-server.onMessage(game.onMessage.bind(game));
+
+server.onMessage((data, reply) => {
+    if (data === null) {
+        return;
+    }
+    game.onMessage(data, reply);
+    handler = reply;
+});
+
+let handler = (data: WorkerResponse[]) => { };
+watch("./dist", { recursive: true }, () => {
+    handler([{ type: "Refresh" }]);
+});
+watch("./resources", { recursive: true }, () => {
+    handler([{ type: "Refresh" }]);
+});
+watch("./index.html", () => {
+    handler([{ type: "Refresh" }]);
+});

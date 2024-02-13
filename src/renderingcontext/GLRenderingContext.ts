@@ -60,6 +60,9 @@ export default class GLRenderingContext implements RenderingContext {
     texImage2D_DEPTH24_UINT_NULL(width: number, height: number): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT24, width, height, 0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, null)
     }
+    texImage2D_DEPTH32_Float_NULL(width: number, height: number): void {
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT32F, width, height, 0, this.gl.DEPTH_COMPONENT, this.gl.FLOAT, null)
+    }
     texImage2D_RGBA_RGBA_NULL(width: number, height: number): void {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null)
     }
@@ -92,6 +95,11 @@ export default class GLRenderingContext implements RenderingContext {
         const gl = this.gl;
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT3, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
         this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1, this.gl.COLOR_ATTACHMENT2, this.gl.COLOR_ATTACHMENT3]);
+    }
+    framebufferDefaultTexture2D(textureIndex: number): void {
+        const gl = this.gl;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0]);
     }
     framebufferReflectTexture2D(textureIndex: number): void {
         const gl = this.gl;

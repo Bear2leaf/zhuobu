@@ -20,6 +20,12 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     bindSkyboxTexture(index?: number): unknown {
         throw new Error("Method not implemented.");
     }
+    framebufferDefaultTexture2D(textureIndex: number): void {
+        throw new Error("Method not implemented.");
+    }
+    texImage2D_DEPTH32_Float_NULL(width: number, height: number): void {
+        throw new Error("Method not implemented.");
+    }
     texImage2D_RGBA_RGBA_Skybox(data: SkyboxArray): void {
         throw new Error("Method not implemented.");
     }

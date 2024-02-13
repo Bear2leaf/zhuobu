@@ -7,10 +7,12 @@ import InformationObject from "../entity/InformationObject.js";
 import Message from "../drawobject/Message.js";
 import Hamburger from "../layout/Hamburger.js";
 import EnvironmentScene from "../scene/EnvironmentScene.js";
+import IslandDepthScene from "../scene/IslandDepthScene.js";
 
 export default class SceneManager {
     private readonly uiScene = new UIScene;
     private readonly islandScene = new IslandScene;
+    private readonly islandDepthScene = new IslandDepthScene;
     private readonly environmentScene = new EnvironmentScene;
     private eventManager?: EventManager;
     getEventManager(): EventManager {
@@ -24,34 +26,39 @@ export default class SceneManager {
     }
     registerEntities(): void {
         this.islandScene.registerEntities();
+        this.islandDepthScene.registerEntities();
         this.uiScene.registerEntities();
         this.environmentScene.registerEntities();
     }
     initSceneEntities(): void {
         this.islandScene.initEntities();
+        this.islandDepthScene.initEntities();
         this.uiScene.initEntities();
         this.environmentScene.initEntities();
         this.getEventManager().uiLayout.notify();
     }
     collectDrawObject(): void {
         this.islandScene.collectDrawObject();
-        this.environmentScene.collectDrawObject();
-        this.uiScene.collectDrawObject();
+        // this.environmentScene.collectDrawObject();
+        // this.uiScene.collectDrawObject();
     }
     collectRefractFramebufferObject() {
         this.islandScene.collectRefractDrawObject();
-        this.environmentScene.collectRefractDrawObject();
+        // this.environmentScene.collectRefractDrawObject();
     }
     collectReflectFramebufferObject() {
         this.islandScene.collectReflectDrawObject();
-        this.environmentScene.collectReflectDrawObject();
+        // this.environmentScene.collectReflectDrawObject();
     }
     collectPickFramebufferObject() {
-        this.uiScene.collectPickDrawObject();
+        // this.uiScene.collectPickDrawObject();
     }
-    collectDepthFramebufferObject() {
+    collectShadowFramebufferObject() {
         this.islandScene.collectDepthDrawObject();
-        this.environmentScene.collectDepthDrawObject();
+        // this.environmentScene.collectDepthDrawObject();
+    }
+    collecTerrainFramebufferObject() {
+        this.islandDepthScene.collectDrawObject();
     }
     toggleUIScene() {
         console.log("toggleUIScene");
@@ -81,6 +88,7 @@ export default class SceneManager {
         console.log("createMessageUI");
     }
     update() {
+        this.islandDepthScene.update();
         this.islandScene.update();
         this.environmentScene.update();
         this.uiScene.update();
@@ -94,6 +102,14 @@ export default class SceneManager {
     initSubjects() {
         const eventManager = this.getEventManager();
         this.islandScene.setEntitySubjects(
+            eventManager.entityInit,
+            eventManager.entityAdd,
+            eventManager.entityRegisterComponents,
+            eventManager.entityRender,
+            eventManager.entityUpdate,
+            eventManager.entityRemove
+        );
+        this.islandDepthScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
             eventManager.entityRegisterComponents,

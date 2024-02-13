@@ -8,8 +8,8 @@ import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
 import Skybox from "../drawobject/Skybox.js";
-import Terrian from "../drawobject/Terrian.js";
-import TerrianMesh from "../drawobject/TerrianMesh.js";
+import Terrain from "../drawobject/Terrain.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import Hamburger from "../layout/Hamburger.js";
 import GLTFManager from "../manager/GLTFManager.js";
@@ -26,6 +26,7 @@ import OnClick from "./OnClick.js";
 import EagleMesh from "../drawobject/EagleMesh.js";
 import ShipMesh from "../drawobject/ShipMesh.js";
 import TRS from "../transform/TRS.js";
+import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
 
 export default class OnEntityInit extends Observer {
     private gltfManager?: GLTFManager;
@@ -79,12 +80,15 @@ export default class OnEntityInit extends Observer {
                 entity.get(SDFCharacter).setTexture(this.textureManager.sdfTexture);
             } else if (entity.has(Flowers)) {
                 entity.get(Flowers).setTexture(this.textureManager.flowerTexture);
-            } else if (entity.has(Terrian)) {
-                entity.get(Terrian).setTexture(this.textureManager.defaultTexture);
-                entity.get(Terrian).setDepthTexture(this.textureManager.depthTexture);
-            } else if (entity.has(TerrianMesh)) {
-                entity.get(TerrianMesh).setTexture(this.textureManager.terrianTexture);
-                entity.get(TerrianMesh).setDepthTexture(this.textureManager.depthTexture);
+            } else if (entity.has(Terrain)) {
+                entity.get(Terrain).setTexture(this.textureManager.defaultTexture);
+                entity.get(Terrain).setDepthTexture(this.textureManager.depthTexture);
+            } else if (entity.has(TerrainMesh)) {
+                entity.get(TerrainMesh).setTexture(this.textureManager.terrainTexture);
+                entity.get(TerrainMesh).setDepthTexture(this.textureManager.depthTexture);
+            } else if (entity.has(TerrainCDLOD)) {
+                entity.get(TerrainCDLOD).setTexture(this.textureManager.terrainDiffuseTexture);
+                entity.get(TerrainCDLOD).setDepthTexture(this.textureManager.terrainHeightTexture);
             } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setTexture(this.textureManager.defaultTexture);
             } else if (entity.has(RenderMap)) {
@@ -125,6 +129,10 @@ export default class OnEntityInit extends Observer {
         if (entity.has(DrawObject)) {
             entity.all(DrawObject).forEach(drawobject => drawobject.initContextObjects());
         }
+        if (entity.has(TerrainCDLOD)) {
+            entity.get(TerrainCDLOD).create();
+            entity.get(TerrainCDLOD).createBuffers();
+        }
         if (entity.has(Mesh) && this.gltfManager) {
             if (entity.has(WhaleMesh)) {
                 entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF);
@@ -132,9 +140,9 @@ export default class OnEntityInit extends Observer {
                 entity.get(WhaleMesh).setAnimationIndex(2)
             } else if (entity.has(HelloWireframe)) {
                 entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF);
-            } else if (entity.has(TerrianMesh)) {
-                entity.get(TerrianMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(TerrianMesh).setNodeIndex(49);
+            } else if (entity.has(TerrainMesh)) {
+                entity.get(TerrainMesh).setGLTF(this.gltfManager.islandGLTF);
+                entity.get(TerrainMesh).setNodeIndex(49);
             } else if (entity.has(RockMesh)) {
                 entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF);
                 entity.get(RockMesh).setNodeIndex(this.rockCounter++);

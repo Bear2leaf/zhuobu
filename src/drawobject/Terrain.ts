@@ -5,7 +5,7 @@ import TRS from "../transform/TRS.js";
 import Node from "../transform/Node.js";
 import Texture from "../texture/Texture.js";
 
-export default class Terrian extends DrawObject {
+export default class Terrain extends DrawObject {
     private readonly tileNumber = 10;
     private readonly tileSize = 1;
     private readonly startHeight = -0.5;

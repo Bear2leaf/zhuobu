@@ -5,6 +5,10 @@ import { EventEmitter } from "node:events";
 //@ts-ignore
 import { createHash } from "crypto";
 //@ts-ignore
+import { readFile } from "fs";
+//@ts-ignore
+import path from "path";
+//@ts-ignore
 import { WorkerRequest, WorkerResponse } from '../worker/script/WorkerMessageType.js';
 enum OPCODES {
     text = 0x01,
@@ -14,15 +18,81 @@ enum OPCODES {
 export default class Server extends EventEmitter {
     private readonly PORT: number = 4000;
     private readonly GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-    private readonly server = createServer((req: Request, res: any) => {
-        const UPGRADE_REQUIRED = 426;
-        const body = STATUS_CODES[UPGRADE_REQUIRED];
-        res.writeHead(UPGRADE_REQUIRED, {
-            'Content-Type': 'text/plain',
-            'Upgrade': 'WebSocket',
-        });
-        res.end(body);
+    private readonly server = createServer((request: Request, response: any) => {
+        if (request.url.startsWith("/ws")) {
+            const UPGRADE_REQUIRED = 426;
+            const body = STATUS_CODES[UPGRADE_REQUIRED];
+            response.writeHead(UPGRADE_REQUIRED, {
+                'Content-Type': 'text/plain',
+                'Upgrade': 'WebSocket',
+            });
+            response.end(body);
+        }
+        else if (request.url === "/") {
+            this.read("./index.html", "text/html", response);
+        }
+        else if (request.url.startsWith("/worker")) {
+            const filePath = './dist' + request.url;
+            const contentType = 'text/javascript';
+            this.read(filePath, contentType, response);
+        }
+        else if (request.url.startsWith("/dist") || request.url.startsWith("/resources") || request.url.startsWith("/worker")) {
+            let filePath = '.' + request.url;
+            const extname = path.extname(filePath);
+            let contentType = 'text/html';
+            switch (extname) {
+                case '.sk':
+                case '.gltf':
+                    contentType = 'text/plain';
+                    break;
+                case '.js':
+                    contentType = 'text/javascript';
+                    break;
+                case '.css':
+                    contentType = 'text/css';
+                    break;
+                case '.json':
+                    contentType = 'application/json';
+                    break;
+                case '.png':
+                    contentType = 'image/png';
+                    break;
+                case '.jpg':
+                    contentType = 'image/jpg';
+                    break;
+                case '.wav':
+                    contentType = 'audio/wav';
+                    break;
+                case '.bin':
+                    contentType = 'application/octet-stream';
+                    break;
+            }
+            this.read(filePath, contentType, response);
+        }
+        else {
+            response.writeHead(404);
+            response.end();
+        }
     });
+    private read(filePath: string, contentType: string, response: any) {
+        readFile(filePath, function (error: any, content: string) {
+            if (error) {
+                if (error.code == 'ENOENT') {
+                    response.writeHead(404);
+                    response.end();
+                }
+                else {
+                    response.writeHead(500);
+                    response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
+                    response.end();
+                }
+            }
+            else {
+                response.writeHead(200, { 'Content-Type': contentType });
+                response.end(content, 'utf-8');
+            }
+        });
+    }
     private generateAcceptValue(acceptKey: string) {
         return createHash('sha1')
             .update(acceptKey + this.GUID, 'binary')

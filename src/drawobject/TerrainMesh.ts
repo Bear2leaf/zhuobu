@@ -2,7 +2,7 @@ import IslandGLTF from "../model/IslandGLTF.js";
 import Texture from "../texture/Texture.js";
 import Mesh from "./Mesh.js";
 
-export default class TerrianMesh extends Mesh {
+export default class TerrainMesh extends Mesh {
     private depthTexture?: Texture;
     setDepthTexture(texture: Texture) {
         this.depthTexture = texture;
