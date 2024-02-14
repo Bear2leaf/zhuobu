@@ -1,5 +1,5 @@
 import ArrayBufferCache from "../cache/ArrayBufferCache.js";
-import GLTFAccessor from "./GLTFAccessor.js";
+import GLTFAccessor, { glTypeToTypedArray } from "./GLTFAccessor.js";
 import GLTFAnimation from "./GLTFAnimation.js";
 import GLTFBuffer from "./GLTFBuffer.js";
 import GLTFBufferView from "./GLTFBufferView.js";
@@ -13,28 +13,11 @@ import GLTFScene from "./GLTFScene.js";
 import GLTFSkin from "./GLTFSkin.js";
 import GLTFTexture from "./GLTFTexture.js";
 import ImageCache from "../cache/ImageCache.js";
+import GLTFAsset from "./GLTFAsset.js";
 
-const glTypeToTypedArrayMap = {
-    '5120': Int8Array,    // gl.BYTE
-    '5121': Uint8Array,   // gl.UNSIGNED_BYTE
-    '5122': Int16Array,   // gl.SHORT
-    '5123': Uint16Array,  // gl.UNSIGNED_SHORT
-    '5124': Int32Array,   // gl.INT
-    '5125': Uint32Array,  // gl.UNSIGNED_INT
-    '5126': Float32Array, // gl.FLOAT
-};
-
-export type GLType = keyof typeof glTypeToTypedArrayMap;
-
-// Given a GL type return the TypedArray needed
-function glTypeToTypedArray(type: GLType) {
-    if (type in glTypeToTypedArrayMap) {
-        return glTypeToTypedArrayMap[type];
-    }
-    throw new Error(`no key: ${type}`);
-}
 export default class GLTF {
     private scene?: number;
+    private asset?: GLTFAsset;
     private scenes?: readonly GLTFScene[];
     private nodes?: readonly GLTFNode[];
     private buffers?: readonly GLTFBuffer[];
@@ -97,6 +80,7 @@ export default class GLTF {
         this.cameras = data.cameras?.map((camera) => new GLTFCamera(camera));
         this.animations = data.animations?.map((animation) => new GLTFAnimation(animation));
         this.skins = data.skins?.map((skin) => new GLTFSkin(skin));
+        this.asset = data.asset && new GLTFAsset(data.asset);
         this.extensionsUsed = data.extensionsUsed;
         this.extensionsRequired = data.extensionsRequired;
         this.extensions = data.extensions;
@@ -260,6 +244,24 @@ export default class GLTF {
             throw new Error(`node not found: ${index}`);
         }
         return node;
+    }
+    createAnimationBuffers(index: number) {
+        const animation = this.getAnimationByIndex(index);
+        animation.samplers.forEach((sampler) => {
+            const input = this.getDataByAccessorIndex(sampler.getInput());
+            const output = this.getDataByAccessorIndex(sampler.getOutput());
+            if (!(input instanceof Float32Array)) {
+                throw new Error("input is not Float32Array");
+            }
+            if (!(output instanceof Float32Array)) {
+                throw new Error("output is not Float32Array");
+            }
+            sampler.setInputBuffer(input);
+            sampler.setOutputBuffer(output);
+        });
+        animation.channels.forEach((channel) => {
+            channel.getTarget().setAnimationNode(this.getNodeByIndex(channel.getTarget().getNode()).getNode());
+        });
     }
 }
 

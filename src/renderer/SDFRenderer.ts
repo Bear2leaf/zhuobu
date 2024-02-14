@@ -1,5 +1,5 @@
 
-import { UniformBinding } from "../renderingcontext/RenderingContext.js";
+import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import { TextureBindIndex } from "../texture/Texture.js";
 import Renderer from "./Renderer.js";
 

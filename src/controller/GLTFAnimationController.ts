@@ -1,4 +1,3 @@
-import WhaleMesh from "../drawobject/WhaleMesh.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import GLTFAnimation from "../gltf/GLTFAnimation.js";
 import GLTFAnimationSampler from "../gltf/GLTFAnimationSampler.js";

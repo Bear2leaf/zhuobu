@@ -1,6 +1,6 @@
+import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";
 import { Tuple } from "../map/util.js";
-import { UniformBinding } from "../renderingcontext/RenderingContext.js";
 
 export default interface Shader {
     updateUniform(key: string, value: number): void;

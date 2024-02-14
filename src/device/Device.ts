@@ -1,4 +1,3 @@
-import WorkerManager from "../manager/WorkerManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
 

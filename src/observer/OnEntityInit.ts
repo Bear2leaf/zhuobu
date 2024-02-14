@@ -3,7 +3,6 @@ import { WindowInfo } from "../device/Device.js";
 import Border from "../drawobject/Border.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import RockMesh from "../drawobject/RockMesh.js";
-import HelloWireframe from "../drawobject/HelloWireframe.js";
 import Mesh from "../drawobject/Mesh.js";
 import Pointer from "../drawobject/Pointer.js";
 import SDFCharacter from "../drawobject/SDFCharacter.js";
@@ -12,7 +11,6 @@ import Terrain from "../drawobject/Terrain.js";
 import TerrainMesh from "../drawobject/TerrainMesh.js";
 import WhaleMesh from "../drawobject/WhaleMesh.js";
 import Hamburger from "../layout/Hamburger.js";
-import GLTFManager from "../manager/GLTFManager.js";
 import TextureManager from "../manager/TextureManager.js";
 import RenderingContext from "../renderingcontext/RenderingContext.js";
 import Flowers from "../sprite/Flowers.js";
@@ -27,16 +25,14 @@ import EagleMesh from "../drawobject/EagleMesh.js";
 import ShipMesh from "../drawobject/ShipMesh.js";
 import TRS from "../transform/TRS.js";
 import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
+import Entity from "../entity/Entity.js";
 
 export default class OnEntityInit extends Observer {
-    private gltfManager?: GLTFManager;
     private sdfCanvas?: SDFCanvas;
     private textureManager?: TextureManager;
     private renderingContext?: RenderingContext;
     private onClick?: OnClick;
     private windowInfo?: WindowInfo;
-    private rockCounter = 6;
-    private shipCounter = 1;
     setSDFCanvas(sdfCanvas: SDFCanvas) {
         this.sdfCanvas = sdfCanvas;
     }
@@ -49,9 +45,6 @@ export default class OnEntityInit extends Observer {
     setOnClick(onClick: OnClick) {
         this.onClick = onClick;
     }
-    setGLTFManager(gltfManager: GLTFManager) {
-        this.gltfManager = gltfManager;
-    }
     setWindowInfo(windowInfo: WindowInfo) {
         this.windowInfo = windowInfo;
     }
@@ -63,6 +56,7 @@ export default class OnEntityInit extends Observer {
             throw new Error("subject is not EntitySubject!");
         }
     }
+    initMesh?: (entity: Entity) => void;
 
     public notify(): void {
         const entity = this.getSubject().getEntity();
@@ -133,40 +127,8 @@ export default class OnEntityInit extends Observer {
             entity.get(TerrainCDLOD).create();
             entity.get(TerrainCDLOD).createBuffers();
         }
-        if (entity.has(Mesh) && this.gltfManager) {
-            if (entity.has(WhaleMesh)) {
-                entity.get(WhaleMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(WhaleMesh).setNodeIndex(47);
-                entity.get(WhaleMesh).setAnimationIndex(2)
-            } else if (entity.has(HelloWireframe)) {
-                entity.get(HelloWireframe).setGLTF(this.gltfManager.helloGLTF);
-            } else if (entity.has(TerrainMesh)) {
-                entity.get(TerrainMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(TerrainMesh).setNodeIndex(49);
-            } else if (entity.has(RockMesh)) {
-                entity.get(RockMesh).setGLTF(this.gltfManager.islandGLTF);
-                entity.get(RockMesh).setNodeIndex(this.rockCounter++);
-            } else if (entity.has(ShipMesh)) {
-                const counter  = this.shipCounter++;
-                const gltf = this.gltfManager.islandGLTF;
-                entity.all(ShipMesh).forEach((mesh, index) => {
-                    const primitives = gltf.getMeshByIndex(gltf.getNodeByIndex(counter).getMesh()).getPrimitives();
-                    if (index < primitives.length) {
-                        mesh.setPrimitiveIndex(index);
-                    }
-                    mesh.setGLTF(gltf);
-                    mesh.setNodeIndex(counter);
-                });
-                
-            } else if (entity.has(EagleMesh)) {
-                const allMeshs = entity.all(EagleMesh);
-                for (const mesh of allMeshs) {
-                    mesh.setGLTF(this.gltfManager.islandGLTF);
-                    mesh.setPrimitiveIndex(allMeshs.indexOf(mesh));
-                    mesh.setNodeIndex(39);
-                }
-            }
-            entity.all(Mesh).forEach(mesh => mesh.initMesh());
+        if (entity.has(Mesh)) {
+            this.initMesh!(entity)
         }
         if (entity.has(SDFCharacter)) {
             entity.get(SDFCharacter).create();

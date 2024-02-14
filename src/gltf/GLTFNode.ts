@@ -1,6 +1,5 @@
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";
-import GLTF from "./GLTF.js";
 
 export default class GLTFNode {
     private readonly name: string;
@@ -35,13 +34,6 @@ export default class GLTFNode {
 
     getChildrenIndices() {
         return this.children;
-    }
-    getChildrenNodes(gltf: GLTF) {
-        if (this.children === undefined) {
-            return []
-        } else {
-            return this.children.map((index) => gltf.getNodeByIndex(index));
-        }
     }
     getCamera(): number {
         if (this.camera === undefined) {

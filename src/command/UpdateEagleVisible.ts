@@ -7,6 +7,6 @@ export default class UpdateEagleVisible extends WorkerMessageCommand {
         this.visible = visible;
     }
     execute(): void {
-        this.getReceiver().getSubject().getSceneManager().getEnvironmentScene().setEagleVisible(this.visible);
+        this.getEnvironmentScene!().setEagleVisible(this.visible);
     }
 }

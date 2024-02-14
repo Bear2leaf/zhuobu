@@ -1,5 +1,4 @@
-import { UniformBinding } from "../renderingcontext/RenderingContext.js";
-import UniformBufferObject from "./UniformBufferObject.js";
+import UniformBufferObject, { UniformBinding } from "./UniformBufferObject.js";
 export default class GLUniformBufferObject implements UniformBufferObject {
     private readonly buffer: WebGLBuffer;
     private readonly gl: WebGL2RenderingContext;

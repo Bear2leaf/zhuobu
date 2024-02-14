@@ -1,4 +1,4 @@
-import ClickPickSubject from "../subject/ClickPick.js";
+import ClickPick from "../subject/ClickPick.js";
 import Click from "../subject/Click.js";
 import EntityInit from "../subject/EntityInit.js";
 import EntityAdd from "../subject/EntityAdd.js";
@@ -30,7 +30,7 @@ export default class EventManager {
     readonly entityRegisterComponents = new EntityRegisterComponents;
     readonly viewPortChange = new ViewPortChange;
     readonly click = new Click;
-    readonly clickPick = new ClickPickSubject;
+    readonly clickPick = new ClickPick;
     readonly workerMessage = new WorkerMessageSubject;
     readonly uiLayout = new UILayout;
     

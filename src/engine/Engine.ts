@@ -80,22 +80,23 @@ export default abstract class Engine {
     }
     buildDependency() {
         this.rendererManager.setEventManager(this.eventManager);
+        this.animationManager.setEventManager(this.eventManager);
         this.textureManager.setEventManager(this.eventManager);
         this.offscreencanvasManager.setEventManager(this.eventManager);
         this.cameraManager.setEventManager(this.eventManager);
         this.inputManager.setEventManager(this.eventManager);
-        this.animationManager.setEventManager(this.eventManager);
         this.gltfManager.setEventManager(this.eventManager);
+        this.framebufferManager.setEventManager(this.eventManager);
+        this.sceneManager.setEventManager(this.eventManager);
+        this.workerManager.setEventManager(this.eventManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.textureManager.setGLTFManager(this.gltfManager);
         this.offscreencanvasManager.setTextureManager(this.textureManager);
         this.framebufferManager.setTextureManager(this.textureManager);
         this.framebufferManager.setRendererManager(this.rendererManager);
-        this.framebufferManager.setEventManager(this.eventManager);
-        this.sceneManager.setEventManager(this.eventManager);
         this.rendererManager.setCacheManager(this.cacheManager);
         this.rendererManager.setSceneManager(this.sceneManager);
-        this.workerManager.setEventManager(this.eventManager);
+        this.animationManager.setCameraManager(this.cameraManager);
         this.rendererManager.setCameraManager(this.cameraManager);
         this.audioManager.setCacheManager(this.cacheManager);
         this.gltfManager.setSceneManager(this.sceneManager);

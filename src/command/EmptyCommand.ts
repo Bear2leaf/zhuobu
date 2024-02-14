@@ -1,7 +1,6 @@
 import WorkerMessageCommand from "./WorkerMessageCommand.js";
 
-export default class GameInit extends WorkerMessageCommand {
+export default class EmptyCommand extends WorkerMessageCommand {
     execute(): void {
-        this.loadInitScene!();
     }
 }

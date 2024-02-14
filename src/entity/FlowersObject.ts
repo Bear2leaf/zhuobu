@@ -1,4 +1,4 @@
-import Component from "./Component.js";
+import { Component } from "./Entity.js";
 import Flowers from "../sprite/Flowers.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

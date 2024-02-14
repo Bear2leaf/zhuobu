@@ -7,6 +7,6 @@ export default class UpdateResourceProgress extends WorkerMessageCommand {
         this.progress = progress;
     }
     execute(): void {
-        this.getReceiver().getSubject().getSceneManager().getEnvironmentScene().updateResourceProgress(this.progress);
+        this.getEnvironmentScene!().updateResourceProgress(this.progress);
     }
 }

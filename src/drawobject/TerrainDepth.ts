@@ -36,8 +36,8 @@ enum BiomeColor {
 
 export default class TerrainDepth extends DrawObject {
     private depthTexture?: Texture;
-    private readonly spacing = 32;
-    private readonly distanceRNG = new SeedableRandom(35);
+    private readonly spacing = 16;
+    private readonly distanceRNG = new SeedableRandom(40);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
     private readonly map = new Map(new TriangleMesh(new MeshBuilder({ boundarySpacing: this.spacing }).addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
@@ -116,8 +116,8 @@ export default class TerrainDepth extends DrawObject {
     }
     adjustHeight(height: number) {
 
-        // return smoothstep(-1.0, 1.0, Math.pow(height, 3)) * 2 - 1;
-        // return Math.pow(height, 3) / 2;
+        // return smoothstep(-1.0, 1.0, Math.pow(height, 3));
+        // return Math.pow(height, 3);
         return height;
     }
 }

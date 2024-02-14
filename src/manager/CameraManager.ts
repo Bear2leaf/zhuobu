@@ -4,6 +4,7 @@ import { DebugCamera } from "../camera/DebugCamera.js";
 import { BackgroundCamera } from "../camera/BackgroundCamera.js";
 import { UICamera } from "../camera/UICamera.js";
 import Device from "../device/Device.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
 import EventManager from "./EventManager.js";
 
 export default class CameraManager {
@@ -12,16 +13,9 @@ export default class CameraManager {
     private readonly uiCamera = new UICamera;
     private readonly frontgroundCamera = new FrontgroundCamera;
     private readonly backgroundCamera = new BackgroundCamera;
-    private eventManager?: EventManager;
     private device?: Device;
     async load(): Promise<void> { }
-    setDevice(device: Device) {
-        this.device = device;
-    }
-    getDevice(): Device {
-        if (!this.device) throw new Error("Device not set");
-        return this.device;
-    }
+    private eventManager?: EventManager;
     setEventManager(eventManager: EventManager) {
         this.eventManager = eventManager;
     }
@@ -30,6 +24,16 @@ export default class CameraManager {
             throw new Error("eventManager is undefined");
         }
         return this.eventManager;
+    }
+    initObservers() {
+        this.getEventManager().onEntityUpdate.updateTerrainMesh = this.updateTerrainMesh.bind(this);
+    }
+    setDevice(device: Device) {
+        this.device = device;
+    }
+    getDevice(): Device {
+        if (!this.device) throw new Error("Device not set");
+        return this.device;
     }
     initCamera(): void {
         const device = this.getDevice();
@@ -46,8 +50,29 @@ export default class CameraManager {
         this.frontgroundCamera.init();
         this.backgroundCamera.init();
     }
-    initObservers() {
-        this.getEventManager().onEntityUpdate.setCameraManager(this);
+
+    updateTerrainMesh(terrainMesh: TerrainMesh) {
+        const gltf = terrainMesh.getGLTF();
+        const cameraNode = gltf.getNodeByName("Camera");
+        if (!cameraNode) {
+            throw new Error("camera node not found");
+        }
+        const camera = gltf.getCameraByIndex(cameraNode.getCamera());
+        const cameraTarget = gltf.getCameraTarget();
+        const aspect = camera.getPerspective().getAspectRatio();
+        const fov = camera.getPerspective().getYFov();
+        const near = camera.getPerspective().getZNear();
+        const far = camera.getPerspective().getZFar();
+
+        const trs = cameraNode.getNode().getSource();
+        if (!trs) {
+            throw new Error("trs not found");
+        }
+        const targetSource = cameraTarget.getNode().getSource();
+        if (!targetSource) {
+            throw new Error("targetSource not found");
+        }
+        this.getMainCamera().fromGLTF(targetSource.getPosition(), trs.getPosition(), fov, near, far);
     }
     getMainCamera() { return this.mainCamera; }
     getDebugCamera() { return this.debugCamera; }

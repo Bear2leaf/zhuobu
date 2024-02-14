@@ -48,7 +48,7 @@ export default class Mesh extends DrawObject {
         if (entity.has(GLTFAnimationController)) {
 
             const animation = gltf.getAnimationByIndex(this.getAnimationIndex());
-            animation.createBuffers(gltf);
+            gltf.createAnimationBuffers(this.getAnimationIndex());
             entity.get(GLTFAnimationController).setAnimationData(
                 animation
             );

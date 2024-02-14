@@ -1,3 +1,12 @@
+import AddMessage from "../command/AddMessage.js";
+import CreateMessageUI from "../command/CreateMessageUI.js";
+import EmptyCommand from "../command/EmptyCommand.js";
+import GameInit from "../command/GameInit.js";
+import ToggleUICommand from "../command/ToggleUICommand.js";
+import UpdateEagleVisible from "../command/UpdateEagleVisible.js";
+import UpdateResourceProgress from "../command/UpdateResourceProgress.js";
+import UpdateStatus from "../command/UpdateStatus.js";
+import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
 import Device from "../device/Device.js";
 import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
 import EventManager from "./EventManager.js";
@@ -30,43 +39,48 @@ export default class WorkerManager {
 
             switch (workerResponse.type) {
                 case "Pong":
+                    this.getEventManager().workerMessage.setCommand(new EmptyCommand());
                     break;
                 case "WorkerInit":
                     this.postMessage({ type: "Ping", args: ["Hello"] })
+                    this.getEventManager().workerMessage.setCommand(new EmptyCommand());
                     break;
                 case "Refresh":
                     this.getDevice().reload();
+                    this.getEventManager().workerMessage.setCommand(new EmptyCommand());
                     break;
                 case "Reconnect":
                     this.postMessage({ type: "EngineInit" });
+                    this.getEventManager().workerMessage.setCommand(new EmptyCommand());
                     break;
                 case "ToggleUI":
-                    this.getEventManager().workerMessage.notifyToggleUI();
+                    this.getEventManager().workerMessage.setCommand(new ToggleUICommand());
                     break;
                 case "CreateMessageUI":
-                    this.getEventManager().workerMessage.notifyCreateMessageUI();
+                    this.getEventManager().workerMessage.setCommand(new CreateMessageUI());
                     break;
                 case "GameInit":
-                    this.getEventManager().workerMessage.notifyGameInit();
+                    this.getEventManager().workerMessage.setCommand(new GameInit());
                     break;
                 case "AddMessage":
-                    this.getEventManager().workerMessage.notifyAddMessage(workerResponse.args[0]);
+                    this.getEventManager().workerMessage.setCommand(new AddMessage(workerResponse.args[0]));
                     break;
                 case "UpdateStatus":
-                    this.getEventManager().workerMessage.notifyUpdateStatus(workerResponse.args[0]);
+                    this.getEventManager().workerMessage.setCommand(new UpdateStatus(workerResponse.args[0]));
                     break;
                 case "UpdateEagleVisible":
-                    this.getEventManager().workerMessage.notifyUpdateEagleVisible(workerResponse.args[0]);
+                    this.getEventManager().workerMessage.setCommand(new UpdateEagleVisible(workerResponse.args[0]));
                     break;
                 case "UpdateWhalesVisible":
-                    this.getEventManager().workerMessage.notifyUpdateWhalesVisible(workerResponse.args[0]);
+                    this.getEventManager().workerMessage.setCommand(new UpdateWhalesVisible(workerResponse.args[0]));
                     break;
                 case "UpdateResourceProgress":
-                    this.getEventManager().workerMessage.notifyUpdateResourceProgress(workerResponse.args[0]);
+                    this.getEventManager().workerMessage.setCommand(new UpdateResourceProgress(workerResponse.args[0]));
                     break;
                 default:
                     throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
             }
+            this.getEventManager().workerMessage.notify();
         }
     }
     setDevice(device: Device) {
@@ -87,7 +101,8 @@ export default class WorkerManager {
         this.postMessage({ type: "EngineInit" });
     }
     initObservers() {
-        this.getEventManager().clickPick.setWorkerManager(this);
+        this.getEventManager().onClickPick.onExplorePicked = () => this.onExplorePicked();
+        this.getEventManager().onClickPick.onRestPicked = () => this.onRestPicked();
     }
     onExplorePicked() {
         this.postMessage({ type: "Explore" });

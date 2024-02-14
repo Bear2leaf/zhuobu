@@ -1,5 +1,3 @@
-import Component from "./Component.js";
-
 export default abstract class Entity {
     private readonly objects: Component[] = [];
     abstract addDefaultComponents(): void;
@@ -42,4 +40,17 @@ export default abstract class Entity {
     }
 
 
+}
+
+export abstract class Component {
+    private entity?: Entity;
+    setEntity(entity: Entity) {
+        this.entity = entity;
+    }
+    getEntity() {
+        if (!this.entity) {
+            throw new Error("entity not exist");
+        }
+        return this.entity;
+    }
 }

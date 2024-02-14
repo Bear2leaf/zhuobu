@@ -1,4 +1,4 @@
-import Component from "./Component.js";
+import { Component } from "./Entity.js";
 import Node from "../transform/Node.js";
 import FrontgroundFrame from "../wireframe/FrontgroundFrame.js";
 import TRS from "../transform/TRS.js";

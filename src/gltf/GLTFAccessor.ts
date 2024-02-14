@@ -1,5 +1,23 @@
-import { GLType } from "./GLTF.js";
 
+const glTypeToTypedArrayMap = {
+    '5120': Int8Array,    // gl.BYTE
+    '5121': Uint8Array,   // gl.UNSIGNED_BYTE
+    '5122': Int16Array,   // gl.SHORT
+    '5123': Uint16Array,  // gl.UNSIGNED_SHORT
+    '5124': Int32Array,   // gl.INT
+    '5125': Uint32Array,  // gl.UNSIGNED_INT
+    '5126': Float32Array, // gl.FLOAT
+};
+
+export type GLType = keyof typeof glTypeToTypedArrayMap;
+
+// Given a GL type return the TypedArray needed
+export function glTypeToTypedArray(type: GLType) {
+    if (type in glTypeToTypedArrayMap) {
+        return glTypeToTypedArrayMap[type];
+    }
+    throw new Error(`no key: ${type}`);
+}
 const accessorTypeToNumComponentsMap = {
     'SCALAR': 1,
     'VEC2': 2,

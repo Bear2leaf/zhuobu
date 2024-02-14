@@ -1,6 +1,5 @@
 import Pointer from "../drawobject/Pointer.js";
 import InputSubject from "../subject/InputSubject.js";
-import ClickPickSubject from "../subject/ClickPick.js";
 import Observer from "./Observer.js";
 
 export default class OnClick extends Observer {
@@ -15,7 +14,7 @@ export default class OnClick extends Observer {
     setPointer(pointer: Pointer) {
         this.pointer = pointer;
     }
-    setChainNext(clickPick: ClickPickSubject) {
+    setChainNext(clickPick: InputSubject) {
         this.next = clickPick;
     }
     public notify(): void {

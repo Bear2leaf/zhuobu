@@ -7,6 +7,6 @@ export default class AddMessage extends WorkerMessageCommand {
         this.message = message;
     }
     execute(): void {
-        this.getReceiver().getSubject().getSceneManager().addMessage(this.message);
+        this.addMessage!(this.message);
     }
 }

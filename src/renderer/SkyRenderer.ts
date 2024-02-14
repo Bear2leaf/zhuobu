@@ -1,10 +1,7 @@
 import { MainCamera } from "../camera/MainCamera.js";
+import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import Matrix from "../geometry/Matrix.js";
-import { Vec4 } from "../geometry/Vector.js";
 import { Tuple } from "../map/util.js";
-import { UniformBinding } from "../renderingcontext/RenderingContext.js";
-import Node from "../transform/Node.js";
-import TRS from "../transform/TRS.js";
 import Renderer from "./Renderer.js";
 
 export class SkyRenderer extends Renderer {

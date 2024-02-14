@@ -1,18 +1,8 @@
-import WorkerMessageCommand from "../command/WorkerMessageCommand.js";
-import ToggleUICommand from "../command/ToggleUICommand.js";
 import Subject from "./Subject.js";
-import CreateMessageUI from "../command/CreateMessageUI.js";
-import GameInit from "../command/GameInit.js";
-import AddMessage from "../command/AddMessage.js";
-import SceneManager from "../manager/SceneManager.js";
-import UpdateStatus from "../command/UpdateStatus.js";
-import UpdateEagleVisible from "../command/UpdateEagleVisible.js";
-import UpdateResourceProgress from "../command/UpdateResourceProgress.js";
-import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
+import WorkerMessageCommand from "../command/WorkerMessageCommand.js";
 
 export default class WorkerMessageSubject extends Subject {
     private command?: WorkerMessageCommand;
-    private sceneManager?: SceneManager;
     setCommand(command: WorkerMessageCommand): void {
         this.command = command;
     }
@@ -21,47 +11,6 @@ export default class WorkerMessageSubject extends Subject {
             throw new Error("command is undefined!");
         }
         return this.command;
-    }
-    setSceneManager(sceneManager: SceneManager) {
-        this.sceneManager = sceneManager;
-    }
-    getSceneManager(): SceneManager {
-        if (!this.sceneManager) {
-            throw new Error("sceneManager is undefined!");
-        }
-        return this.sceneManager;
-    }
-    notifyToggleUI(): void {
-        this.setCommand(new ToggleUICommand());
-        this.notify();
-    }
-    notifyCreateMessageUI(): void {
-        this.setCommand(new CreateMessageUI());
-        this.notify();
-    }
-    notifyGameInit() {
-        this.setCommand(new GameInit());
-        this.notify();
-    }
-    notifyAddMessage(message: string) {
-        this.setCommand(new AddMessage(message));
-        this.notify();
-    }
-    notifyUpdateStatus(message: string) {
-        this.setCommand(new UpdateStatus(message));
-        this.notify();
-    }
-    notifyUpdateResourceProgress(progress: number) {
-        this.setCommand(new UpdateResourceProgress(progress));
-        this.notify();
-    }
-    notifyUpdateEagleVisible(visible: boolean) {
-        this.setCommand(new UpdateEagleVisible(visible));
-        this.notify();
-    }
-    notifyUpdateWhalesVisible(visible: boolean) {
-        this.setCommand(new UpdateWhalesVisible(visible));
-        this.notify();
     }
     public notify(): void {
         super.notify();

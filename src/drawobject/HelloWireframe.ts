@@ -25,7 +25,7 @@ export default class HelloWireframe extends Mesh {
         );
         if (entity.has(GLTFAnimationController)) {
             const animation = gltf.getAnimationByIndex(this.getAnimationIndex());
-            animation.createBuffers(gltf);
+            gltf.createAnimationBuffers(this.getAnimationIndex());
             entity.get(GLTFAnimationController).setAnimationData(
                 animation
             );

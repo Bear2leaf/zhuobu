@@ -1,4 +1,4 @@
-import Component from "../entity/Component.js";
+import { Component } from "../entity/Entity.js";
 
 
 export default class SingleColorCanvasMap extends Component {

@@ -1,5 +1,5 @@
 import Matrix from "../geometry/Matrix.js";
-import Component from "../entity/Component.js";
+import { Component } from "../entity/Entity.js";
 import TRS from "./TRS.js";
 
 export default class Node extends Component {

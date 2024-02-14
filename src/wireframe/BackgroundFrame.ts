@@ -1,5 +1,5 @@
 import Matrix from "../geometry/Matrix.js";
-import Component from "../entity/Component.js";
+import { Component } from "../entity/Entity.js";
 import Node from "../transform/Node.js";
 import VisualizeCamera from "./VisualizeCamera.js";
 import TRS from "../transform/TRS.js";

@@ -93,7 +93,8 @@ void main() {
     vec2 position = origin * u_scale + u_offset + worldOffset.xz;
     position = calculateNoMorphNeighbour(position, morphK);
     position = clamp(position, -0.9f, 0.9f);
-    float height = texture(u_texture7, position * 0.5f + 0.5f).r * 2.0f - 1.0f;
+    float height = texture(u_texture7, position * 0.5f + 0.5f).r;
+    height = height * 2.0f - 1.0f;
     // float height = textureLod(u_texture7, position * 0.5f + 0.5f, log2(1.0f / u_scale)).r - 0.5f;
     // float height = 0.0f;
     v_color = a_color;

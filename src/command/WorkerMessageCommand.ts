@@ -1,16 +1,13 @@
-import OnWorkerMessage from "../observer/OnWorkerMessage.js";
-import { Command } from "./Command.js";
+import InformationObject from "../entity/InformationObject.js";
+import EnvironmentScene from "../scene/EnvironmentScene.js";
+import Command from "./Command.js";
 
-export default abstract class WorkerMessageCommand implements Command {
-    private receiver?: OnWorkerMessage;
-    setReceiver(receiver: OnWorkerMessage): void {
-        this.receiver = receiver;
-    }
-    getReceiver(): OnWorkerMessage {
-        if (!this.receiver) {
-            throw new Error("receiver is undefined!");
-        }
-        return this.receiver;
-    }
-    abstract execute(): void ;
+export default class WorkerMessageCommand extends Command {
+    toggleUIScene?: () => void
+    addMessage?: (message: string) => void;
+    updateStatus?: (message: string) => void;
+    getInformationObject?: () => InformationObject;
+    getEnvironmentScene?: () => EnvironmentScene;
+    loadInitScene?: () => void;
+    createMessageUI?: () => void;
 }

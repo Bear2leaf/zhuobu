@@ -1,12 +1,10 @@
 import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
-import WorkerManager from "../manager/WorkerManager.js";
 import UIScene from "../scene/UIScene.js";
 import InputSubject from "./InputSubject.js";
 
-export default class ClickPickSubject extends InputSubject {
+export default class ClickPick extends InputSubject {
     private frameBufferObject?: PickFrameBufferObject;
     private uiScene?: UIScene;
-    private workerManager?: WorkerManager;
     setUIScene(uiScene: UIScene) {
         this.uiScene = uiScene;
     }
@@ -20,12 +18,5 @@ export default class ClickPickSubject extends InputSubject {
     }
     setFrameBufferObject(frameBufferObject: PickFrameBufferObject) {
         this.frameBufferObject = frameBufferObject;
-    }
-    setWorkerManager(workerManager: WorkerManager) {
-        this.workerManager = workerManager;
-    }
-    getWorkerManager() {
-        if (!this.workerManager) throw new Error("workerManager is not set!");
-        return this.workerManager;
     }
 }

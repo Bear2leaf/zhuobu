@@ -1,12 +1,12 @@
-import ClickPickSubject from "../subject/ClickPick.js";
+import ClickPick from "../subject/ClickPick.js";
 import Observer from "./Observer.js";
 
 export default class OnClickPick extends Observer {
-    getSubject(): ClickPickSubject {
-        if (!(super.getSubject() instanceof ClickPickSubject)) {
+    getSubject(): ClickPick {
+        if (!(super.getSubject() instanceof ClickPick)) {
             throw new Error("subject is not ClickPickSubject!");
         }
-        return super.getSubject() as ClickPickSubject;
+        return super.getSubject() as ClickPick;
     }
     public notify(): void {
         const fbo = this.getSubject().getFrameBufferObject();
@@ -27,10 +27,13 @@ export default class OnClickPick extends Observer {
         //     restPicked
         // });
         if (explorePicked) {
-            this.getSubject().getWorkerManager().onExplorePicked();
+            this.onExplorePicked!();
         } else if (restPicked) {
-            this.getSubject().getWorkerManager().onRestPicked();
+            this.onRestPicked!();
         }
     }
+
+    public onExplorePicked?: () => void;
+    public onRestPicked?: () => void;
 
 }

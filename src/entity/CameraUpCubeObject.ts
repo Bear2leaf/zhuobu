@@ -1,4 +1,4 @@
-import Component from "./Component.js";
+import { Component } from "./Entity.js";
 import Node from "../transform/Node.js";
 import CameraUpCube from "../drawobject/CameraUpCube.js";
 import Entity from "./Entity.js";

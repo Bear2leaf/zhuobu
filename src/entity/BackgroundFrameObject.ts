@@ -1,5 +1,5 @@
 import BackgroundFrame from "../wireframe/BackgroundFrame.js";
-import Component from "./Component.js";
+import { Component } from "./Entity.js";
 import DrawObject from "../drawobject/DrawObject.js";
 import Node from "../transform/Node.js";
 import TRS from "../transform/TRS.js";

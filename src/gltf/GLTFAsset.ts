@@ -1,9 +1,9 @@
 export default class GLTFAsset {
     private readonly version: string;
     private readonly generator: string;
-    constructor(version: string, generator: string) {
-        this.version = version;
-        this.generator = generator;
+    constructor(data: GLTFAsset) {
+        this.version = data.version;
+        this.generator = data.generator;
     }
 
 }

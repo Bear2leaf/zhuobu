@@ -7,6 +7,6 @@ export default class UpdateStatus extends WorkerMessageCommand {
         this.message = message;
     }
     execute(): void {
-        this.getReceiver().getSubject().getSceneManager().updateStatus(this.message);
+        this.updateStatus!(this.message);
     }
 }

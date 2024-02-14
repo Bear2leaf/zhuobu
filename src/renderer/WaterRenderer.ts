@@ -1,5 +1,5 @@
 import { MainCamera } from "../camera/MainCamera.js";
-import { UniformBinding } from "../renderingcontext/RenderingContext.js";
+import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import Water from "../sprite/Water.js";
 import Renderer from "./Renderer.js";
 

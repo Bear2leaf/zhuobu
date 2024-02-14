@@ -1,6 +1,5 @@
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import { Tuple } from "../map/util.js";
-import TerrainCDLODRenderer from "../renderer/TerrainCDLODRenderer.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
 import DrawObject from "./DrawObject.js";
@@ -14,6 +13,12 @@ enum Edge {
 };
 export default class TerrainCDLOD extends DrawObject {
     private depthTexture?: Texture;
+    tiles: number = 0;
+    readonly TILE_RESOLUTION = 64;
+    readonly TILE_LEVEL = 4;
+    readonly scales: number[] = [];
+    readonly offsets: Tuple<number, 2>[] = [];
+    readonly edges: Edge[] = [];
     setDepthTexture(texture: Texture) {
         this.depthTexture = texture;
     }
@@ -26,61 +31,6 @@ export default class TerrainCDLOD extends DrawObject {
     initContextObjects(): void {
         super.initContextObjects();
         this.setPrimitive(this.getRenderingContext().makePrimitive(PrimitiveType.TRIANGLES))
-    }
-    private readonly TILE_RESOLUTION = 64;
-    private readonly TILE_LEVEL = 4;
-    private tiles: number = 0;
-    private scales: number[] = [];
-    private offsets: Tuple<number, 2>[] = [];
-    private edges: Edge[] = [];
-    drawByRenderer(renderer: TerrainCDLODRenderer) {
-        const perspective: Tuple<number, 4> = [Math.PI / 4, 1, 0.01, 100];
-        const up: Tuple<number, 3> = [0, 1, 0];
-        const target: Tuple<number, 3> = [0, 0, 0];
-        // const eye: Tuple<number, 3> = [0 , 0.0, -1 ];
-        const eye: Tuple<number, 3> = [1, 0, 1];
-        this.updatePerspective(renderer, ...perspective);
-        this.updateLookAt(renderer, eye, target, up);
-        renderer.getShader().updateUniform("u_resolution", this.TILE_RESOLUTION);
-        renderer.getShader().updateUniform("u_lightDirection", [1, 1, 1]);
-        this.getTexture().active();
-        this.getTexture().bind();
-        renderer.getShader().updateUniform("u_texture", this.getTexture().getBindIndex());
-        this.getDepthTexture().active();
-        this.getDepthTexture().bind();
-        renderer.getShader().updateUniform("u_texture7", this.getDepthTexture().getBindIndex());
-        const model: Tuple<number, 16> = [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1,
-        ];
-        renderer.getShader().updateUniform("u_model", model);
-        const context = this.getRenderingContext();
-        this.bind();
-        for (let i = 0; i < this.tiles; i++) {
-            const scale = this.scales[i];
-            const offset = this.offsets[i];
-            const edge = this.edges[i];
-            renderer.getShader().updateUniform("u_scale", scale);
-            renderer.getShader().updateUniform("u_offset", offset);
-            renderer.getShader().updateUniform("u_edge", edge);
-            this.draw();
-
-            // context.drawArrays(context.LINES, 0, this.TILE_RESOLUTION * this.TILE_RESOLUTION * 6);
-        }
-
-    }
-    updateLookAt(renderer: TerrainCDLODRenderer, eye: Tuple<number, 3>, target: Tuple<number, 3>, up: Tuple<number, 3>) {
-        renderer.getShader().updateUniform("u_up", up);
-        renderer.getShader().updateUniform("u_eye", eye);
-        renderer.getShader().updateUniform("u_target", target);
-    }
-    updatePerspective(renderer: TerrainCDLODRenderer, fov: number, aspect: number, near: number, far: number) {
-        renderer.getShader().updateUniform("u_perspective", [fov, aspect, near, far]);
-    }
-    updateLightDirection(renderer: TerrainCDLODRenderer, lightDirection: Tuple<number, 3>) {
-        renderer.getShader().updateUniform("u_lightDirection", lightDirection);
     }
     createBuffers() {
         const subdivided: number[] = [];

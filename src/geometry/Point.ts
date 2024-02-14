@@ -1,5 +1,4 @@
-import { Vec2, Vec4 } from "./Vector.js";
-import LineSegment from "./LineSegment.js";
+import { Vec4 } from "./Vector.js";
 
 export default class Point {
     private readonly x: number;
@@ -22,9 +21,6 @@ export default class Point {
     }
     equels(a: Point): boolean {
         return this.x === a.x && this.y === a.y && this.z === a.z && this.w === a.w;
-    }
-    lineTo(point: Point): LineSegment {
-        return new LineSegment(this, point);
     }
     appendTo(vertices?: Vec4[], colors?: Vec4[], indices?: number[], texcoords?: Vec4[]): void {
         vertices?.push(...this.vertices);

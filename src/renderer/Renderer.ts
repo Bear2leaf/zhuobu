@@ -1,10 +1,10 @@
 import Camera from "../camera/Camera.js";
 import Shader from "../shader/Shader.js";
 import CacheManager from "../manager/CacheManager.js";
-import RenderingContext, { UniformBinding } from "../renderingcontext/RenderingContext.js";
+import RenderingContext from "../renderingcontext/RenderingContext.js";
 import SceneManager from "../manager/SceneManager.js";
 import DrawObject from "../drawobject/DrawObject.js";
-import UniformBufferObject from "../contextobject/UniformBufferObject.js";
+import UniformBufferObject, { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import SkinMesh from "../drawobject/SkinMesh.js";
 import Matrix from "../geometry/Matrix.js";
 import { Vec3, Vec4 } from "../geometry/Vector.js";

@@ -1,7 +1,7 @@
 import { WindowInfo, TouchInfo } from "../device/Device.js";
-import { Command } from "./Command.js";
+import Command from "./Command.js";
 
-export default class TouchCommand implements Command {
+export default class TouchCommand extends Command {
     private touchInfo?: TouchInfo;
     private windowInfo?: WindowInfo;
     setTouchInfo(touchInfo?: TouchInfo) {

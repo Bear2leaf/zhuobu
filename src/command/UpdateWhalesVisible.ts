@@ -7,6 +7,6 @@ export default class UpdateWhalesVisible extends WorkerMessageCommand {
         this.visible = visible;
     }
     execute(): void {
-        this.getReceiver().getSubject().getSceneManager().getEnvironmentScene().setWhalesVisible(this.visible);
+        this.getEnvironmentScene!().setWhalesVisible(this.visible);
     }
 }

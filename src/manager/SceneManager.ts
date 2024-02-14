@@ -96,7 +96,7 @@ export default class SceneManager {
     initObservers() {
         const eventManager = this.getEventManager();
         eventManager.clickPick.setUIScene(this.uiScene);
-        eventManager.workerMessage.setSceneManager(this);
+        eventManager.onWorkerMessage.setSceneManager(this);
         eventManager.uiLayout.setUIScene(this.uiScene);
     }
     initSubjects() {

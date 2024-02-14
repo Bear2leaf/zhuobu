@@ -1,11 +1,11 @@
-import RenderingContext, { ArrayBufferIndex, UniformBinding } from "../renderingcontext/RenderingContext.js";
+import RenderingContext, { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import ArrayBufferObject from "../contextobject/ArrayBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
-import Component from "../entity/Component.js";
+import { Component } from "../entity/Entity.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import Texture from "../texture/Texture.js";
 import { Vec4 } from "../geometry/Vector.js";
-import UniformBufferObject from "../contextobject/UniformBufferObject.js";
+import UniformBufferObject, { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import Node from "../transform/Node.js";
 
 

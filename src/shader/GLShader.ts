@@ -1,5 +1,5 @@
+import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import { flatten, Vec3, Vec4 } from "../geometry/Vector.js";
-import { UniformBinding as UniformBinding } from "../renderingcontext/RenderingContext.js";
 import Shader from "./Shader.js";
 
 export default class GLShader implements Shader {
