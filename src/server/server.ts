@@ -36,6 +36,12 @@ export default class Server extends EventEmitter {
             const contentType = 'text/javascript';
             this.read(filePath, contentType, response);
         }
+        else if (request.url.startsWith("/webcomponent")) {
+            const contentType = 'text/html';
+            const component = request.url.split("/webcomponent/")[1].toLowerCase();
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(`<script src="/dist/webcomponent/main.js" type="module"></script>\n<${component}></${component}>`, 'utf-8');
+        }
         else if (request.url.startsWith("/dist") || request.url.startsWith("/resources") || request.url.startsWith("/worker")) {
             let filePath = '.' + request.url;
             const extname = path.extname(filePath);

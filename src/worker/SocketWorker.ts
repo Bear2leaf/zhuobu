@@ -44,7 +44,7 @@ export default class SocketWorker extends Worker {
             this.connectWebsocket();
         }, this.interval);
     }
-    postMessage(data: WorkerResponse[]): void {
+    postMessage: (data: WorkerResponse[])=> void = (data) => {
         self.postMessage(data);
     }
 

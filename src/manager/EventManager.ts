@@ -19,6 +19,8 @@ import WorkerMessageSubject from "../subject/WorkerMessageSubject.js";
 import OnWorkerMessage from "../observer/OnWorkerMessage.js";
 import UILayout from "../subject/UILayout.js";
 import OnUILayout from "../observer/OnUILayout.js";
+import CameraFovChange from "../subject/CameraFovChange.js";
+import OnCameraFovChange from "../observer/OnCameraFovChange.js";
 
 
 export default class EventManager {
@@ -33,6 +35,7 @@ export default class EventManager {
     readonly clickPick = new ClickPick;
     readonly workerMessage = new WorkerMessageSubject;
     readonly uiLayout = new UILayout;
+    readonly cameraFovChange = new CameraFovChange;
     
     readonly onEntityRegisterComponents = new OnEntityRegisterComponents;
     readonly onEntityUpdate = new OnEntityUpdate;
@@ -44,6 +47,7 @@ export default class EventManager {
     readonly onViewPortChange = new OnViewPortChange;
     readonly onWorkerMessage = new OnWorkerMessage;
     readonly onUILayout = new OnUILayout;
+    readonly onCameraFovChange = new OnCameraFovChange;
 
 
 
@@ -60,5 +64,6 @@ export default class EventManager {
         this.viewPortChange.register(this.onViewPortChange);
         this.workerMessage.register(this.onWorkerMessage);
         this.uiLayout.register(this.onUILayout);
+        this.cameraFovChange.register(this.onCameraFovChange);
     }
 }

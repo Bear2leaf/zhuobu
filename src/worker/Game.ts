@@ -2,6 +2,7 @@ import SurvivalEngine from "./SurvivalEngine.js";
 import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class Game {
     private engine?: SurvivalEngine;
+    private state: Record<string, string> = {}
     private initEngine() {
         this.engine = new SurvivalEngine("Player");
     }
@@ -52,6 +53,15 @@ export default class Game {
                     break;
                 case "Rest":
                     this.getEngine().survival('2');
+                    break;
+                case "UpdateCameraFov":
+                    this.state["CameraFov"] = `${message.args[0]}`
+                    break;
+                case "GetCameraFov":
+                    reply([{ type: "SendCameraFov", args: [this.state["CameraFov"]] }])
+                    break;
+                case "HelloCompInit":
+                    reply([{ type: "HelloCompInitWorker" }])
                     break;
                 default:
                     break;

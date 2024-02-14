@@ -73,6 +73,8 @@ export default class CameraManager {
             throw new Error("targetSource not found");
         }
         this.getMainCamera().fromGLTF(targetSource.getPosition(), trs.getPosition(), fov, near, far);
+        this.getEventManager().cameraFovChange.fov = fov;
+        this.getEventManager().cameraFovChange.notify();
     }
     getMainCamera() { return this.mainCamera; }
     getDebugCamera() { return this.debugCamera; }
