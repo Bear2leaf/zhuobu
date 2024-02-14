@@ -1,5 +1,5 @@
 import Worker from "./Worker.js";
-import { WorkerRequest, WorkerResponse } from "./script/WorkerMessageType.js";
+import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class SocketWorker extends Worker {
     private readonly messageQueue: WorkerRequest[] = [];
     private readonly interval = 100;

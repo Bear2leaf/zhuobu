@@ -1,5 +1,5 @@
-import Game from "./script/Game.js";
-import { WorkerRequest, WorkerResponse } from "./script/WorkerMessageType.js";
+import Game from "./Game.js";
+import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 import Worker from "./Worker.js";
 
 export type MiniGameWorkerType = { onMessage: (callback: (data: WorkerRequest) => void) => void, postMessage: (data: WorkerResponse[]) => void }

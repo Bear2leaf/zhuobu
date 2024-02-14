@@ -9,7 +9,7 @@ import { readFile } from "fs";
 //@ts-ignore
 import path from "path";
 //@ts-ignore
-import { WorkerRequest, WorkerResponse } from '../worker/script/WorkerMessageType.js';
+import { WorkerRequest, WorkerResponse } from '../worker/WorkerMessageType.js';
 enum OPCODES {
     text = 0x01,
     close = 0x08

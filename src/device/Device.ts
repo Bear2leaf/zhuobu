@@ -1,5 +1,5 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
+import { WorkerResponse, WorkerRequest } from "../worker/WorkerMessageType.js";
 
 export type WindowInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 export type TouchInfo = { x: number, y: number }

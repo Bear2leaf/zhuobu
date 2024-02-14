@@ -8,7 +8,7 @@ import UpdateResourceProgress from "../command/UpdateResourceProgress.js";
 import UpdateStatus from "../command/UpdateStatus.js";
 import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
 import Device from "../device/Device.js";
-import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
+import { WorkerResponse, WorkerRequest } from "../worker/WorkerMessageType.js";
 import EventManager from "./EventManager.js";
 import SceneManager from "./SceneManager.js";
 

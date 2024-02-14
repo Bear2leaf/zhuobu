@@ -1,6 +1,6 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
-import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
+import { WorkerResponse, WorkerRequest } from "../worker/WorkerMessageType.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 
 type MiniGameType = {

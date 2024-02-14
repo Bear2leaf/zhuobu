@@ -1,5 +1,5 @@
-import Game from "../worker/script/Game.js";
-import { WorkerResponse } from "../worker/script/WorkerMessageType.js";
+import Game from "../worker/Game.js";
+import { WorkerResponse } from "../worker/WorkerMessageType.js";
 import Server from "./server.js";
 //@ts-ignore
 import { watch } from "fs";
