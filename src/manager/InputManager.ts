@@ -55,6 +55,7 @@ export default class InputManager {
 
     initObservers() {
         this.getEventManager().onEntityInit.setOnClick(this.getEventManager().onClick);
+        this.getEventManager().onClick.setChainNext(this.getEventManager().clickPick);
 
     }
     process(): void {

@@ -9,7 +9,7 @@ import SingleColorTexture from "../texture/SingleColorTexture.js";
 import SDFTexture from "../texture/SDFTexture.js";
 import Device from "../device/Device.js";
 import EventManager from "./EventManager.js";
-import { TextureBindIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "../renderingcontext/RenderingContext.js";
 import SkyboxTexture from "../texture/SkyboxTexture.js";
 import ReflectTexture from "../texture/ReflectTexture.js";
 import WaterNormalTexture from "../texture/WaterNormalTexture.js";
@@ -19,6 +19,21 @@ import GLTFManager from "./GLTFManager.js";
 import EagleJointTexture from "../texture/EagleJointTexture.js";
 import TerrainHeightTexture from "../texture/TerrainHeightTexture.js";
 import TerrainDiffuseTexture from "../texture/TerrainDiffuseTexture.js";
+import Entity from "../entity/Entity.js";
+import DrawObject from "../drawobject/DrawObject.js";
+import EagleMesh from "../drawobject/EagleMesh.js";
+import RockMesh from "../drawobject/RockMesh.js";
+import SDFCharacter from "../drawobject/SDFCharacter.js";
+import ShipMesh from "../drawobject/ShipMesh.js";
+import Skybox from "../drawobject/Skybox.js";
+import Terrain from "../drawobject/Terrain.js";
+import TerrainCDLOD from "../drawobject/TerrainCDLOD.js";
+import TerrainMesh from "../drawobject/TerrainMesh.js";
+import WhaleMesh from "../drawobject/WhaleMesh.js";
+import Flowers from "../sprite/Flowers.js";
+import ReflectMap from "../sprite/ReflectMap.js";
+import RenderMap from "../sprite/RenderMap.js";
+import Water from "../sprite/Water.js";
 
 
 export default class TextureManager {
@@ -60,7 +75,7 @@ export default class TextureManager {
     }
     initTextures() {
 
-        const glContext= this.getDevice().getRenderingContext();
+        const glContext = this.getDevice().getRenderingContext();
         this.defaultTexture.setContext(glContext);
         this.terrainTexture.setContext(glContext);
         this.terrainHeightTexture.setContext(glContext);
@@ -156,7 +171,55 @@ export default class TextureManager {
     }
     initObservers() {
 
-        this.getEventManager().onEntityInit.setTextureManager(this);
+        this.getEventManager().onEntityInit.initTexture = this.initTexture.bind(this);
+    }
+    initTexture(entity: Entity) {
+
+        for (const drawobject of entity.all(DrawObject)) {
+            drawobject.setTexture(this.defaultTexture)
+        }
+        if (entity.has(SDFCharacter)) {
+            entity.get(SDFCharacter).setTexture(this.sdfTexture);
+        } else if (entity.has(Flowers)) {
+            entity.get(Flowers).setTexture(this.flowerTexture);
+        } else if (entity.has(Terrain)) {
+            entity.get(Terrain).setTexture(this.defaultTexture);
+            entity.get(Terrain).setDepthTexture(this.depthTexture);
+        } else if (entity.has(TerrainMesh)) {
+            entity.get(TerrainMesh).setTexture(this.terrainTexture);
+            entity.get(TerrainMesh).setDepthTexture(this.depthTexture);
+        } else if (entity.has(TerrainCDLOD)) {
+            entity.get(TerrainCDLOD).setTexture(this.terrainDiffuseTexture);
+            entity.get(TerrainCDLOD).setDepthTexture(this.terrainHeightTexture);
+        } else if (entity.has(RockMesh)) {
+            entity.get(RockMesh).setTexture(this.defaultTexture);
+        } else if (entity.has(RenderMap)) {
+            entity.get(RenderMap).setTexture(this.renderTexture);
+        } else if (entity.has(ReflectMap)) {
+            entity.get(ReflectMap).setTexture(this.reflectTexture);
+        } else if (entity.has(Water)) {
+            entity.get(Water).setTexture(this.renderTexture);
+            entity.get(Water).setDepthTexture(this.waterDepthTexture);
+            entity.get(Water).setReflectTexture(this.reflectTexture);
+            entity.get(Water).setDistortionTexture(this.waterDistortionTexture);
+            entity.get(Water).setNormalTexture(this.waterNormalTexture);
+        } else if (entity.has(Skybox)) {
+            entity.get(Skybox).setTexture(this.skyboxTexture);
+        } else if (entity.has(ShipMesh)) {
+            const allMeshs = entity.all(ShipMesh);
+            for (const mesh of allMeshs) {
+                mesh.setTexture(this.defaultTexture);
+            }
+        } else if (entity.has(EagleMesh)) {
+            const allMeshs = entity.all(EagleMesh);
+            for (const mesh of allMeshs) {
+                mesh.setJointTexture(this.eagleJointTexture);
+                mesh.setTexture(this.flowerTexture);
+            }
+        } else if (entity.has(WhaleMesh)) {
+            entity.get(WhaleMesh).setJointTexture(this.jointTexture);
+            entity.get(WhaleMesh).setTexture(this.flowerTexture);
+        }
     }
     getEventManager(): EventManager {
         if (this.eventManager === undefined) {

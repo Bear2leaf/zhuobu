@@ -10,12 +10,14 @@ import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
 import Device from "../device/Device.js";
 import { WorkerResponse, WorkerRequest } from "../worker/script/WorkerMessageType.js";
 import EventManager from "./EventManager.js";
+import SceneManager from "./SceneManager.js";
 
 export default class WorkerManager {
     private readonly workerPath = 'worker/main.js';
     private readonly workerResponseQueue: WorkerResponse[] = [];
     private device?: Device;
     private eventManager?: EventManager;
+    private sceneManager?: SceneManager;
     private callback?: (data: WorkerRequest) => void;
     private get postMessage() {
         if (this.callback === undefined) {
@@ -80,6 +82,15 @@ export default class WorkerManager {
                 default:
                     throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
             }
+            const command = this.getEventManager().workerMessage.getCommand();
+
+            command.addMessage = this.getSceneManager().addMessage.bind(this.getSceneManager());
+            command.updateStatus = this.getSceneManager().updateStatus.bind(this.getSceneManager());
+            command.toggleUIScene = this.getSceneManager().toggleUIScene.bind(this.getSceneManager());
+            command.createMessageUI = this.getSceneManager().createMessageUI.bind(this.getSceneManager());
+            command.getEnvironmentScene = this.getSceneManager().getEnvironmentScene.bind(this.getSceneManager());
+            command.getInformationObject = this.getSceneManager().getInformationObject.bind(this.getSceneManager());
+            command.loadInitScene = this.getSceneManager().loadInitScene.bind(this.getSceneManager());
             this.getEventManager().workerMessage.notify();
         }
     }
@@ -118,5 +129,14 @@ export default class WorkerManager {
     }
     setEventManager(sceneManager: EventManager) {
         this.eventManager = sceneManager;
+    }
+    getSceneManager(): SceneManager {
+        if (this.sceneManager === undefined) {
+            throw new Error("sceneManager is undefined");
+        }
+        return this.sceneManager;
+    }
+    setSceneManager(sceneManager: SceneManager) {
+        this.sceneManager = sceneManager;
     }
 }

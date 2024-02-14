@@ -4,7 +4,8 @@ import GLVertexArrayObject from "../contextobject/GLVertexArrayObject.js";
 import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import Shader from "../shader/Shader.js";
-import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
+import { TextureBindIndex } from "./RenderingContext.js";
+import { SkyboxArray } from "./RenderingContext.js";
 import RenderingContext, { ArrayBufferIndex } from "./RenderingContext.js";
 export default class OffscreenCanvasRenderingContext implements RenderingContext {
     private readonly context: CanvasRenderingContext2D;

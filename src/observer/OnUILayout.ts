@@ -1,16 +1,12 @@
 import Hamburger from "../layout/Hamburger.js";
-import UILayout from "../subject/UILayout.js";
+import UIScene from "../scene/UIScene.js";
 import Node from "../transform/Node.js";
 import Observer from "./Observer.js";
 
 export default class OnUILayout extends Observer {
-    getSubject(): UILayout {
-        const subject = super.getSubject();
-        if (!(subject instanceof UILayout)) throw new Error("subject is not UILayout!");
-        return subject;
-    }
+    uiScene?: UIScene;
     public notify(): void {
-        const uiScene = this.getSubject().getUIScene();
+        const uiScene = this.uiScene!;
         const hamburger = uiScene.getHamburgerObject().get(Hamburger);
         hamburger.setStatus(uiScene.getMessageObject().get(Node));
         hamburger.setInfo(uiScene.getInformationObject().get(Node));

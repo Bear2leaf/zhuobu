@@ -4,7 +4,7 @@ import ImageCache from "../cache/ImageCache.js";
 import TextCache from "../cache/TextCache.js";
 import GLTF from "../gltf/GLTF.js";
 import Device from "../device/Device.js";
-import { SkyboxArray } from "../texture/Texture.js";
+import { SkyboxArray } from "../renderingcontext/RenderingContext.js";
 
 
 export default class CacheManager {

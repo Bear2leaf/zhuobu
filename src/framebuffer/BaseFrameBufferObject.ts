@@ -1,5 +1,6 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-import Texture, { TextureBindIndex } from "../texture/Texture.js";
+import Texture from "../texture/Texture.js";
+import { TextureBindIndex } from "../renderingcontext/RenderingContext.js";
 import FrameBufferObject from "./FrameBufferObject.js";
 
 export default class BaseFrameBufferObject implements FrameBufferObject {

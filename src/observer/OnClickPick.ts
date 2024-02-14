@@ -1,20 +1,17 @@
-import ClickPick from "../subject/ClickPick.js";
+import PickFrameBufferObject from "../framebuffer/PickFrameBufferObject.js";
+import UIScene from "../scene/UIScene.js";
 import Observer from "./Observer.js";
 
 export default class OnClickPick extends Observer {
-    getSubject(): ClickPick {
-        if (!(super.getSubject() instanceof ClickPick)) {
-            throw new Error("subject is not ClickPickSubject!");
-        }
-        return super.getSubject() as ClickPick;
-    }
+    x = 0;
+    y = 0;
+    framebufferObject?: PickFrameBufferObject;
+    uiScene?: UIScene;
     public notify(): void {
-        const fbo = this.getSubject().getFrameBufferObject();
-        const uiScene = this.getSubject().getUIScene();
+        const fbo = this.framebufferObject!;
+        const uiScene = this.uiScene!;
         fbo.bindRead();
-        const x = this.getSubject().getScreenX();
-        const y = this.getSubject().getScreenY();
-        fbo.updatePixels(x, y);
+        fbo.updatePixels(this.x, this.y);
         fbo.unbindRead();
         const pixel = fbo.readPixel();
         const messagePicked = uiScene.messagePicked(...pixel);

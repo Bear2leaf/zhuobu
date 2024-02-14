@@ -1,26 +1,6 @@
 import RenderingContext from "../renderingcontext/RenderingContext.js";
-
-export enum TextureBindIndex {
-  Default = 0,
-  Skybox = 0,
-  Pick = 7,
-  OffscreenCanvas = 0,
-  Depth = 1,
-  Joint = 6,
-  Render = 2,
-  Reflect = 3,
-  WaterDistortion = 4,
-  WaterNormal = 5,
-}
-
-export type SkyboxArray = readonly [
-  HTMLImageElement
-  , HTMLImageElement
-  , HTMLImageElement
-  , HTMLImageElement
-  , HTMLImageElement
-  , HTMLImageElement
-];
+import { TextureBindIndex } from "../renderingcontext/RenderingContext.js";
+import { SkyboxArray } from "../renderingcontext/RenderingContext.js";
 
 export default abstract class Texture {
   private textureIndex?: number;

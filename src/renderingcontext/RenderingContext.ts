@@ -4,7 +4,6 @@ import Primitive, { PrimitiveType } from "../contextobject/Primitive.js";
 import UniformBufferObject from "../contextobject/UniformBufferObject.js";
 import VertexArrayObject from "../contextobject/VertexArrayObject.js";
 import Shader from "../shader/Shader.js";
-import { SkyboxArray, TextureBindIndex } from "../texture/Texture.js";
 
 export enum ArrayBufferIndex {
     Position = 0,
@@ -66,3 +65,23 @@ export default interface RenderingContext {
     makeShader(vert: string, frag: string): Shader;
     generatePickColor(): [number, number, number, number];
 }
+export type SkyboxArray = readonly [
+  HTMLImageElement,
+  HTMLImageElement,
+  HTMLImageElement,
+  HTMLImageElement,
+  HTMLImageElement,
+  HTMLImageElement
+];export enum TextureBindIndex {
+  Default = 0,
+  Skybox = 0,
+  Pick = 7,
+  OffscreenCanvas = 0,
+  Depth = 1,
+  Joint = 6,
+  Render = 2,
+  Reflect = 3,
+  WaterDistortion = 4,
+  WaterNormal = 5
+}
+

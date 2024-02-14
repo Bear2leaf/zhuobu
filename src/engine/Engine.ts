@@ -74,7 +74,6 @@ export default abstract class Engine {
         this.rendererManager.initShaderName();
         this.workerManager.initObservers();
         this.sceneManager.initObservers();
-        this.sceneManager.initSubjects();
         this.sceneManager.registerEntities();
         this.audioManager.initAudioContext();
     }
@@ -89,6 +88,7 @@ export default abstract class Engine {
         this.framebufferManager.setEventManager(this.eventManager);
         this.sceneManager.setEventManager(this.eventManager);
         this.workerManager.setEventManager(this.eventManager);
+        this.workerManager.setSceneManager(this.sceneManager);
         this.textureManager.setCacheManager(this.cacheManager);
         this.textureManager.setGLTFManager(this.gltfManager);
         this.offscreencanvasManager.setTextureManager(this.textureManager);

@@ -1,4 +1,5 @@
-import Texture, { SkyboxArray } from "./Texture.js";
+import Texture from "./Texture.js";
+import { SkyboxArray } from "../renderingcontext/RenderingContext.js";
 
 export default class GLTexture extends Texture {
     generate(data?: ImageData | HTMLImageElement | SkyboxArray | Float32Array, width: number = 1, height: number = 1) {

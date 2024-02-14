@@ -5,12 +5,9 @@ import Observer from "./Observer.js";
 export default class OnClick extends Observer {
     private pointer?: Pointer;
     private next?: InputSubject;
-    getSubject(): InputSubject {
-        if (!(super.getSubject() instanceof InputSubject)) {
-            throw new Error("subject is not BaseClickSubject!");
-        }
-        return super.getSubject() as InputSubject;
-    }
+     x = 0;
+     y = 0;
+     pixelRatio = 1;
     setPointer(pointer: Pointer) {
         this.pointer = pointer;
     }
@@ -18,10 +15,10 @@ export default class OnClick extends Observer {
         this.next = clickPick;
     }
     public notify(): void {
-        this.pointer?.onClick(this.getSubject().getX(), this.getSubject().getY());
+        this.pointer?.onClick(this.x, this.y);
         if (this.next) {
-            this.next.setPosition(this.getSubject().getX(), this.getSubject().getY());
-            this.next.setPixelRatio(this.getSubject().getPixelRatio());
+            this.next.setPosition(this.x, this.y);
+            this.next.setPixelRatio(this.pixelRatio);
             this.next.notify();
         }
     }

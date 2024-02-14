@@ -50,17 +50,15 @@ export default class EventManager {
 
 
     initObservers() {
-        this.onEntityAdd.setSubject(this.entityAdd);
-        this.onEntityInit.setSubject(this.entityInit);
-        this.onEntityRegisterComponents.setSubject(this.entityRegisterComponents);
-
-        this.onEntityUpdate.setSubject(this.entityUpdate);
-        this.onEntityRender.setSubject(this.entityRender);
-        this.onClick.setSubject(this.click);
-        this.onClick.setChainNext(this.clickPick)
-        this.onClickPick.setSubject(this.clickPick);
-        this.onViewPortChange.setSubject(this.viewPortChange);
-        this.onWorkerMessage.setSubject(this.workerMessage);
-        this.onUILayout.setSubject(this.uiLayout);
+        this.entityAdd.register(this.onEntityAdd)
+        this.entityInit.register(this.onEntityInit);
+        this.entityRegisterComponents.register(this.onEntityRegisterComponents);
+        this.entityUpdate.register(this.onEntityUpdate);
+        this.entityRender.register(this.onEntityRender);
+        this.click.register(this.onClick);
+        this.clickPick.register(this.onClickPick);
+        this.viewPortChange.register(this.onViewPortChange);
+        this.workerMessage.register(this.onWorkerMessage);
+        this.uiLayout.register(this.onUILayout);
     }
 }

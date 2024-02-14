@@ -96,11 +96,7 @@ export default class SceneManager {
     initObservers() {
         const eventManager = this.getEventManager();
         eventManager.clickPick.setUIScene(this.uiScene);
-        eventManager.onWorkerMessage.setSceneManager(this);
         eventManager.uiLayout.setUIScene(this.uiScene);
-    }
-    initSubjects() {
-        const eventManager = this.getEventManager();
         this.islandScene.setEntitySubjects(
             eventManager.entityInit,
             eventManager.entityAdd,
@@ -133,6 +129,5 @@ export default class SceneManager {
             eventManager.entityUpdate,
             eventManager.entityRemove
         );
-
     }
 }

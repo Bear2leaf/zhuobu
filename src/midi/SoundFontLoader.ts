@@ -1,8 +1,6 @@
-import MIDIPlayer from "./MIDIPlayer.js";
-import { CachedPreset, NumPair, WavePreset, PresetInfo } from "./MIDIType.js";
+import {  WavePreset, PresetInfo } from "./MIDIType.js";
 export default class SoundFontLoader {
 	private soundCache?: Record<string, any>;
-	private readonly player: MIDIPlayer;
 	private readonly instrumentKeyArray: string[] = [
 		'0000_JCLive_sf2_file', '0000_Aspirin_sf2_file', '0000_Chaos_sf2_file', '0000_FluidR3_GM_sf2_file', '0000_GeneralUserGS_sf2_file', '0000_SBLive_sf2', '0000_SoundBlasterOld_sf2'
 		, '0001_FluidR3_GM_sf2_file', '0001_GeneralUserGS_sf2_file', '0002_GeneralUserGS_sf2_file', '0003_GeneralUserGS_sf2_file', '0010_Aspirin_sf2_file', '0010_Chaos_sf2_file', '0010_FluidR3_GM_sf2_file'
@@ -391,9 +389,6 @@ export default class SoundFontLoader {
 		, '80_0_SBLive_sf2', '80_12_JCLive_sf2_file', '80_16_JCLive_sf2_file', '80_18_JCLive_sf2_file', '80_4_Chaos_sf2_file', '81_0_SBLive_sf2', '81_12_JCLive_sf2_file', '81_16_JCLive_sf2_file'
 		, '81_18_JCLive_sf2_file', '81_4_Chaos_sf2_file'
 	];
-	constructor(player: MIDIPlayer) {
-		this.player = player;
-	}
 	getPresetByInstr(instr: string): WavePreset {
 		if (!this.soundCache) {
 			throw new Error('sound cache not set');
@@ -407,9 +402,6 @@ export default class SoundFontLoader {
 	setSoundCache(soundCache: Record<string, any>) {
 		this.soundCache = soundCache;
 	}
-	async startLoad(audioContext: AudioContext, filePath: string, variableName: string) {
-		await this.player.adjustPreset(audioContext, this.getPresetByInstr(variableName));
-	};
 	loaded(variableName: string): boolean {
 		if (!(this.getPresetByInstr(variableName))) {
 			return false;

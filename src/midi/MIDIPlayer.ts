@@ -5,7 +5,7 @@ import { WaveEnvelope, WaveSlide, WavePreset, WaveZone, WaveAHDSR } from "./MIDI
 
 export default class MIDIPlayer {
 	private readonly envelopes: WaveEnvelope[] = [];
-	readonly loader = new SoundFontLoader(this);
+	readonly loader = new SoundFontLoader();
 	private readonly afterTime = 0.05;
 	private readonly nearZero = 0.000001;
 	queueChord(audioContext: AudioContext, target: AudioNode, instr: string, when: number, pitches: number[], duration: number, volume: number, slides?: WaveSlide[][]): WaveEnvelope[] {

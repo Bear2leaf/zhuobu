@@ -1,5 +1,5 @@
 import GLTexture from "./GLTexture.js";
-import { SkyboxArray } from "./Texture.js";
+import { SkyboxArray } from "../renderingcontext/RenderingContext.js";
 
 export default class SkyboxTexture extends GLTexture {
     generate(data: SkyboxArray): void {

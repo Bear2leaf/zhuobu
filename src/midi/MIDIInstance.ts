@@ -92,16 +92,17 @@ export default class MidiInstance {
             const info = this.player.loader.instrumentInfo(nn);
             this.getSong().tracks[i].info = info;
             this.getSong().tracks[i].id = nn;
-            await this.player.loader.startLoad(this.audioContext, info.url, info.variable);
+            await this.player.adjustPreset(this.audioContext, this.player.loader.getPresetByInstr(info.variable));
         }
         for (let i = 0; i < this.getSong().beats.length; i++) {
             const nn = this.player.loader.findDrum(this.getSong().beats[i].n);
             const info = this.player.loader.drumInfo(nn);
             this.getSong().beats[i].info = info;
             this.getSong().beats[i].id = nn;
-            await this.player.loader.startLoad(this.audioContext, info.url, info.variable);
+            await this.player.adjustPreset(this.audioContext, this.player.loader.getPresetByInstr(info.variable));
         }
     }
+
     async loadBuffer(buffer: ArrayBuffer) {
         this.stop = true;
         const midiFile = new MIDIFile(buffer);
