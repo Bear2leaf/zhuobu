@@ -1,15 +1,9 @@
-//@ts-ignore
-import { STATUS_CODES, createServer } from 'http';
-//@ts-ignore
+import { IncomingMessage, STATUS_CODES, ServerResponse, createServer } from 'http';
 import { EventEmitter } from "node:events";
-//@ts-ignore
 import { createHash } from "crypto";
-//@ts-ignore
 import { readFile } from "fs";
-//@ts-ignore
 import path from "path";
-//@ts-ignore
-import { WorkerRequest, WorkerResponse } from '../worker/WorkerMessageType.js';
+import { WorkerRequest, WorkerResponse } from '../types/index.js';
 enum OPCODES {
     text = 0x01,
     close = 0x08
@@ -18,8 +12,12 @@ enum OPCODES {
 export default class Server extends EventEmitter {
     private readonly PORT: number = 4000;
     private readonly GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-    private readonly server = createServer((request: Request, response: any) => {
-        if (request.url.startsWith("/ws")) {
+    private readonly server = createServer((request, response) => {
+        const url = request.url;
+        if (!url) {
+            throw new Error("url is undefined");
+        }
+        if (url.startsWith("/ws")) {
             const UPGRADE_REQUIRED = 426;
             const body = STATUS_CODES[UPGRADE_REQUIRED];
             response.writeHead(UPGRADE_REQUIRED, {
@@ -28,22 +26,19 @@ export default class Server extends EventEmitter {
             });
             response.end(body);
         }
-        else if (request.url === "/") {
-            this.read("./index.html", "text/html", response);
+        else if (url === "/") {
+            this.createWebcomponentPage("/webcomponent/MainGame", response);
         }
-        else if (request.url.startsWith("/worker")) {
-            const filePath = './dist' + request.url;
+        else if (url.startsWith("/worker")) {
+            const filePath = './dist' + url;
             const contentType = 'text/javascript';
             this.read(filePath, contentType, response);
         }
-        else if (request.url.startsWith("/webcomponent")) {
-            const contentType = 'text/html';
-            const component = request.url.split("/webcomponent/")[1].toLowerCase();
-            response.writeHead(200, { 'Content-Type': contentType });
-            response.end(`<script src="/dist/webcomponent/main.js" type="module"></script>\n<${component}></${component}>`, 'utf-8');
+        else if (url.startsWith("/webcomponent")) {
+            this.createWebcomponentPage(url, response);
         }
-        else if (request.url.startsWith("/dist") || request.url.startsWith("/resources") || request.url.startsWith("/worker")) {
-            let filePath = '.' + request.url;
+        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/worker")) {
+            let filePath = '.' + url;
             const extname = path.extname(filePath);
             let contentType = 'text/html';
             switch (extname) {
@@ -80,8 +75,25 @@ export default class Server extends EventEmitter {
             response.end();
         }
     });
+    private createWebcomponentPage(url: string, response: ServerResponse<IncomingMessage> & { req: IncomingMessage; }) {
+
+        const component = url.split("/webcomponent/")[1].toLowerCase();
+        const componentClassName = component.split("-").map(word => {
+            const sneakCase = [...word];
+            sneakCase[0] = word[0].toUpperCase();
+            return sneakCase.join("");
+        }).join("")
+        response.writeHead(200, { 'Content-Type': 'text/html' });
+        response.end(`
+        <script type="module">
+            import ${componentClassName} from "/dist/webcomponent/${componentClassName}.js";
+            customElements.define("${component}", ${componentClassName});
+        </script>
+        <${component}></${component}>
+        `, 'utf-8');
+    }
     private read(filePath: string, contentType: string, response: any) {
-        readFile(filePath, function (error: any, content: string) {
+        readFile(filePath, function (error, content) {
             if (error) {
                 if (error.code == 'ENOENT') {
                     response.writeHead(404);
@@ -104,11 +116,11 @@ export default class Server extends EventEmitter {
             .update(acceptKey + this.GUID, 'binary')
             .digest('base64');
     }
-    //@ts-ignore
-    private createFrame(data) {
+
+    private createFrame(data: JSON) {
         const payload = JSON.stringify(data);
 
-        //@ts-ignore
+
         const payloadByteLength = Buffer.byteLength(payload);
         let payloadBytesOffset = 2;
         let payloadLength = payloadByteLength;
@@ -121,7 +133,7 @@ export default class Server extends EventEmitter {
             payloadLength = 126;
         }
 
-        //@ts-ignore
+
         const buffer = Buffer.alloc(payloadBytesOffset + payloadByteLength);
 
         // first byte
@@ -132,55 +144,57 @@ export default class Server extends EventEmitter {
         if (payloadLength === 126) { // write actual payload length as a 16-bit unsigned integer
             buffer.writeUInt16BE(payloadByteLength, 2);
         } else if (payloadByteLength === 127) { // write actual payload length as a 64-bit unsigned integer
-            //@ts-ignore
+
             buffer.writeBigUInt64BE(BigInt(payloadByteLength), 2);
         }
 
         buffer.write(payload, payloadBytesOffset);
         return buffer;
     }
-    //@ts-ignore
-    private parseFrame(buffer) {
+
+    private parseFrame(buffer: Buffer) {
         const firstByte = buffer.readUInt8(0);
         const opCode = firstByte & 0b00001111; // get last 4 bits of a byte
 
         if (opCode === OPCODES.close) {
             this.emit('close');
-            return null;
+            return "";
         } else if (opCode !== OPCODES.text) {
-            return;
+            throw new Error("Wrong opCode" + opCode)
+        } else {
+
+            // second byte processing next...
+            // ... first byte processing ...
+
+            const secondByte = buffer.readUInt8(1);
+
+            let offset = 2;
+            let payloadLength = secondByte & 0b01111111; // get last 7 bits of a second byte
+
+            if (payloadLength === 126) {
+                offset += 2;
+            } else if (payloadLength === 127) {
+                offset += 8;
+            }
+            // ... first and second byte processing ...
+
+            const isMasked = Boolean((secondByte >>> 7) & 0b00000001); // get first bit of a second byte
+
+            if (isMasked) {
+                const maskingKey = buffer.readUInt32BE(offset); // read 4-byte (32-bit) masking key
+                offset += 4;
+                const payload = buffer.subarray(offset);
+                const result = this.unmask(payload, maskingKey);
+                return result.toString('utf-8');
+            }
+
+            return buffer.subarray(offset).toString('utf-8');
         }
 
-        // second byte processing next...
-        // ... first byte processing ...
-
-        const secondByte = buffer.readUInt8(1);
-
-        let offset = 2;
-        let payloadLength = secondByte & 0b01111111; // get last 7 bits of a second byte
-
-        if (payloadLength === 126) {
-            offset += 2;
-        } else if (payloadLength === 127) {
-            offset += 8;
-        }
-        // ... first and second byte processing ...
-
-        const isMasked = Boolean((secondByte >>> 7) & 0b00000001); // get first bit of a second byte
-
-        if (isMasked) {
-            const maskingKey = buffer.readUInt32BE(offset); // read 4-byte (32-bit) masking key
-            offset += 4;
-            const payload = buffer.subarray(offset);
-            const result = this.unmask(payload, maskingKey);
-            return result.toString('utf-8');
-        }
-
-        return buffer.subarray(offset).toString('utf-8');
     }
-    //@ts-ignore
-    private unmask(payload, maskingKey) {
-        //@ts-ignore
+
+    private unmask(payload: Buffer, maskingKey: number) {
+
         const result = Buffer.alloc(payload.byteLength);
 
         for (let i = 0; i < payload.byteLength; ++i) {
@@ -193,16 +207,11 @@ export default class Server extends EventEmitter {
 
         return result;
     }
-    private emit(type: 'close'): void;
-    private emit(type: 'data', data: WorkerRequest, reply: (buffer: any) => void): void;
-    private emit(type: 'data' | 'close', data?: WorkerRequest, reply?: (buffer: any) => void) {
-        super.emit(type, data, reply)
-    }
     onMessage(callback: (data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) => void): void {
         super.on("data", callback)
     }
     init() {
-        //@ts-ignore
+
         this.server.on('upgrade', (req, socket) => {
             if (req.headers.upgrade !== 'websocket') {
                 socket.end('HTTP/1.1 400 Bad Request');
@@ -225,9 +234,9 @@ export default class Server extends EventEmitter {
             socket.on('close', () => {
                 console.log("closing socket...", socket);
             });
-            //@ts-ignore
-            socket.on('data', (buffer) => {
-                this.emit('data', JSON.parse(this.parseFrame(buffer)), (data) => socket.write(this.createFrame(data)))
+
+            socket.on('data', (buffer: Buffer) => {
+                this.emit('data', JSON.parse(this.parseFrame(buffer)), (data: JSON) => socket.write(this.createFrame(data)))
             });
             socket.write(responseHeaders.concat('\r\n').join('\r\n'));
         });

@@ -28,10 +28,10 @@ export default class CacheManager {
         return this.imageCache;
     }
     getVertShaderTxt(name: string) {
-        return this.textCache.get(`resources/shader/${name}.vert.sk`);
+        return this.textCache.get(`/resources/shader/${name}.vert.sk`);
     }
     getFragShaderTxt(name: string) {
-        return this.textCache.get(`resources/shader/${name}.frag.sk`);
+        return this.textCache.get(`/resources/shader/${name}.frag.sk`);
     }
     getTxt(name: string) {
         const txt = this.textCache.get(name);
@@ -39,74 +39,74 @@ export default class CacheManager {
         return txt;
     }
     getGLTF(name: string) {
-        const gltf = this.jsonCache.get(`resources/gltf/${name}.gltf`);
+        const gltf = this.jsonCache.get(`/resources/gltf/${name}.gltf`);
         if (gltf === undefined) throw new Error(`resources/gltf/${name}.gltf not found`);
         return gltf as GLTF;
     }
     getImage(name: string) {
-        return this.imageCache.get(`resources/texture/${name}.png`);
+        return this.imageCache.get(`/resources/texture/${name}.png`);
     }
     getSkybox(name: string): SkyboxArray {
         return [
-            this.imageCache.get(`resources/texture/skybox/${name}_back.png`),
-            this.imageCache.get(`resources/texture/skybox/${name}_down.png`),
-            this.imageCache.get(`resources/texture/skybox/${name}_front.png`),
-            this.imageCache.get(`resources/texture/skybox/${name}_left.png`),
-            this.imageCache.get(`resources/texture/skybox/${name}_right.png`),
-            this.imageCache.get(`resources/texture/skybox/${name}_up.png`)
+            this.imageCache.get(`/resources/texture/skybox/${name}_back.png`),
+            this.imageCache.get(`/resources/texture/skybox/${name}_down.png`),
+            this.imageCache.get(`/resources/texture/skybox/${name}_front.png`),
+            this.imageCache.get(`/resources/texture/skybox/${name}_left.png`),
+            this.imageCache.get(`/resources/texture/skybox/${name}_right.png`),
+            this.imageCache.get(`/resources/texture/skybox/${name}_up.png`)
         ]
     }
     getSoundfont(name: string) {
-        const font = this.jsonCache.get(`resources/soundfont/${name}.json`);
+        const font = this.jsonCache.get(`/resources/soundfont/${name}.json`);
         if (font === undefined) throw new Error(`soundfont resources/soundfont/${name}.json not found`);
         return font;
     }
     getMidi(name: string) {
-        const midi = this.arrayBufferCache.get(`resources/midi/${name}.bin`);
+        const midi = this.arrayBufferCache.get(`/resources/midi/${name}.bin`);
         if (midi === undefined) throw new Error(`fontCache resources/midi/${name}.bin not found`);
         return midi;
     }
     getWav(name: string) {
-        const wav = this.arrayBufferCache.get(`resources/audio/${name}.wav`);
+        const wav = this.arrayBufferCache.get(`/resources/audio/${name}.wav`);
         if (wav === undefined) throw new Error(`audio resources/audio/${name}.wav not found`);
         return wav;
     }
 
 
     async loadImageCache(url: string) {
-        await this.imageCache.load(`resources/texture/${url}.png`);
+        await this.imageCache.load(`/resources/texture/${url}.png`);
     }
     async loadSkyboxCache(url: string) {
-        await this.imageCache.load(`resources/texture/skybox/${url}_back.png`),
-        await this.imageCache.load(`resources/texture/skybox/${url}_down.png`),
-        await this.imageCache.load(`resources/texture/skybox/${url}_front.png`),
-        await this.imageCache.load(`resources/texture/skybox/${url}_left.png`),
-        await this.imageCache.load(`resources/texture/skybox/${url}_right.png`),
-        await this.imageCache.load(`resources/texture/skybox/${url}_up.png`)
+        await this.imageCache.load(`/resources/texture/skybox/${url}_back.png`),
+        await this.imageCache.load(`/resources/texture/skybox/${url}_down.png`),
+        await this.imageCache.load(`/resources/texture/skybox/${url}_front.png`),
+        await this.imageCache.load(`/resources/texture/skybox/${url}_left.png`),
+        await this.imageCache.load(`/resources/texture/skybox/${url}_right.png`),
+        await this.imageCache.load(`/resources/texture/skybox/${url}_up.png`)
     }
 
     async loadGLTFCache(name: string) {
-        await this.jsonCache.load(`resources/gltf/${name}.gltf`)
+        await this.jsonCache.load(`/resources/gltf/${name}.gltf`)
         const images = (this.getGLTF(name) as GLTF)['images'];
         if (images !== undefined) {
             for (const image of images) {
-                await this.imageCache.load(`resources/${image["uri"].replace("../", "")}`);
+                await this.imageCache.load(`/resources/${image["uri"].replace("../", "")}`);
             }
         }
-        await this.arrayBufferCache.load(`resources/gltf/${name}.bin`)
+        await this.arrayBufferCache.load(`/resources/gltf/${name}.bin`)
     }
     async loadSoundFontCache(name: string) {
-        await this.jsonCache.load(`resources/soundfont/${name}.json`)
+        await this.jsonCache.load(`/resources/soundfont/${name}.json`)
     }
     async loadWavCache(name: string) {
-        await this.arrayBufferCache.load(`resources/audio/${name}.wav`)
+        await this.arrayBufferCache.load(`/resources/audio/${name}.wav`)
     }
     async loadMidiCache(name: string) {
-        await this.arrayBufferCache.load(`resources/midi/${name}.bin`)
+        await this.arrayBufferCache.load(`/resources/midi/${name}.bin`)
     }
 
     async loadShaderTxtCache(name: string) {
-        await this.textCache.load(`resources/shader/${name}.vert.sk`)
-        await this.textCache.load(`resources/shader/${name}.frag.sk`)
+        await this.textCache.load(`/resources/shader/${name}.vert.sk`)
+        await this.textCache.load(`/resources/shader/${name}.frag.sk`)
     }
 }

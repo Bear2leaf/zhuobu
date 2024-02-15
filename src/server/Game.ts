@@ -1,5 +1,5 @@
+import { WorkerRequest, WorkerResponse } from "../types/index.js";
 import SurvivalEngine from "./SurvivalEngine.js";
-import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class Game {
     private engine?: SurvivalEngine;
     private state: Record<string, string> = {}

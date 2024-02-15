@@ -8,12 +8,12 @@ import UpdateResourceProgress from "../command/UpdateResourceProgress.js";
 import UpdateStatus from "../command/UpdateStatus.js";
 import UpdateWhalesVisible from "../command/UpdateWhalesVisible.js";
 import Device from "../device/Device.js";
-import { WorkerResponse, WorkerRequest } from "../worker/WorkerMessageType.js";
+import { WorkerResponse, WorkerRequest } from "../types/index.js";
 import EventManager from "./EventManager.js";
 import SceneManager from "./SceneManager.js";
 
 export default class WorkerManager {
-    private readonly workerPath = 'worker/main.js';
+    private readonly workerPath = '/worker/main.js';
     private readonly workerResponseQueue: WorkerResponse[] = [];
     private device?: Device;
     private eventManager?: EventManager;

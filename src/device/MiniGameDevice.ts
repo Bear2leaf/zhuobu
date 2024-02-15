@@ -1,26 +1,11 @@
 import GLRenderingContext from "../renderingcontext/GLRenderingContext.js";
 import OffscreenCanvasRenderingContext from "../renderingcontext/OffscreenCanvasRenderingContext.js";
-import { WorkerResponse, WorkerRequest } from "../worker/WorkerMessageType.js";
+import { WorkerResponse, WorkerRequest } from "../types/index.js";
 import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
 
-type MiniGameType = {
-    createCanvas: Function,
-    getSystemInfoSync: Function,
-    getWindowInfo: Function,
-    getPerformance: Function,
-    createImage: Function,
-    createWebAudioContext: Function,
-    createWorker: Function,
-    onTouchStart: Function,
-    onTouchMove: Function,
-    onTouchEnd: Function,
-    onTouchCancel: Function,
-    getFileSystemManager: Function
-    loadSubpackage: Function
-}
 
-const wx = (globalThis as unknown as { wx: MiniGameType }).wx;
-type MiniGameTouchInfo = { touches: { clientX: number, clientY: number }[] }
+
+
 
 export default class MiniGameDevice extends Device {
     private readonly divideTimeBy: number;
@@ -32,7 +17,7 @@ export default class MiniGameDevice extends Device {
         const { windowWidth, windowHeight, pixelRatio } = wx.getWindowInfo();
         (canvas.width) = windowWidth * pixelRatio;
         (canvas.height) = windowHeight * pixelRatio;
-        super(new GLRenderingContext(canvas), new OffscreenCanvasRenderingContext(offscreenCanvas), new OffscreenCanvasRenderingContext(sdfcanvas));
+        super(new GLRenderingContext(canvas as unknown as HTMLCanvasElement), new OffscreenCanvasRenderingContext(offscreenCanvas as unknown as HTMLCanvasElement), new OffscreenCanvasRenderingContext(sdfcanvas as unknown as HTMLCanvasElement));
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 
@@ -43,7 +28,7 @@ export default class MiniGameDevice extends Device {
         return this.getWindowInfo();
     }
     getPerformance(): Performance {
-        return wx.getPerformance();
+        return wx.getPerformance() as Performance;
     }
     now(): number {
         return this.getPerformance().now() / this.divideTimeBy;
@@ -56,32 +41,35 @@ export default class MiniGameDevice extends Device {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: { errMsg: string }) {
-                    // console.debug("load resources success", res)
+                    console.debug("load resources success", res)
                     resolve(null)
                 },
                 fail(res: { errMsg: string }) {
                     console.error("load resources fail", res)
+                },
+                complete() {
+                    console.debug("load resources complete");
                 }
             })
 
-            task.onProgressUpdate((res: { [key: string]: number }) => {
-                // console.debug(`onProgressUpdate: ${Object.keys(res).map(key => `${key}: ${res[key]}`).join(", ")}`)
+            task.onProgressUpdate((res) => {
+                console.debug(`onProgressUpdate: ${res.progress}, ${res.totalBytesExpectedToWrite}, ${res.totalBytesWritten}`)
             })
         });
     }
     createImage(): HTMLImageElement {
-        return wx.createImage();
+        return wx.createImage() as HTMLImageElement;
     }
     createWebAudioContext(): AudioContext {
-        return wx.createWebAudioContext();
+        return wx.createWebAudioContext() as unknown as AudioContext;
     }
     createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
         const worker = wx.createWorker(path);
         setPostMessageCallback(worker.postMessage.bind(worker))
-        worker.onMessage((data: WorkerResponse[]) => onMessageCallback(data))
+        worker.onMessage((data) => onMessageCallback(data as unknown as WorkerResponse[]))
     }
     onTouchStart(listener: TouchInfoFunction): void {
-        wx.onTouchStart((e: MiniGameTouchInfo) => {
+        wx.onTouchStart((e) => {
             const touch = e.touches[0];
             if (!touch) {
                 throw new Error("touch not exist")
@@ -90,7 +78,7 @@ export default class MiniGameDevice extends Device {
         });
     }
     onTouchMove(listener: TouchInfoFunction): void {
-        wx.onTouchMove((e: MiniGameTouchInfo) => {
+        wx.onTouchMove((e) => {
             const touch = e.touches[0];
             if (!touch) {
                 throw new Error("touch not exist")
@@ -99,23 +87,23 @@ export default class MiniGameDevice extends Device {
         });
     }
     onTouchEnd(listener: TouchInfoFunction): void {
-        wx.onTouchEnd((e: MiniGameTouchInfo) => {
+        wx.onTouchEnd((e) => {
             listener();
         });
     }
     onTouchCancel(listener: TouchInfoFunction): void {
-        wx.onTouchCancel((e: MiniGameTouchInfo) => {
+        wx.onTouchCancel((e) => {
             listener();
         });
     }
     readJson(file: string): Promise<Object> {
-        return new Promise(resolve => resolve(JSON.parse(wx.getFileSystemManager().readFileSync(file, 'utf-8'))));
+        return new Promise(resolve => resolve(JSON.parse(wx.getFileSystemManager().readFileSync(file, 'utf-8') as string)));
     }
     readText(file: string): Promise<string> {
-        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8')));
+        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file, 'utf-8') as string));
     }
     readBuffer(file: string): Promise<ArrayBuffer> {
-        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file)));
+        return new Promise(resolve => resolve(wx.getFileSystemManager().readFileSync(file) as ArrayBuffer));
     }
 }
 

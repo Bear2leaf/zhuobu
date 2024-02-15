@@ -1,4 +1,4 @@
-import { WorkerRequest } from "../worker/WorkerMessageType.js";
+import { WorkerRequest } from "../types/index.js";
 import Observer from "./Observer.js";
 
 export default class OnCameraFovChange extends Observer {

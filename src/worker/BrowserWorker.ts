@@ -1,4 +1,4 @@
-import { WorkerResponse } from "./WorkerMessageType.js";
+import { WorkerResponse } from "../types/index.js";
 import Worker from "./Worker.js";
 export default class BrowserWorker extends Worker {
     constructor() {

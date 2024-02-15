@@ -1,5 +1,5 @@
+import { WorkerRequest, WorkerResponse } from "../types/index.js";
 import Worker from "./Worker.js";
-import { WorkerRequest, WorkerResponse } from "./WorkerMessageType.js";
 export default class SocketWorker extends Worker {
     private readonly messageQueue: WorkerRequest[] = [];
     private readonly interval = 100;
@@ -42,7 +42,7 @@ export default class SocketWorker extends Worker {
         clearTimeout(this.timerId);
         this.timerId = setTimeout(() => {
             this.connectWebsocket();
-        }, this.interval);
+        }, this.interval) as unknown as number;
     }
     postMessage: (data: WorkerResponse[])=> void = (data) => {
         self.postMessage(data);

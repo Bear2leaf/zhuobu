@@ -1,5 +1,5 @@
+import { WorkerResponse } from "../types/index.js";
 import SocketWorker from "../worker/SocketWorker.js";
-import { WorkerResponse } from "../worker/WorkerMessageType.js";
 
 export default class HelloComp extends HTMLElement {
     private readonly socket: SocketWorker;

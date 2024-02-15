@@ -1,9 +1,9 @@
-import MiniGameWorker, { MiniGameWorkerType } from "./MiniGameWorker.js";
+import MiniGameWorker from "./MiniGameWorker.js";
 import SocketWorker from "./SocketWorker.js";
 
 
+declare const worker: WechatMinigame.Worker;
 
-const miniGameWorker = (globalThis as unknown as { worker: MiniGameWorkerType }).worker;
-const worker = (miniGameWorker ? new MiniGameWorker(miniGameWorker) : new SocketWorker());
+const thread = (typeof worker === "undefined" ? new SocketWorker() : new MiniGameWorker(worker));
 
-worker.postMessage([{ type: "WorkerInit" }]);
+thread.postMessage([{ type: "WorkerInit" }]);

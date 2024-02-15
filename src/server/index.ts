@@ -1,8 +1,7 @@
-import Game from "../worker/Game.js";
-import { WorkerResponse } from "../worker/WorkerMessageType.js";
-import Server from "./server.js";
-//@ts-ignore
+import Game from "./Game.js";
 import { watch } from "fs";
+import Server from "./Server.js";
+import { WorkerResponse } from "../types/index.js";
 const server = new Server();
 server.init();
 const game = new Game();

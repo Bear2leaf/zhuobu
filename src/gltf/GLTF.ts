@@ -207,7 +207,7 @@ export default class GLTF {
                             if (this.imageCache === undefined) {
                                 throw new Error(`imageCache is undefined`);
                             }
-                            image.setImage(this.imageCache.get(`resources/${uri.replace("../", "")}`));
+                            image.setImage(this.imageCache.get(`/resources/${uri.replace("../", "")}`));
                         }
                     }
                 }

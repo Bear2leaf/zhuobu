@@ -8,7 +8,7 @@ export default class GLTFBuffer {
         this.uri = buffer.uri;
     }
     getBufferData(cache: ArrayBufferCache): ArrayBuffer {
-        const buffer = cache.get(`resources/gltf/${this.uri}`);
+        const buffer = cache.get(`/resources/gltf/${this.uri}`);
         if (!buffer) {
             throw new Error(`Buffer not found: ${this.uri}`);
         }

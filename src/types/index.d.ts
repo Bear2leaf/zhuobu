@@ -14,7 +14,7 @@ export type WorkerResponse =
 
 
     | { type: "HelloCompInitWorker"; }
-    | { type: "SendCameraFov"; args: [string]}
+    | { type: "SendCameraFov"; args: [string] }
 
     | never;
 export type WorkerRequest =
