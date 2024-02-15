@@ -158,7 +158,7 @@ export default class Server extends EventEmitter {
 
         if (opCode === OPCODES.close) {
             this.emit('close');
-            return "";
+            return "{}";
         } else if (opCode !== OPCODES.text) {
             throw new Error("Wrong opCode" + opCode)
         } else {
@@ -191,7 +191,7 @@ export default class Server extends EventEmitter {
             return buffer.subarray(offset).toString('utf-8');
         }
 
-    }
+    } 
 
     private unmask(payload: Buffer, maskingKey: number) {
 
@@ -206,9 +206,6 @@ export default class Server extends EventEmitter {
         }
 
         return result;
-    }
-    onMessage(callback: (data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) => void): void {
-        super.on("data", callback)
     }
     init() {
 
