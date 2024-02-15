@@ -50,9 +50,9 @@ export class MainCamera extends PerspectiveCamera {
         this.target.set(target.x, target.y, target.z, 1);
     }
     rotateViewPerFrame(time: number) {
-        this.getEye().x = Math.sin(time) * 10;
-        this.getEye().z = -Math.cos(time) * 10;
-        this.getEye().y = -Math.sin(time) * 5 + 6;
+        this.getEye().x = Math.sin(time) * 1;
+        this.getEye().z = -Math.cos(time) * 1;
+        this.getEye().y = -Math.sin(time) * 1 + 1;
     }
     getProjection(): Matrix {
         return this.projection;

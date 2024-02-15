@@ -27,7 +27,7 @@ export default class Server extends EventEmitter {
             response.end(body);
         }
         else if (url === "/") {
-            this.createWebcomponentPage("/webcomponent/MainGame", response);
+            this.createWebcomponentPage("/webcomponent/main-game", response);
         }
         else if (url.startsWith("/worker")) {
             const filePath = './dist' + url;

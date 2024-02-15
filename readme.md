@@ -8,7 +8,7 @@ npx runtime and typescript compiler is required.
 
 ```bash
 # you can run all above commands with
-rm -rf dist && mkdir dist && cp -r resources game.json index.html project.config.json dist && tsc && echo '{"type": "module"}' > dist/package.json && touch dist/resources/game.js
+rm -rf dist && mkdir dist && cp -r resources game.json index.html project.config.json dist && tsc && echo '{"type": "module"}' > dist/package.json && touch distresources/game.js
 
 # update resources
 cp -r resources game.json index.html project.config.json dist

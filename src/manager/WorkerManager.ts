@@ -12,7 +12,7 @@ import EventManager from "./EventManager.js";
 import SceneManager from "./SceneManager.js";
 
 export default class WorkerManager {
-    private readonly workerPath = '/worker/main.js';
+    private readonly workerPath = 'worker/main.js';
     private readonly workerResponseQueue: WorkerResponse[] = [];
     private device?: Device;
     private eventManager?: EventManager;

@@ -1,7 +1,6 @@
 import { PrimitiveType } from "../contextobject/Primitive.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
-import Node from "../transform/Node.js";
 import DrawObject from "./DrawObject.js";
 
 enum Edge {

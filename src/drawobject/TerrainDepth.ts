@@ -117,7 +117,7 @@ export default class TerrainDepth extends DrawObject {
     }
     adjustHeight(height: number) {
 
-        return smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5;
+        return smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.6;
         // return Math.pow(height, 3);
         // return height;
     }
