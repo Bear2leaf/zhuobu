@@ -1,4 +1,3 @@
-import { WorkerResponse } from "../types/index.js";
 import SocketWorker from "../worker/SocketWorker.js";
 
 export default class HelloComp extends HTMLElement {

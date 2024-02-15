@@ -1,4 +1,3 @@
-import { WorkerRequest, WorkerResponse } from "../types/index.js";
 
 
 

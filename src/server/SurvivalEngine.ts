@@ -1,4 +1,4 @@
-import SeedableRandom from "./SeedableRandom.js";
+import SeedableRandom from "../map/SeedableRandom.js";
 
 export default class SurvivalEngine {
   private readonly totalResources: number = 50;

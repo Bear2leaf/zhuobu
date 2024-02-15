@@ -1,6 +1,5 @@
-import { WorkerRequest, WorkerResponse } from "../types/index.js";
 import SurvivalEngine from "./SurvivalEngine.js";
-export default class Game {
+export default class Manager {
     private engine?: SurvivalEngine;
     private state: Record<string, string> = {}
     private initEngine() {
@@ -63,7 +62,7 @@ export default class Game {
                 case "HelloCompInit":
                     reply([{ type: "HelloCompInitWorker" }])
                     break;
-                default:
+                default: 
                     break;
             }
         }

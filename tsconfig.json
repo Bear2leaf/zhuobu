@@ -2,10 +2,7 @@
     "compilerOptions": {
         "outDir": "dist",
         "target": "ES2015",
-        "module": "NodeNext",
-        "skipLibCheck": true,
         "strict": true,
-        "types": ["Node", "minigame-api-typings"]
     }
     
 }

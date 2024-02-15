@@ -1,4 +1,3 @@
-import { WorkerRequest, WorkerResponse } from "../types/index.js";
 import Worker from "./Worker.js";
 export default class SocketWorker extends Worker {
     private readonly messageQueue: WorkerRequest[] = [];
@@ -19,13 +18,14 @@ export default class SocketWorker extends Worker {
     }
     connectWebsocket() {
         const ws = new WebSocket('ws://localhost:4000');
+        self.onclose = () => ws.close();
         ws.onmessage = (event) => {
             this.postMessage(JSON.parse(event.data))
         }
         ws.onopen = () => {
             if (this.timerId) {
                 this.postMessage([{ type: "Reconnect" }])
-            }
+            } 
             this.onMessage = (data: WorkerRequest[]) => {
                 ws.send(JSON.stringify(data))
             };

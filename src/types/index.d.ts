@@ -1,4 +1,6 @@
-export type WorkerResponse =
+/// <reference path="./wx/index.d.ts" />
+
+declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "GameInit"; }
     | { type: "Pong"; args: [1, 2, 3]; }
@@ -17,7 +19,7 @@ export type WorkerResponse =
     | { type: "SendCameraFov"; args: [string] }
 
     | never;
-export type WorkerRequest =
+declare type WorkerRequest =
     { type: "Ping"; args: ["Hello"]; }
     | { type: "EngineInit"; }
     | { type: "Explore"; }

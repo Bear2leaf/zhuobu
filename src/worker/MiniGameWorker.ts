@@ -1,4 +1,3 @@
-import { WorkerRequest, WorkerResponse } from "../types/index.js";
 import Worker from "./Worker.js";
 
 export default class MiniGameWorker extends Worker {

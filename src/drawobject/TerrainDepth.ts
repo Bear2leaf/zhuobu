@@ -7,7 +7,7 @@ import TriangleMesh from "../map/TriangleMesh.js";
 import MeshBuilder from "../map/create.js";
 import PoissonDiskSampling from "../poisson/index.js";
 import { createNoise2D } from "../map/simplex-noise.js";
-import SeedableRandom from "../server/SeedableRandom.js";
+import SeedableRandom from "../map/SeedableRandom.js";
 
 
 enum BiomeColor {

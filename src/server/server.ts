@@ -1,9 +1,9 @@
+//@ts-nocheck
 import { IncomingMessage, STATUS_CODES, ServerResponse, createServer } from 'http';
 import { EventEmitter } from "node:events";
 import { createHash } from "crypto";
 import { readFile } from "fs";
 import path from "path";
-import { WorkerRequest, WorkerResponse } from '../types/index.js';
 enum OPCODES {
     text = 0x01,
     close = 0x08
@@ -158,7 +158,7 @@ export default class Server extends EventEmitter {
 
         if (opCode === OPCODES.close) {
             this.emit('close');
-            return "{}";
+            return null;
         } else if (opCode !== OPCODES.text) {
             throw new Error("Wrong opCode" + opCode)
         } else {
@@ -191,7 +191,7 @@ export default class Server extends EventEmitter {
             return buffer.subarray(offset).toString('utf-8');
         }
 
-    } 
+    }
 
     private unmask(payload: Buffer, maskingKey: number) {
 
@@ -208,7 +208,7 @@ export default class Server extends EventEmitter {
         return result;
     }
     init() {
-
+        const clients = [];
         this.server.on('upgrade', (req, socket) => {
             if (req.headers.upgrade !== 'websocket') {
                 socket.end('HTTP/1.1 400 Bad Request');
@@ -227,16 +227,32 @@ export default class Server extends EventEmitter {
                 'Connection: Upgrade',
                 `Sec-WebSocket-Accept: ${acceptValue}`,
             ];
-
+            clients.push(socket);
             socket.on('close', () => {
                 console.log("closing socket...", socket);
+                const index = clients.indexOf(socket);
+                if (index !== -1) {
+                    clients.splice(index, 1);
+                }
             });
+            socket.on('error', () => {
 
+                console.error("Error occurs socket");
+                const index = clients.indexOf(socket);
+                if (index !== -1) {
+                    clients.splice(index, 1);
+                }
+            })
             socket.on('data', (buffer: Buffer) => {
-                this.emit('data', JSON.parse(this.parseFrame(buffer)), (data: JSON) => socket.write(this.createFrame(data)))
+                this.emit('data', JSON.parse(this.parseFrame(buffer)), (data) => socket.write(this.createFrame(data)))
             });
             socket.write(responseHeaders.concat('\r\n').join('\r\n'));
         });
+        this.on("broadcast", (data) => {
+            for (const client of clients) {
+                client.write(this.createFrame(data));
+            };
+        })
         this.server.listen(this.PORT);
     }
 }
