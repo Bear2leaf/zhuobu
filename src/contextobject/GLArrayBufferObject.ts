@@ -3,7 +3,7 @@ import ArrayBufferObject from "./ArrayBufferObject.js";
 export default class GLArrayBufferObject implements ArrayBufferObject {
     private readonly bufferObject: WebGLBuffer;
     private readonly gl: WebGL2RenderingContext;
-    constructor(gl: WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array | Uint16Array | Uint8Array, size: number) {
+    constructor(gl: WebGL2RenderingContext, index: ArrayBufferIndex, arrays: Float32Array | Uint16Array | Uint8Array | Int8Array, size: number, divisor?: number) {
         this.gl = gl;
         const bufferObject = this.gl.createBuffer();
         if (!bufferObject) {
@@ -18,11 +18,16 @@ export default class GLArrayBufferObject implements ArrayBufferObject {
             this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_SHORT, 0, 0);
         } else if (arrays instanceof Uint8Array) {
             this.gl.vertexAttribIPointer(index, size, this.gl.UNSIGNED_BYTE, 0, 0);
+        } else if (arrays instanceof Int8Array) {
+            this.gl.vertexAttribIPointer(index, size, this.gl.BYTE, 0, 0);
         } else {
             throw new Error("arrays type is not supported");
         }
+        if (divisor) {
+            this.gl.vertexAttribDivisor(index, divisor);
+        }
     }
-    updateBuffer(arrays: Float32Array | Uint16Array | Uint8Array) {
+    updateBuffer(arrays: Float32Array | Uint16Array | Uint8Array | Int8Array) {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferObject);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, arrays, this.gl.STATIC_DRAW);
     }

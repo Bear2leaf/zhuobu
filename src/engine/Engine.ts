@@ -106,12 +106,13 @@ export default abstract class Engine {
     update() {
         this.timestepManager.tick();
         this.workerManager.processMessage();
-        // if (this.rafId) {
-        //     this.rafId = requestAnimationFrame(this.update.bind(this));
-        //     return;
-        // }
         this.inputManager.process();
         this.sceneManager.update();
+        if (!this.rafId) {
+            // only run once
+            this.sceneManager.collecTerrainFramebufferObject();
+            this.framebufferManager.processTerrainFramebuffer();
+        }
         this.sceneManager.collectRefractFramebufferObject();
         this.framebufferManager.processRefractFramebuffer();
         this.sceneManager.collectReflectFramebufferObject();
@@ -120,8 +121,6 @@ export default abstract class Engine {
         this.framebufferManager.processPickFramebuffer();
         this.sceneManager.collectShadowFramebufferObject();
         this.framebufferManager.processShadowFramebuffer();
-        this.sceneManager.collecTerrainFramebufferObject();
-        this.framebufferManager.processTerrainFramebuffer();
         this.sceneManager.collectDrawObject();
         this.rendererManager.render();
         this.audioManager.process();

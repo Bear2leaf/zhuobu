@@ -17,7 +17,7 @@ export default class SocketWorker extends Worker {
         }
     }
     connectWebsocket() {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('ws://192.168.1.101:4000');
         self.onclose = () => ws.close();
         ws.onmessage = (event) => {
             this.postMessage(JSON.parse(event.data))

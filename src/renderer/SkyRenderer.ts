@@ -25,12 +25,7 @@ export class SkyRenderer extends Renderer {
         this.getShader().updateUniform("u_perspective", [fov, aspect, near, far]);
     }
     render() {
-        this.getShader().use();
-        this.bindUBOs();
-        const camera = this.getCamera();
-        const viewInverse = camera.getView().inverse().getVertics();
-        const projection = Matrix.perspective(Math.PI / 4, camera.getAspect(), 0.1, 1000).getVertics();
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
+        this.prepareUBOs();
         const objectList = this.getObjectList();
         objectList.forEach(drawObject => {
             drawObject.bind();

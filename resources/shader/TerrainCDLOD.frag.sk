@@ -1,20 +1,28 @@
 #version 300 es
 precision highp float;
-in vec3 v_color;
 in vec2 v_position;
+in vec4 v_vertexPosition;
+in float v_scale;
 
 uniform sampler2D u_texture;
 uniform sampler2D u_texture7;
-uniform vec3 u_lightDirection;
 uniform float u_resolution;
-uniform float u_scale;
+
+uniform Light {
+    vec3 u_lightDirection;
+};
+
+uniform vec4 u_pickColor;
 
 const float ambient = 0.1f;
-out vec4 color;
+layout(location = 0) out vec4 o_color;
+layout(location = 1) out vec4 o_pickColor;
+layout(location = 2) out vec4 o_reflect;
+layout(location = 3) out vec4 o_refract;
 
 vec3 getNormalSingleSample() {
     vec2 position = v_position * 0.5f + 0.5f;
-    float sampleDistance = u_scale / u_resolution;
+    float sampleDistance = v_scale / u_resolution;
     float u = texture(u_texture7, position + vec2(0.0f, sampleDistance)).r;
     float r = texture(u_texture7, position + vec2(sampleDistance, 0.0f)).r;
     float l = texture(u_texture7, position + vec2(-sampleDistance, 0.0f)).r;
@@ -36,8 +44,17 @@ vec3 getDiffuse() {
     return texture(u_texture, v_position / 2.0f + 0.5f).rgb;
 }
 
+const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
 void main() {
-    color = vec4(getDiffuse() * (ambient + (1.0f - ambient) * getLight()), 1.0f);
+    o_color = vec4(getDiffuse() * (ambient + (1.0f - ambient) * getLight()), 1.0f);
+    if(dot(plane, vec4(v_vertexPosition / v_vertexPosition.w)) < 0.0f) {
+        o_refract = o_color;
+        o_reflect = vec4(0.0f);
+    } else {
+        o_refract = vec4(0.0f);
+        o_reflect = o_color;
+    }
+    o_pickColor = vec4(u_pickColor / 255.0f);
     // color = vec4(1.0f);
     // color = vec4(texture(u_texture7, v_position / 2.0 + 0.5).rrr * v_color , 1.0f);
 }

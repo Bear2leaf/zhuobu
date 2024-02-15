@@ -13,19 +13,17 @@ uniform SDF {
     float u_gamma;
 };
 uniform sampler2D u_texture;
-uniform bool u_inner;
+uniform int u_inner;
 
 layout(location = 0) out vec4 o_color;
 layout(location = 1) out vec4 o_pickColor;
-layout(location = 2) out vec4 o_reflect;
-layout(location = 3) out vec4 o_refract;
 
 void main() {
-    float buffer = (u_inner ? u_bufferOutline : u_buffer);
+    float buffer = float(u_inner) * u_bufferOutline  + float(1 - u_inner) * u_buffer;
+    float edge0 = buffer - u_gamma;
+    float edge1 = buffer + u_gamma;
     float dist = texture(u_texture, v_texcoord.xy).r;
-    float alpha = smoothstep(buffer - u_gamma, buffer + u_gamma, dist);
+    float alpha = smoothstep(edge0, edge1, dist);
     o_pickColor = vec4((u_pickColor) / 255.0f);
-    o_color = vec4(((u_inner ? 1.0f : 0.0f) * v_color).rgb, alpha * v_color.a);
-    o_reflect = vec4(((u_inner ? 1.0f : 0.0f) * v_color).rgb, alpha * v_color.a);
-    o_refract = vec4(((u_inner ? 1.0f : 0.0f) * v_color).rgb, alpha * v_color.a);
+    o_color = vec4((float(u_inner) * v_color).rgb, alpha * v_color.a);
 }

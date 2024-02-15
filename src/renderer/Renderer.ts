@@ -109,7 +109,8 @@ export default class Renderer {
     prepareLight() {
         this.updateUBO(UniformBinding.Light, this.lightPosition.normalize().toFloatArray());
     }
-    render() {
+    prepareUBOs() {
+
         this.getShader().use();
         this.bindUBOs();
         const camera = this.getCamera();
@@ -117,8 +118,11 @@ export default class Renderer {
         const viewInverse = camera.getView().inverse().getVertics();
         const lightView = Matrix.lookAt(this.lightPosition.clone().normalize(), this.lightTarget.clone().normalize(), this.lightUp.clone().normalize());
         const lightViewInverse = lightView.inverse().getVertics();
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection]));
+        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection, ...camera.getEye().toFloatArray()]));
         this.updateUBO(UniformBinding.Shadow, new Float32Array([...lightViewInverse, ...this.lightProjection]));
+    }
+    render() {
+        this.prepareUBOs();
         this.objectlist.forEach(drawObject => {
             drawObject.bind();
             drawObject.getTexture().active();
@@ -135,10 +139,6 @@ export default class Renderer {
                 drawObject.getDepthTexture().active();
                 drawObject.getDepthTexture().bind();
                 this.getShader().setInteger("u_depthTexture", drawObject.getDepthTexture().getBindIndex());
-            } else if (drawObject instanceof TerrainCDLOD) {
-                drawObject.getDepthTexture().active();
-                drawObject.getDepthTexture().bind();
-                this.getShader().setInteger("u_texture7", drawObject.getDepthTexture().getBindIndex());
             }
             this.getShader().setInteger("u_texture", drawObject.getTexture().getBindIndex());
             drawObject.draw();

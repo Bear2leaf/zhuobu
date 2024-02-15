@@ -7,17 +7,16 @@ import { PerspectiveCamera } from "./PerspectiveCamera.js";
 
 export class MainCamera extends PerspectiveCamera {
     private reflected = false;
-    private readonly eye = new Vec4(4, 5, 5, 1);
+    private readonly eye = new Vec4(0.5, 0.5, 0.5, 1);
     private readonly target = new Vec4(0, 0, 0, 1);
     private readonly up = new Vec4(0, 1, 0, 1);
     private readonly projection = Matrix.identity();
-    private fov = Math.PI / 180 * 60;
+    private fov = Math.PI / 4;
     private near = 0.1;
-    private far = 100;
+    private far = 10;
     init(): void {
         super.init()
         this.getProjection().set(Matrix.perspective(this.fov, this.getAspect(), this.near, this.far))
-        // this.fromGLTF(new Vec3(7.358891487121582, 4.958309173583984, 6.925790786743164), new Vec4(-0.20997299253940582, 0.3857799470424652, 0.09062844514846802, 0.8937962055206299));
     }
     reflect(enable: boolean = false) {
         this.reflected = enable;
@@ -46,7 +45,7 @@ export class MainCamera extends PerspectiveCamera {
         this.near = near;
         this.far = far;
         this.fov = fov;
-        this.getProjection().set(Matrix.perspective(this.fov, this.getAspect(), this.near, this.far));
+        this.projection.set(Matrix.perspective(this.fov, this.getAspect(), this.near, this.far));
         this.eye.set(position.x, position.y, position.z, 1);
         this.target.set(target.x, target.y, target.z, 1);
     }

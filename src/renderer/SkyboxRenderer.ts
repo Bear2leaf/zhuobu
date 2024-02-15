@@ -15,8 +15,7 @@ export class SkyboxRenderer extends Renderer {
         return camera;
     }
     render() {
-        this.getShader().use();
-        this.bindUBOs();
+        this.prepareUBOs();
         const camera = this.getCamera();
         const viewInverse = camera.getView().inverse().getVertics();
         const projection = Matrix.perspective(Math.PI / 4, camera.getAspect(), 0.1, 1000).getVertics();

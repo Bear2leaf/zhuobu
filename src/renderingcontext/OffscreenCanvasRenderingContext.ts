@@ -12,6 +12,9 @@ export default class OffscreenCanvasRenderingContext implements RenderingContext
     constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
     }
+    drawInstanced(mode: number, offset: number, count: number, instances: number): void {
+        throw new Error("Method not implemented.");
+    }
     clearTextureBindings(): void {
         throw new Error("Method not implemented.");
     }

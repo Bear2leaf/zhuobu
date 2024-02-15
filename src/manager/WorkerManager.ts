@@ -109,7 +109,7 @@ export default class WorkerManager {
             , this.setCallback.bind(this)
         );
         this.postMessage({ type: "EngineInit" });
-        this.getEventManager().onCameraFovChange.postMessage = this.postMessage.bind(this);
+        this.getEventManager().onCameraChange.postMessage = this.postMessage.bind(this);
     }
     initObservers() {
         this.getEventManager().onClickPick.onExplorePicked = () => this.onExplorePicked();

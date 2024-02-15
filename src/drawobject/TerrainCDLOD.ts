@@ -1,7 +1,7 @@
 import { PrimitiveType } from "../contextobject/Primitive.js";
-import { Tuple } from "../map/util.js";
 import { ArrayBufferIndex } from "../renderingcontext/RenderingContext.js";
 import Texture from "../texture/Texture.js";
+import Node from "../transform/Node.js";
 import DrawObject from "./DrawObject.js";
 
 enum Edge {
@@ -12,12 +12,12 @@ enum Edge {
     RIGHT = 8,
 };
 export default class TerrainCDLOD extends DrawObject {
-    private depthTexture?: Texture;
     tiles: number = 0;
+    private depthTexture?: Texture;
     readonly TILE_RESOLUTION = 64;
     readonly TILE_LEVEL = 4;
     readonly scales: number[] = [];
-    readonly offsets: Tuple<number, 2>[] = [];
+    readonly offsets: number[] = [];
     readonly edges: Edge[] = [];
     setDepthTexture(texture: Texture) {
         this.depthTexture = texture;
@@ -34,7 +34,6 @@ export default class TerrainCDLOD extends DrawObject {
     }
     createBuffers() {
         const subdivided: number[] = [];
-        const colors: number[] = [];
         const indices: number[] = [];
         for (let i = 0; i < this.TILE_RESOLUTION; i++) {
             for (let j = 0; j < this.TILE_RESOLUTION; j++) {
@@ -50,15 +49,6 @@ export default class TerrainCDLOD extends DrawObject {
                     x1, 0, z0,
                     x0, 0, z0,
                 );
-                colors.push(
-                    1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1,
-                )
-
                 indices.push((i * this.TILE_RESOLUTION + j) * 6);
                 indices.push((i * this.TILE_RESOLUTION + j) * 6 + 1);
                 indices.push((i * this.TILE_RESOLUTION + j) * 6 + 2);
@@ -68,14 +58,20 @@ export default class TerrainCDLOD extends DrawObject {
             }
         }
         this.bind();
+
         this.createABO(ArrayBufferIndex.Position, new Float32Array(subdivided), 3);
-        this.createABO(ArrayBufferIndex.Color, new Float32Array(colors), 3);
+        this.createABO(ArrayBufferIndex.Color, new Float32Array([1, 1, 1]), 3, this.tiles);
+        this.createABO(ArrayBufferIndex.Edge, new Int8Array(this.edges), 1, 1);
+        this.createABO(ArrayBufferIndex.Offset, new Float32Array(this.offsets), 2, 1);
+        this.createABO(ArrayBufferIndex.Scale, new Float32Array(this.scales), 1, 1);
         this.updateEBO(new Uint16Array(indices));
+        // this.getEntity().get(Node).getSource()!.getScale().multiply(1.5);
+        // this.getEntity().get(Node).updateWorldMatrix();
     }
     createTile(x: number, y: number, scale: number, edge: Edge) {
         this.tiles++;
         this.scales.push(scale);
-        this.offsets.push([x, y]);
+        this.offsets.push(x, y);
         this.edges.push(edge);
 
     }
@@ -128,5 +124,13 @@ export default class TerrainCDLOD extends DrawObject {
 
 
         }
+    }
+    drawInstanced(instances: number): void {
+
+        this.getRenderingContext().switchBlend(true);
+        this.getRenderingContext().switchNearestFilter(true);
+        super.drawInstanced(instances);
+        this.getRenderingContext().switchNearestFilter(false);
+        this.getRenderingContext().switchBlend(false);
     }
 }

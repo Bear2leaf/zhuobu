@@ -53,7 +53,7 @@ export default class Manager {
                 case "Rest":
                     this.getEngine().survival('2');
                     break;
-                case "UpdateCameraFov":
+                case "UpdateCamera":
                     this.state["CameraFov"] = `${message.args[0]}`
                     broadcast([{ type: "SendCameraFov", args: [this.state["CameraFov"]] }])
                     break;

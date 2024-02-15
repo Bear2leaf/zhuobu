@@ -13,11 +13,15 @@ export enum ArrayBufferIndex {
     Weights = 4,
     Joints = 5,
     Barycentric = 6,
+    Edge = 7,
+    Offset = 8,
+    Scale = 9,
 }
 
 
 export default interface RenderingContext {
-    bindSkyboxTexture(index?: number): unknown;
+    drawInstanced(mode: number, offset: number, count: number, instances: number): void;
+    bindSkyboxTexture(index?: number): void;
     putImageData(data: ImageData, dx: number, dy: number): void;
     createImageData(width: number, height: number): ImageData;
     updateSize(width: number, height: number): void;
@@ -49,7 +53,7 @@ export default interface RenderingContext {
     init(): void;
     draw(mode: number, count: number): void;
     viewportTo(left: number, top: number, width: number, height: number): void;
-    makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject;
+    makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array | Int8Array, size: number, divisor?: number): ArrayBufferObject;
     makeUniformBlockObject(): UniformBufferObject;
     makeElementBufferObject(data: Uint16Array): ArrayBufferObject;
     makeVertexArrayObject(): VertexArrayObject;
@@ -72,7 +76,8 @@ export type SkyboxArray = readonly [
   HTMLImageElement,
   HTMLImageElement,
   HTMLImageElement
-];export enum TextureBindIndex {
+];
+export enum TextureBindIndex {
   Default = 0,
   Skybox = 0,
   Pick = 7,

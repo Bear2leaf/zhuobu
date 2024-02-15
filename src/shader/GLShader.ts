@@ -40,12 +40,13 @@ export default class GLShader implements Shader {
         this.program = program;
     }
     updateUniform(key: string, value: number): void;
+    updateUniform(key: "u_eye", value: Float32Array): void;
     updateUniform(key: "u_isortho", value: boolean): void;
     updateUniform(key: "u_offset" | "u_worldOffset", value: [number, number]): void;
-    updateUniform(key: "u_eye" | "u_target" | "u_up" | "u_lightDirection" | "sunPosition" | "cameraPosition", value: [number, number, number]): void;
+    updateUniform(key: "u_target" | "u_up" | "u_lightDirection" | "sunPosition" | "cameraPosition", value: [number, number, number]): void;
     updateUniform(key: "u_perspective", value: [number, number, number, number]): void;
     updateUniform(key: "u_model" | "modelMatrix", value: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]): void;
-    updateUniform(key: string, value: number | boolean | [number, number, number, number] | [number, number] | [number, number, number] | [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]): void {
+    updateUniform(key: string, value: number | Float32Array | boolean | [number, number, number, number] | [number, number] | [number, number, number] | [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]): void {
 
         let loc = this.locMap.get(key);
         if (loc !== undefined) {
@@ -73,6 +74,8 @@ export default class GLShader implements Shader {
             context.uniform3fv(uniformLocation, value);
         } else if (value instanceof Array && value.length === 16) {
             context.uniformMatrix4fv(uniformLocation, false, value);
+        } else if (key === "u_eye") {
+            context.uniform3fv(uniformLocation, value);
         } else {
             throw new Error("Invalid uniform value");
         }

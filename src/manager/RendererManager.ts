@@ -219,6 +219,9 @@ export default class RendererManager {
     getTerrainRenderer() {
         return this.terrainRenderer;
     }
+    getTerrainCDLODRenderer() {
+        return this.terrainCDLODRenderer;
+    }
     getTerrainDepthRenderer() {
         return this.terrainDepthRenderer;
     }

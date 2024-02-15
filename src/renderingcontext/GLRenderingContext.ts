@@ -21,6 +21,9 @@ export default class GLRenderingContext implements RenderingContext {
     constructor(canvas: HTMLCanvasElement) {
         this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
     }
+    drawInstanced(mode: number, offset: number, count: number, instances: number): void {
+        this.gl.drawElementsInstanced(mode,  count, this.gl.UNSIGNED_SHORT, offset, instances);
+    }
     generatePickColor(): [number, number, number, number] {
         const color = this.colorCounter++;
         if (color >= 0xffffff) {
@@ -105,7 +108,7 @@ export default class GLRenderingContext implements RenderingContext {
     framebufferReflectTexture2D(textureIndex: number): void {
         const gl = this.gl;
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT2, gl.TEXTURE_2D, this.allWebGLTextures[textureIndex], 0);
-        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1, this.gl.COLOR_ATTACHMENT2]);
+        this.gl.drawBuffers([this.gl.COLOR_ATTACHMENT0, this.gl.COLOR_ATTACHMENT1, this.gl.COLOR_ATTACHMENT2, this.gl.COLOR_ATTACHMENT3]);
     }
     readPixels(x: number, y: number, width: number, height: number): Uint8Array {
         const gl = this.gl;
@@ -194,8 +197,8 @@ export default class GLRenderingContext implements RenderingContext {
         this.gl.viewport(left, top, width, height);
         this.gl.scissor(left, top, width, height);
     }
-    makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number): ArrayBufferObject {
-        return new GLArrayBufferObject(this.gl, index, data, size);
+    makeArrayBufferObject(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number, divisor?: number): ArrayBufferObject {
+        return new GLArrayBufferObject(this.gl, index, data, size, divisor);
     }
     makeUniformBlockObject(): UniformBufferObject {
         return new GLUniformBufferObject(this.gl);

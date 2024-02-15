@@ -64,6 +64,9 @@ export default class DrawObject extends Component {
     draw() {
         this.getRenderingContext().draw(this.getPrimitive().getMode(), this.count);
     }
+    drawInstanced(instances: number) {
+        this.getRenderingContext().drawInstanced(this.getPrimitive().getMode(), 0, this.count, instances);
+    }
     bind() {
         if (!this.vao) {
             throw new Error("vao is not set");
@@ -110,12 +113,12 @@ export default class DrawObject extends Component {
         this.ebo.updateBuffer(buffer);
         this.count = buffer.length;
     }
-    createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array, size: number) {
+    createABO(index: ArrayBufferIndex, data: Float32Array | Uint16Array | Int8Array, size: number, divisor?: number) {
         if (!this.aboMap) {
             throw new Error("aboMap is not set");
         }
 
-        this.aboMap.set(index, this.getRenderingContext().makeArrayBufferObject(index, data, size));
+        this.aboMap.set(index, this.getRenderingContext().makeArrayBufferObject(index, data, size, divisor));
     }
     updateABO(index: ArrayBufferIndex, data: Float32Array) {
         const abo = this.aboMap.get(index);

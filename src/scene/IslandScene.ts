@@ -15,10 +15,10 @@ export default class IslandScene extends Scene {
     getDefaultEntities(): Entity[] {
         return [
             new CameraControllerObject()
+            , new WaterObject()
             , new SkyboxObject()
             // , new SkyObject()
-            , new WaterObject()
-            , new TerrainObject()
+            // , new TerrainObject()
             , new TerrainCDLODObject()
             , new HelloWireframeObject()
         ];

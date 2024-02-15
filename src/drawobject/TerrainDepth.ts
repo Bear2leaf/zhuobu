@@ -8,6 +8,7 @@ import MeshBuilder from "../map/create.js";
 import PoissonDiskSampling from "../poisson/index.js";
 import { createNoise2D } from "../map/simplex-noise.js";
 import SeedableRandom from "../map/SeedableRandom.js";
+import { smoothstep } from "../map/util.js";
 
 
 enum BiomeColor {
@@ -116,8 +117,8 @@ export default class TerrainDepth extends DrawObject {
     }
     adjustHeight(height: number) {
 
-        // return smoothstep(-1.0, 1.0, Math.pow(height, 3));
+        return smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5;
         // return Math.pow(height, 3);
-        return height;
+        // return height;
     }
 }

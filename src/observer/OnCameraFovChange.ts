@@ -1,6 +1,6 @@
 import Observer from "./Observer.js";
 
-export default class OnCameraFovChange extends Observer {
+export default class OnCameraChange extends Observer {
     postMessage?: (data: WorkerRequest) => void;
     fov: number = 0;
     oldFov: number = 0;
@@ -10,7 +10,7 @@ export default class OnCameraFovChange extends Observer {
         }
         this.oldFov = this.fov;
         this.postMessage!(
-            { type: "UpdateCameraFov", args: [this.fov] }
+            { type: "UpdateCamera", args: [this.fov] }
         )
     }
 

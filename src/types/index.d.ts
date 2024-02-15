@@ -27,6 +27,6 @@ declare type WorkerRequest =
     | { type: "HelloCompInit"; }
 
     | { type: "GetCameraFov"; }
-    | { type: "UpdateCameraFov"; args: [number] }
+    | { type: "UpdateCamera"; args: [number] }
 
     | never;

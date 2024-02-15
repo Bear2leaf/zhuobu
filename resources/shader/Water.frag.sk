@@ -30,7 +30,8 @@ void main() {
     float depth = texture(u_depthTexture, vec2(refractTexcoord.x, refractTexcoord.y)).r;
     float floorDistance = 2.0f * u_near * u_far / (u_far + u_near - (2.0f * depth - 1.0f) * (u_far - u_near));
     float waterDistance = 2.0f * u_near * u_far / (u_far + u_near - (2.0f * gl_FragCoord.z - 1.0f) * (u_far - u_near));
-    float waterDepth = floorDistance - waterDistance;
+    // float waterDepth = floorDistance - waterDistance;
+    float waterDepth = 1.0f;
     float waterDepthFactor = clamp(pow(waterDepth, 2.0f), 0.0f, 1.0f);
     vec2 distortedTexCoords = texture(u_distortionTexture, vec2(v_texcoord.x + u_frames, v_texcoord.y)).rg * DISTORT_FACTOR;
     distortedTexCoords = vec2(v_texcoord.xy) + vec2(distortedTexCoords.x, distortedTexCoords.y + u_frames);
@@ -47,7 +48,7 @@ void main() {
     float specularFactor = max(dot(reflectedLightDirection, viewVector), 0.0f);
     specularFactor = pow(specularFactor, shineDamper);
     vec3 specularColor = vec3(1.0f, 1.0f, 1.0f) * specularFactor * reflectivity * waterDepthFactor;
-    float refractFactor = (dot(viewVector, normal), 0.0f, 1.0f);
+    float refractFactor = clamp(dot(viewVector, normal), 0.0f, 1.0f);
     refractFactor = pow(refractFactor, 0.5f);
     color = mix(reflectColor, refractColor, refractFactor) * v_color + vec4(specularColor, 1.0f);
     color.a = waterDepthFactor;

@@ -1,20 +1,25 @@
 #version 300 es 
 layout(location = 0) in vec3 a_position;
 layout(location = 1) in vec3 a_color;
+layout(location = 7) in int a_edge;
+layout(location = 8) in vec2 a_offset;
+layout(location = 9) in float a_scale;
 
-uniform float u_scale;
-uniform int u_edge;
 uniform float u_resolution;
-uniform vec2 u_offset;
 uniform sampler2D u_texture7;
-uniform mat4 u_model;
-uniform vec4 u_perspective;
 uniform vec3 u_eye;
-uniform vec3 u_target;
-uniform vec3 u_up;
 
+uniform Model {
+  mat4 u_world;
+};
+uniform Camera {
+  mat4 u_viewInverse;
+  mat4 u_projection;
+};
 out vec3 v_color;
 out vec2 v_position;
+out vec4 v_vertexPosition;
+out float v_scale;
 
 const int EDGE_MORPH_TOP = 1;
 const int EDGE_MORPH_LEFT = 2;
@@ -24,7 +29,7 @@ const int EDGE_MORPH_RIGHT = 8;
 const float MORPH_REGION = 0.3f;
 // Poor man's bitwise &
 bool edgePresent(int edge) {
-    int e = u_edge / edge;
+    int e = a_edge / edge;
     return 2 * (e / 2) != e;
 }
 
@@ -66,39 +71,26 @@ float calculateMorph(vec2 p) {
 
 vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
     vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
-    return position - fraction * morphK * u_scale;
+    return position - fraction * morphK * a_scale;
 }
 
-mat4 projection() {
-    float fov = u_perspective.x;
-    float aspect = u_perspective.y;
-    float near = u_perspective.z;
-    float far = u_perspective.w;
-    float f = 1.0f / tan(fov / 2.0f);
-    return mat4(f / aspect, 0.0f, 0.0f, 0.0f, 0.0f, f, 0.0f, 0.0f, 0.0f, 0.0f, (far + near) / (near - far), -1.0f, 0.0f, 0.0f, (2.0f * far * near) / (near - far), 0.0f);
-
-}
-mat4 modelView() {
-    vec3 f = normalize(u_target - u_eye);
-    vec3 r = normalize(cross(f, u_up));
-    vec3 u = cross(r, f);
-    return mat4(r.x, u.x, -f.x, 0.0f, r.y, u.y, -f.y, 0.0f, r.z, u.z, -f.z, 0.0f, -dot(r, u_eye), -dot(u, u_eye), dot(f, u_eye), 1.0f);
-}
 
 void main() {
     vec2 origin = a_position.xz;
     // Morph between zoom layers
     float morphK = calculateMorph(origin);
-    vec4 worldOffset = inverse(u_model) * vec4(u_eye.x, 0.0f, u_eye.z, 1.0f);
-    vec2 position = origin * u_scale + u_offset + worldOffset.xz;
+    vec4 worldOffset = inverse(u_world) * vec4(u_eye.x, 0.0f, u_eye.z, 1.0f);
+    vec2 position = origin * a_scale + a_offset + worldOffset.xz;
     position = calculateNoMorphNeighbour(position, morphK);
     position = clamp(position, -0.9f, 0.9f);
     float height = texture(u_texture7, position * 0.5f + 0.5f).r;
     height = height * 2.0f - 1.0f;
-    // float height = textureLod(u_texture7, position * 0.5f + 0.5f, log2(1.0f / u_scale)).r - 0.5f;
+    // float height = textureLod(u_texture7, position * 0.5f + 0.5f, log2(1.0f / a_scale)).r - 0.5f;
     // float height = 0.0f;
     v_color = a_color;
     v_position = position;
-    gl_Position = projection() * modelView() * u_model * vec4(position.x, height, position.y, 1.0f);
+    v_scale = a_scale;
+    gl_Position = u_projection * u_viewInverse * u_world * vec4(position.x, height, position.y, 1.0f);
+    v_vertexPosition = u_world * vec4(position.x, height, position.y, 1.0f);
 
 }

@@ -1,5 +1,4 @@
 import { MainCamera } from "../camera/MainCamera.js";
-import { UniformBinding } from "../contextobject/UniformBufferObject.js";
 import Water from "../sprite/Water.js";
 import Renderer from "./Renderer.js";
 
@@ -13,12 +12,8 @@ export default class WaterRenderer extends Renderer {
         return camera;
     }
     render(): void {
-        this.getShader().use();
-        this.bindUBOs();
+        this.prepareUBOs();
         const camera = this.getCamera();
-        const projection = camera.getProjection().getVertics();
-        const viewInverse = camera.getView().inverse().getVertics();
-        this.updateUBO(UniformBinding.Camera, new Float32Array([...viewInverse, ...projection, ...camera.getEye().toFloatArray()]));
         this.getShader().setFloat("u_frames", (this.frames++ / 1000) % 1.0);
         this.getShader().setFloat("u_near", camera.getNear());
         this.getShader().setFloat("u_far", camera.getFar());

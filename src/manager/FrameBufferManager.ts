@@ -55,6 +55,7 @@ export default class FrameBufferManager {
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
         this.getRendererManager().getTerrainRenderer().render();
+        this.getRendererManager().getTerrainCDLODRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
         this.renderFrameBufferObject.unbind();
@@ -66,6 +67,7 @@ export default class FrameBufferManager {
         this.getEventManager().onViewPortChange.notify();
         this.getRendererManager().getSkyboxRenderer().render();
         this.getRendererManager().getTerrainRenderer().render();
+        this.getRendererManager().getTerrainCDLODRenderer().render();
         this.getRendererManager().getMeshRenderer().render();
         this.getRendererManager().getSkinMeshRenderer().render();
         this.reflectFrameBufferObject.unbind();
