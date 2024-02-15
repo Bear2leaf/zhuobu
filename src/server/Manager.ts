@@ -11,7 +11,7 @@ export default class Manager {
         }
         return this.engine;
     }
-    onMessage(data: WorkerRequest[], reply: (data: WorkerResponse[]) => void) {
+    onMessage(data: WorkerRequest[], reply: (data: WorkerResponse[]) => void, broadcast: (data: WorkerResponse[]) => void) {
         console.log("[WorkerReceive]", data);
         if (!data || data.length === 0) {
             return;
@@ -55,6 +55,7 @@ export default class Manager {
                     break;
                 case "UpdateCameraFov":
                     this.state["CameraFov"] = `${message.args[0]}`
+                    broadcast([{ type: "SendCameraFov", args: [this.state["CameraFov"]] }])
                     break;
                 case "GetCameraFov":
                     reply([{ type: "SendCameraFov", args: [this.state["CameraFov"]] }])

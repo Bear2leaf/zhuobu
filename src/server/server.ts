@@ -229,7 +229,7 @@ export default class Server extends EventEmitter {
             ];
             clients.push(socket);
             socket.on('close', () => {
-                console.log("closing socket...", socket);
+                console.log("closing socket...");
                 const index = clients.indexOf(socket);
                 if (index !== -1) {
                     clients.splice(index, 1);

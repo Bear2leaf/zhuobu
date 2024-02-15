@@ -79,7 +79,7 @@ export default class WorkerManager {
                     this.getEventManager().workerMessage.setCommand(new UpdateResourceProgress(workerResponse.args[0]));
                     break;
                 default:
-                    throw new Error(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
+                    console.warn(`Unknown workerResponse ${JSON.stringify(workerResponse)}`);
             }
             const command = this.getEventManager().workerMessage.getCommand();
 

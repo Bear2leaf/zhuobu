@@ -7,11 +7,11 @@ server.init();
 const manager = new Manager();
 
 
-server.on("data", (data, callback) => {
+server.on("data", (data, reply) => {
     if (data === null) {
         return;
     }
-    manager.onMessage(data, callback);
+    manager.onMessage(data, reply, (resp) => server.emit("broadcast", resp));
 });
 
 watch("./dist", { recursive: true }, () => {
