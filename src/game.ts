@@ -10,9 +10,9 @@ enum Edge {
 export default class WebGLRenderer {
     private readonly vertexShaderSource = `#version 300 es 
 layout(location = 0) in vec3 a_position;
-/* layout(location = 1) in */ uniform int a_edge;
-/* layout(location = 2) in */ uniform vec2 a_offset;
-/* layout(location = 3) in */ uniform float a_scale;
+layout(location = 1) in /* uniform */ int a_edge;
+layout(location = 2) in /* uniform */ vec2 a_offset;
+layout(location = 3) in /* uniform */ float a_scale;
 uniform mat4 u_model;
 const float u_resolution = 64.0f;
 const int EDGE_MORPH_TOP = 1;
@@ -107,9 +107,9 @@ void main() {
     private delta = 0;
     private now = 0;
     private readonly loc_model: WebGLUniformLocation;
-    private readonly loc_edge: WebGLUniformLocation;
-    private readonly loc_scale: WebGLUniformLocation;
-    private readonly loc_offset: WebGLUniformLocation;
+    // private readonly loc_edge: WebGLUniformLocation;
+    // private readonly loc_scale: WebGLUniformLocation;
+    // private readonly loc_offset: WebGLUniformLocation;
     constructor() {
         if (typeof wx === "undefined") {
             const canvas = document.createElement("canvas");
@@ -127,9 +127,9 @@ void main() {
         this.buffer2 = this.context.createBuffer()!;
         this.buffer3 = this.context.createBuffer()!;
         this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
-        this.loc_edge = this.context.getUniformLocation(this.program, "a_edge")!;
-        this.loc_scale = this.context.getUniformLocation(this.program, "a_scale")!;
-        this.loc_offset = this.context.getUniformLocation(this.program, "a_offset")!;
+        // this.loc_edge = this.context.getUniformLocation(this.program, "a_edge")!;
+        // this.loc_scale = this.context.getUniformLocation(this.program, "a_scale")!;
+        // this.loc_offset = this.context.getUniformLocation(this.program, "a_offset")!;
         this.initCDLODGrid();
         this.initDrawobject();
         requestAnimationFrame((time) => this.now = time);
@@ -246,57 +246,57 @@ void main() {
             this.count = subdivided.length / 3;
 
         }
-        // {
-        //     const attributeLocation = context.getAttribLocation(this.program, "a_edge");
-        //     if (attributeLocation === -1) {
-        //         throw new Error("Failed to get attribute location");
-        //     }
-        //     const buffer = this.buffer1;
-        //     if (buffer === null) {
-        //         throw new Error("Failed to create buffer");
-        //     }
-        //     context.enableVertexAttribArray(attributeLocation);
-        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        //     const data: number[] = this.edges;
-        //     context.bufferData(context.ARRAY_BUFFER, new Int8Array(data), context.STATIC_DRAW);
-        //     context.vertexAttribIPointer(attributeLocation, 1, context.BYTE, 0, 0);
-        //     context.vertexAttribDivisor(attributeLocation, 1);
-        //     context.bindBuffer(context.ARRAY_BUFFER, null);
-        // }
-        // {
-        //     const attributeLocation = context.getAttribLocation(this.program, "a_scale");
-        //     if (attributeLocation === -1) {
-        //         throw new Error("Failed to get attribute location");
-        //     }
-        //     const buffer = this.buffer2;
-        //     if (buffer === null) {
-        //         throw new Error("Failed to create buffer");
-        //     }
-        //     context.enableVertexAttribArray(attributeLocation);
-        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        //     const data: number[] = this.scales;
-        //     context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
-        //     context.vertexAttribPointer(attributeLocation, 1, context.FLOAT, false, 0, 0);
-        //     context.vertexAttribDivisor(attributeLocation, 1);
-        //     context.bindBuffer(context.ARRAY_BUFFER, null);
-        // }
-        // {
-        //     const attributeLocation = context.getAttribLocation(this.program, "a_offset");
-        //     if (attributeLocation === -1) {
-        //         throw new Error("Failed to get attribute location");
-        //     }
-        //     const buffer = this.buffer3;
-        //     if (buffer === null) {
-        //         throw new Error("Failed to create buffer");
-        //     }
-        //     context.enableVertexAttribArray(attributeLocation);
-        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        //     const data: number[] = this.offsets;
-        //     context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
-        //     context.vertexAttribPointer(attributeLocation, 2, context.FLOAT, false, 0, 0);
-        //     context.vertexAttribDivisor(attributeLocation, 1);
-        //     context.bindBuffer(context.ARRAY_BUFFER, null);
-        // }
+        {
+            const attributeLocation = context.getAttribLocation(this.program, "a_edge");
+            if (attributeLocation === -1) {
+                throw new Error("Failed to get attribute location");
+            }
+            const buffer = this.buffer1;
+            if (buffer === null) {
+                throw new Error("Failed to create buffer");
+            }
+            context.enableVertexAttribArray(attributeLocation);
+            context.bindBuffer(context.ARRAY_BUFFER, buffer);
+            const data: number[] = this.edges;
+            context.bufferData(context.ARRAY_BUFFER, new Int8Array(data), context.STATIC_DRAW);
+            context.vertexAttribIPointer(attributeLocation, 1, context.BYTE, 0, 0);
+            context.vertexAttribDivisor(attributeLocation, 1);
+            context.bindBuffer(context.ARRAY_BUFFER, null);
+        }
+        {
+            const attributeLocation = context.getAttribLocation(this.program, "a_scale");
+            if (attributeLocation === -1) {
+                throw new Error("Failed to get attribute location");
+            }
+            const buffer = this.buffer2;
+            if (buffer === null) {
+                throw new Error("Failed to create buffer");
+            }
+            context.enableVertexAttribArray(attributeLocation);
+            context.bindBuffer(context.ARRAY_BUFFER, buffer);
+            const data: number[] = this.scales;
+            context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
+            context.vertexAttribPointer(attributeLocation, 1, context.FLOAT, false, 0, 0);
+            context.vertexAttribDivisor(attributeLocation, 1);
+            context.bindBuffer(context.ARRAY_BUFFER, null);
+        }
+        {
+            const attributeLocation = context.getAttribLocation(this.program, "a_offset");
+            if (attributeLocation === -1) {
+                throw new Error("Failed to get attribute location");
+            }
+            const buffer = this.buffer3;
+            if (buffer === null) {
+                throw new Error("Failed to create buffer");
+            }
+            context.enableVertexAttribArray(attributeLocation);
+            context.bindBuffer(context.ARRAY_BUFFER, buffer);
+            const data: number[] = this.offsets;
+            context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
+            context.vertexAttribPointer(attributeLocation, 2, context.FLOAT, false, 0, 0);
+            context.vertexAttribDivisor(attributeLocation, 1);
+            context.bindBuffer(context.ARRAY_BUFFER, null);
+        }
 
     }
     render() {
@@ -305,13 +305,13 @@ void main() {
         context.bindVertexArray(this.vao);
         // context.uniform1f(context.getUniformLocation(this.program, "u_elapsed"), this.elapsed / 1000.0);
         context.uniformMatrix4fv(this.loc_model, false, Matrix.rotationZ(this.elapsed / 1000).getVertics());
-        for(let i = 0; i < this.tiles; i++) {
-            context.uniform1i(this.loc_edge, this.edges[i]);
-            context.uniform1f(this.loc_scale, this.scales[i]);
-            context.uniform2fv(this.loc_offset, [this.offsets[i * 2], this.offsets[i * 2 + 1]]);
-            context.drawArrays(context.LINES, 0, this.count);
-        }
-        // context.drawArrays(context.TRIANGLES, 0, 6)
+        // for(let i = 0; i < this.tiles; i++) {
+        //     context.uniform1i(this.loc_edge, this.edges[i]);
+        //     context.uniform1f(this.loc_scale, this.scales[i]);
+        //     context.uniform2fv(this.loc_offset, [this.offsets[i * 2], this.offsets[i * 2 + 1]]);
+        //     context.drawArrays(context.LINES, 0, this.count);
+        // }
+        context.drawArraysInstanced(context.LINES, 0, this.count, this.tiles)
         context.bindVertexArray(null);
     }
     initShaderProgram() {
