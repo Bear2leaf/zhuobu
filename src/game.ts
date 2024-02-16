@@ -360,14 +360,17 @@ void main() {
 
         requestAnimationFrame((time) => {
             this.render();
+            this.render();
+            this.render();
+            this.render();
             this.tick(time);
         })
     }
     adjustHeight(height: number) {
 
-        // return smoothstep(-1.0, 1.0, Math.pow(height, 3));
+        return smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.6;
         // return Math.pow(height, 3);
-        return height;
+        // return height;
     }
     initDrawobject() {
         const context = this.context;
@@ -398,7 +401,7 @@ void main() {
             context.enableVertexAttribArray(attributeLocation);
             context.bindBuffer(context.ARRAY_BUFFER, buffer);
             const subdivided: number[] = [];
-            const TILE_RESOLUTION = 128;
+            const TILE_RESOLUTION = 64;
             for (let i = 0; i < TILE_RESOLUTION; i++) {
                 for (let j = 0; j < TILE_RESOLUTION; j++) {
                     const x0 = i / TILE_RESOLUTION;
@@ -511,7 +514,7 @@ void main() {
         context.useProgram(this.program);
         context.bindVertexArray(this.vao);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
-        context.uniformMatrix4fv(this.loc_model, false, Matrix.identity().translate(new Vec4(-0.75, -0.75, 0.0, 1.0)).rotateY(this.elapsed / 1000).scale(new Vec4(0.5, 0.5, 0.5, 1.0)).getVertics());
+        context.uniformMatrix4fv(this.loc_model, false, Matrix.identity().translate(new Vec4(-0.75, -0.75, 0.0, 1.0)).rotateX(-Math.PI / 8).rotateY(this.elapsed / 1000).scale(new Vec4(0.5, 0.5, 0.5, 1.0)).getVertics());
         context.drawArraysInstanced(context.TRIANGLES, 0, this.count, this.tiles)
         context.bindVertexArray(null);
     }
