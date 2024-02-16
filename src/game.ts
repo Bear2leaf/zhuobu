@@ -10,71 +10,80 @@ enum Edge {
 export default class WebGLRenderer {
     private readonly vertexShaderSource = `#version 300 es 
 layout(location = 0) in vec3 a_position;
-layout(location = 1) in /* uniform */ int a_edge;
-layout(location = 2) in /* uniform */ vec2 a_offset;
-layout(location = 3) in /* uniform */ float a_scale;
-uniform mat4 u_model;
-const float u_resolution = 64.0f;
-const int EDGE_MORPH_TOP = 1;
-const int EDGE_MORPH_LEFT = 2;
-const int EDGE_MORPH_BOTTOM = 4;
-const int EDGE_MORPH_RIGHT = 8;
+// layout(location = 1) in /* uniform */ int a_edge;
+// layout(location = 2) in /* uniform */ vec2 a_offset;
+// layout(location = 3) in /* uniform */ float a_scale;
+ uniform mat4 u_model;
+ uniform int a_edges[52];
+ uniform vec2 a_offsets[52];
+ uniform float a_scales[52];
+ const float u_resolution = 64.0f;
+ const int EDGE_MORPH_TOP = 1;
+ const int EDGE_MORPH_LEFT = 2;
+ const int EDGE_MORPH_BOTTOM = 4;
+ const int EDGE_MORPH_RIGHT = 8;
+ 
 
-const float MORPH_REGION = 0.3f;
-// Poor man's bitwise &
-bool edgePresent(int edge) {
-    int e = a_edge / edge;
-    return 2 * (e / 2) != e;
-}
-
-// At the edges of tiles morph the vertices, if they are joining onto a higher layer
-float calculateMorph(vec2 p) {
-    float morphFactor = 0.0f;
-    if(edgePresent(EDGE_MORPH_TOP) && p.y >= 1.0f - MORPH_REGION) {
-        float m = 1.0f - clamp((1.0f - p.y) / MORPH_REGION, 0.0f, 1.0f);
-        morphFactor = max(m, morphFactor);
-    }
-    if(edgePresent(EDGE_MORPH_LEFT) && p.x <= MORPH_REGION) {
-        float m = 1.0f - clamp(p.x / MORPH_REGION, 0.0f, 1.0f);
-        morphFactor = max(m, morphFactor);
-    }
-    if(edgePresent(EDGE_MORPH_BOTTOM) && p.y <= MORPH_REGION) {
-        float m = 1.0f - clamp(p.y / MORPH_REGION, 0.0f, 1.0f);
-        morphFactor = max(m, morphFactor);
-    }
-    if(edgePresent(EDGE_MORPH_RIGHT) && p.x >= 1.0f - MORPH_REGION) {
-        float m = 1.0f - clamp((1.0f - p.x) / MORPH_REGION, 0.0f, 1.0f);
-        morphFactor = max(m, morphFactor);
-    }
-
-    return morphFactor;
-}
-
-// 01 // morphs input vertex uv from high to low detailed mesh position
-// 02 // - gridPos: normalized [0, 1] .xy grid position of the source vertex
-// 03 // - vertex: vertex.xy components in the world space
-// 04 // - morphK: morph value
-// 05
-// 06 const float2 g_gridDim = float2( 64, 64 );
-// 07
-// 08 float2 morphVertex( float2 gridPos, float2 vertex, float morphK )
-// 09 {
-// 10 float2 fracPart = frac( gridPos.xy * g_gridDim.xy * 0.5 ) * 2.0 / g_gridDim.xy;
-// 11 return vertex.xy - fracPart * g_quadScale.xy * morphK;
-// 12 }
-
-vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
-    vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
-    return position - fraction * morphK * a_scale;
-}
-
-
+ const float MORPH_REGION = 0.3f;
+ // Poor man's bitwise &
+ bool edgePresent(int edge) {
+    int a_edge = a_edges[gl_InstanceID];
+     int e = a_edge / edge;
+     return 2 * (e / 2) != e;
+ }
+ 
+ // At the edges of tiles morph the vertices, if they are joining onto a higher layer
+ float calculateMorph(vec2 p) {
+     float morphFactor = 0.0f;
+     if(edgePresent(EDGE_MORPH_TOP) && p.y >= 1.0f - MORPH_REGION) {
+         float m = 1.0f - clamp((1.0f - p.y) / MORPH_REGION, 0.0f, 1.0f);
+         morphFactor = max(m, morphFactor);
+     }
+     if(edgePresent(EDGE_MORPH_LEFT) && p.x <= MORPH_REGION) {
+         float m = 1.0f - clamp(p.x / MORPH_REGION, 0.0f, 1.0f);
+         morphFactor = max(m, morphFactor);
+     }
+     if(edgePresent(EDGE_MORPH_BOTTOM) && p.y <= MORPH_REGION) {
+         float m = 1.0f - clamp(p.y / MORPH_REGION, 0.0f, 1.0f);
+         morphFactor = max(m, morphFactor);
+     }
+     if(edgePresent(EDGE_MORPH_RIGHT) && p.x >= 1.0f - MORPH_REGION) {
+         float m = 1.0f - clamp((1.0f - p.x) / MORPH_REGION, 0.0f, 1.0f);
+         morphFactor = max(m, morphFactor);
+     }
+ 
+     return morphFactor;
+ }
+ 
+ // 01 // morphs input vertex uv from high to low detailed mesh position
+ // 02 // - gridPos: normalized [0, 1] .xy grid position of the source vertex
+ // 03 // - vertex: vertex.xy components in the world space
+ // 04 // - morphK: morph value
+ // 05
+ // 06 const float2 g_gridDim = float2( 64, 64 );
+ // 07
+ // 08 float2 morphVertex( float2 gridPos, float2 vertex, float morphK )
+ // 09 {
+ // 10 float2 fracPart = frac( gridPos.xy * g_gridDim.xy * 0.5 ) * 2.0 / g_gridDim.xy;
+ // 11 return vertex.xy - fracPart * g_quadScale.xy * morphK;
+ // 12 }
+ 
+ vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
+    float a_scale = a_scales[gl_InstanceID];
+     vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
+     return position - fraction * morphK * a_scale;
+ }
+ 
+ 
 void main() {
-    vec2 origin = a_position.xy;
-    // Morph between zoom layers
-    float morphK = calculateMorph(origin);
-    vec2 position = origin * a_scale + a_offset;
-    position = calculateNoMorphNeighbour(position, morphK);
+
+    float a_scale = a_scales[gl_InstanceID];
+    vec2 a_offset = a_offsets[gl_InstanceID];
+     vec2 origin = a_position.xy;
+     // Morph between zoom layers
+     float morphK = calculateMorph(origin);
+     vec2 position = origin * a_scale + a_offset;
+     position = calculateNoMorphNeighbour(position, morphK);
     gl_Position = u_model * vec4(position, 0.0f, 1.0f);
 }
     `;
@@ -107,12 +116,14 @@ void main() {
     private delta = 0;
     private now = 0;
     private readonly loc_model: WebGLUniformLocation;
-    // private readonly loc_edge: WebGLUniformLocation;
-    // private readonly loc_scale: WebGLUniformLocation;
-    // private readonly loc_offset: WebGLUniformLocation;
+    private readonly loc_edges: WebGLUniformLocation;
+    private readonly loc_scales: WebGLUniformLocation;
+    private readonly loc_offsets: WebGLUniformLocation;
     constructor() {
         if (typeof wx === "undefined") {
             const canvas = document.createElement("canvas");
+            canvas.width = 1024;
+            canvas.height = 1024;
             document.body.append(canvas);
             this.context = canvas.getContext("webgl2")!;
         } else {
@@ -120,18 +131,19 @@ void main() {
         }
         this.program = this.context.createProgram()!;
         this.initShaderProgram();
-        this.initUniforms();
+        this.context.useProgram(this.program);
         this.vao = this.context.createVertexArray()!;
         this.buffer0 = this.context.createBuffer()!;
         this.buffer1 = this.context.createBuffer()!;
         this.buffer2 = this.context.createBuffer()!;
         this.buffer3 = this.context.createBuffer()!;
-        this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
-        // this.loc_edge = this.context.getUniformLocation(this.program, "a_edge")!;
-        // this.loc_scale = this.context.getUniformLocation(this.program, "a_scale")!;
-        // this.loc_offset = this.context.getUniformLocation(this.program, "a_offset")!;
         this.initCDLODGrid();
+        this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
+        this.loc_edges = this.context.getUniformLocation(this.program, "a_edges")!;
+        this.loc_scales = this.context.getUniformLocation(this.program, "a_scales")!;
+        this.loc_offsets = this.context.getUniformLocation(this.program, "a_offsets")!;
         this.initDrawobject();
+        console.log(this);
         requestAnimationFrame((time) => this.now = time);
     }
 
@@ -201,15 +213,15 @@ void main() {
             this.tick(time);
         })
     }
-    initUniforms() {
-        this.context.useProgram(this.program);
-    }
     initDrawobject() {
         const context = this.context;
         context.clearColor(0, 0, 0, 1);
         context.enable(context.DEPTH_TEST);
         context.enable(context.CULL_FACE);
         context.bindVertexArray(this.vao);
+        context.uniform1iv(this.loc_edges, this.edges);
+        context.uniform1fv(this.loc_scales, this.scales);
+        context.uniform2fv(this.loc_offsets, this.offsets);
         {
 
             const attributeLocation = context.getAttribLocation(this.program, "a_position");
@@ -246,57 +258,57 @@ void main() {
             this.count = subdivided.length / 3;
 
         }
-        {
-            const attributeLocation = context.getAttribLocation(this.program, "a_edge");
-            if (attributeLocation === -1) {
-                throw new Error("Failed to get attribute location");
-            }
-            const buffer = this.buffer1;
-            if (buffer === null) {
-                throw new Error("Failed to create buffer");
-            }
-            context.enableVertexAttribArray(attributeLocation);
-            context.bindBuffer(context.ARRAY_BUFFER, buffer);
-            const data: number[] = this.edges;
-            context.bufferData(context.ARRAY_BUFFER, new Int8Array(data), context.STATIC_DRAW);
-            context.vertexAttribIPointer(attributeLocation, 1, context.BYTE, 0, 0);
-            context.vertexAttribDivisor(attributeLocation, 1);
-            context.bindBuffer(context.ARRAY_BUFFER, null);
-        }
-        {
-            const attributeLocation = context.getAttribLocation(this.program, "a_scale");
-            if (attributeLocation === -1) {
-                throw new Error("Failed to get attribute location");
-            }
-            const buffer = this.buffer2;
-            if (buffer === null) {
-                throw new Error("Failed to create buffer");
-            }
-            context.enableVertexAttribArray(attributeLocation);
-            context.bindBuffer(context.ARRAY_BUFFER, buffer);
-            const data: number[] = this.scales;
-            context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
-            context.vertexAttribPointer(attributeLocation, 1, context.FLOAT, false, 0, 0);
-            context.vertexAttribDivisor(attributeLocation, 1);
-            context.bindBuffer(context.ARRAY_BUFFER, null);
-        }
-        {
-            const attributeLocation = context.getAttribLocation(this.program, "a_offset");
-            if (attributeLocation === -1) {
-                throw new Error("Failed to get attribute location");
-            }
-            const buffer = this.buffer3;
-            if (buffer === null) {
-                throw new Error("Failed to create buffer");
-            }
-            context.enableVertexAttribArray(attributeLocation);
-            context.bindBuffer(context.ARRAY_BUFFER, buffer);
-            const data: number[] = this.offsets;
-            context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
-            context.vertexAttribPointer(attributeLocation, 2, context.FLOAT, false, 0, 0);
-            context.vertexAttribDivisor(attributeLocation, 1);
-            context.bindBuffer(context.ARRAY_BUFFER, null);
-        }
+        // {
+        //     const attributeLocation = context.getAttribLocation(this.program, "a_edge");
+        //     if (attributeLocation === -1) {
+        //         throw new Error("Failed to get attribute location");
+        //     }
+        //     const buffer = this.buffer1;
+        //     if (buffer === null) {
+        //         throw new Error("Failed to create buffer");
+        //     }
+        //     context.enableVertexAttribArray(attributeLocation);
+        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
+        //     const data: number[] = this.edges;
+        //     context.bufferData(context.ARRAY_BUFFER, new Int8Array(data), context.STATIC_DRAW);
+        //     context.vertexAttribIPointer(attributeLocation, 1, context.BYTE, 0, 0);
+        //     context.vertexAttribDivisor(attributeLocation, 1);
+        //     context.bindBuffer(context.ARRAY_BUFFER, null);
+        // }
+        // {
+        //     const attributeLocation = context.getAttribLocation(this.program, "a_scale");
+        //     if (attributeLocation === -1) {
+        //         throw new Error("Failed to get attribute location");
+        //     }
+        //     const buffer = this.buffer2;
+        //     if (buffer === null) {
+        //         throw new Error("Failed to create buffer");
+        //     }
+        //     context.enableVertexAttribArray(attributeLocation);
+        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
+        //     const data: number[] = this.scales;
+        //     context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
+        //     context.vertexAttribPointer(attributeLocation, 1, context.FLOAT, false, 0, 0);
+        //     context.vertexAttribDivisor(attributeLocation, 1);
+        //     context.bindBuffer(context.ARRAY_BUFFER, null);
+        // }
+        // {
+        //     const attributeLocation = context.getAttribLocation(this.program, "a_offset");
+        //     if (attributeLocation === -1) {
+        //         throw new Error("Failed to get attribute location");
+        //     }
+        //     const buffer = this.buffer3;
+        //     if (buffer === null) {
+        //         throw new Error("Failed to create buffer");
+        //     }
+        //     context.enableVertexAttribArray(attributeLocation);
+        //     context.bindBuffer(context.ARRAY_BUFFER, buffer);
+        //     const data: number[] = this.offsets;
+        //     context.bufferData(context.ARRAY_BUFFER, new Float32Array(data), context.STATIC_DRAW);
+        //     context.vertexAttribPointer(attributeLocation, 2, context.FLOAT, false, 0, 0);
+        //     context.vertexAttribDivisor(attributeLocation, 1);
+        //     context.bindBuffer(context.ARRAY_BUFFER, null);
+        // }
 
     }
     render() {
@@ -311,6 +323,7 @@ void main() {
         //     context.uniform2fv(this.loc_offset, [this.offsets[i * 2], this.offsets[i * 2 + 1]]);
         //     context.drawArrays(context.LINES, 0, this.count);
         // }
+
         context.drawArraysInstanced(context.LINES, 0, this.count, this.tiles)
         context.bindVertexArray(null);
     }
