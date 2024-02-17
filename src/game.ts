@@ -1,6 +1,3 @@
-import { WindowInfo } from "./device/Device.js";
-import Matrix from "./geometry/Matrix.js";
-import { Vec4 } from "./geometry/Vector.js";
 import Map from "./map/Map.js";
 import SeedableRandom from "./map/SeedableRandom.js";
 import TriangleMesh from "./map/TriangleMesh.js";
@@ -8,6 +5,11 @@ import MeshBuilder from "./map/create.js";
 import { createNoise2D } from "./map/simplex-noise.js";
 import { smoothstep } from "./map/util.js";
 import PoissonDiskSampling from "./poisson/index.js";
+
+import matrix from "./math/matrix.js"
+
+type WindowInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
+
 enum Edge {
     NONE = 0,
     TOP = 1,
@@ -52,7 +54,8 @@ layout(location = 0) in vec3 a_position;
  uniform sampler2D u_textureDepth;
 
  out vec3 v_color;
- out vec2 v_position;
+ out vec2 v_texcoord;
+ out vec4 v_position;
 
  const float u_resolution = 64.0f;
  const int EDGE_MORPH_TOP = 1;
@@ -121,30 +124,40 @@ void main() {
      float morphK = calculateMorph(origin);
      vec2 position = origin * u_scale + u_offset;
      position = calculateNoMorphNeighbour(position, morphK);
-     position = clamp(position, -0.9f, 0.9f);
-     float height = texture(u_textureDepth, position * 0.5f + 0.5f).r;
+     v_texcoord = position * 0.5f + 0.5f;
+     float height = texture(u_textureDepth, v_texcoord).r;
      height = height * 2.0f - 1.0f;
     gl_Position = u_model * vec4(position.x, height, position.y, 1.0f);
-    v_position = position;
+    v_position = gl_Position;
 }
     `;
     private readonly fragmentShaderSource = `#version 300 es
 precision highp float;
 
-in vec2 v_position;
+in vec2 v_texcoord;
+in vec4 v_position;
 
 uniform float u_elapsed;
 uniform sampler2D u_texture;
+uniform sampler2D u_textureNormal;
+
+const vec3 sun = vec3(0.0f, 1.0f, 0.5f);
 
 out vec4 color;
 
 vec3 getDiffuse() {
     // return vec3(1.0f);
-    return texture(u_texture, v_position / 2.0f + 0.5f).rgb;
+    return texture(u_texture, v_texcoord).rgb;
+}
+float getLight() {
+    vec3 normal = texture(u_textureNormal, v_texcoord).rgb;
+    vec3 lightDirection = normalize(sun);
+    float light = dot(normal, lightDirection);
+    return light;
 }
 
 void main() {
-    color = vec4(getDiffuse(), 1.0f);
+    color = vec4(getDiffuse() * getLight(), 1.0f);
 }
 
     `;
@@ -154,19 +167,24 @@ void main() {
     
     
     out vec3 v_color;
+    out vec3 v_position;
     void main() {
-        gl_Position =  vec4(a_position, 1.0f);
+        gl_Position = vec4(a_position, 1.0f);
+        v_position = a_position;
         v_color = a_color;
     }`;
     private readonly textureFragmentShaderSource = `#version 300 es
     precision highp float;
     in vec3 v_color;
+    in vec3 v_position;
     
     
     layout(location = 0) out vec4 o_diffuse;
+    layout(location = 1) out vec3 o_normal;
     
     void main() {
         o_diffuse = vec4(v_color, 1.0f);
+        o_normal = normalize(cross(dFdx(v_position), dFdy(v_position)));
     }`
     private readonly context: WebGL2RenderingContext;
     private readonly program: WebGLProgram;
@@ -176,16 +194,17 @@ void main() {
     private readonly buffer0: WebGLBuffer;
     private readonly buffer1: WebGLBuffer;
     private readonly buffer2: WebGLBuffer;
-    private readonly buffer3: WebGLBuffer;
     private readonly loc_model: WebGLUniformLocation;
     private readonly loc_edges: WebGLUniformLocation;
     private readonly loc_scales: WebGLUniformLocation;
     private readonly loc_offsets: WebGLUniformLocation;
     private readonly loc_diffuse: WebGLUniformLocation;
+    private readonly loc_normal: WebGLUniformLocation;
     private readonly loc_depth: WebGLUniformLocation;
     private readonly terrainFramebuffer: WebGLFramebuffer;
     private readonly depthTexture: WebGLTexture;
     private readonly diffuseTexture: WebGLTexture;
+    private readonly normalTexture: WebGLTexture;
     private readonly scales: number[] = [];
     private readonly offsets: number[] = [];
     private readonly edges: number[] = [];
@@ -200,7 +219,7 @@ void main() {
     private readonly distanceRNG = new SeedableRandom(40);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
-    private readonly map = new Map(new TriangleMesh(new MeshBuilder({ boundarySpacing: this.spacing }).addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
+    private readonly map = new Map(new TriangleMesh(new MeshBuilder().addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
         amplitude: 0.5,
         length: 4,
     }, () => (N) => Math.round(this.rng.nextFloat() * N));
@@ -233,9 +252,9 @@ void main() {
         this.buffer0 = this.context.createBuffer()!;
         this.buffer1 = this.context.createBuffer()!;
         this.buffer2 = this.context.createBuffer()!;
-        this.buffer3 = this.context.createBuffer()!;
         this.depthTexture = this.context.createTexture()!;
         this.diffuseTexture = this.context.createTexture()!;
+        this.normalTexture = this.context.createTexture()!;
         this.terrainFramebuffer = this.context.createFramebuffer()!;
         this.initCDLODGrid();
         this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
@@ -244,12 +263,13 @@ void main() {
         this.loc_offsets = this.context.getUniformLocation(this.program, "u_offsets")!;
         this.loc_depth = this.context.getUniformLocation(this.program, "u_textureDepth")!;
         this.loc_diffuse = this.context.getUniformLocation(this.program, "u_texture")!;
+        this.loc_normal = this.context.getUniformLocation(this.program, "u_textureNormal")!;
         this.createDepthTexture()
         this.createDiffuseTexture()
+        this.createNormalTexture()
         this.initMap();
         this.createTerrainFramebuffer();
         this.initDrawobject();
-        this.renderTexture();
         requestAnimationFrame((time) => this.now = time);
     }
     createTerrainFramebuffer() {
@@ -259,9 +279,12 @@ void main() {
         context.bindTexture(context.TEXTURE_2D, this.diffuseTexture);
         context.activeTexture(context.TEXTURE1);
         context.bindTexture(context.TEXTURE_2D, this.depthTexture);
+        context.activeTexture(context.TEXTURE2);
+        context.bindTexture(context.TEXTURE_2D, this.normalTexture);
         context.framebufferTexture2D(context.FRAMEBUFFER, context.DEPTH_ATTACHMENT, context.TEXTURE_2D, this.depthTexture, 0);
         context.framebufferTexture2D(context.FRAMEBUFFER, context.COLOR_ATTACHMENT0, context.TEXTURE_2D, this.diffuseTexture, 0);
-        context.drawBuffers([context.COLOR_ATTACHMENT0]);
+        context.framebufferTexture2D(context.FRAMEBUFFER, context.COLOR_ATTACHMENT1, context.TEXTURE_2D, this.normalTexture, 0);
+        context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
     createDepthTexture() {
@@ -281,7 +304,17 @@ void main() {
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
-        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR);
+        context.bindTexture(context.TEXTURE_2D, null);
+    }
+    createNormalTexture() {
+        const context = this.context;
+        context.bindTexture(context.TEXTURE_2D, this.normalTexture);
+        context.texImage2D(context.TEXTURE_2D, 0, context.RGB, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio, 0, context.RGB, context.UNSIGNED_BYTE, null);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR);
         context.bindTexture(context.TEXTURE_2D, null);
     }
     initMap() {
@@ -359,18 +392,17 @@ void main() {
         this.now = time;
 
         requestAnimationFrame((time) => {
-            this.render();
-            this.render();
-            this.render();
+            this.renderTexture();
             this.render();
             this.tick(time);
         })
     }
     adjustHeight(height: number) {
 
-        return smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.6;
+        // return (smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5) * 2;
         // return Math.pow(height, 3);
-        // return height;
+        // return Math.sign(height) * Math.sqrt(Math.abs(height) / 8);
+        return height / 8;
     }
     initDrawobject() {
         const context = this.context;
@@ -387,6 +419,7 @@ void main() {
             context.bindVertexArray(this.vao);
             context.uniform1i(this.loc_diffuse, 0);
             context.uniform1i(this.loc_depth, 1);
+            context.uniform1i(this.loc_normal, 2);
             context.uniform1iv(this.loc_edges, this.edges);
             context.uniform1fv(this.loc_scales, this.scales);
             context.uniform2fv(this.loc_offsets, this.offsets);
@@ -431,7 +464,7 @@ void main() {
             const colors: number[] = []
 
             const map = this.map;
-            for (let s = 0; s < map.mesh.numSolidSides; s++) {
+            for (let s = 0; s < map.mesh.numSides; s++) {
                 const r = map.mesh.s_begin_r(s),
                     t1 = map.mesh.s_inner_t(s),
                     t2 = map.mesh.s_outer_t(s);
@@ -514,7 +547,7 @@ void main() {
         context.useProgram(this.program);
         context.bindVertexArray(this.vao);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
-        context.uniformMatrix4fv(this.loc_model, false, Matrix.identity().translate(new Vec4(-0.75, -0.75, 0.0, 1.0)).rotateX(-Math.PI / 8).rotateY(this.elapsed / 1000).scale(new Vec4(0.5, 0.5, 0.5, 1.0)).getVertics());
+        context.uniformMatrix4fv(this.loc_model, false, matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000));
         context.drawArraysInstanced(context.TRIANGLES, 0, this.count, this.tiles)
         context.bindVertexArray(null);
     }
