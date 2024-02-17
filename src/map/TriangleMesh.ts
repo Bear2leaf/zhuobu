@@ -4,7 +4,7 @@
  * License: Apache v2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
  */
 
-import Delaunator from "./Delaunator.js";
+import Delaunator from "../util/Delaunator.js";
 
 
 /**

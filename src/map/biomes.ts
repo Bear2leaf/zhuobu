@@ -6,7 +6,7 @@
 
 'use strict';
 
-import TriangleMesh from '../util/TriangleMesh.js';
+import TriangleMesh from './TriangleMesh.js';
 import { mix } from '../util/math.js';
 
 function biome(ocean: boolean, water: boolean, coast: boolean, temperature: number, moisture: number) {

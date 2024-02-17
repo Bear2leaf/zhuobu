@@ -1,3 +1,3 @@
-import WebGLRenderer from "./dist/renderer/WebGLRenderer";
-import MiniGameDevice from "./dist/device/MiniGameDevice";
-new WebGLRenderer(new MiniGameDevice());
+import Renderer from "./dist/renderer/Renderer.js";
+import MinigameDevice from "./dist/device/MinigameDevice.js";
+new Renderer(new MinigameDevice());

@@ -1,0 +1,70 @@
+#version 300 es 
+#define TILES 52
+#define RESOLUTION 64.0f
+#define EDGE_MORPH_TOP 1
+#define EDGE_MORPH_LEFT 2
+#define EDGE_MORPH_BOTTOM 4
+#define EDGE_MORPH_RIGHT 8
+#define MORPH_REGION 0.3f
+
+
+layout(location = 0) in vec3 a_position;
+uniform mat4 u_model;
+uniform int u_edges[TILES];
+uniform vec2 u_offsets[TILES];
+uniform float u_scales[TILES];
+uniform sampler2D u_textureDepth;
+
+out vec2 v_texcoord;
+
+ // Poor man's bitwise &
+bool edgePresent(int edge) {
+    int u_edge = u_edges[gl_InstanceID];
+    int e = u_edge / edge;
+    return 2 * (e / 2) != e;
+}
+
+ // At the edges of tiles morph the vertices, if they are joining onto a higher layer
+float calculateMorph(vec2 p) {
+    float morphFactor = 0.0f;
+    if(edgePresent(EDGE_MORPH_TOP) && p.y >= 1.0f - MORPH_REGION) {
+        float m = 1.0f - clamp((1.0f - p.y) / MORPH_REGION, 0.0f, 1.0f);
+        morphFactor = max(m, morphFactor);
+    }
+    if(edgePresent(EDGE_MORPH_LEFT) && p.x <= MORPH_REGION) {
+        float m = 1.0f - clamp(p.x / MORPH_REGION, 0.0f, 1.0f);
+        morphFactor = max(m, morphFactor);
+    }
+    if(edgePresent(EDGE_MORPH_BOTTOM) && p.y <= MORPH_REGION) {
+        float m = 1.0f - clamp(p.y / MORPH_REGION, 0.0f, 1.0f);
+        morphFactor = max(m, morphFactor);
+    }
+    if(edgePresent(EDGE_MORPH_RIGHT) && p.x >= 1.0f - MORPH_REGION) {
+        float m = 1.0f - clamp((1.0f - p.x) / MORPH_REGION, 0.0f, 1.0f);
+        morphFactor = max(m, morphFactor);
+    }
+
+    return morphFactor;
+}
+
+vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
+    float u_scale = u_scales[gl_InstanceID];
+    vec2 fraction = fract(a_position.xz * RESOLUTION * 0.5f) * 2.0f / RESOLUTION;
+    return position - fraction * morphK * u_scale;
+}
+
+void main() {
+
+    float u_scale = u_scales[gl_InstanceID];
+    vec2 u_offset = u_offsets[gl_InstanceID];
+    vec2 origin = a_position.xz;
+     // Morph between zoom layers
+    float morphK = calculateMorph(origin);
+    vec2 position = origin * u_scale + u_offset;
+    position = calculateNoMorphNeighbour(position, morphK);
+    position = clamp(position, -0.9f, 0.9f);
+    v_texcoord = position * 0.5f + 0.5f;
+    float height = texture(u_textureDepth, v_texcoord).r;
+    height = height * 2.0f - 1.0f;
+    gl_Position = u_model * vec4(position.x, height, position.y, 1.0f);
+}

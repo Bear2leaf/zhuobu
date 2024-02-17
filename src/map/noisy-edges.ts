@@ -6,7 +6,7 @@
 
 'use strict';
 
-import TriangleMesh from '../util/TriangleMesh.js';
+import TriangleMesh from './TriangleMesh.js';
 import { mixp } from '../util/math.js';
 
 /**

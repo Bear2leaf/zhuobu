@@ -1,0 +1,124 @@
+
+
+import { matrix } from "../util/math.js";
+import Device from "../device/Device.js";
+import Texture from "../texture/Texture.js";
+import Framebuffer from "../framebuffer/Framebuffer.js";
+import Terrain from "../drawobject/Terrain.js";
+import Program from "../program/Program.js";
+import TerrainFBO from "../drawobject/TerrainFBO.js";
+import Drawobject from "../drawobject/Drawobject.js";
+
+
+
+
+export default class Renderer {
+    private readonly context: WebGL2RenderingContext;
+    private readonly terrainFBOProgram: Program;
+    private readonly terrainProgram: Program;
+    private readonly terrainFramebuffer: Framebuffer;
+    private readonly depthTexture: Texture;
+    private readonly diffuseTexture: Texture;
+    private readonly normalTexture: Texture;
+    private readonly terrain: Drawobject;
+    private readonly terrainFBO: Drawobject;
+    private readonly windowInfo: WindowInfo;
+    private elapsed = 0;
+    private delta = 0;
+    private now = 0;
+    constructor(device: Device) {
+        this.context = device.contextGL;
+        const context = this.context;
+        this.windowInfo = device.getWindowInfo();
+        this.terrainFBOProgram = Program.create(context);
+        this.terrainProgram = Program.create(context);
+        this.depthTexture = Texture.create(context);
+        this.diffuseTexture = Texture.create(context);
+        this.normalTexture = Texture.create(context);
+        this.terrain = Terrain.create(context);
+        this.terrainFBO = TerrainFBO.create(context);
+        this.terrainFramebuffer = Framebuffer.create(context);
+        this.terrainFBOProgram.name = "terrainFBO";
+        this.terrainProgram.name = "terrain";
+        device.loadSubpackage().then(() => this.terrainFBOProgram.loadShaderSource(device).then(() => this.terrainProgram.loadShaderSource(device))).then(() => {
+            device.createWorker("dist/worker/index.js", (data) => {
+                console.log(data);
+            }, (sendMessage) => {
+            })
+            this.initShaderProgram();
+            this.terrain.init(context, this.terrainProgram);
+            this.terrainFBO.init(context, this.terrainFBOProgram);
+            const width = this.windowInfo.width;
+            const height = this.windowInfo.height;
+            this.diffuseTexture.generateDiffuse(context, width, height);
+            this.depthTexture.generateDepth(context, width, height);
+            this.normalTexture.generateNormal(context, width, height);
+            this.terrainFramebuffer.createTerrainFramebuffer(context, this.depthTexture, this.diffuseTexture, this.normalTexture);
+            this.initContextState();
+            this.enableTextures(context);
+            requestAnimationFrame((time) => {
+                this.now = time;
+                this.tick(time)
+            });
+        });
+    }
+    tick(time: number) {
+        this.delta = time - this.now;
+        this.elapsed += this.delta;
+        this.now = time;
+
+        requestAnimationFrame((time) => {
+            this.renderTerrainFramebuffer();
+            this.render();
+            this.tick(time);
+        })
+    }
+    initContextState() {
+        const context = this.context;
+        context.clearColor(0, 0, 0, 1);
+        context.viewport(0, 0, this.windowInfo.width, this.windowInfo.height);
+        context.scissor(0, 0, this.windowInfo.width, this.windowInfo.height);
+        context.enable(context.DEPTH_TEST);
+        context.enable(context.CULL_FACE);
+        context.enable(context.SCISSOR_TEST)
+        context.blendFunc(context.ONE, context.ONE_MINUS_SRC_ALPHA);
+        context.blendFuncSeparate(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA, context.ONE, context.ONE);
+    }
+    render() {
+        const context = this.context;
+        this.terrainProgram.active(context);
+        context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
+        this.terrain.bind(context);
+        this.terrainProgram.updateTerrainModel(context, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [1, 1, 1]))
+        this.terrain.drawInstanced(context);
+        this.terrain.unbind(context);
+        this.terrainProgram.deactive(context);
+    }
+    enableTextures(context: WebGL2RenderingContext) {
+        this.diffuseTexture.active(context, 0);
+        this.diffuseTexture.bind(context);
+        this.depthTexture.active(context, 1);
+        this.depthTexture.bind(context);
+        this.normalTexture.active(context, 2);
+        this.normalTexture.bind(context);
+    }
+    renderTerrainFramebuffer() {
+        const context = this.context;
+        this.terrainFBOProgram.active(context);
+        this.terrainFramebuffer.bind(context);
+        context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
+        this.terrainFBO.bind(context);
+        this.terrainFBO.draw(context);
+        this.terrainFBO.unbind(context);
+        this.terrainFramebuffer.unbind(context);
+        this.terrainFBOProgram.deactive(context);
+
+    }
+    initShaderProgram() {
+        const context = this.context;
+        this.terrainFBOProgram.name = "terrainFBO";
+        this.terrainFBOProgram.init(context);
+        this.terrainProgram.name = "terrain";
+        this.terrainProgram.init(context);
+    }
+}

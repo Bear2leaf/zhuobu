@@ -6,7 +6,7 @@
 
 'use strict';
 
-import TriangleMesh from "../util/TriangleMesh.js";
+import TriangleMesh from "./TriangleMesh.js";
 
 /**
  * Coast corners are connected to coast sides, which have

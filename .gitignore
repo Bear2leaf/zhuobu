@@ -1,3 +1,5 @@
 .DS_Store
+.dependency-cruiser.js
+lib.*.d.ts
 dist
 project.*.json

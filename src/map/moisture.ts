@@ -6,7 +6,7 @@
 
 'use strict';
 
-import TriangleMesh from "../util/TriangleMesh.js";
+import TriangleMesh from "./TriangleMesh.js";
 
 /**
  * Find regions adjacent to rivers; out_r should be a Set

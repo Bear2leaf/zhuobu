@@ -3,7 +3,7 @@
 // License: Apache v2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
 
 'use strict';
-import TriangleMesh from '../util/TriangleMesh.js';
+import TriangleMesh from './TriangleMesh.js';
 import { NoiseFunction2D } from '../util/simplex-noise.js';
 import { mix } from '../util/math.js';
 

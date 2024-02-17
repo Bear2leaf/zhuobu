@@ -1,7 +1,7 @@
 import WorkerDevice from "./WorkerDevice";
 
 declare const worker: WechatMinigame.Worker;
-export default class MiniGameWorker implements WorkerDevice {
+export default class MinigameWorker implements WorkerDevice {
     constructor() {
         worker.onMessage((result: any) => this.onmessage(result));
     }

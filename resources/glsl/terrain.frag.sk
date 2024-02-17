@@ -1,0 +1,25 @@
+#version 300 es
+precision highp float;
+
+in vec2 v_texcoord;
+
+uniform sampler2D u_texture;
+uniform sampler2D u_textureNormal;
+
+const vec3 sun = vec3(0.0f, 1.0f, 0.5f);
+
+out vec4 color;
+
+vec3 getDiffuse() {
+    return texture(u_texture, v_texcoord).rgb;
+}
+float getLight() {
+    vec3 normal = texture(u_textureNormal, v_texcoord).rgb;
+    vec3 lightDirection = normalize(sun);
+    float light = dot(normal, lightDirection);
+    return light;
+}
+
+void main() {
+    color = vec4(getDiffuse() * getLight(), 1.0f);
+}

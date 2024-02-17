@@ -6,7 +6,7 @@
 
 'use strict';
 
-import TriangleMesh from "../util/TriangleMesh.js";
+import TriangleMesh from "./TriangleMesh.js";
 
 const MIN_SPRING_ELEVATION = 0.3;
 const MAX_SPRING_ELEVATION = 0.9;

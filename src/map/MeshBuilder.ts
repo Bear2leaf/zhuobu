@@ -11,7 +11,7 @@
 'use strict';
 
 
-import TriangleMesh from '../util/TriangleMesh.js';
+import TriangleMesh from './TriangleMesh.js';
 import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
 import Delaunator from '../util/Delaunator.js';
 

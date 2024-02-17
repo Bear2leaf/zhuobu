@@ -1,8 +1,8 @@
-import Device, { WindowInfo, TouchInfoFunction } from "./Device.js";
+import Device from "./Device.js";
 
 
 
-export default class MiniGameDevice implements Device {
+export default class MinigameDevice implements Device {
     private readonly divideTimeBy: number;
     private readonly canvasGL: WechatMinigame.Canvas;
     private readonly canvas2D: WechatMinigame.Canvas;

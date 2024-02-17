@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import TriangleMesh from '../util/TriangleMesh.js';
+import TriangleMesh from './TriangleMesh.js';
 import { randomShuffle } from '../util/math.js';
 import { assign_r_water, assign_r_ocean } from './water.js';
 import { assign_t_elevation, redistribute_t_elevation, assign_r_elevation } from './elevation.js';
