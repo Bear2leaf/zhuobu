@@ -1,12 +1,12 @@
 import Map from "./map/Map.js";
-import SeedableRandom from "./map/SeedableRandom.js";
-import TriangleMesh from "./map/TriangleMesh.js";
+import SeedableRandom from "./util/SeedableRandom.js";
+import TriangleMesh from "./util/TriangleMesh.js";
 import MeshBuilder from "./map/create.js";
-import { createNoise2D } from "./map/simplex-noise.js";
-import { smoothstep } from "./map/util.js";
-import PoissonDiskSampling from "./poisson/index.js";
+import { createNoise2D } from "./util/simplex-noise.js";
+import { smoothstep } from "./util/math.js";
+import PoissonDiskSampling from "./poisson/PoissonDiskSampling.js";
 
-import matrix from "./math/matrix.js"
+import { matrix } from "./util/math.js";
 
 type WindowInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
 
@@ -43,28 +43,26 @@ enum BiomeColor {
 };
 export default class WebGLRenderer {
     private readonly vertexShaderSource = `#version 300 es 
+    #define TILES 52
+    #define RESOLUTION 64.0f
+    #define EDGE_MORPH_TOP 1
+    #define EDGE_MORPH_LEFT 2
+    #define EDGE_MORPH_BOTTOM 4
+    #define EDGE_MORPH_RIGHT 8
+    #define MORPH_REGION 0.3f
 layout(location = 0) in vec3 a_position;
-// layout(location = 1) in /* uniform */ int a_edge;
-// layout(location = 2) in /* uniform */ vec2 a_offset;
-// layout(location = 3) in /* uniform */ float a_scale;
  uniform mat4 u_model;
- uniform int u_edges[52];
- uniform vec2 u_offsets[52];
- uniform float u_scales[52];
+ uniform int u_edges[TILES];
+ uniform vec2 u_offsets[TILES];
+ uniform float u_scales[TILES];
  uniform sampler2D u_textureDepth;
 
  out vec3 v_color;
  out vec2 v_texcoord;
  out vec4 v_position;
 
- const float u_resolution = 64.0f;
- const int EDGE_MORPH_TOP = 1;
- const int EDGE_MORPH_LEFT = 2;
- const int EDGE_MORPH_BOTTOM = 4;
- const int EDGE_MORPH_RIGHT = 8;
  
 
- const float MORPH_REGION = 0.3f;
  // Poor man's bitwise &
  bool edgePresent(int edge) {
     int u_edge = u_edges[gl_InstanceID];
@@ -110,7 +108,7 @@ layout(location = 0) in vec3 a_position;
  
  vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
     float u_scale = u_scales[gl_InstanceID];
-     vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
+     vec2 fraction = fract(a_position.xz * RESOLUTION * 0.5f) * 2.0f / RESOLUTION;
      return position - fraction * morphK * u_scale;
  }
  
@@ -195,12 +193,6 @@ void main() {
     private readonly buffer1: WebGLBuffer;
     private readonly buffer2: WebGLBuffer;
     private readonly loc_model: WebGLUniformLocation;
-    private readonly loc_edges: WebGLUniformLocation;
-    private readonly loc_scales: WebGLUniformLocation;
-    private readonly loc_offsets: WebGLUniformLocation;
-    private readonly loc_diffuse: WebGLUniformLocation;
-    private readonly loc_normal: WebGLUniformLocation;
-    private readonly loc_depth: WebGLUniformLocation;
     private readonly terrainFramebuffer: WebGLFramebuffer;
     private readonly depthTexture: WebGLTexture;
     private readonly diffuseTexture: WebGLTexture;
@@ -258,12 +250,6 @@ void main() {
         this.terrainFramebuffer = this.context.createFramebuffer()!;
         this.initCDLODGrid();
         this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
-        this.loc_edges = this.context.getUniformLocation(this.program, "u_edges")!;
-        this.loc_scales = this.context.getUniformLocation(this.program, "u_scales")!;
-        this.loc_offsets = this.context.getUniformLocation(this.program, "u_offsets")!;
-        this.loc_depth = this.context.getUniformLocation(this.program, "u_textureDepth")!;
-        this.loc_diffuse = this.context.getUniformLocation(this.program, "u_texture")!;
-        this.loc_normal = this.context.getUniformLocation(this.program, "u_textureNormal")!;
         this.createDepthTexture()
         this.createDiffuseTexture()
         this.createNormalTexture()
@@ -417,12 +403,12 @@ void main() {
         {
             context.useProgram(this.program);
             context.bindVertexArray(this.vao);
-            context.uniform1i(this.loc_diffuse, 0);
-            context.uniform1i(this.loc_depth, 1);
-            context.uniform1i(this.loc_normal, 2);
-            context.uniform1iv(this.loc_edges, this.edges);
-            context.uniform1fv(this.loc_scales, this.scales);
-            context.uniform2fv(this.loc_offsets, this.offsets);
+            context.uniform1i(context.getUniformLocation(this.program, "u_texture"), 0);
+            context.uniform1i(context.getUniformLocation(this.program, "u_textureDepth"), 1);
+            context.uniform1i(context.getUniformLocation(this.program, "u_textureNormal"), 2);
+            context.uniform1iv(context.getUniformLocation(this.program, "u_edges"), this.edges);
+            context.uniform1fv(context.getUniformLocation(this.program, "u_scales"), this.scales);
+            context.uniform2fv(context.getUniformLocation(this.program, "u_offsets"), this.offsets);
             const attributeLocation = context.getAttribLocation(this.program, "a_position");
             if (attributeLocation === -1) {
                 throw new Error("Failed to get attribute location");

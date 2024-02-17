@@ -11,20 +11,11 @@
 'use strict';
 
 
-import TriangleMesh from './TriangleMesh.js';
-import PoissonDiskSampling from "../poisson/index.js";
-import Delaunator from './Delaunator.js';
+import TriangleMesh from '../util/TriangleMesh.js';
+import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
+import Delaunator from '../util/Delaunator.js';
 
 function s_next_s(s: number) { return (s % 3 == 2) ? s - 2 : s + 1; }
-
-
-function checkPointInequality(mesh: { _r_vertex: number[][], _triangles: Uint32Array, _halfedges: Int32Array }) {
-    const { _r_vertex, _triangles, _halfedges } = mesh;
-    // TODO: check for collinear vertices. Around each red point P if
-    // there's a point Q and R both connected to it, and the angle P→Q and
-    // the angle P→R are 180° apart, then there's collinearity. This would
-    // indicate an issue with point selection.
-}
 
 
 function checkTriangleInequality(mesh: { _r_vertex: number[][], _triangles: Uint32Array, _halfedges: Int32Array }) {
@@ -82,26 +73,6 @@ function checkMeshConnectivity(mesh: { _r_vertex: number[][], _triangles: Uint32
     }
 }
 
-
-/*
- * Add vertices evenly along the boundary of the mesh;
- * use a slight curve so that the Delaunay triangulation
- * doesn't make long thing triangles along the boundary.
- * These points also prevent the Poisson disc generator
- * from making uneven points near the boundary.
- */
-function addBoundaryPoints(spacing: number, size: number): number[][] {
-    let N = Math.ceil(size / spacing);
-    let points: number[][] = [];
-    for (let i = 0; i <= N; i++) {
-        let t = (i + 0.5) / (N + 1);
-        let w = size * t;
-        let offset = Math.pow(t - 0.5, 2);
-        points.push([offset, w], [size - offset, w]);
-        points.push([w, offset], [w, size - offset]);
-    }
-    return points;
-}
 
 
 function addGhostStructure(mesh: { _r_vertex: number[][], _triangles: Uint32Array, _halfedges: Int32Array }) {
@@ -174,19 +145,15 @@ function addGhostStructure(mesh: { _r_vertex: number[][], _triangles: Uint32Arra
  *
  * Build a mesh with poisson disc points and a boundary:
  *
- * new MeshBuilder({boundarySpacing: 150})
+ * new MeshBuilder()
  *    .addPoisson(Poisson, 100)
  *    .create()
  */
 class MeshBuilder {
     private points: number[][];
-    private readonly numBoundaryRegions;
     /** If boundarySpacing > 0 there will be a boundary added around the 1000x1000 area */
-    constructor(options: { boundarySpacing?: number } = {}) {
-        const boundarySpacing = options.boundarySpacing || 0;
-        let boundaryPoints = boundarySpacing > 0 ? addBoundaryPoints(boundarySpacing, 1000) : [];
-        this.points = boundaryPoints;
-        this.numBoundaryRegions = boundaryPoints.length;
+    constructor() {
+        this.points = [];
     }
 
     /** Points should be [x, y] */
@@ -197,16 +164,6 @@ class MeshBuilder {
         return this;
     }
 
-    /** Points will be [x, y] */
-    getNonBoundaryPoints() {
-        return this.points.slice(this.numBoundaryRegions);
-    }
-
-    /** (used for more advanced mixing of different mesh types) */
-    clearNonBoundaryPoints() {
-        this.points.splice(this.numBoundaryRegions, this.points.length);
-        return this;
-    }
 
     /** Pass in the constructor from the poisson-disk-sampling module */
     addPoisson(Poisson: typeof PoissonDiskSampling, spacing: number, random = Math.random) {
@@ -234,12 +191,10 @@ class MeshBuilder {
         };
 
         if (runChecks) {
-            checkPointInequality(graph);
             checkTriangleInequality(graph);
         }
 
         graph = addGhostStructure(graph);
-        graph.numBoundaryRegions = this.numBoundaryRegions;
         if (runChecks) {
             checkMeshConnectivity(graph);
         }

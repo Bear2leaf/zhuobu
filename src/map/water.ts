@@ -3,10 +3,23 @@
 // License: Apache v2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
 
 'use strict';
-import TriangleMesh from './TriangleMesh.js';
-import { NoiseFunction2D } from './simplex-noise.js';
-import { fbm_noise, mix } from './util.js';
+import TriangleMesh from '../util/TriangleMesh.js';
+import { NoiseFunction2D } from '../util/simplex-noise.js';
+import { mix } from '../util/math.js';
 
+
+/**
+ * Add several noise values together
+ */
+export function fbm_noise(noise: {noise2D: NoiseFunction2D}, amplitudes: number[], nx: number, ny: number) {
+    let sum = 0, sumOfAmplitudes = 0;
+    for (let octave = 0; octave < amplitudes.length; octave++) {
+        let frequency = 1 << octave;
+        sum += amplitudes[octave] * noise.noise2D(nx * frequency, ny * frequency/*, octave*/);
+        sumOfAmplitudes += amplitudes[octave];
+    }
+    return sum / sumOfAmplitudes;
+};
 // NOTE: r_water, r_ocean, other fields are boolean valued so it
 // could be more efficient to pack them as bit fields in Uint8Array
 
