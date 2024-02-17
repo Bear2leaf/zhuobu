@@ -23,6 +23,7 @@ export default class Renderer {
     private readonly terrain: Drawobject;
     private readonly terrainFBO: Drawobject;
     private readonly windowInfo: WindowInfo;
+    private readonly mapSize = 512;
     private elapsed = 0;
     private delta = 0;
     private now = 0;
@@ -48,11 +49,10 @@ export default class Renderer {
             this.initShaderProgram();
             this.terrain.init(context, this.terrainProgram);
             this.terrainFBO.init(context, this.terrainFBOProgram);
-            const width = this.windowInfo.width;
-            const height = this.windowInfo.height;
-            this.diffuseTexture.generateDiffuse(context, width, height);
-            this.depthTexture.generateDepth(context, width, height);
-            this.normalTexture.generateNormal(context, width, height);
+            const size = this.mapSize;
+            this.diffuseTexture.generateDiffuse(context, size, size);
+            this.depthTexture.generateDepth(context, size, size);
+            this.normalTexture.generateNormal(context, size, size);
             this.terrainFramebuffer.createTerrainFramebuffer(context, this.depthTexture, this.diffuseTexture, this.normalTexture);
             this.initContextState();
             this.enableTextures(context);
@@ -76,8 +76,6 @@ export default class Renderer {
     initContextState() {
         const context = this.context;
         context.clearColor(0, 0, 0, 1);
-        context.viewport(0, 0, this.windowInfo.width, this.windowInfo.height);
-        context.scissor(0, 0, this.windowInfo.width, this.windowInfo.height);
         context.enable(context.DEPTH_TEST);
         context.enable(context.CULL_FACE);
         context.enable(context.SCISSOR_TEST)
@@ -87,9 +85,11 @@ export default class Renderer {
     render() {
         const context = this.context;
         this.terrainProgram.active(context);
+        context.viewport(0, 0, this.windowInfo.width, this.windowInfo.height);
+        context.scissor(0, 0, this.windowInfo.width, this.windowInfo.height);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
         this.terrain.bind(context);
-        this.terrainProgram.updateTerrainModel(context, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [1, 1, 1]))
+        this.terrainProgram.updateTerrainModel(context, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [2, 2, 2]))
         this.terrain.drawInstanced(context);
         this.terrain.unbind(context);
         this.terrainProgram.deactive(context);
@@ -106,6 +106,9 @@ export default class Renderer {
         const context = this.context;
         this.terrainFBOProgram.active(context);
         this.terrainFramebuffer.bind(context);
+        const size = this.mapSize;
+        context.viewport(0, 0, size, size);
+        context.scissor(0, 0, size, size);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
         this.terrainFBO.bind(context);
         this.terrainFBO.draw(context);
