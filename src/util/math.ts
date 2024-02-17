@@ -5,7 +5,6 @@
  */
 
 
-export type Matrix = number[] | Float32Array;
 /**
  * Return value, unless it's undefined, then return orElse
  */
@@ -90,7 +89,7 @@ export function randomShuffle(array: number[], randInt: (seed: number) => number
         array[j] = swap;
     }
     return array;
-};export const matrix = {
+}; export const matrix = {
     identity(dst?: Matrix) {
         dst = dst || new Float32Array(16);
         dst[0] = 1;
@@ -173,6 +172,35 @@ export function randomShuffle(array: number[], randInt: (seed: number) => number
             dst[14] = m[14];
             dst[15] = m[15];
         }
+        return dst;
+    },
+    scale(m: Matrix, v: number[], dst?: Matrix) {
+        dst = dst || new Float32Array(16);
+
+        const v0 = v[0];
+        const v1 = v[1];
+        const v2 = v[2];
+
+        dst[0] = v0 * m[0 * 4 + 0];
+        dst[1] = v0 * m[0 * 4 + 1];
+        dst[2] = v0 * m[0 * 4 + 2];
+        dst[3] = v0 * m[0 * 4 + 3];
+        dst[4] = v1 * m[1 * 4 + 0];
+        dst[5] = v1 * m[1 * 4 + 1];
+        dst[6] = v1 * m[1 * 4 + 2];
+        dst[7] = v1 * m[1 * 4 + 3];
+        dst[8] = v2 * m[2 * 4 + 0];
+        dst[9] = v2 * m[2 * 4 + 1];
+        dst[10] = v2 * m[2 * 4 + 2];
+        dst[11] = v2 * m[2 * 4 + 3];
+
+        if (m !== dst) {
+            dst[12] = m[12];
+            dst[13] = m[13];
+            dst[14] = m[14];
+            dst[15] = m[15];
+        }
+
         return dst;
     }
 };

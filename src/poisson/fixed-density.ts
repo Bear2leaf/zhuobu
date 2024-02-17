@@ -1,8 +1,8 @@
 "use strict";
 
 import { integer as tinyNDArray } from './tiny-ndarray.js';
-import sphereRandom from './sphere-random.js';
 import getNeighbourhood from './neighbourhood.js';
+import sphereRandom from './sphere-random.js';
 
 /**
  * Get the squared euclidean distance from two points of arbitrary, but equal, dimensions

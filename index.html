@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zhuobu</title>
+    <title>Document</title>
 </head>
 <body>
-    
-    <script type="module" src="./dist/game.js"></script>
+    <script type="module">
+        import WebGLRenderer from "./dist/renderer/WebGLRenderer.js";
+        import BrowserDevice from "./dist/device/BrowserDevice.js";
+        new WebGLRenderer(new BrowserDevice());
+    </script>
 </body>
 </html>

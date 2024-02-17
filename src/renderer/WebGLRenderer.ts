@@ -1,14 +1,15 @@
-import Map from "./map/Map.js";
-import SeedableRandom from "./util/SeedableRandom.js";
-import TriangleMesh from "./util/TriangleMesh.js";
-import MeshBuilder from "./map/create.js";
-import { createNoise2D } from "./util/simplex-noise.js";
-import { smoothstep } from "./util/math.js";
-import PoissonDiskSampling from "./poisson/PoissonDiskSampling.js";
+import Map from "../map/Map.js";
+import SeedableRandom from "../util/SeedableRandom.js";
+import TriangleMesh from "../util/TriangleMesh.js";
+import MeshBuilder from "../map/create.js";
+import { createNoise2D } from "../util/simplex-noise.js";
+import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
 
-import { matrix } from "./util/math.js";
+import { matrix } from "../util/math.js";
+import Device from "../device/Device.js";
 
-type WindowInfo = { windowWidth: number; windowHeight: number; pixelRatio: number; }
+
+
 
 enum Edge {
     NONE = 0,
@@ -93,18 +94,6 @@ layout(location = 0) in vec3 a_position;
      return morphFactor;
  }
  
- // 01 // morphs input vertex uv from high to low detailed mesh position
- // 02 // - gridPos: normalized [0, 1] .xy grid position of the source vertex
- // 03 // - vertex: vertex.xy components in the world space
- // 04 // - morphK: morph value
- // 05
- // 06 const float2 g_gridDim = float2( 64, 64 );
- // 07
- // 08 float2 morphVertex( float2 gridPos, float2 vertex, float morphK )
- // 09 {
- // 10 float2 fracPart = frac( gridPos.xy * g_gridDim.xy * 0.5 ) * 2.0 / g_gridDim.xy;
- // 11 return vertex.xy - fracPart * g_quadScale.xy * morphK;
- // 12 }
  
  vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
     float u_scale = u_scales[gl_InstanceID];
@@ -122,6 +111,7 @@ void main() {
      float morphK = calculateMorph(origin);
      vec2 position = origin * u_scale + u_offset;
      position = calculateNoMorphNeighbour(position, morphK);
+     position = clamp(position, -0.9f, 0.9f);
      v_texcoord = position * 0.5f + 0.5f;
      float height = texture(u_textureDepth, v_texcoord).r;
      height = height * 2.0f - 1.0f;
@@ -159,31 +149,8 @@ void main() {
 }
 
     `;
-    private readonly textureVertexShaderSource = `#version 300 es 
-    layout(location = 0) in vec3 a_position;
-    layout(location = 1) in vec3 a_color;
-    
-    
-    out vec3 v_color;
-    out vec3 v_position;
-    void main() {
-        gl_Position = vec4(a_position, 1.0f);
-        v_position = a_position;
-        v_color = a_color;
-    }`;
-    private readonly textureFragmentShaderSource = `#version 300 es
-    precision highp float;
-    in vec3 v_color;
-    in vec3 v_position;
-    
-    
-    layout(location = 0) out vec4 o_diffuse;
-    layout(location = 1) out vec3 o_normal;
-    
-    void main() {
-        o_diffuse = vec4(v_color, 1.0f);
-        o_normal = normalize(cross(dFdx(v_position), dFdy(v_position)));
-    }`
+    private textureVertexShaderSource = ``;
+    private textureFragmentShaderSource = ``
     private readonly context: WebGL2RenderingContext;
     private readonly program: WebGLProgram;
     private readonly textureProgram: WebGLProgram;
@@ -192,7 +159,7 @@ void main() {
     private readonly buffer0: WebGLBuffer;
     private readonly buffer1: WebGLBuffer;
     private readonly buffer2: WebGLBuffer;
-    private readonly loc_model: WebGLUniformLocation;
+    private loc_model: WebGLUniformLocation | null = null;
     private readonly terrainFramebuffer: WebGLFramebuffer;
     private readonly depthTexture: WebGLTexture;
     private readonly diffuseTexture: WebGLTexture;
@@ -215,30 +182,11 @@ void main() {
         amplitude: 0.5,
         length: 4,
     }, () => (N) => Math.round(this.rng.nextFloat() * N));
-    constructor() {
-        if (typeof wx === "undefined") {
-            const canvas = document.createElement("canvas");
-            this.windowInfo = {
-                pixelRatio: 1,
-                windowHeight: 1024,
-                windowWidth: 1024,
-            }
-            canvas.width = this.windowInfo.windowWidth * this.windowInfo.pixelRatio;
-            canvas.height = this.windowInfo.windowHeight * this.windowInfo.pixelRatio;
-            canvas.style.width = "100%";
-            document.body.append(canvas);
-            this.context = canvas.getContext("webgl2")!;
-        } else {
-            this.context = wx.createCanvas().getContext("webgl2") as WebGL2RenderingContext;
-            this.windowInfo = {
-                pixelRatio: wx.getWindowInfo().pixelRatio,
-                windowHeight: wx.getWindowInfo().windowHeight,
-                windowWidth: wx.getWindowInfo().windowWidth,
-            }
-        }
+    constructor(device: Device) {
+        this.context = device.contextGL;
+        this.windowInfo = device.getWindowInfo();
         this.program = this.context.createProgram()!;
         this.textureProgram = this.context.createProgram()!;
-        this.initShaderProgram();
         this.vao = this.context.createVertexArray()!;
         this.textureVAO = this.context.createVertexArray()!;
         this.buffer0 = this.context.createBuffer()!;
@@ -248,15 +196,34 @@ void main() {
         this.diffuseTexture = this.context.createTexture()!;
         this.normalTexture = this.context.createTexture()!;
         this.terrainFramebuffer = this.context.createFramebuffer()!;
-        this.initCDLODGrid();
-        this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
-        this.createDepthTexture()
-        this.createDiffuseTexture()
-        this.createNormalTexture()
-        this.initMap();
-        this.createTerrainFramebuffer();
-        this.initDrawobject();
-        requestAnimationFrame((time) => this.now = time);
+        device.loadSubpackage().then(() => this.loadShaderSource(device)).then(() => {
+            device.createWorker("dist/worker/index.js", (data) => {
+                console.log(data);
+            }, (sendMessage) => {
+                setInterval(() => {
+                    sendMessage({
+                        type: "EngineInit"
+                    })
+                }, 1000)
+            })
+            this.initShaderProgram();
+            this.initCDLODGrid();
+            this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
+            this.createDepthTexture()
+            this.createDiffuseTexture()
+            this.createNormalTexture()
+            this.initMap();
+            this.createTerrainFramebuffer();
+            this.initDrawobject();
+            requestAnimationFrame((time) => {
+                this.now = time;
+                this.tick(time)
+            });
+        });
+    }
+    async loadShaderSource(device: Device) {
+        this.textureVertexShaderSource = await device.readText("resources/glsl/terrainFBO.vert.sk")
+        this.textureFragmentShaderSource = await device.readText("resources/glsl/terrainFBO.frag.sk")
     }
     createTerrainFramebuffer() {
         const context = this.context;
@@ -276,7 +243,7 @@ void main() {
     createDepthTexture() {
         const context = this.context;
         context.bindTexture(context.TEXTURE_2D, this.depthTexture);
-        context.texImage2D(context.TEXTURE_2D, 0, context.DEPTH_COMPONENT32F, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio, 0, context.DEPTH_COMPONENT, context.FLOAT, null);
+        context.texImage2D(context.TEXTURE_2D, 0, context.DEPTH_COMPONENT32F, this.windowInfo.width * this.windowInfo.ratio, this.windowInfo.height * this.windowInfo.ratio, 0, context.DEPTH_COMPONENT, context.FLOAT, null);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
@@ -286,7 +253,7 @@ void main() {
     createDiffuseTexture() {
         const context = this.context;
         context.bindTexture(context.TEXTURE_2D, this.diffuseTexture);
-        context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio, 0, context.RGBA, context.UNSIGNED_BYTE, null);
+        context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, this.windowInfo.width * this.windowInfo.ratio, this.windowInfo.height * this.windowInfo.ratio, 0, context.RGBA, context.UNSIGNED_BYTE, null);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
@@ -296,7 +263,7 @@ void main() {
     createNormalTexture() {
         const context = this.context;
         context.bindTexture(context.TEXTURE_2D, this.normalTexture);
-        context.texImage2D(context.TEXTURE_2D, 0, context.RGB, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio, 0, context.RGB, context.UNSIGNED_BYTE, null);
+        context.texImage2D(context.TEXTURE_2D, 0, context.RGB, this.windowInfo.width * this.windowInfo.ratio, this.windowInfo.height * this.windowInfo.ratio, 0, context.RGB, context.UNSIGNED_BYTE, null);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
@@ -393,8 +360,8 @@ void main() {
     initDrawobject() {
         const context = this.context;
         context.clearColor(0, 0, 0, 1);
-        context.viewport(0, 0, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio);
-        context.scissor(0, 0, this.windowInfo.windowWidth * this.windowInfo.pixelRatio, this.windowInfo.windowHeight * this.windowInfo.pixelRatio);
+        context.viewport(0, 0, this.windowInfo.width * this.windowInfo.ratio, this.windowInfo.height * this.windowInfo.ratio);
+        context.scissor(0, 0, this.windowInfo.width * this.windowInfo.ratio, this.windowInfo.height * this.windowInfo.ratio);
         context.enable(context.DEPTH_TEST);
         context.enable(context.CULL_FACE);
         context.enable(context.SCISSOR_TEST)
@@ -533,7 +500,7 @@ void main() {
         context.useProgram(this.program);
         context.bindVertexArray(this.vao);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
-        context.uniformMatrix4fv(this.loc_model, false, matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000));
+        context.uniformMatrix4fv(this.loc_model, false, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [2, 2, 2]));
         context.drawArraysInstanced(context.TRIANGLES, 0, this.count, this.tiles)
         context.bindVertexArray(null);
     }
@@ -617,6 +584,3 @@ void main() {
         }
     }
 }
-
-const renderer = new WebGLRenderer();
-renderer.tick(0);
