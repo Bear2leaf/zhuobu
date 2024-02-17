@@ -46,9 +46,9 @@ layout(location = 0) in vec3 a_position;
 // layout(location = 2) in /* uniform */ vec2 a_offset;
 // layout(location = 3) in /* uniform */ float a_scale;
  uniform mat4 u_model;
- uniform int a_edges[52];
- uniform vec2 a_offsets[52];
- uniform float a_scales[52];
+ uniform int u_edges[52];
+ uniform vec2 u_offsets[52];
+ uniform float u_scales[52];
  uniform sampler2D u_textureDepth;
 
  out vec3 v_color;
@@ -64,8 +64,8 @@ layout(location = 0) in vec3 a_position;
  const float MORPH_REGION = 0.3f;
  // Poor man's bitwise &
  bool edgePresent(int edge) {
-    int a_edge = a_edges[gl_InstanceID];
-     int e = a_edge / edge;
+    int u_edge = u_edges[gl_InstanceID];
+     int e = u_edge / edge;
      return 2 * (e / 2) != e;
  }
  
@@ -106,20 +106,20 @@ layout(location = 0) in vec3 a_position;
  // 12 }
  
  vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
-    float a_scale = a_scales[gl_InstanceID];
+    float u_scale = u_scales[gl_InstanceID];
      vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
-     return position - fraction * morphK * a_scale;
+     return position - fraction * morphK * u_scale;
  }
  
  
 void main() {
 
-    float a_scale = a_scales[gl_InstanceID];
-    vec2 a_offset = a_offsets[gl_InstanceID];
+    float u_scale = u_scales[gl_InstanceID];
+    vec2 u_offset = u_offsets[gl_InstanceID];
      vec2 origin = a_position.xz;
      // Morph between zoom layers
      float morphK = calculateMorph(origin);
-     vec2 position = origin * a_scale + a_offset;
+     vec2 position = origin * u_scale + u_offset;
      position = calculateNoMorphNeighbour(position, morphK);
      position = clamp(position, -0.9f, 0.9f);
      float height = texture(u_textureDepth, position * 0.5f + 0.5f).r;
@@ -208,7 +208,7 @@ void main() {
         if (typeof wx === "undefined") {
             const canvas = document.createElement("canvas");
             this.windowInfo = {
-                pixelRatio: devicePixelRatio,
+                pixelRatio: 1,
                 windowHeight: 1024,
                 windowWidth: 1024,
             }
@@ -239,9 +239,9 @@ void main() {
         this.terrainFramebuffer = this.context.createFramebuffer()!;
         this.initCDLODGrid();
         this.loc_model = this.context.getUniformLocation(this.program, "u_model")!;
-        this.loc_edges = this.context.getUniformLocation(this.program, "a_edges")!;
-        this.loc_scales = this.context.getUniformLocation(this.program, "a_scales")!;
-        this.loc_offsets = this.context.getUniformLocation(this.program, "a_offsets")!;
+        this.loc_edges = this.context.getUniformLocation(this.program, "u_edges")!;
+        this.loc_scales = this.context.getUniformLocation(this.program, "u_scales")!;
+        this.loc_offsets = this.context.getUniformLocation(this.program, "u_offsets")!;
         this.loc_depth = this.context.getUniformLocation(this.program, "u_textureDepth")!;
         this.loc_diffuse = this.context.getUniformLocation(this.program, "u_texture")!;
         this.createDepthTexture()
