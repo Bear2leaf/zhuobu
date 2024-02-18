@@ -217,18 +217,18 @@ export default class Server extends EventEmitter {
             ];
             clients.push(socket);
             socket.on('close', () => {
-                console.log("closing socket...");
                 const index = clients.indexOf(socket);
                 if (index !== -1) {
                     clients.splice(index, 1);
                 }
             });
             socket.on('error', () => {
-
-                console.error("Error occurs socket");
                 const index = clients.indexOf(socket);
                 if (index !== -1) {
                     clients.splice(index, 1);
+                }
+                if (clients.length > 10) {
+                    console.warn("too many clients, CHECK!")
                 }
             })
             socket.on('data', (buffer) => {
