@@ -6,7 +6,7 @@ export default interface Device {
   now(): number;
   loadSubpackage(): Promise<null>;
   createImage(): HTMLImageElement;
-  createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void;
+  createWorker(path: string, onMessageCallback: (data: WorkerResponse, callback: (data: WorkerRequest) => void) => void): void;
   createWebAudioContext(): AudioContext;
   onTouchStart(listener: TouchInfoFunction): void;
   onTouchMove(listener: TouchInfoFunction): void;

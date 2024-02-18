@@ -14,7 +14,6 @@ export default class Program {
         return new Program(context);
     }
     updateTerrainFBOUniforms(context: WebGL2RenderingContext, edges: number[], scales: number[], offsets: number[]) {
-        console.log(...arguments)
         context.uniform1i(context.getUniformLocation(this.program, "u_texture"), 0);
         context.uniform1i(context.getUniformLocation(this.program, "u_textureDepth"), 1);
         context.uniform1i(context.getUniformLocation(this.program, "u_textureNormal"), 2);

@@ -32,7 +32,7 @@ export default class MinigameDevice implements Device {
         throw new Error("MiniGame not support reload.")
     }
     async loadSubpackage(): Promise<null> {
-        return await new Promise<null>(resolve => {
+        await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: { errMsg: string }) {
@@ -51,6 +51,7 @@ export default class MinigameDevice implements Device {
                 console.debug(`onProgressUpdate: ${res.progress}, ${res.totalBytesExpectedToWrite}, ${res.totalBytesWritten}`)
             })
         });
+        return null;
     }
     createImage(): HTMLImageElement {
         return wx.createImage() as HTMLImageElement;
@@ -58,10 +59,9 @@ export default class MinigameDevice implements Device {
     createWebAudioContext(): AudioContext {
         return wx.createWebAudioContext() as unknown as AudioContext;
     }
-    createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse, callback: (data: WorkerRequest) => void) => void) {
         const worker = wx.createWorker(path);
-        setPostMessageCallback(worker.postMessage.bind(worker))
-        worker.onMessage((data) => onMessageCallback(data as unknown as WorkerResponse[]))
+        worker.onMessage((data) => onMessageCallback(data as unknown as WorkerResponse, worker.postMessage.bind(worker)))
     }
     onTouchStart(listener: TouchInfoFunction): void {
         wx.onTouchStart((e) => {

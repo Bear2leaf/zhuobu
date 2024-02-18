@@ -8,6 +8,10 @@ import Terrain from "../drawobject/Terrain.js";
 import Program from "../program/Program.js";
 import TerrainFBO from "../drawobject/TerrainFBO.js";
 import Drawobject from "../drawobject/Drawobject.js";
+import { hello } from "../../third/hello/lib.js";
+import { createWorld } from "../../third/bitecs/index.js";
+import { m4 } from "../../third/twgl/m4.js";
+import { v3 } from "../../third/twgl/v3.js";
 
 
 
@@ -28,8 +32,10 @@ export default class Renderer {
     private delta = 0;
     private now = 0;
     constructor(device: Device) {
-        this.context = device.contextGL;
-        const context = this.context;
+        hello();
+        const world = createWorld();
+        console.log(world, m4.axisRotate(m4.identity(), v3.create(0, 1, 0), 10))
+        const context = this.context = device.contextGL;
         this.windowInfo = device.getWindowInfo();
         this.terrainFBOProgram = Program.create(context);
         this.terrainProgram = Program.create(context);
@@ -41,25 +47,26 @@ export default class Renderer {
         this.terrainFramebuffer = Framebuffer.create(context);
         this.terrainFBOProgram.name = "terrainFBO";
         this.terrainProgram.name = "terrain";
-        device.loadSubpackage().then(() => this.terrainFBOProgram.loadShaderSource(device).then(() => this.terrainProgram.loadShaderSource(device))).then(() => {
-            device.createWorker("dist/worker/index.js", (data) => {
-                console.log(data);
-            }, (sendMessage) => {
-            })
-            this.initShaderProgram();
-            this.terrain.init(context, this.terrainProgram);
-            this.terrainFBO.init(context, this.terrainFBOProgram);
-            const size = this.mapSize;
-            this.diffuseTexture.generateDiffuse(context, size, size);
-            this.depthTexture.generateDepth(context, size, size);
-            this.normalTexture.generateNormal(context, size, size);
-            this.terrainFramebuffer.createTerrainFramebuffer(context, this.depthTexture, this.diffuseTexture, this.normalTexture);
-            this.initContextState();
-            this.enableTextures(context);
-            requestAnimationFrame((time) => {
-                this.now = time;
-                this.tick(time)
-            });
+    }
+    async load(device: Device) {
+        await this.terrainFBOProgram.loadShaderSource(device);
+        await this.terrainProgram.loadShaderSource(device);
+    }
+    init() {
+        const context = this.context;
+        this.initShaderProgram();
+        this.terrain.init(context, this.terrainProgram);
+        this.terrainFBO.init(context, this.terrainFBOProgram);
+        const size = this.mapSize;
+        this.diffuseTexture.generateDiffuse(context, size, size);
+        this.depthTexture.generateDepth(context, size, size);
+        this.normalTexture.generateNormal(context, size, size);
+        this.terrainFramebuffer.createTerrainFramebuffer(context, this.depthTexture, this.diffuseTexture, this.normalTexture);
+        this.initContextState();
+        this.enableTextures(context);
+        requestAnimationFrame((time) => {
+            this.now = time;
+            this.tick(time)
         });
     }
     tick(time: number) {
@@ -85,8 +92,10 @@ export default class Renderer {
     render() {
         const context = this.context;
         this.terrainProgram.active(context);
-        context.viewport(0, 0, this.windowInfo.width, this.windowInfo.height);
-        context.scissor(0, 0, this.windowInfo.width, this.windowInfo.height);
+        const width = this.windowInfo.width;
+        const height = this.windowInfo.height;
+        context.viewport(0, 0, width, height);
+        context.scissor(0, 0, width, height);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
         this.terrain.bind(context);
         this.terrainProgram.updateTerrainModel(context, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [2, 2, 2]))

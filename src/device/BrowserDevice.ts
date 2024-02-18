@@ -43,10 +43,9 @@ export default class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
-    createWorker(path: string, onMessageCallback: (data: WorkerResponse[]) => void, setPostMessageCallback: (callback: (data: WorkerRequest) => void) => void): void {
+    createWorker(path: string, onMessageCallback: (data: WorkerResponse, callback: (data: WorkerRequest) => void) => void): void {
         const worker = new Worker(path, { type: "module" });
-        setPostMessageCallback(worker.postMessage.bind(worker))
-        worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data)
+        worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data, worker.postMessage.bind(worker))
     }
     onTouchStart(listener: TouchInfoFunction): void {
         const windowInfo = this.getWindowInfo();
