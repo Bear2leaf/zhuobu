@@ -90,12 +90,6 @@ export default class Renderer {
         context.scissor(0, 0, width, height);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
         this.terrain.bind(context);
-        this.terrainProgram.updateTerrainModel(context, [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1,
-        ])
         this.terrain.drawInstanced(context);
         this.terrain.unbind(context);
         this.terrainProgram.deactive(context);
@@ -122,6 +116,17 @@ export default class Renderer {
         this.terrainFramebuffer.unbind(context);
         this.terrainFBOProgram.deactive(context);
 
+    }
+    updateModelTranslation(translation: [number, number, number]) {
+        const context = this.context;
+        this.terrainProgram.active(context);
+        this.terrainProgram.updateTerrainModel(context, [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            ...translation, 1,
+        ])
+        this.terrainProgram.deactive(context);
     }
     initShaderProgram() {
         const context = this.context;

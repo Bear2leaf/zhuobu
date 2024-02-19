@@ -6,10 +6,14 @@ export default class SocketState extends State {
         const ws = this.ws = new WebSocket('ws://localhost:4000');
         self.onclose = () => ws.close();
         ws.onopen = () => {
-            this.device.onmessage = this.decode.bind(this);
+            this.device.onmessage = (data) => {
+                this.onRequest(data);
+            };
         }
         ws.onmessage = (event) => {
-            this.device.emit(JSON.parse(event.data))
+            const data = JSON.parse(event.data);
+            this.onResponse(data);
+            this.device.emit(data)
         }
     }
     private send(data: WorkerResponse) {
@@ -31,6 +35,13 @@ export default class SocketState extends State {
         this.send({
             type: "RequestSync",
             broadcast: true
+        })
+    }
+    changeModelTranslation(translation: [number, number, number]): void {
+        this.send({
+            type: "SendModelTranslation",
+            broadcast: true,
+            args: [translation]
         })
     }
 

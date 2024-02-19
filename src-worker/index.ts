@@ -1,9 +1,9 @@
-import SocketState from "./SocketState.js";
-import StandaloneState from "./StandaloneState.js";
-import State from "./State.js";
-import BrowserWorker from "./BrowserWorker.js";
-import MinigameWorker from "./MinigameWorker.js";
-import WorkerDevice from "./WorkerDevice.js";
+import SocketState from "./state/SocketState.js";
+import StandaloneState from "./state/StandaloneState.js";
+import State from "./state/State.js";
+import BrowserWorker from "./device/BrowserWorker.js";
+import MinigameWorker from "./device/MinigameWorker.js";
+import WorkerDevice from "./device/WorkerDevice.js";
 
 console.log("worker created.");
 declare const worker : WechatMinigame.Worker;

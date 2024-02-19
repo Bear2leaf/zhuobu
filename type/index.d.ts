@@ -4,6 +4,7 @@ declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "Refresh"; }
     | { type: "SendState"; broadcast: true; args: [Record<string, string>] }
+    | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | { type: "RequestSync"; broadcast: true }
 
 
@@ -12,7 +13,7 @@ declare type WorkerResponse =
 declare type WorkerRequest =
     | { type: "SyncState"; args?: [Record<string, string>]; broadcast?: boolean }
     | { type: "GetState"; }
-
+    | { type: "ChangeModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | never;
 
 declare type Matrix = number[] | Float32Array;

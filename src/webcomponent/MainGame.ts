@@ -45,6 +45,9 @@ export default class MainGame extends HTMLElement {
                 case "Refresh":
                     device.reload();
                     break;
+                case "SendModelTranslation":
+                    this.renderer.updateModelTranslation(data.args[0])
+                    break;
             }
         })
     }
