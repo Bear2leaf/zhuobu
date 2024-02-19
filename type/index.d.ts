@@ -1,14 +1,16 @@
+///<reference path="./wx/index.d.ts"/>
+
 declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "Refresh"; }
-    | { type: "SendState"; target: "broadcast"; args: [Record<string, string>] }
-    | { type: "RequestSync"; target: "broadcast" }
+    | { type: "SendState"; broadcast: true; args: [Record<string, string>] }
+    | { type: "RequestSync"; broadcast: true }
 
 
 
     | never;
 declare type WorkerRequest =
-    | { type: "SyncState"; args?: [Record<string, string>]; target?: "broadcast" }
+    | { type: "SyncState"; args?: [Record<string, string>]; broadcast?: boolean }
     | { type: "GetState"; }
 
     | never;

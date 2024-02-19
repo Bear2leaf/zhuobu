@@ -41,6 +41,7 @@ export default class MinigameDevice implements Device {
                 },
                 fail(res: { errMsg: string }) {
                     console.error("load resources fail", res)
+                    resolve(null)
                 },
                 complete() {
                     console.debug("load resources complete");

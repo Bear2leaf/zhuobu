@@ -5,7 +5,7 @@ import BrowserWorker from "./BrowserWorker.js";
 import MinigameWorker from "./MinigameWorker.js";
 import WorkerDevice from "./WorkerDevice.js";
 
-console.log("worker init");
+console.log("worker created.");
 declare const worker : WechatMinigame.Worker;
 let device: WorkerDevice;
 let state: State;

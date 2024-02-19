@@ -1,8 +1,6 @@
 {
-    "exclude": ["worker"],
     "compilerOptions": {
-        "rootDir": "src",
-        "outDir": "dist",
+        "types": ["../type"],
         "target": "ES2015",
         "strict": true
     }

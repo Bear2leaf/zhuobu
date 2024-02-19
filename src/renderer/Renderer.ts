@@ -9,7 +9,6 @@ import Program from "../program/Program.js";
 import TerrainFBO from "../drawobject/TerrainFBO.js";
 import Drawobject from "../drawobject/Drawobject.js";
 import { hello } from "../../third/hello/lib.js";
-import { createWorld } from "../../third/bitecs/index.js";
 import { m4 } from "../../third/twgl/m4.js";
 import { v3 } from "../../third/twgl/v3.js";
 
@@ -33,8 +32,7 @@ export default class Renderer {
     private now = 0;
     constructor(device: Device) {
         hello();
-        const world = createWorld();
-        console.log(world, m4.axisRotate(m4.identity(), v3.create(0, 1, 0), 10))
+        console.log(m4.axisRotate(m4.identity(), v3.create(0, 1, 0), 10))
         const context = this.context = device.contextGL;
         this.windowInfo = device.getWindowInfo();
         this.terrainFBOProgram = Program.create(context);

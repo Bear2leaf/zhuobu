@@ -1,10 +1,13 @@
 import WorkerDevice from "../WorkerDevice.js";
+import { createWorld } from "../third/bitecs/index.js";
 export default class State {
+    private  readonly world = createWorld();
     readonly state: Record<string, string> = {};
     constructor(readonly device: WorkerDevice) {
         console.log("State Inited.")
     }
     init() {
+        console.log(this.world)
         this.device.emit({
             type: "WorkerInit"
         })

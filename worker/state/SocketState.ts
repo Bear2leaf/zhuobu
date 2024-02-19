@@ -23,14 +23,14 @@ export default class SocketState extends State {
         const state = this.state;
         this.send({
             type: "SendState",
-            target: "broadcast",
+            broadcast: true,
             args: [state]
         });
     }
     sync() {
         this.send({
             type: "RequestSync",
-            target: "broadcast"
+            broadcast: true
         })
     }
 

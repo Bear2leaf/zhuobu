@@ -58,7 +58,7 @@ export default class Server extends EventEmitter {
         else if (url.startsWith("/c")) {
             this.createWebcomponentPage(url, response);
         }
-        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/third")) {
+        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/third") || url.startsWith("/worker")) {
             readFile(filePath, function (error, content) {
                 if (error) {
                     if (error.code == 'ENOENT') {
@@ -252,7 +252,7 @@ server.on("data", (data) => {
     if (data === null) {
         return;
     }
-    if (data.target === "broadcast") {
+    if (data.broadcast) {
         server.emit("broadcast", data);
     }
 });
@@ -260,5 +260,8 @@ watch("./dist", { recursive: true }, () => {
     server.emit("broadcast", { type: "Refresh" });
 });
 watch("./resources", { recursive: true }, () => {
+    server.emit("broadcast", { type: "Refresh" });
+});
+watch("./worker", { recursive: true }, () => {
     server.emit("broadcast", { type: "Refresh" });
 });

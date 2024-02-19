@@ -26,7 +26,8 @@ export default class MainGame extends HTMLElement {
         await this.renderer.load(device);
     }
     initWorker(device: Device) {
-        device.createWorker("dist/worker/index.js", (data, sendMessage) => {
+        device.createWorker("worker/index.js", (data, sendMessage) => {
+            console.log("MainGame.ReceiveMsg: ", data)
             switch (data.type) {
                 case "WorkerInit":
                     sendMessage({
