@@ -1,9 +1,11 @@
 import BrowserDevice from "../device/BrowserDevice.js";
 import Device from "../device/Device.js";
+import WorkerManager from "../manager/WorkerManager.js";
 import Renderer from "../renderer/Renderer.js";
 
 export default class MainGame extends HTMLElement {
     private readonly renderer: Renderer;
+    private readonly workerManager: WorkerManager;
     private readonly elChildren: HTMLElement[] = []
     addChildren(el: HTMLElement) {
         this.elChildren.push(el);
@@ -16,7 +18,9 @@ export default class MainGame extends HTMLElement {
         super();
         const device = new BrowserDevice();
         this.renderer = new Renderer(device);
-        this.initWorker(device);
+        this.workerManager = new WorkerManager();
+        this.workerManager.init(device);
+        this.workerManager.updateModelTranslation = this.renderer.updateModelTranslation.bind(this.renderer);
         this.load(device).then(() => {
             this.renderer.init();
         });
@@ -24,32 +28,6 @@ export default class MainGame extends HTMLElement {
     async load(device: Device) {
         await device.loadSubpackage();
         await this.renderer.load(device);
-    }
-    initWorker(device: Device) {
-        device.createWorker("dist-worker/index.js", (data, sendMessage) => {
-            console.log("MainGame.ReceiveMsg: ", data)
-            switch (data.type) {
-                case "WorkerInit":
-                    sendMessage({
-                        type: "SyncState",
-                        args: [{
-                            foo: "bar"
-                        }]
-                    });
-                    break;
-                case "RequestSync":
-                    sendMessage({
-                        type: "SyncState"
-                    });
-                    break;
-                case "Refresh":
-                    device.reload();
-                    break;
-                case "SendModelTranslation":
-                    this.renderer.updateModelTranslation(data.args[0])
-                    break;
-            }
-        })
     }
 
 }
