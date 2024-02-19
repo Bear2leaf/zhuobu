@@ -1,4 +1,5 @@
 .DS_Store
 project.*.json
 dist
+dist-worker
 dependency-graph.html

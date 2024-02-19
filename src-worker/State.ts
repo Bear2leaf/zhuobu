@@ -1,5 +1,5 @@
-import WorkerDevice from "../WorkerDevice.js";
-import { createWorld } from "../third/bitecs/index.js";
+import WorkerDevice from "./WorkerDevice.js";
+import { createWorld } from "./third/bitecs/index.js";
 export default class State {
     private  readonly world = createWorld();
     readonly state: Record<string, string> = {};

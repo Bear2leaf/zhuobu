@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "allowJs": true,
+        "outDir": "../dist-worker",
         "types": ["../type"],
         "target": "ES2015",
         "strict": true

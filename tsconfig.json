@@ -1,5 +1,5 @@
 {
-    "exclude": ["worker"],
+    "exclude": ["src-worker"],
     "compilerOptions": {
         "rootDir": "src",
         "outDir": "dist",

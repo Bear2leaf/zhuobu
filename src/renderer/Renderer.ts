@@ -1,6 +1,5 @@
 
 
-import { matrix } from "../util/math.js";
 import Device from "../device/Device.js";
 import Texture from "../texture/Texture.js";
 import Framebuffer from "../framebuffer/Framebuffer.js";
@@ -8,9 +7,6 @@ import Terrain from "../drawobject/Terrain.js";
 import Program from "../program/Program.js";
 import TerrainFBO from "../drawobject/TerrainFBO.js";
 import Drawobject from "../drawobject/Drawobject.js";
-import { hello } from "../../third/hello/lib.js";
-import { m4 } from "../../third/twgl/m4.js";
-import { v3 } from "../../third/twgl/v3.js";
 
 
 
@@ -31,8 +27,6 @@ export default class Renderer {
     private delta = 0;
     private now = 0;
     constructor(device: Device) {
-        hello();
-        console.log(m4.axisRotate(m4.identity(), v3.create(0, 1, 0), 10))
         const context = this.context = device.contextGL;
         this.windowInfo = device.getWindowInfo();
         this.terrainFBOProgram = Program.create(context);
@@ -96,7 +90,12 @@ export default class Renderer {
         context.scissor(0, 0, width, height);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
         this.terrain.bind(context);
-        this.terrainProgram.updateTerrainModel(context, matrix.scale(matrix.rotateY(matrix.rotateX(matrix.identity(), -Math.PI / 8), this.elapsed / 1000), [2, 2, 2]))
+        this.terrainProgram.updateTerrainModel(context, [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ])
         this.terrain.drawInstanced(context);
         this.terrain.unbind(context);
         this.terrainProgram.deactive(context);

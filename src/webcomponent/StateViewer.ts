@@ -1,5 +1,4 @@
 import BrowserDevice from "../device/BrowserDevice.js";
-import Device from "../device/Device.js";
 
 export default class StateViewer extends HTMLElement {
     private readonly elChildren: HTMLElement[] = []
@@ -13,7 +12,8 @@ export default class StateViewer extends HTMLElement {
     constructor() {
         super();
         const device = new BrowserDevice();
-        device.createWorker("/dist/worker/index.js", (data, sendMessage) => {
+        console.log("StateView.")
+        device.createWorker("/dist-worker/index.js", (data, sendMessage) => {
             switch (data.type) {
                 case "WorkerInit":
                     sendMessage({
@@ -22,6 +22,10 @@ export default class StateViewer extends HTMLElement {
                     break;
                 case "SendState":
                     console.log("Received: ", data);
+                    break;
+                case "Refresh":
+                    device.reload();
+                    break;
             }
         })
     }
