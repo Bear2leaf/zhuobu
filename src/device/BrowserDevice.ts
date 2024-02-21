@@ -28,6 +28,12 @@ export default class BrowserDevice implements Device {
             ratio: window.devicePixelRatio
         }
     }
+    hideCanvas() {
+        this.canvasGL.style.display = "none";
+    }
+    showCanvas() {
+        this.canvasGL.style.display = "block;"
+    }
     now(): number {
         return performance.now();
     }

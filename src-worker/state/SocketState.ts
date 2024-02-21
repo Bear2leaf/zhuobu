@@ -1,48 +1,44 @@
 import State from "./State.js";
 
 export default class SocketState extends State {
-    private ws?: WebSocket;
+    private readonly ws: WebSocket = new WebSocket('ws://localhost:4000');
+    private readonly requestQueue: WorkerRequest[] = [];
+    private readonly responseQueue: WorkerResponse[] = [];
+    private ready = false;
     private connectWebsocket() {
-        const ws = this.ws = new WebSocket('ws://localhost:4000');
+        const ws = this.ws;
         self.onclose = () => ws.close();
         ws.onopen = () => {
-            this.device.onmessage = (data) => {
-                this.onRequest(data);
-            };
+            this.ready = true;
         }
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             this.onResponse(data);
-            this.device.emit(data)
+            this.device.emit(data);
         }
     }
-    private send(data: WorkerResponse) {
-        this.ws!.send(JSON.stringify(data))
+    process() {
+        if (this.ready && this.responseQueue.length) {
+            const data = this.responseQueue.shift()!;
+            this.ws.send(JSON.stringify(data));
+        } else if (this.ready && this.requestQueue.length) {
+            const data = this.requestQueue.shift()!
+            this.onRequest(data);
+        } else {
+        }
+    }
+    send(data: WorkerResponse) {
+        this.responseQueue.push(data);
     }
     init() {
+        this.device.onmessage = (data) => {
+            this.requestQueue.push(data);
+        };
         super.init();
         this.connectWebsocket();
-    }
-    get(): void {
-        const state = this.state;
-        this.send({
-            type: "SendState",
-            broadcast: true,
-            args: [state]
-        });
-    }
-    sync() {
-        this.send({
-            type: "RequestSync",
-            broadcast: true
-        })
-    }
-    changeModelTranslation(translation: [number, number, number]): void {
-        this.send({
-            type: "SendModelTranslation",
-            broadcast: true,
-            args: [translation]
-        })
+        setInterval(() => {
+            this.process();
+        }, 10);
     }
 
 }

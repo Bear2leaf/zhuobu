@@ -3,29 +3,60 @@ import Device from "../device/Device.js";
 export default class Program {
 
     private readonly program: WebGLProgram;
-    private loc_model: WebGLUniformLocation | null = null;
+    private readonly locMap: Map<string, WebGLUniformLocation | null>;
+    private readonly valueMap: Map<string, number[]>;
     private vertexShaderSource = "";
     private fragmentShaderSource = "";
     name = "";
     constructor(context: WebGL2RenderingContext) {
         this.program = context.createProgram()!;
+        this.locMap = new Map();
+        this.valueMap = new Map();
     }
     static create(context: WebGL2RenderingContext): Program {
         return new Program(context);
     }
-    updateTerrainFBOUniforms(context: WebGL2RenderingContext, edges: number[], scales: number[], offsets: number[]) {
-        context.uniform1i(context.getUniformLocation(this.program, "u_texture"), 0);
-        context.uniform1i(context.getUniformLocation(this.program, "u_textureDepth"), 1);
-        context.uniform1i(context.getUniformLocation(this.program, "u_textureNormal"), 2);
-        context.uniform1iv(context.getUniformLocation(this.program, "u_edges"), edges);
-        context.uniform1fv(context.getUniformLocation(this.program, "u_scales"), scales);
-        context.uniform2fv(context.getUniformLocation(this.program, "u_offsets"), offsets);
-    }
-    updateTerrainModel(context: WebGL2RenderingContext, data: Matrix) {
-        if (this.loc_model === null) {
-            this.loc_model = context.getUniformLocation(this.program, "u_model");
+    cacheLoc(context: WebGL2RenderingContext, name: string) {
+        let loc = this.locMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = context.getUniformLocation(this.program, name);
+            this.locMap.set(name, loc);
         }
-        context.uniformMatrix4fv(this.loc_model, false, data);
+        return loc;
+    }
+    sameVal(name: string, values: number[]) {
+        const old = this.valueMap.get(name);
+        if (old === undefined) {
+            return false;
+        }
+        if (old.length !== values.length) {
+            return false;
+        }
+        for (let i = 0; i < old.length; i++) {
+            if (old[i] !== values[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    updateUniform1i(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform1i(this.cacheLoc(context, name), values[0]);
+    }
+    updateUniform1iv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform1iv(this.cacheLoc(context, name), values);
+    }
+    updateUniform1fv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform1fv(this.cacheLoc(context, name), values);
+    }
+    updateUniform2fv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform2fv(this.cacheLoc(context, name), values);
+    }
+    updateUniform3fv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform3fv(this.cacheLoc(context, name), values);
+    }
+    updateUniformMatrix4fv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniformMatrix4fv(this.cacheLoc(context, name), false, values);
     }
     activeVertexAttribArray(context: WebGL2RenderingContext, name: string, size: number, type: number) {
         const attributeLocation = context.getAttribLocation(this.program, name);

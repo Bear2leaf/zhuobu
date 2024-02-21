@@ -1,6 +1,4 @@
-import Program from "../program/Program.js";
-import Drawobject from "./Drawobject.js";
-
+import Factory from "./Factory.js";
 
 enum Edge {
     NONE = 0,
@@ -9,18 +7,15 @@ enum Edge {
     BOTTOM = 4,
     RIGHT = 8,
 };
-
-export default class Terrain extends Drawobject {
+export default class GridFactory implements Factory {
+    private readonly vertices: number[] = [];
     private readonly scales: number[] = [];
     private readonly offsets: number[] = [];
     private readonly edges: number[] = [];
-    static create(context: WebGL2RenderingContext) {
-        return new Terrain(context.createVertexArray()!);
-    }
-    init(context: WebGL2RenderingContext, program: Program) {
+    create(): void {
 
         this.initGridTiles();
-        const vertices: number[] = [];
+        const vertices: number[] = this.vertices;
         const TILE_RESOLUTION = 64;
         for (let i = 0; i < TILE_RESOLUTION; i++) {
             for (let j = 0; j < TILE_RESOLUTION; j++) {
@@ -38,12 +33,6 @@ export default class Terrain extends Drawobject {
                 );
             }
         }
-        program.active(context);
-        this.bind(context);
-        program.updateTerrainFBOUniforms(context, this.edges, this.scales, this.offsets);
-        this.createAttribute(context, program, "a_position", new Float32Array(vertices), context.FLOAT, 3);
-        this.unbind(context);
-        program.deactive(context);
     }
     initGridTiles() {
         const TILE_LEVEL = 4;
@@ -95,10 +84,26 @@ export default class Terrain extends Drawobject {
         }
     }
     createTile(x: number, y: number, scale: number, edge: Edge) {
-        this.instanceCount++;
         this.scales.push(scale);
         this.offsets.push(x, y);
         this.edges.push(edge);
 
+    }
+    getAttributes() {
+        const results = [];
+        const batch = 100;
+        const batchSize = this.vertices.length / batch;
+        for (let i = 0; i < batch; i++) {
+            results.push(
+                { name: "a_position", value: this.vertices.slice(i * batchSize, (i + 1) * batchSize) },
+            )
+        }
+        return results
+    }
+    getUniforms() {
+        return [
+            {name :"u_scales",value: this.scales},
+            {name :"u_offsets",value: this.offsets},
+            {name :"u_edges",value: this.edges},]
     }
 }

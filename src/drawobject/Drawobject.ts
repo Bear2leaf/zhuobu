@@ -9,8 +9,8 @@ export default class Drawobject {
     constructor(vao: WebGLVertexArrayObject) {
         this.vao = vao;
     }
-    init(context: WebGL2RenderingContext, program: Program) {
-        throw new Error("Abstract Method.")
+    static create(context: WebGL2RenderingContext) {
+        return new Drawobject(context.createVertexArray()!)
     }
     bind(context: WebGL2RenderingContext) {
         context.bindVertexArray(this.vao);
@@ -31,6 +31,6 @@ export default class Drawobject {
         program.activeVertexAttribArray(context, name, size, type);
         context.bindBuffer(context.ARRAY_BUFFER, null);
         this.buffers.push(buffer);
-        this.count= data.length / size;
+        this.count = data.length / size;
     }
 }

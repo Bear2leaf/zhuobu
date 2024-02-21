@@ -148,7 +148,7 @@ export default class Server extends EventEmitter {
             this.emit('close');
             return null;
         } else if (opCode !== OPCODES.text) {
-            throw new Error("Wrong opCode" + opCode)
+            throw new Error("Wrong opCode: " + opCode)
         } else {
 
             // second byte processing next...

@@ -3,9 +3,7 @@
 import Device from "../device/Device.js";
 import Texture from "../texture/Texture.js";
 import Framebuffer from "../framebuffer/Framebuffer.js";
-import Terrain from "../drawobject/Terrain.js";
 import Program from "../program/Program.js";
-import TerrainFBO from "../drawobject/TerrainFBO.js";
 import Drawobject from "../drawobject/Drawobject.js";
 
 
@@ -13,19 +11,16 @@ import Drawobject from "../drawobject/Drawobject.js";
 
 export default class Renderer {
     private readonly context: WebGL2RenderingContext;
-    private readonly terrainFBOProgram: Program;
-    private readonly terrainProgram: Program;
     private readonly terrainFramebuffer: Framebuffer;
     private readonly depthTexture: Texture;
     private readonly diffuseTexture: Texture;
     private readonly normalTexture: Texture;
-    private readonly terrain: Drawobject;
-    private readonly terrainFBO: Drawobject;
     private readonly windowInfo: WindowInfo;
     private readonly mapSize = 512;
-    private elapsed = 0;
-    private delta = 0;
-    private now = 0;
+    readonly terrainFBOProgram: Program;
+    readonly terrainProgram: Program;
+    readonly terrainFBO: Drawobject;
+    readonly terrain: Drawobject;
     constructor(device: Device) {
         const context = this.context = device.contextGL;
         this.windowInfo = device.getWindowInfo();
@@ -34,8 +29,8 @@ export default class Renderer {
         this.depthTexture = Texture.create(context);
         this.diffuseTexture = Texture.create(context);
         this.normalTexture = Texture.create(context);
-        this.terrain = Terrain.create(context);
-        this.terrainFBO = TerrainFBO.create(context);
+        this.terrain = Drawobject.create(context);
+        this.terrainFBO = Drawobject.create(context);
         this.terrainFramebuffer = Framebuffer.create(context);
         this.terrainFBOProgram.name = "terrainFBO";
         this.terrainProgram.name = "terrain";
@@ -47,8 +42,6 @@ export default class Renderer {
     init() {
         const context = this.context;
         this.initShaderProgram();
-        this.terrain.init(context, this.terrainProgram);
-        this.terrainFBO.init(context, this.terrainFBOProgram);
         const size = this.mapSize;
         this.diffuseTexture.generateDiffuse(context, size, size);
         this.depthTexture.generateDepth(context, size, size);
@@ -56,21 +49,6 @@ export default class Renderer {
         this.terrainFramebuffer.createTerrainFramebuffer(context, this.depthTexture, this.diffuseTexture, this.normalTexture);
         this.initContextState();
         this.enableTextures(context);
-        requestAnimationFrame((time) => {
-            this.now = time;
-            this.tick(time)
-        });
-    }
-    tick(time: number) {
-        this.delta = time - this.now;
-        this.elapsed += this.delta;
-        this.now = time;
-
-        requestAnimationFrame((time) => {
-            this.renderTerrainFramebuffer();
-            this.render();
-            this.tick(time);
-        })
     }
     initContextState() {
         const context = this.context;
@@ -102,6 +80,34 @@ export default class Renderer {
         this.normalTexture.active(context, 2);
         this.normalTexture.bind(context);
     }
+    createAttributes(drawobject: Drawobject, program: Program, name: string, type: "FLOAT", size: number, attribute: number[]) {
+        const context = this.context
+        program.active(context);
+        drawobject.bind(context);
+        drawobject.createAttribute(context, program, name, new Float32Array(attribute), context[type], size);
+        drawobject.unbind(context);
+        program.deactive(context);
+    }
+    updateUniform(program: Program, name: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', ...values: number[]): void {
+        const context = this.context;
+        program.active(context);
+        if (type === '1i') {
+            program.updateUniform1i(context, name, values);
+        } else if (type === '1iv') {
+            program.updateUniform1iv(context, name, values);
+        } else if (type === '2fv') {
+            program.updateUniform2fv(context, name, values);
+        } else if (type === '1fv') {
+            program.updateUniform1fv(context, name, values);
+        } else if (type === '3fv') {
+            program.updateUniform3fv(context, name, values);
+        } else if (type === 'Matrix4fv') {
+            program.updateUniformMatrix4fv(context, name, values);
+        } else {
+            throw new Error("Not implemented.");
+        }
+        program.deactive(context);
+    }
     renderTerrainFramebuffer() {
         const context = this.context;
         this.terrainFBOProgram.active(context);
@@ -116,17 +122,6 @@ export default class Renderer {
         this.terrainFramebuffer.unbind(context);
         this.terrainFBOProgram.deactive(context);
 
-    }
-    updateModelTranslation(translation: [number, number, number]) {
-        const context = this.context;
-        this.terrainProgram.active(context);
-        this.terrainProgram.updateTerrainModel(context, [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            ...translation, 1,
-        ])
-        this.terrainProgram.deactive(context);
     }
     initShaderProgram() {
         const context = this.context;

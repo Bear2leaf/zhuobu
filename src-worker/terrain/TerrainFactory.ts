@@ -1,11 +1,10 @@
-import Drawobject from "./Drawobject.js";
 import Map from "../map/Map.js";
-import SeedableRandom from "../util/SeedableRandom.js";
-import TriangleMesh from "../map/TriangleMesh.js";
 import MeshBuilder from "../map/MeshBuilder.js";
-import { createNoise2D } from "../util/simplex-noise.js";
+import TriangleMesh from "../map/TriangleMesh.js";
 import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
-import Program from "../program/Program.js";
+import SeedableRandom from "../util/SeedableRandom.js";
+import { createNoise2D } from "../util/simplex-noise.js";
+import Factory from "./Factory.js";
 
 enum BiomeColor {
     BARE = 136 << 16 | 136 << 8 | 136,
@@ -30,15 +29,15 @@ enum BiomeColor {
     TROPICAL_SEASONAL_FOREST = 85 << 16 | 153 << 8 | 68,
     TUNDRA = 187 << 16 | 187 << 8 | 170,
 };
-
-export default class TerrainFBO extends Drawobject {
+export default class TerrainFactory implements Factory {
     private readonly spacing = 16;
     private readonly distanceRNG = new SeedableRandom(40);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
     private readonly map: Map;
-    constructor(vao: WebGLVertexArrayObject) {
-        super(vao);
+    private readonly vertices: number[] = []
+    private readonly colors: number[] = []
+    constructor() {
         this.map = new Map(new TriangleMesh(new MeshBuilder().addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
             amplitude: 0.5,
             length: 4,
@@ -53,20 +52,10 @@ export default class TerrainFBO extends Drawobject {
             biomeBias: { north_temperature: 0, south_temperature: 0, moisture: 0 },
         });
     }
-    static create(context: WebGL2RenderingContext) {
-        return new TerrainFBO(context.createVertexArray()!);
-    }
-    adjustHeight(height: number) {
+    create() {
 
-        // return (smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5) * 2;
-        // return Math.pow(height, 3);
-        // return Math.sign(height) * Math.sqrt(Math.abs(height) / 8);
-        return height / 8;
-    }
-    init(context: WebGL2RenderingContext, program: Program) {
-        const vertices: number[] = []
-        const colors: number[] = []
-
+        const vertices: number[] = this.vertices;
+        const colors: number[] = this.colors;
         const map = this.map;
         for (let s = 0; s < map.mesh.numSides; s++) {
             const r = map.mesh.s_begin_r(s),
@@ -111,12 +100,24 @@ export default class TerrainFBO extends Drawobject {
             ].map(x => (x & 0xff) / 255));
 
         }
-        program.active(context);
-        this.bind(context);
-        this.createAttribute(context, program, "a_position", new Float32Array(vertices), context.FLOAT, 3);
-        this.createAttribute(context, program, "a_color", new Float32Array(colors), context.FLOAT, 3);
-        this.unbind(context);
-        program.deactive(context);
+    }
+    adjustHeight(height: number) {
 
+        // return (smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5) * 2;
+        // return Math.pow(height, 3);
+        // return Math.sign(height) * Math.sqrt(Math.abs(height) / 8);
+        return height / 8;
+    }
+    getAttributes() {
+        const results = [];
+        const batch = 100;
+        const batchSize = this.vertices.length / batch;
+        for (let i = 0; i < batch; i++) {
+            results.push(
+                { name: "a_position", value: this.vertices.slice(i * batchSize, (i + 1) * batchSize) },
+                { name: "a_color", value: this.colors.slice(i * batchSize, (i + 1) * batchSize) }
+            )
+        }
+        return results
     }
 }

@@ -7,6 +7,9 @@ export default class CameraController extends HTMLElement {
         this.elChildren.push(el);
     }
     connectedCallback() {
+        const label = document.createElement("label");
+        label.innerText = "CameraY:"
+        this.addChildren(label)
         const input = document.createElement("input");
         input.type = "number";
         input.step = "0.1";
@@ -24,6 +27,7 @@ export default class CameraController extends HTMLElement {
     constructor() {
         super();
         const device = new BrowserDevice();
+        device.hideCanvas();
         console.log("CameraController.")
         device.createWorker("/dist-worker/index.js", (data, sendMessage) => {
             this.sendMessage = sendMessage;

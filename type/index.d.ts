@@ -4,6 +4,15 @@ declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "Refresh"; }
     | { type: "SendState"; broadcast: true; args: [Record<string, string>] }
+    | { type: "SendTerrain"; broadcast: true; args: { name: string, value: number[] }[] }
+    | { type: "SendTerrainUniforms"; broadcast: true; args: { name: string, value: number[] }[] }
+    | { type: "SendTerrainFBO"; broadcast: true; args: { name: string, value: number[] }[] }
+    | { type: "SendTerrainFBOBegin"; broadcast: true; }
+    | { type: "SendTerrainFBOEnd"; broadcast: true; }
+    | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
+    | { type: "SendTerrain"; broadcast: true; args: { name: string, value: number[] }[] }
+    | { type: "SendTerrainBegin"; broadcast: true; }
+    | { type: "SendTerrainEnd"; broadcast: true; }
     | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | { type: "RequestSync"; broadcast: true }
 
@@ -13,6 +22,7 @@ declare type WorkerResponse =
 declare type WorkerRequest =
     | { type: "SyncState"; args?: [Record<string, string>]; broadcast?: boolean }
     | { type: "GetState"; }
+    | { type: "RequestTerrain"; }
     | { type: "ChangeModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | never;
 
