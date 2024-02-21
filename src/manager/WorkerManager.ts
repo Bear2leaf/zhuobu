@@ -3,6 +3,7 @@ import Device from "../device/Device.js";
 export default class WorkerManager {
     private readonly requestQueue: WorkerRequest[] = [];
     private readonly responseQueue: WorkerResponse[] = [];
+    private readonly batchMap: Map<string, { name: string, value: number[] }[]> = new Map();
     private sendMessage?: (data: WorkerRequest) => void;
     private reload?: () => void;
     init(device: Device) {
@@ -19,8 +20,6 @@ export default class WorkerManager {
             this.sendMessage(this.requestQueue.shift()!)
         }
     }
-    private terrainFBOAttrs?: { name: string, value: number[] }[];
-    private terrainAttrs?: { name: string, value: number[] }[];
     decodeMessage(data: WorkerResponse) {
         switch (data.type) {
             case "WorkerInit":
@@ -45,56 +44,34 @@ export default class WorkerManager {
             case "SendTerrainUniforms":
                 this.buildTerrainUniformsData(data.args);
                 break;
-            case "SendTerrainFBO":
-                this.terrainFBOAttrs!.push(...data.args)
+            case "SendAttrBatch":
+                const batch = data.args.slice(1) as { name: string, value: number[] }[];
+                this.batchMap.get(data.args[0])!.push(...batch)
                 break;
-            case "SendTerrainFBOBegin":
-                this.terrainFBOAttrs = [];
+            case "SendAttrBatchBegin":
+                this.batchMap.set(data.args[0], [])
                 break;
-            case "SendTerrainFBOEnd":
-                this.buildTerrainFBOData();
-                this.terrainFBOAttrs = [];
-                break;
-            case "SendTerrain":
-                this.terrainAttrs!.push(...data.args)
-                break;
-            case "SendTerrainBegin":
-                this.terrainAttrs = [];
-                break;
-            case "SendTerrainEnd":
-                this.buildTerrainData();
-                this.terrainAttrs = [];
+            case "SendAttrBatchEnd":
+                this.buildAttributes(data.args[0]);
+                this.batchMap.set(data.args[0], [])
                 break;
         }
     }
-    buildTerrainFBOData() {
-        const vertices: number[] = [];
-        const colors: number[] = []
-        this.terrainFBOAttrs!.forEach(attr => {
-            if (attr.name === "a_position") {
-                vertices.push(...attr.value);
-            } else if (attr.name === "a_color") {
-                colors.push(...attr.value)
+    buildAttributes(name: string) {
+        const data: Record<string, number[]> = {};
+        this.batchMap.get(name)!.forEach(attr => {
+            data[attr.name] = data[attr.name] || [];
+            data[attr.name].push(...attr.value);
+        });
+        for (const key in data) {
+            if (name === "Terrain") {
+                this.initTerrainAttr!(key, "FLOAT", 3, data[key]);
+            } else if (name === "TerrainFBO") {
+                this.initTerrainFBOAttr!(key, "FLOAT", 3, data[key])
             } else {
-                throw new Error("Not supported name.");
+                throw new Error("unsupport type")
             }
-
-        })
-        this.initTerrainFBOAttr!("a_position", "FLOAT", 3, vertices);
-        this.initTerrainFBOAttr!("a_color", "FLOAT", 3, colors);
-    }
-    buildTerrainData() {
-        const vertices: number[] = [];
-        this.terrainAttrs!.forEach(attr => {
-            if (attr.name === "a_position") {
-                vertices.push(...attr.value);
-            } else {
-                throw new Error("Not supported name.");
-            }
-
-        })
-        this.initTerrainAttr!("a_position", "FLOAT", 3, vertices);
-
+        }
     }
     buildTerrainUniformsData(args: { name: string, value: number[] }[]) {
         const scales: number[] = [];

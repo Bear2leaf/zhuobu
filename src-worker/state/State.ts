@@ -51,18 +51,20 @@ export default class State {
             const attributes = factory.getAttributes();
             let i = 0;
             this.send({
-                type: "SendTerrainFBOBegin",
+                type: "SendAttrBatchBegin",
+                args: ["TerrainFBO"],
                 broadcast: true
             })
             while (i < attributes.length) {
                 this.send({
-                    type: "SendTerrainFBO",
-                    args: [attributes[i++]],
+                    type: "SendAttrBatch",
+                    args: ["TerrainFBO", attributes[i++]],
                     broadcast: true
                 })
             }
             this.send({
-                type: "SendTerrainFBOEnd",
+                type: "SendAttrBatchEnd",
+                args: ["TerrainFBO"],
                 broadcast: true
             })
         }
@@ -70,18 +72,20 @@ export default class State {
             const attributes = gridFactory.getAttributes();
             let i = 0;
             this.send({
-                type: "SendTerrainBegin",
+                type: "SendAttrBatchBegin",
+                args: ["Terrain"],
                 broadcast: true
             })
             while (i < attributes.length) {
                 this.send({
-                    type: "SendTerrain",
-                    args: [attributes[i++]],
+                    type: "SendAttrBatch",
+                    args: ["Terrain", attributes[i++]],
                     broadcast: true
                 })
             }
             this.send({
-                type: "SendTerrainEnd",
+                type: "SendAttrBatchEnd",
+                args: ["Terrain"],
                 broadcast: true
             })
         }
