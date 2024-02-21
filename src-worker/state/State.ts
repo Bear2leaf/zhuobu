@@ -12,6 +12,11 @@ export default class State {
         this.device.emit({
             type: "WorkerInit"
         })
+        this.send({
+            type: "SendModelTranslation",
+            broadcast: true,
+            args: [[0, 0, 0]]
+        })
     }
     onRequest(data: WorkerRequest) {
         switch (data.type) {
@@ -30,6 +35,7 @@ export default class State {
                 break;
             case "RequestTerrain":
                 this.requestTerrain();
+
                 break;
             case "ChangeModelTranslation":
                 this.changeModelTranslation(data.args[0]);

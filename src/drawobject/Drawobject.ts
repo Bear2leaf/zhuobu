@@ -19,10 +19,11 @@ export default class Drawobject {
         context.bindVertexArray(null)
     }
     draw(context: WebGL2RenderingContext) {
-        context.drawArrays(context.TRIANGLES, 0, this.count)
+        this.count && context.drawArrays(context.TRIANGLES, 0, this.count)
     }
     drawInstanced(context: WebGL2RenderingContext) {
-        context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
+
+        this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
     }
     createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array, type: number, size: number) {
         const buffer = context.createBuffer()!;
