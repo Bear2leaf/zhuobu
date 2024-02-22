@@ -47,48 +47,16 @@ export default class State {
         const gridFactory = new GridFactory;
         gridFactory.create();
         factory.create();
-        {
-            const attributes = factory.getAttributes();
-            let i = 0;
-            this.send({
-                type: "SendAttrBatchBegin",
-                args: ["TerrainFBO"],
-                broadcast: true
-            })
-            while (i < attributes.length) {
-                this.send({
-                    type: "SendAttrBatch",
-                    args: ["TerrainFBO", attributes[i++]],
-                    broadcast: true
-                })
-            }
-            this.send({
-                type: "SendAttrBatchEnd",
-                args: ["TerrainFBO"],
-                broadcast: true
-            })
-        }
-        {
-            const attributes = gridFactory.getAttributes();
-            let i = 0;
-            this.send({
-                type: "SendAttrBatchBegin",
-                args: ["Terrain"],
-                broadcast: true
-            })
-            while (i < attributes.length) {
-                this.send({
-                    type: "SendAttrBatch",
-                    args: ["Terrain", attributes[i++]],
-                    broadcast: true
-                })
-            }
-            this.send({
-                type: "SendAttrBatchEnd",
-                args: ["Terrain"],
-                broadcast: true
-            })
-        }
+        this.send({
+            type: "SendAttributes",
+            args: ["TerrainFBO", ...factory.getAttributes()],
+            broadcast: true
+        })
+        this.send({
+            type: "SendAttributes",
+            args: ["Terrain", ...gridFactory.getAttributes()],
+            broadcast: true
+        })
         this.send({
             type: "SendTerrainUniforms",
             args: gridFactory.getUniforms(),

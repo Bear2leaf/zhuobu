@@ -109,15 +109,9 @@ export default class TerrainFactory implements Factory {
         return height / 8;
     }
     getAttributes() {
-        const results = [];
-        const batch = 100;
-        const batchSize = this.vertices.length / batch;
-        for (let i = 0; i < batch; i++) {
-            results.push(
-                { name: "a_position", value: this.vertices.slice(i * batchSize, (i + 1) * batchSize) },
-                { name: "a_color", value: this.colors.slice(i * batchSize, (i + 1) * batchSize) }
-            )
-        }
-        return results
+        return [
+            { name: "a_position", value: this.vertices },
+            { name: "a_color", value: this.colors }
+        ]
     }
 }

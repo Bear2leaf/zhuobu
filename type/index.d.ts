@@ -6,9 +6,7 @@ declare type WorkerResponse =
     | { type: "SendState"; broadcast: true; args: [Record<string, string>] }
     | { type: "SendTerrainUniforms"; broadcast: true; args: { name: string, value: number[] }[] }
     | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
-    | { type: "SendAttrBatch"; broadcast: true; args: [string, ...{ name: string, value: number[] }[]] }
-    | { type: "SendAttrBatchBegin"; broadcast: true; args: [string] }
-    | { type: "SendAttrBatchEnd"; broadcast: true; args: [string] }
+    | { type: "SendAttributes"; broadcast: true; args: [string, ...{ name: string, value: number[] }[]] }
     | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | { type: "RequestSync"; broadcast: true }
 

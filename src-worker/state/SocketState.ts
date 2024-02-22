@@ -1,7 +1,7 @@
 import State from "./State.js";
 
 export default class SocketState extends State {
-    private readonly ws: WebSocket = new WebSocket('ws://localhost:4000');
+    private readonly ws: WebSocket = new WebSocket('ws://localhost:4000/ws');
     private readonly requestQueue: WorkerRequest[] = [];
     private readonly responseQueue: WorkerResponse[] = [];
     private ready = false;

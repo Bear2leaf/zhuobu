@@ -2,4 +2,6 @@
 project.*.json
 dist
 dist-worker
+node_modules
+package-lock.json
 dependency-graph.html

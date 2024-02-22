@@ -44,32 +44,19 @@ export default class WorkerManager {
             case "SendTerrainUniforms":
                 this.buildTerrainUniformsData(data.args);
                 break;
-            case "SendAttrBatch":
-                const batch = data.args.slice(1) as { name: string, value: number[] }[];
-                this.batchMap.get(data.args[0])!.push(...batch)
-                break;
-            case "SendAttrBatchBegin":
-                this.batchMap.set(data.args[0], [])
-                break;
-            case "SendAttrBatchEnd":
-                this.buildAttributes(data.args[0]);
-                this.batchMap.set(data.args[0], [])
+            case "SendAttributes":
+                this.buildAttributes(...data.args);
                 break;
         }
     }
-    buildAttributes(name: string) {
-        const data: Record<string, number[]> = {};
-        this.batchMap.get(name)!.forEach(attr => {
-            data[attr.name] = data[attr.name] || [];
-            data[attr.name].push(...attr.value);
-        });
-        for (const key in data) {
+    buildAttributes(name: string, ...batch: {name:string, value: number[]}[]) {
+        for (const attribute of batch) {
             if (name === "Terrain") {
-                this.initTerrainAttr!(key, "FLOAT", 3, data[key]);
+                this.initTerrainAttr!(attribute.name, "FLOAT", 3, attribute.value);
             } else if (name === "TerrainFBO") {
-                this.initTerrainFBOAttr!(key, "FLOAT", 3, data[key])
+                this.initTerrainFBOAttr!(attribute.name, "FLOAT", 3, attribute.value)
             } else {
-                throw new Error("unsupport type")
+                throw new Error("unsupport type.")
             }
         }
     }
