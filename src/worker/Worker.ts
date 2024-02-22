@@ -1,9 +1,8 @@
 import Device from "../device/Device.js";
 
-export default class WorkerManager {
+export default class Worker {
     private readonly requestQueue: WorkerRequest[] = [];
     private readonly responseQueue: WorkerResponse[] = [];
-    private readonly batchMap: Map<string, { name: string, value: number[] }[]> = new Map();
     private sendMessage?: (data: WorkerRequest) => void;
     private reload?: () => void;
     init(device: Device) {
@@ -41,8 +40,8 @@ export default class WorkerManager {
             case "SendModelTranslation":
                 this.updateModelTranslation!(data.args[0]);
                 break;
-            case "SendTerrainUniforms":
-                this.buildTerrainUniformsData(data.args);
+            case "SendUniforms":
+                this.buildUniformsData(...data.args);
                 break;
             case "SendAttributes":
                 this.buildAttributes(...data.args);
@@ -50,7 +49,7 @@ export default class WorkerManager {
         }
     }
     buildAttributes(name: string, ...batch: {name:string, value: number[]}[]) {
-        for (const attribute of batch) {
+        batch.forEach(attribute => {
             if (name === "Terrain") {
                 this.initTerrainAttr!(attribute.name, "FLOAT", 3, attribute.value);
             } else if (name === "TerrainFBO") {
@@ -58,25 +57,30 @@ export default class WorkerManager {
             } else {
                 throw new Error("unsupport type.")
             }
-        }
+        });
     }
-    buildTerrainUniformsData(args: { name: string, value: number[] }[]) {
-        const scales: number[] = [];
-        const offsets: number[] = [];
-        const edges: number[] = [];
-        args.forEach(attr => {
-            if (attr.name === "u_scales") {
-                scales.push(...attr.value);
-            } else if (attr.name === "u_offsets") {
-                offsets.push(...attr.value);
-            } else if (attr.name === "u_edges") {
-                edges.push(...attr.value);
-            } else {
-                throw new Error("Not supported name.");
-            }
+    buildUniformsData(name: string, ...batch: {name:string, value: number[]}[]) {
+        if (name === "Terrain") {
 
-        })
-        this.updateTerrainUniforms!(edges, scales, offsets);
+            const scales: number[] = [];
+            const offsets: number[] = [];
+            const edges: number[] = [];
+            batch.forEach(uniform => {
+                if (uniform.name === "u_scales") {
+                    scales.push(...uniform.value);
+                } else if (uniform.name === "u_offsets") {
+                    offsets.push(...uniform.value);
+                } else if (uniform.name === "u_edges") {
+                    edges.push(...uniform.value);
+                } else {
+                    throw new Error("Not supported name.");
+                }
+    
+            })
+            this.updateTerrainUniforms!(edges, scales, offsets);
+        } else {
+            throw new Error("unsupport type.")
+        }
     }
     requestTerrain() {
         this.requestQueue.push({

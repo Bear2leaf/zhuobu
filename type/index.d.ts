@@ -4,7 +4,7 @@ declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "Refresh"; }
     | { type: "SendState"; broadcast: true; args: [Record<string, string>] }
-    | { type: "SendTerrainUniforms"; broadcast: true; args: { name: string, value: number[] }[] }
+    | { type: "SendUniforms"; broadcast: true; args: [string, ...{ name: string, value: number[] }[]] }
     | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }
     | { type: "SendAttributes"; broadcast: true; args: [string, ...{ name: string, value: number[] }[]] }
     | { type: "SendModelTranslation"; broadcast: true; args: [[number, number, number]] }

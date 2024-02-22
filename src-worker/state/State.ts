@@ -58,8 +58,8 @@ export default class State {
             broadcast: true
         })
         this.send({
-            type: "SendTerrainUniforms",
-            args: gridFactory.getUniforms(),
+            type: "SendUniforms",
+            args: ["Terrain", ...gridFactory.getUniforms()],
             broadcast: true
         })
     }
