@@ -120,6 +120,9 @@ export default class Server {
         wss.on("connection", (ws) => {
             ws.on("error", console.error);
             ws.on('message', (msg, isBinary) => {
+                if (isBinary) {
+                    throw new Error("unsupport binary data.")
+                } 
                 const data = JSON.parse(msg);
                 if (data.broadcast) {
                     this.broadcast(msg, isBinary)
