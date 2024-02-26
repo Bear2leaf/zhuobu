@@ -49,7 +49,8 @@ export default class Worker {
         }
     }
     decodeState(state: StateData) {
-        this.updateModelTranslation!(state.modelTranslation!);
+        state.modelTranslation && this.updateModelTranslation && this.updateModelTranslation(state.modelTranslation);
+        this.updateModelAnimation && this.updateModelAnimation(state.animation);
     }
     buildAttributes(name: string, ...batch: { name: string, value: number[] }[]) {
         batch.forEach(attribute => {
@@ -90,8 +91,17 @@ export default class Worker {
             type: "RequestTerrain"
         });
     }
+    requestAnimation() {
+        this.requestQueue.push({
+            type: "SyncState",
+            args: [{
+                animation: true
+            }]
+        });
+    }
     updateTerrainUniforms?: (edges: number[], scales: number[], offsets: number[]) => void;
     updateModelTranslation?: (translation: number[]) => void;
+    updateModelAnimation?: (animation?: boolean) => void;
     initTerrainFBOAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
     initTerrainAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
 }

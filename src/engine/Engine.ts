@@ -13,11 +13,12 @@ export default class Engine {
         this.renderer = new Renderer(device);
         this.worker = new Worker();
         this.worker.init(device);
-        this.worker.updateModelTranslation = (translation) => this.renderer.updateUniform(this.renderer.terrainProgram, "u_model", "Matrix4fv",
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            ...translation, 1,);
+        this.worker.updateModelAnimation = (animation) => {this.renderer.animation = !!animation};
+        this.worker.updateModelTranslation = (translation) => {
+            this.renderer.terrain.model[12] = translation[0];
+            this.renderer.terrain.model[13] = translation[1];
+            this.renderer.terrain.model[14] = translation[2];
+        }
         this.worker.initTerrainFBOAttr = (name, type, size, attribute) => {
             this.renderer.createAttributes(this.renderer.terrainFBO, this.renderer.terrainFBOProgram, name, type, size, attribute);
         };
@@ -36,11 +37,13 @@ export default class Engine {
         this.load(device).then(() => {
             this.renderer.init();
             this.worker.requestTerrain();
+            this.worker.requestAnimation();
             requestAnimationFrame((t) => {
                 this.ticker.now = t;
                 this.ticker.tick(t, () => {
                     this.worker.process();
                     this.renderer.renderTerrainFramebuffer();
+                    this.renderer.update(this.ticker.now);
                     this.renderer.render();
                 });
             })

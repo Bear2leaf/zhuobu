@@ -4,6 +4,12 @@ export default class Drawobject {
     readonly buffers: WebGLBuffer[] = [];
     private readonly vao: WebGLVertexArrayObject;
     private readonly first = 0;
+    readonly model: Matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
     private count = 0;
     instanceCount = 0;
     constructor(vao: WebGLVertexArrayObject) {

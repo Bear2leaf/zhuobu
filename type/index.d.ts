@@ -20,6 +20,7 @@ declare type WorkerRequest =
 
 declare type StateData = {
     modelTranslation?: [number, number ,number];
+    animation?: boolean;
     foo?: "bar1";
 }
 declare type Matrix = number[] | Float32Array;

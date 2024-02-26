@@ -10,17 +10,28 @@ export default class CameraController extends HTMLElement {
         const label = document.createElement("label");
         label.innerText = "CameraY:"
         this.addChildren(label)
-        const input = document.createElement("input");
-        input.type = "number";
-        input.step = "0.1";
-        input.onchange = (ev) => {
+        const inputModelTranslation = document.createElement("input");
+        inputModelTranslation.type = "number";
+        inputModelTranslation.step = "0.1";
+        inputModelTranslation.onchange = (ev) => {
             this.sendMessage!({
                 type: "SyncState",
                 broadcast: true,
-                args: [{ modelTranslation: [0, parseFloat(input.value), 0] }]
+                args: [{ modelTranslation: [0, parseFloat(inputModelTranslation.value), 0] }]
             })
         }
-        this.addChildren(input)
+        this.addChildren(inputModelTranslation)
+        const checkboxAnimation = document.createElement("input");
+        checkboxAnimation.type = "checkbox";
+
+        checkboxAnimation.onchange = (ev) => {
+            this.sendMessage!({
+                type: "SyncState",
+                broadcast: true,
+                args: [{ animation: checkboxAnimation.checked }]
+            })
+        }
+        this.addChildren(checkboxAnimation)
         this.elChildren.forEach(this.appendChild.bind(this))
     }
 
