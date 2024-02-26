@@ -134,32 +134,17 @@ export default class Renderer {
     update(time: number) {
         this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...this.terrain.model)
         if (this.animation) {
-            this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...this.rotationY(time / 1000, this.terrain.model))
+            const dst = this.terrain.model;
+            const angleInRadians = time / 1000;
+            const c = Math.cos(angleInRadians);
+            const s = Math.sin(angleInRadians);
+            // rotation Y
+            dst[0] = c;
+            dst[2] = -s;
+            dst[8] = s;
+            dst[10] = c;
+
+            this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...dst)
         }
-    }
-    rotationY(angleInRadians: number, dst: Matrix) {
-        dst = dst || new Float32Array(16);
-
-        const c = Math.cos(angleInRadians);
-        const s = Math.sin(angleInRadians);
-
-        dst[0] = c;
-        dst[1] = 0;
-        dst[2] = -s;
-        dst[3] = 0;
-        dst[4] = 0;
-        dst[5] = 1;
-        dst[6] = 0;
-        dst[7] = 0;
-        dst[8] = s;
-        dst[9] = 0;
-        dst[10] = c;
-        dst[11] = 0;
-        dst[12] = 0;
-        dst[13] = 0;
-        dst[14] = 0;
-        dst[15] = 1;
-
-        return dst;
     }
 }

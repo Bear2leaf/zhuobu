@@ -12,13 +12,6 @@ export default class State {
         this.device.emit({
             type: "WorkerInit"
         })
-        this.send({
-            type: "SendState",
-            broadcast: true,
-            args: [{
-                modelTranslation: [0, 0, 0]
-            }]
-        })
     }
     onRequest(data: WorkerRequest) {
         switch (data.type) {

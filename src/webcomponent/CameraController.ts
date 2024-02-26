@@ -2,6 +2,8 @@ import BrowserDevice from "../device/BrowserDevice.js";
 
 export default class CameraController extends HTMLElement {
     private readonly elChildren: HTMLElement[] = []
+    private readonly translation = document.createElement("input");
+    private readonly animation = document.createElement("input");
     private sendMessage?: (data: WorkerRequest) => void;
     addChildren(el: HTMLElement) {
         this.elChildren.push(el);
@@ -10,7 +12,7 @@ export default class CameraController extends HTMLElement {
         const label = document.createElement("label");
         label.innerText = "CameraY:"
         this.addChildren(label)
-        const inputModelTranslation = document.createElement("input");
+        const inputModelTranslation = this.translation;
         inputModelTranslation.type = "number";
         inputModelTranslation.step = "0.1";
         inputModelTranslation.onchange = (ev) => {
@@ -21,7 +23,7 @@ export default class CameraController extends HTMLElement {
             })
         }
         this.addChildren(inputModelTranslation)
-        const checkboxAnimation = document.createElement("input");
+        const checkboxAnimation = this.animation;
         checkboxAnimation.type = "checkbox";
 
         checkboxAnimation.onchange = (ev) => {
@@ -49,7 +51,8 @@ export default class CameraController extends HTMLElement {
                     });
                     break;
                 case "SendState":
-                    console.log("Received: ", data);
+                    this.animation.checked = !!data.args[0].animation;
+                    this.translation.value = data.args[0].modelTranslation? data.args[0].modelTranslation[1].toString() : "";
                     break;
                 case "Refresh":
                     device.reload();

@@ -98,6 +98,12 @@ export default class Worker {
                 animation: true
             }]
         });
+        this.requestQueue.push({
+            type: "SyncState",
+            args: [{
+                modelTranslation: [0, 0, 0]
+            }]
+        })
     }
     updateTerrainUniforms?: (edges: number[], scales: number[], offsets: number[]) => void;
     updateModelTranslation?: (translation: number[]) => void;
