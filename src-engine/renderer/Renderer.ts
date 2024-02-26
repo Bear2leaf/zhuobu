@@ -6,6 +6,7 @@ import Framebuffer from "../framebuffer/Framebuffer.js";
 import Program from "../program/Program.js";
 import Drawobject from "../drawobject/Drawobject.js";
 import { m4 } from "../third/twgl/m4.js";
+import { v3 } from "../third/twgl/v3.js";
 
 
 
@@ -133,10 +134,16 @@ export default class Renderer {
         this.terrainProgram.init(context);
     }
     update(delta: number) {
+        const viewInverse = m4.identity();
+        const projection = m4.identity();
         if (this.animation) {
             m4.rotateY(this.terrain.model, 0.001 * delta, this.terrain.model)
         }
+        m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse)
+        m4.perspective(Math.PI / 8, 1, 0.01, 10, projection)
         this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...this.terrain.model)
+        this.updateUniform(this.terrainProgram, "u_viewInverse", "Matrix4fv", ...viewInverse)
+        this.updateUniform(this.terrainProgram, "u_projection", "Matrix4fv", ...projection)
 
     }
 }

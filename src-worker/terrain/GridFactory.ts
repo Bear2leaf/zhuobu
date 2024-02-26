@@ -24,12 +24,12 @@ export default class GridFactory implements Factory {
                 const z0 = j / TILE_RESOLUTION;
                 const z1 = (j + 1) / TILE_RESOLUTION;
                 vertices.push(
-                    x0, 0, z0,
-                    x1, 0, z0,
-                    x1, 0, z1,
-                    x1, 0, z1,
                     x0, 0, z1,
+                    x1, 0, z1,
+                    x1, 0, z0,
+                    x1, 0, z0,
                     x0, 0, z0,
+                    x0, 0, z1,
                 );
             }
         }

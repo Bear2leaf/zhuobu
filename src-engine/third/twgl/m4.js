@@ -20,7 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-import * as v3 from './v3.js';
+import { v3 } from './v3.js';
 
 /**
  * 4x4 Matrix math math functions.
@@ -78,16 +78,16 @@ function setDefaultType(ctor) {
 function negate(m, dst) {
   dst = dst || new MatType(16);
 
-  dst[ 0] = -m[ 0];
-  dst[ 1] = -m[ 1];
-  dst[ 2] = -m[ 2];
-  dst[ 3] = -m[ 3];
-  dst[ 4] = -m[ 4];
-  dst[ 5] = -m[ 5];
-  dst[ 6] = -m[ 6];
-  dst[ 7] = -m[ 7];
-  dst[ 8] = -m[ 8];
-  dst[ 9] = -m[ 9];
+  dst[0] = -m[0];
+  dst[1] = -m[1];
+  dst[2] = -m[2];
+  dst[3] = -m[3];
+  dst[4] = -m[4];
+  dst[5] = -m[5];
+  dst[6] = -m[6];
+  dst[7] = -m[7];
+  dst[8] = -m[8];
+  dst[9] = -m[9];
   dst[10] = -m[10];
   dst[11] = -m[11];
   dst[12] = -m[12];
@@ -117,16 +117,16 @@ function create() {
 function copy(m, dst) {
   dst = dst || new MatType(16);
 
-  dst[ 0] = m[ 0];
-  dst[ 1] = m[ 1];
-  dst[ 2] = m[ 2];
-  dst[ 3] = m[ 3];
-  dst[ 4] = m[ 4];
-  dst[ 5] = m[ 5];
-  dst[ 6] = m[ 6];
-  dst[ 7] = m[ 7];
-  dst[ 8] = m[ 8];
-  dst[ 9] = m[ 9];
+  dst[0] = m[0];
+  dst[1] = m[1];
+  dst[2] = m[2];
+  dst[3] = m[3];
+  dst[4] = m[4];
+  dst[5] = m[5];
+  dst[6] = m[6];
+  dst[7] = m[7];
+  dst[8] = m[8];
+  dst[9] = m[9];
   dst[10] = m[10];
   dst[11] = m[11];
   dst[12] = m[12];
@@ -147,16 +147,16 @@ function copy(m, dst) {
 function identity(dst) {
   dst = dst || new MatType(16);
 
-  dst[ 0] = 1;
-  dst[ 1] = 0;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = 1;
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = 0;
-  dst[ 9] = 0;
+  dst[0] = 1;
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = 1;
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = 1;
   dst[11] = 0;
   dst[12] = 0;
@@ -174,7 +174,7 @@ function identity(dst) {
  * @return {module:twgl/m4.Mat4} The transpose of m.
  * @memberOf module:twgl/m4
  */
- function transpose(m, dst) {
+function transpose(m, dst) {
   dst = dst || new MatType(16);
   if (dst === m) {
     let t;
@@ -222,16 +222,16 @@ function identity(dst) {
   const m32 = m[3 * 4 + 2];
   const m33 = m[3 * 4 + 3];
 
-  dst[ 0] = m00;
-  dst[ 1] = m10;
-  dst[ 2] = m20;
-  dst[ 3] = m30;
-  dst[ 4] = m01;
-  dst[ 5] = m11;
-  dst[ 6] = m21;
-  dst[ 7] = m31;
-  dst[ 8] = m02;
-  dst[ 9] = m12;
+  dst[0] = m00;
+  dst[1] = m10;
+  dst[2] = m20;
+  dst[3] = m30;
+  dst[4] = m01;
+  dst[5] = m11;
+  dst[6] = m21;
+  dst[7] = m31;
+  dst[8] = m02;
+  dst[9] = m12;
   dst[10] = m22;
   dst[11] = m32;
   dst[12] = m03;
@@ -268,16 +268,16 @@ function inverse(m, dst) {
   const m31 = m[3 * 4 + 1];
   const m32 = m[3 * 4 + 2];
   const m33 = m[3 * 4 + 3];
-  const tmp_0  = m22 * m33;
-  const tmp_1  = m32 * m23;
-  const tmp_2  = m12 * m33;
-  const tmp_3  = m32 * m13;
-  const tmp_4  = m12 * m23;
-  const tmp_5  = m22 * m13;
-  const tmp_6  = m02 * m33;
-  const tmp_7  = m32 * m03;
-  const tmp_8  = m02 * m23;
-  const tmp_9  = m22 * m03;
+  const tmp_0 = m22 * m33;
+  const tmp_1 = m32 * m23;
+  const tmp_2 = m12 * m33;
+  const tmp_3 = m32 * m13;
+  const tmp_4 = m12 * m23;
+  const tmp_5 = m22 * m13;
+  const tmp_6 = m02 * m33;
+  const tmp_7 = m32 * m03;
+  const tmp_8 = m02 * m23;
+  const tmp_9 = m22 * m03;
   const tmp_10 = m02 * m13;
   const tmp_11 = m12 * m03;
   const tmp_12 = m20 * m31;
@@ -294,44 +294,44 @@ function inverse(m, dst) {
   const tmp_23 = m10 * m01;
 
   const t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
-      (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+    (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
   const t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
-      (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+    (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
   const t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
-      (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+    (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
   const t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
-      (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+    (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
 
   const d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
 
-  dst[ 0] = d * t0;
-  dst[ 1] = d * t1;
-  dst[ 2] = d * t2;
-  dst[ 3] = d * t3;
-  dst[ 4] = d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
-          (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30));
-  dst[ 5] = d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
-          (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30));
-  dst[ 6] = d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
-          (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30));
-  dst[ 7] = d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
-          (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20));
-  dst[ 8] = d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
-          (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33));
-  dst[ 9] = d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
-          (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33));
+  dst[0] = d * t0;
+  dst[1] = d * t1;
+  dst[2] = d * t2;
+  dst[3] = d * t3;
+  dst[4] = d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
+    (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30));
+  dst[5] = d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
+    (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30));
+  dst[6] = d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
+    (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30));
+  dst[7] = d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
+    (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20));
+  dst[8] = d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
+    (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33));
+  dst[9] = d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
+    (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33));
   dst[10] = d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
-          (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33));
+    (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33));
   dst[11] = d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
-          (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23));
+    (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23));
   dst[12] = d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
-          (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22));
+    (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22));
   dst[13] = d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
-          (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02));
+    (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02));
   dst[14] = d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
-          (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12));
+    (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12));
   dst[15] = d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
-          (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02));
+    (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02));
 
   return dst;
 }
@@ -351,14 +351,14 @@ function multiply(a, b, dst) {
   const a01 = a[1];
   const a02 = a[2];
   const a03 = a[3];
-  const a10 = a[ 4 + 0];
-  const a11 = a[ 4 + 1];
-  const a12 = a[ 4 + 2];
-  const a13 = a[ 4 + 3];
-  const a20 = a[ 8 + 0];
-  const a21 = a[ 8 + 1];
-  const a22 = a[ 8 + 2];
-  const a23 = a[ 8 + 3];
+  const a10 = a[4 + 0];
+  const a11 = a[4 + 1];
+  const a12 = a[4 + 2];
+  const a13 = a[4 + 3];
+  const a20 = a[8 + 0];
+  const a21 = a[8 + 1];
+  const a22 = a[8 + 2];
+  const a23 = a[8 + 3];
   const a30 = a[12 + 0];
   const a31 = a[12 + 1];
   const a32 = a[12 + 2];
@@ -367,29 +367,29 @@ function multiply(a, b, dst) {
   const b01 = b[1];
   const b02 = b[2];
   const b03 = b[3];
-  const b10 = b[ 4 + 0];
-  const b11 = b[ 4 + 1];
-  const b12 = b[ 4 + 2];
-  const b13 = b[ 4 + 3];
-  const b20 = b[ 8 + 0];
-  const b21 = b[ 8 + 1];
-  const b22 = b[ 8 + 2];
-  const b23 = b[ 8 + 3];
+  const b10 = b[4 + 0];
+  const b11 = b[4 + 1];
+  const b12 = b[4 + 2];
+  const b13 = b[4 + 3];
+  const b20 = b[8 + 0];
+  const b21 = b[8 + 1];
+  const b22 = b[8 + 2];
+  const b23 = b[8 + 3];
   const b30 = b[12 + 0];
   const b31 = b[12 + 1];
   const b32 = b[12 + 2];
   const b33 = b[12 + 3];
 
-  dst[ 0] = a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03;
-  dst[ 1] = a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03;
-  dst[ 2] = a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03;
-  dst[ 3] = a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03;
-  dst[ 4] = a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13;
-  dst[ 5] = a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13;
-  dst[ 6] = a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13;
-  dst[ 7] = a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13;
-  dst[ 8] = a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23;
-  dst[ 9] = a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23;
+  dst[0] = a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03;
+  dst[1] = a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03;
+  dst[2] = a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03;
+  dst[3] = a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03;
+  dst[4] = a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13;
+  dst[5] = a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13;
+  dst[6] = a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13;
+  dst[7] = a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13;
+  dst[8] = a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23;
+  dst[9] = a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23;
   dst[10] = a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23;
   dst[11] = a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23;
   dst[12] = a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33;
@@ -412,16 +412,16 @@ function multiply(a, b, dst) {
 function setTranslation(a, v, dst) {
   dst = dst || identity();
   if (a !== dst) {
-    dst[ 0] = a[ 0];
-    dst[ 1] = a[ 1];
-    dst[ 2] = a[ 2];
-    dst[ 3] = a[ 3];
-    dst[ 4] = a[ 4];
-    dst[ 5] = a[ 5];
-    dst[ 6] = a[ 6];
-    dst[ 7] = a[ 7];
-    dst[ 8] = a[ 8];
-    dst[ 9] = a[ 9];
+    dst[0] = a[0];
+    dst[1] = a[1];
+    dst[2] = a[2];
+    dst[3] = a[3];
+    dst[4] = a[4];
+    dst[5] = a[5];
+    dst[6] = a[6];
+    dst[7] = a[7];
+    dst[8] = a[8];
+    dst[9] = a[9];
     dst[10] = a[10];
     dst[11] = a[11];
   }
@@ -512,18 +512,18 @@ function perspective(fieldOfViewYInRadians, aspect, zNear, zFar, dst) {
   const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewYInRadians);
   const rangeInv = 1.0 / (zNear - zFar);
 
-  dst[0]  = f / aspect;
-  dst[1]  = 0;
-  dst[2]  = 0;
-  dst[3]  = 0;
+  dst[0] = f / aspect;
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
 
-  dst[4]  = 0;
-  dst[5]  = f;
-  dst[6]  = 0;
-  dst[7]  = 0;
+  dst[4] = 0;
+  dst[5] = f;
+  dst[6] = 0;
+  dst[7] = 0;
 
-  dst[8]  = 0;
-  dst[9]  = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = (zNear + zFar) * rangeInv;
   dst[11] = -1;
 
@@ -554,18 +554,18 @@ function perspective(fieldOfViewYInRadians, aspect, zNear, zFar, dst) {
 function ortho(left, right, bottom, top, near, far, dst) {
   dst = dst || new MatType(16);
 
-  dst[0]  = 2 / (right - left);
-  dst[1]  = 0;
-  dst[2]  = 0;
-  dst[3]  = 0;
+  dst[0] = 2 / (right - left);
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
 
-  dst[4]  = 0;
-  dst[5]  = 2 / (top - bottom);
-  dst[6]  = 0;
-  dst[7]  = 0;
+  dst[4] = 0;
+  dst[5] = 2 / (top - bottom);
+  dst[6] = 0;
+  dst[7] = 0;
 
-  dst[8]  = 0;
-  dst[9]  = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = 2 / (near - far);
   dst[11] = 0;
 
@@ -603,16 +603,16 @@ function frustum(left, right, bottom, top, near, far, dst) {
   const dy = (top - bottom);
   const dz = (near - far);
 
-  dst[ 0] = 2 * near / dx;
-  dst[ 1] = 0;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = 2 * near / dy;
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = (left + right) / dx;
-  dst[ 9] = (top + bottom) / dy;
+  dst[0] = 2 * near / dx;
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = 2 * near / dy;
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = (left + right) / dx;
+  dst[9] = (top + bottom) / dy;
   dst[10] = far / dz;
   dst[11] = -1;
   dst[12] = 0;
@@ -649,20 +649,20 @@ function lookAt(eye, target, up, dst) {
   zAxis = zAxis || v3.create();
 
   v3.normalize(
-      v3.subtract(eye, target, zAxis), zAxis);
+    v3.subtract(eye, target, zAxis), zAxis);
   v3.normalize(v3.cross(up, zAxis, xAxis), xAxis);
   v3.normalize(v3.cross(zAxis, xAxis, yAxis), yAxis);
 
-  dst[ 0] = xAxis[0];
-  dst[ 1] = xAxis[1];
-  dst[ 2] = xAxis[2];
-  dst[ 3] = 0;
-  dst[ 4] = yAxis[0];
-  dst[ 5] = yAxis[1];
-  dst[ 6] = yAxis[2];
-  dst[ 7] = 0;
-  dst[ 8] = zAxis[0];
-  dst[ 9] = zAxis[1];
+  dst[0] = xAxis[0];
+  dst[1] = xAxis[1];
+  dst[2] = xAxis[2];
+  dst[3] = 0;
+  dst[4] = yAxis[0];
+  dst[5] = yAxis[1];
+  dst[6] = yAxis[2];
+  dst[7] = 0;
+  dst[8] = zAxis[0];
+  dst[9] = zAxis[1];
   dst[10] = zAxis[2];
   dst[11] = 0;
   dst[12] = eye[0];
@@ -684,16 +684,16 @@ function lookAt(eye, target, up, dst) {
 function translation(v, dst) {
   dst = dst || new MatType(16);
 
-  dst[ 0] = 1;
-  dst[ 1] = 0;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = 1;
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = 0;
-  dst[ 9] = 0;
+  dst[0] = 1;
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = 1;
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = 1;
   dst[11] = 0;
   dst[12] = v[0];
@@ -736,16 +736,16 @@ function translate(m, v, dst) {
   const m33 = m[3 * 4 + 3];
 
   if (m !== dst) {
-    dst[ 0] = m00;
-    dst[ 1] = m01;
-    dst[ 2] = m02;
-    dst[ 3] = m03;
-    dst[ 4] = m10;
-    dst[ 5] = m11;
-    dst[ 6] = m12;
-    dst[ 7] = m13;
-    dst[ 8] = m20;
-    dst[ 9] = m21;
+    dst[0] = m00;
+    dst[1] = m01;
+    dst[2] = m02;
+    dst[3] = m03;
+    dst[4] = m10;
+    dst[5] = m11;
+    dst[6] = m12;
+    dst[7] = m13;
+    dst[8] = m20;
+    dst[9] = m21;
     dst[10] = m22;
     dst[11] = m23;
   }
@@ -771,16 +771,16 @@ function rotationX(angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[ 0] = 1;
-  dst[ 1] = 0;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = c;
-  dst[ 6] = s;
-  dst[ 7] = 0;
-  dst[ 8] = 0;
-  dst[ 9] = -s;
+  dst[0] = 1;
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = c;
+  dst[6] = s;
+  dst[7] = 0;
+  dst[8] = 0;
+  dst[9] = -s;
   dst[10] = c;
   dst[11] = 0;
   dst[12] = 0;
@@ -814,20 +814,20 @@ function rotateX(m, angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[4]  = c * m10 + s * m20;
-  dst[5]  = c * m11 + s * m21;
-  dst[6]  = c * m12 + s * m22;
-  dst[7]  = c * m13 + s * m23;
-  dst[8]  = c * m20 - s * m10;
-  dst[9]  = c * m21 - s * m11;
+  dst[4] = c * m10 + s * m20;
+  dst[5] = c * m11 + s * m21;
+  dst[6] = c * m12 + s * m22;
+  dst[7] = c * m13 + s * m23;
+  dst[8] = c * m20 - s * m10;
+  dst[9] = c * m21 - s * m11;
   dst[10] = c * m22 - s * m12;
   dst[11] = c * m23 - s * m13;
 
   if (m !== dst) {
-    dst[ 0] = m[ 0];
-    dst[ 1] = m[ 1];
-    dst[ 2] = m[ 2];
-    dst[ 3] = m[ 3];
+    dst[0] = m[0];
+    dst[1] = m[1];
+    dst[2] = m[2];
+    dst[3] = m[3];
     dst[12] = m[12];
     dst[13] = m[13];
     dst[14] = m[14];
@@ -850,16 +850,16 @@ function rotationY(angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[ 0] = c;
-  dst[ 1] = 0;
-  dst[ 2] = -s;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = 1;
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = s;
-  dst[ 9] = 0;
+  dst[0] = c;
+  dst[1] = 0;
+  dst[2] = -s;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = 1;
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = s;
+  dst[9] = 0;
   dst[10] = c;
   dst[11] = 0;
   dst[12] = 0;
@@ -893,20 +893,20 @@ function rotateY(m, angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[ 0] = c * m00 - s * m20;
-  dst[ 1] = c * m01 - s * m21;
-  dst[ 2] = c * m02 - s * m22;
-  dst[ 3] = c * m03 - s * m23;
-  dst[ 8] = c * m20 + s * m00;
-  dst[ 9] = c * m21 + s * m01;
+  dst[0] = c * m00 - s * m20;
+  dst[1] = c * m01 - s * m21;
+  dst[2] = c * m02 - s * m22;
+  dst[3] = c * m03 - s * m23;
+  dst[8] = c * m20 + s * m00;
+  dst[9] = c * m21 + s * m01;
   dst[10] = c * m22 + s * m02;
   dst[11] = c * m23 + s * m03;
 
   if (m !== dst) {
-    dst[ 4] = m[ 4];
-    dst[ 5] = m[ 5];
-    dst[ 6] = m[ 6];
-    dst[ 7] = m[ 7];
+    dst[4] = m[4];
+    dst[5] = m[5];
+    dst[6] = m[6];
+    dst[7] = m[7];
     dst[12] = m[12];
     dst[13] = m[13];
     dst[14] = m[14];
@@ -929,16 +929,16 @@ function rotationZ(angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[ 0] = c;
-  dst[ 1] = s;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = -s;
-  dst[ 5] = c;
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = 0;
-  dst[ 9] = 0;
+  dst[0] = c;
+  dst[1] = s;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = -s;
+  dst[5] = c;
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = 1;
   dst[11] = 0;
   dst[12] = 0;
@@ -972,18 +972,18 @@ function rotateZ(m, angleInRadians, dst) {
   const c = Math.cos(angleInRadians);
   const s = Math.sin(angleInRadians);
 
-  dst[ 0] = c * m00 + s * m10;
-  dst[ 1] = c * m01 + s * m11;
-  dst[ 2] = c * m02 + s * m12;
-  dst[ 3] = c * m03 + s * m13;
-  dst[ 4] = c * m10 - s * m00;
-  dst[ 5] = c * m11 - s * m01;
-  dst[ 6] = c * m12 - s * m02;
-  dst[ 7] = c * m13 - s * m03;
+  dst[0] = c * m00 + s * m10;
+  dst[1] = c * m01 + s * m11;
+  dst[2] = c * m02 + s * m12;
+  dst[3] = c * m03 + s * m13;
+  dst[4] = c * m10 - s * m00;
+  dst[5] = c * m11 - s * m01;
+  dst[6] = c * m12 - s * m02;
+  dst[7] = c * m13 - s * m03;
 
   if (m !== dst) {
-    dst[ 8] = m[ 8];
-    dst[ 9] = m[ 9];
+    dst[8] = m[8];
+    dst[9] = m[9];
     dst[10] = m[10];
     dst[11] = m[11];
     dst[12] = m[12];
@@ -1023,16 +1023,16 @@ function axisRotation(axis, angleInRadians, dst) {
   const s = Math.sin(angleInRadians);
   const oneMinusCosine = 1 - c;
 
-  dst[ 0] = xx + (1 - xx) * c;
-  dst[ 1] = x * y * oneMinusCosine + z * s;
-  dst[ 2] = x * z * oneMinusCosine - y * s;
-  dst[ 3] = 0;
-  dst[ 4] = x * y * oneMinusCosine - z * s;
-  dst[ 5] = yy + (1 - yy) * c;
-  dst[ 6] = y * z * oneMinusCosine + x * s;
-  dst[ 7] = 0;
-  dst[ 8] = x * z * oneMinusCosine + y * s;
-  dst[ 9] = y * z * oneMinusCosine - x * s;
+  dst[0] = xx + (1 - xx) * c;
+  dst[1] = x * y * oneMinusCosine + z * s;
+  dst[2] = x * z * oneMinusCosine - y * s;
+  dst[3] = 0;
+  dst[4] = x * y * oneMinusCosine - z * s;
+  dst[5] = yy + (1 - yy) * c;
+  dst[6] = y * z * oneMinusCosine + x * s;
+  dst[7] = 0;
+  dst[8] = x * z * oneMinusCosine + y * s;
+  dst[9] = y * z * oneMinusCosine - x * s;
   dst[10] = zz + (1 - zz) * c;
   dst[11] = 0;
   dst[12] = 0;
@@ -1094,16 +1094,16 @@ function axisRotate(m, axis, angleInRadians, dst) {
   const m22 = m[10];
   const m23 = m[11];
 
-  dst[ 0] = r00 * m00 + r01 * m10 + r02 * m20;
-  dst[ 1] = r00 * m01 + r01 * m11 + r02 * m21;
-  dst[ 2] = r00 * m02 + r01 * m12 + r02 * m22;
-  dst[ 3] = r00 * m03 + r01 * m13 + r02 * m23;
-  dst[ 4] = r10 * m00 + r11 * m10 + r12 * m20;
-  dst[ 5] = r10 * m01 + r11 * m11 + r12 * m21;
-  dst[ 6] = r10 * m02 + r11 * m12 + r12 * m22;
-  dst[ 7] = r10 * m03 + r11 * m13 + r12 * m23;
-  dst[ 8] = r20 * m00 + r21 * m10 + r22 * m20;
-  dst[ 9] = r20 * m01 + r21 * m11 + r22 * m21;
+  dst[0] = r00 * m00 + r01 * m10 + r02 * m20;
+  dst[1] = r00 * m01 + r01 * m11 + r02 * m21;
+  dst[2] = r00 * m02 + r01 * m12 + r02 * m22;
+  dst[3] = r00 * m03 + r01 * m13 + r02 * m23;
+  dst[4] = r10 * m00 + r11 * m10 + r12 * m20;
+  dst[5] = r10 * m01 + r11 * m11 + r12 * m21;
+  dst[6] = r10 * m02 + r11 * m12 + r12 * m22;
+  dst[7] = r10 * m03 + r11 * m13 + r12 * m23;
+  dst[8] = r20 * m00 + r21 * m10 + r22 * m20;
+  dst[9] = r20 * m01 + r21 * m11 + r22 * m21;
   dst[10] = r20 * m02 + r21 * m12 + r22 * m22;
   dst[11] = r20 * m03 + r21 * m13 + r22 * m23;
 
@@ -1130,16 +1130,16 @@ function axisRotate(m, axis, angleInRadians, dst) {
 function scaling(v, dst) {
   dst = dst || new MatType(16);
 
-  dst[ 0] = v[0];
-  dst[ 1] = 0;
-  dst[ 2] = 0;
-  dst[ 3] = 0;
-  dst[ 4] = 0;
-  dst[ 5] = v[1];
-  dst[ 6] = 0;
-  dst[ 7] = 0;
-  dst[ 8] = 0;
-  dst[ 9] = 0;
+  dst[0] = v[0];
+  dst[1] = 0;
+  dst[2] = 0;
+  dst[3] = 0;
+  dst[4] = 0;
+  dst[5] = v[1];
+  dst[6] = 0;
+  dst[7] = 0;
+  dst[8] = 0;
+  dst[9] = 0;
   dst[10] = v[2];
   dst[11] = 0;
   dst[12] = 0;
@@ -1168,16 +1168,16 @@ function scale(m, v, dst) {
   const v1 = v[1];
   const v2 = v[2];
 
-  dst[ 0] = v0 * m[0 * 4 + 0];
-  dst[ 1] = v0 * m[0 * 4 + 1];
-  dst[ 2] = v0 * m[0 * 4 + 2];
-  dst[ 3] = v0 * m[0 * 4 + 3];
-  dst[ 4] = v1 * m[1 * 4 + 0];
-  dst[ 5] = v1 * m[1 * 4 + 1];
-  dst[ 6] = v1 * m[1 * 4 + 2];
-  dst[ 7] = v1 * m[1 * 4 + 3];
-  dst[ 8] = v2 * m[2 * 4 + 0];
-  dst[ 9] = v2 * m[2 * 4 + 1];
+  dst[0] = v0 * m[0 * 4 + 0];
+  dst[1] = v0 * m[0 * 4 + 1];
+  dst[2] = v0 * m[0 * 4 + 2];
+  dst[3] = v0 * m[0 * 4 + 3];
+  dst[4] = v1 * m[1 * 4 + 0];
+  dst[5] = v1 * m[1 * 4 + 1];
+  dst[6] = v1 * m[1 * 4 + 2];
+  dst[7] = v1 * m[1 * 4 + 3];
+  dst[8] = v2 * m[2 * 4 + 0];
+  dst[9] = v2 * m[2 * 4 + 1];
   dst[10] = v2 * m[2 * 4 + 2];
   dst[11] = v2 * m[2 * 4 + 3];
 
