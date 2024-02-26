@@ -15,9 +15,9 @@ export default class CameraController extends HTMLElement {
         input.step = "0.1";
         input.onchange = (ev) => {
             this.sendMessage!({
-                type: "ChangeModelTranslation",
+                type: "SyncState",
                 broadcast: true,
-                args: [[0, parseFloat(input.value), 0]]
+                args: [{ modelTranslation: [0, parseFloat(input.value), 0] }]
             })
         }
         this.addChildren(input)

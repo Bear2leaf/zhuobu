@@ -25,7 +25,7 @@ export default class Worker {
                 this.requestQueue.push({
                     type: "SyncState",
                     args: [{
-                        foo: "bar"
+                        foo: "bar1"
                     }]
                 });
                 break;
@@ -37,8 +37,8 @@ export default class Worker {
             case "Refresh":
                 this.reload!();
                 break;
-            case "SendModelTranslation":
-                this.updateModelTranslation!(data.args[0]);
+            case "SendState":
+                this.decodeState(data.args[0]);
                 break;
             case "SendUniforms":
                 this.buildUniformsData(...data.args);
@@ -48,7 +48,10 @@ export default class Worker {
                 break;
         }
     }
-    buildAttributes(name: string, ...batch: {name:string, value: number[]}[]) {
+    decodeState(state: StateData) {
+        this.updateModelTranslation!(state.modelTranslation!);
+    }
+    buildAttributes(name: string, ...batch: { name: string, value: number[] }[]) {
         batch.forEach(attribute => {
             if (name === "Terrain") {
                 this.initTerrainAttr!(attribute.name, "FLOAT", 3, attribute.value);
@@ -59,7 +62,7 @@ export default class Worker {
             }
         });
     }
-    buildUniformsData(name: string, ...batch: {name:string, value: number[]}[]) {
+    buildUniformsData(name: string, ...batch: { name: string, value: number[] }[]) {
         if (name === "Terrain") {
 
             const scales: number[] = [];
@@ -75,7 +78,7 @@ export default class Worker {
                 } else {
                     throw new Error("Not supported name.");
                 }
-    
+
             })
             this.updateTerrainUniforms!(edges, scales, offsets);
         } else {
@@ -88,7 +91,7 @@ export default class Worker {
         });
     }
     updateTerrainUniforms?: (edges: number[], scales: number[], offsets: number[]) => void;
-    updateModelTranslation?: (translation: [number, number, number]) => void;
+    updateModelTranslation?: (translation: number[]) => void;
     initTerrainFBOAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
     initTerrainAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
 }

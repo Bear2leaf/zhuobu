@@ -4,7 +4,7 @@ import TerrainFactory from "../terrain/TerrainFactory.js";
 import { createWorld } from "../third/bitecs/index.js";
 export default class State {
     private readonly world = createWorld();
-    readonly state: Record<string, string> = {};
+    readonly state: StateData = {};
     constructor(readonly device: WorkerDevice) {
         console.log("State Inited.")
     }
@@ -13,9 +13,11 @@ export default class State {
             type: "WorkerInit"
         })
         this.send({
-            type: "SendModelTranslation",
+            type: "SendState",
             broadcast: true,
-            args: [[0, 0, 0]]
+            args: [{
+                modelTranslation: [0, 0, 0]
+            }]
         })
     }
     onRequest(data: WorkerRequest) {
@@ -35,10 +37,6 @@ export default class State {
                 break;
             case "RequestTerrain":
                 this.requestTerrain();
-
-                break;
-            case "ChangeModelTranslation":
-                this.changeModelTranslation(data.args[0]);
                 break;
         }
     }
@@ -74,9 +72,9 @@ export default class State {
     }
     changeModelTranslation(translation: [number, number, number]): void {
         this.send({
-            type: "SendModelTranslation",
+            type: "SendState",
             broadcast: true,
-            args: [translation]
+            args: [{ modelTranslation: translation }]
         })
     }
     sync() {
