@@ -9,31 +9,27 @@ export default class CameraController extends HTMLElement {
         this.elChildren.push(el);
     }
     connectedCallback() {
-        const label = document.createElement("label");
-        label.innerText = "CameraY:"
-        this.addChildren(label)
-        const inputModelTranslation = this.translation;
-        inputModelTranslation.type = "number";
-        inputModelTranslation.step = "0.1";
-        inputModelTranslation.onchange = (ev) => {
-            this.sendMessage!({
-                type: "SyncState",
-                broadcast: true,
-                args: [{ modelTranslation: [0, parseFloat(inputModelTranslation.value), 0] }]
-            })
-        }
-        this.addChildren(inputModelTranslation)
-        const checkboxAnimation = this.animation;
-        checkboxAnimation.type = "checkbox";
-
-        checkboxAnimation.onchange = (ev) => {
-            this.sendMessage!({
-                type: "SyncState",
-                broadcast: true,
-                args: [{ animation: checkboxAnimation.checked }]
-            })
-        }
-        this.addChildren(checkboxAnimation)
+        this.addChildren(Object.assign(document.createElement("h4"), { innerText: "Camera:" }))
+        this.addChildren(Object.assign(document.createElement("p"), { innerText: "modelY:" }))
+        this.addChildren(Object.assign(this.translation, {
+            type: "number", step: "0.1", onchange: () => {
+                this.sendMessage!({
+                    type: "SyncState",
+                    broadcast: true,
+                    args: [{ modelTranslation: [0, parseFloat(this.translation.value), 0] }]
+                })
+            }
+        }))
+        this.addChildren(Object.assign(document.createElement("p"), { innerText: "animation:" }))
+        this.addChildren(Object.assign(this.animation, {
+            type: "checkbox", onchange: () => {
+                this.sendMessage!({
+                    type: "SyncState",
+                    broadcast: true,
+                    args: [{ animation: this.animation.checked }]
+                })
+            }
+        }))
         this.elChildren.forEach(this.appendChild.bind(this))
     }
 
@@ -52,7 +48,7 @@ export default class CameraController extends HTMLElement {
                     break;
                 case "SendState":
                     this.animation.checked = !!data.args[0].animation;
-                    this.translation.value = data.args[0].modelTranslation? data.args[0].modelTranslation[1].toString() : "";
+                    this.translation.value = data.args[0].modelTranslation ? data.args[0].modelTranslation[1].toString() : "";
                     break;
                 case "Refresh":
                     device.reload();
