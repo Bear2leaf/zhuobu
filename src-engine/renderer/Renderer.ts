@@ -5,6 +5,7 @@ import Texture from "../texture/Texture.js";
 import Framebuffer from "../framebuffer/Framebuffer.js";
 import Program from "../program/Program.js";
 import Drawobject from "../drawobject/Drawobject.js";
+import { m4 } from "../third/twgl/m4.js";
 
 
 
@@ -131,20 +132,11 @@ export default class Renderer {
         this.terrainProgram.name = "terrain";
         this.terrainProgram.init(context);
     }
-    update(time: number) {
-        this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...this.terrain.model)
+    update(delta: number) {
         if (this.animation) {
-            const dst = this.terrain.model;
-            const angleInRadians = time / 1000;
-            const c = Math.cos(angleInRadians);
-            const s = Math.sin(angleInRadians);
-            // rotation Y
-            dst[0] = c;
-            dst[2] = -s;
-            dst[8] = s;
-            dst[10] = c;
-
-            this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...dst)
+            m4.rotateY(this.terrain.model, 0.001 * delta, this.terrain.model)
         }
+        this.updateUniform(this.terrainProgram, "u_model", "Matrix4fv", ...this.terrain.model)
+
     }
 }

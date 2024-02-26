@@ -1,9 +1,0 @@
-{
-    "exclude": ["src-worker"],
-    "compilerOptions": {
-        "rootDir": "src",
-        "outDir": "dist",
-        "target": "ES2015",
-        "strict": true
-    }
-}

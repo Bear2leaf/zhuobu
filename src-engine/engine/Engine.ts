@@ -43,7 +43,7 @@ export default class Engine {
                 this.ticker.tick(t, () => {
                     this.worker.process();
                     this.renderer.renderTerrainFramebuffer();
-                    this.renderer.update(this.ticker.now);
+                    this.renderer.update(this.ticker.delta);
                     this.renderer.render();
                 });
             })

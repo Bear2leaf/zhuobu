@@ -3,10 +3,6 @@ import { readFile, watch } from "fs";
 import { WebSocketServer, WebSocket } from 'ws';
 import { extname } from "path";
 
-const OPCODES = {
-    text: 0x01,
-    close: 0x08
-}
 
 export default class Server {
     PORT = 4000;
