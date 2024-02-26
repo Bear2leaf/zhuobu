@@ -1,0 +1,48 @@
+{
+  "compileType": "game",
+  "libVersion": "2.26.0",
+  "packOptions": {
+    "ignore": [
+      {
+        "value": "src-engine",
+        "type": "folder"
+      },
+      {
+        "value": "src-worker",
+        "type": "folder"
+      },
+      {
+        "value": "server",
+        "type": "folder"
+      },
+      {
+        "value": ".dependency-cruiser.js",
+        "type": "file"
+      },
+      {
+        "value": "dist/webcomponent",
+        "type": "folder"
+      },
+      {
+        "value": "dist/device/BrowserDevice.js",
+        "type": "file"
+      }
+    ],
+    "include": []
+  },
+  "condition": {},
+  "setting": {
+    "ignoreUploadUnusedFiles": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "es6": true,
+    "enhance": true
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
+}

@@ -1,7 +1,9 @@
-.DS_Store
-project.*.json
+
 dist
 dist-worker
 node_modules
 package-lock.json
+project.private.config.json
 dependency-graph.html
+.DS_Store
+.dependency-cruiser.js
