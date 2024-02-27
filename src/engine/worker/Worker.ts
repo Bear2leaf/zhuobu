@@ -46,52 +46,47 @@ export default class Worker {
             case "SendAttributes":
                 this.buildAttributes(...data.args);
                 break;
+            case "SendInstanceCount":
+                this.updateInstanceCount!(...data.args);
+                break;
+            case "SendCreateObjects":
+                this.createObjects!(...data.args);
+                break;
+            case "SendObjectCreated":
+                this.onObjectCreated!();
+                break;
         }
     }
     decodeState(state: StateData) {
         state.modelTranslation && this.updateModelTranslation && this.updateModelTranslation(state.modelTranslation);
-        this.updateModelAnimation && this.updateModelAnimation(state.animation);
+        state.animation !== undefined && this.updateModelAnimation && this.updateModelAnimation(state.animation);
     }
-    buildAttributes(name: string, ...batch: { name: string, value: number[] }[]) {
+    buildAttributes(name: string, ...batch: { name: string, value: number[], type: "FLOAT", size: number }[]) {
         batch.forEach(attribute => {
-            if (name === "Terrain") {
-                this.initTerrainAttr!(attribute.name, "FLOAT", 3, attribute.value);
-            } else if (name === "TerrainFBO") {
-                this.initTerrainFBOAttr!(attribute.name, "FLOAT", 3, attribute.value)
-            } else {
-                throw new Error("unsupport type.")
-            }
+            this.initAttributes!(name, name, attribute.name, attribute.type, attribute.size, attribute.value)
         });
     }
-    buildUniformsData(name: string, ...batch: { name: string, value: number[] }[]) {
-        if (name === "Terrain") {
-
-            const scales: number[] = [];
-            const offsets: number[] = [];
-            const edges: number[] = [];
-            batch.forEach(uniform => {
-                if (uniform.name === "u_scales") {
-                    scales.push(...uniform.value);
-                } else if (uniform.name === "u_offsets") {
-                    offsets.push(...uniform.value);
-                } else if (uniform.name === "u_edges") {
-                    edges.push(...uniform.value);
-                } else {
-                    throw new Error("Not supported name.");
-                }
-
-            })
-            this.updateTerrainUniforms!(edges, scales, offsets);
-        } else {
-            throw new Error("unsupport type.")
-        }
+    buildUniformsData(name: string, ...batch: { name: string, value: number[], type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv' }[]) {
+        batch.forEach(uniform => {
+            this.updateUniforms!(name, uniform.name, uniform.type, uniform.value);
+        })
     }
     requestTerrain() {
         this.requestQueue.push({
             type: "RequestTerrain"
         });
     }
-    requestAnimation() {
+    requestLoadStart() {
+        this.requestQueue.push({
+            type: "RequestLoadStart"
+        });
+    }
+    requestObjectCreated() {
+        this.requestQueue.push({
+            type: "RequestObjectCreated"
+        });
+    }
+    initStates() {
         this.requestQueue.push({
             type: "SyncState",
             args: [{
@@ -105,9 +100,12 @@ export default class Worker {
             }]
         })
     }
-    updateTerrainUniforms?: (edges: number[], scales: number[], offsets: number[]) => void;
+    updateUniforms?: (programName: string, uniformName: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => void;
+    updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
-    updateModelAnimation?: (animation?: boolean) => void;
-    initTerrainFBOAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
-    initTerrainAttr?: (name: string, type: "FLOAT", size: number, attribute: number[]) => void;
+    updateModelAnimation?: (animation: boolean) => void;
+    initAttributes?: (objectName: string, programName: string, name: string, type: "FLOAT", size: number, attribute: number[]) => void;
+    createObjects?: (programs: string[], objects: string[], textures: string[]) => void;
+    onObjectCreated?: () => void;
+
 }

@@ -6,7 +6,7 @@ enum Edge {
     BOTTOM = 4,
     RIGHT = 8,
 };
-export default class CdlodGrid  {
+export default class CdlodGrid {
     private readonly vertices: number[] = [];
     private readonly scales: number[] = [];
     private readonly offsets: number[] = [];
@@ -89,15 +89,27 @@ export default class CdlodGrid  {
         this.edges.push(edge);
 
     }
-    getAttributes() {
+    getAttributes(): {
+        name: string;
+        type: "FLOAT";
+        value: number[];
+        size: number;
+    }[] {
         return [
-            { name: "a_position", value: this.vertices },
+            { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
         ]
     }
-    getUniforms() {
+    getUniforms(): { name: string; type: "1iv" | "1i" | "1fv" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
         return [
-            {name :"u_scales",value: this.scales},
-            {name :"u_offsets",value: this.offsets},
-            {name :"u_edges",value: this.edges},]
+            { name: "u_scales", type: "1fv", value: this.scales },
+            { name: "u_offsets", type: "2fv", value: this.offsets },
+            { name: "u_edges", type: "1iv", value: this.edges },
+            { name: "u_texture", type: "1i", value: [0] },
+            { name: "u_textureDepth", type: "1i", value: [1] },
+            { name: "u_textureNormal", type: "1i", value: [2] },
+        ]
+    }
+    getInstanceCount() {
+        return this.scales.length;
     }
 }

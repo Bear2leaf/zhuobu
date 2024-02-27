@@ -1,19 +1,19 @@
 import Program from "../program/Program.js";
+import { m4 } from "../third/twgl/m4.js";
 
 export default class Drawobject {
     readonly buffers: WebGLBuffer[] = [];
     private vao: WebGLVertexArrayObject | null = null;
     private readonly first = 0;
-    readonly model: Matrix = [
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-    ];
+    readonly name: string;
+    readonly model: Matrix = m4.identity();
     private count = 0;
     instanceCount = 0;
-    static create() {
-        return new Drawobject()
+    constructor(name: string) {
+        this.name = name;
+    }
+    static create(name: string) {
+        return new Drawobject(name);
     }
     bind(context: WebGL2RenderingContext) {
         context.bindVertexArray(this.vao);

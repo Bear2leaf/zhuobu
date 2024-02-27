@@ -7,13 +7,14 @@ export default class Program {
     private readonly valueMap: Map<string, number[]>;
     private vertexShaderSource = "";
     private fragmentShaderSource = "";
-    name = "";
-    constructor() {
+    readonly name;
+    constructor(name: string) {
+        this.name = name;
         this.locMap = new Map();
         this.valueMap = new Map();
     }
-    static create(): Program {
-        return new Program();
+    static create(name: string): Program {
+        return new Program(name);
     }
     cacheLoc(context: WebGL2RenderingContext, name: string) {
         let loc = this.locMap.get(name);

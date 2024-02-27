@@ -108,10 +108,15 @@ export default class Terrain {
         // return Math.sign(height) * Math.sqrt(Math.abs(height) / 8);
         return height / 8;
     }
-    getAttributes() {
+    getAttributes(): {
+        name: string;
+        type: "FLOAT";
+        value: number[];
+        size: number;
+    }[] {
         return [
-            { name: "a_position", value: this.vertices },
-            { name: "a_color", value: this.colors }
+            { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
+            { name: "a_color", type: "FLOAT", value: this.colors, size: 3 }
         ]
     }
 }

@@ -90,8 +90,16 @@ export default class Renderer {
     deactiveProgram(program: Program) {
         program.deactive(this.context);
     }
-    createDiffuseTexture(texture: Texture) {
-        texture.generateDiffuse(this.context)
+    createTexture(texture: Texture) {
+        if (texture.name === "diffuse") {
+            texture.generateDiffuse(this.context)
+        } else if (texture.name === "depth") {
+            texture.generateDepth(this.context)
+        } else if (texture.name === "normal") {
+            texture.generateNormal(this.context)
+        } else {
+            throw new Error("unsupport texture name.")
+        }
     }
     createDepthTexture(texture: Texture) {
         texture.generateDepth(this.context)

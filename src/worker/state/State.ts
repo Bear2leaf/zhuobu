@@ -31,24 +31,42 @@ export default class State {
             case "RequestTerrain":
                 this.requestTerrain();
                 break;
+            case "RequestLoadStart":
+                this.send({
+                    type: "SendCreateObjects",
+                    args: [["terrain", "terrainFBO"], ["terrain", "terrainFBO"], ["diffuse", "depth", "normal"]],
+                    broadcast: true
+                })
+                break;
+            case "RequestObjectCreated":
+                this.send({
+                    type: "SendObjectCreated",
+                    broadcast: true
+                })
+                break;
         }
     }
     requestTerrain() {
-        const factory =  Terrain.create();
+        const factory = Terrain.create();
         const gridFactory = CdlodGrid.create();
         this.send({
             type: "SendAttributes",
-            args: ["TerrainFBO", ...factory.getAttributes()],
+            args: ["terrainFBO", ...factory.getAttributes()],
             broadcast: true
         })
         this.send({
             type: "SendAttributes",
-            args: ["Terrain", ...gridFactory.getAttributes()],
+            args: ["terrain", ...gridFactory.getAttributes()],
             broadcast: true
         })
         this.send({
             type: "SendUniforms",
-            args: ["Terrain", ...gridFactory.getUniforms()],
+            args: ["terrain", ...gridFactory.getUniforms()],
+            broadcast: true
+        })
+        this.send({
+            type: "SendInstanceCount",
+            args: ["terrain", gridFactory.getInstanceCount()],
             broadcast: true
         })
     }
