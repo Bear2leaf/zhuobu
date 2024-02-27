@@ -1,4 +1,4 @@
-declare module v3 {
+export module v3 {
     /**
      * A JavaScript array with 3 values or a Float32Array with 3 values.
      * When created by the library will create the default type which is `Float32Array`

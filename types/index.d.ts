@@ -1,5 +1,4 @@
 ///<reference path="./wx/index.d.ts"/>
-///<reference path="./twgl/m4.d.ts"/>
 
 declare type WorkerResponse =
     { type: "WorkerInit"; }

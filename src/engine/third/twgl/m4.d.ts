@@ -1,6 +1,6 @@
-///<reference path="./v3.d.ts"/>
+import { v3 } from "./v3.js";
 
-declare module m4 {
+export module m4 {
     /**
      * A JavaScript array with 16 values or a Float32Array with 16 values.
      * When created by the library will create the default type which is `Float32Array`
