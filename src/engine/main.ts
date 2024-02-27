@@ -42,10 +42,10 @@ export default class Engine {
                 model[14] = translation[2];
             }
         }
-        this.worker.initAttributes = (objectName, programName, name, type, size, attribute) => {
+        this.worker.initAttributes = (objectName, programName, name, type, size, attribute, divisor) => {
             const object = this.objects.find(o => o.name === objectName)!
             const program = this.programs.find(p => p.name === programName)!
-            this.renderer.createAttributes(object, program, name, type, size, attribute);
+            this.renderer.createAttributes(object, program, name, type, size, attribute, divisor);
         };
         this.worker.updateUniforms = (programName: string, uniformName: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => {
             const program = this.programs.find(p => p.name === programName)!;

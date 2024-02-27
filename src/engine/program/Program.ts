@@ -58,10 +58,18 @@ export default class Program {
     updateUniformMatrix4fv(context: WebGL2RenderingContext, name: string, values: number[]) {
         this.sameVal(name, values) || context.uniformMatrix4fv(this.cacheLoc(context, name), false, values);
     }
-    activeVertexAttribArray(context: WebGL2RenderingContext, name: string, size: number, type: number) {
+    activeVertexAttribArray(context: WebGL2RenderingContext, name: string, size: number, type: number, divisor: number = 0) {
         const attributeLocation = context.getAttribLocation(this.program!, name);
         context.enableVertexAttribArray(attributeLocation);
-        context.vertexAttribPointer(attributeLocation, size, type, false, 0, 0);
+        if (type === context.INT) {
+            // DONT USE TYPE SIZE LESS THAN INT IN MINIGAME, PERF ISSUE!
+            context.vertexAttribIPointer(attributeLocation, size, type, 0, 0);
+        } else {
+            context.vertexAttribPointer(attributeLocation, size, type, false, 0, 0);
+        }
+        if (divisor) {
+            context.vertexAttribDivisor(attributeLocation, divisor);
+        }
     }
 
     async loadShaderSource(device: Device) {

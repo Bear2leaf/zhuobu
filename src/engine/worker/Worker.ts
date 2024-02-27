@@ -61,9 +61,9 @@ export default class Worker {
         state.modelTranslation && this.updateModelTranslation && this.updateModelTranslation(state.modelTranslation);
         state.animation !== undefined && this.updateModelAnimation && this.updateModelAnimation(state.animation);
     }
-    buildAttributes(name: string, ...batch: { name: string, value: number[], type: "FLOAT", size: number }[]) {
+    buildAttributes(name: string, ...batch: { name: string, value: number[], type: "FLOAT" | "INT", size: number, divisor?: number }[]) {
         batch.forEach(attribute => {
-            this.initAttributes!(name, name, attribute.name, attribute.type, attribute.size, attribute.value)
+            this.initAttributes!(name, name, attribute.name, attribute.type, attribute.size, attribute.value, attribute.divisor)
         });
     }
     buildUniformsData(name: string, ...batch: { name: string, value: number[], type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv' }[]) {
@@ -104,7 +104,7 @@ export default class Worker {
     updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
     updateModelAnimation?: (animation: boolean) => void;
-    initAttributes?: (objectName: string, programName: string, name: string, type: "FLOAT", size: number, attribute: number[]) => void;
+    initAttributes?: (objectName: string, programName: string, name: string, type: "FLOAT" | "INT", size: number, attribute: number[], divisor?: number) => void;
     createObjects?: (programs: string[], objects: string[], textures: string[]) => void;
     onObjectCreated?: () => void;
 

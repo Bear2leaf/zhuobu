@@ -36,11 +36,11 @@ export default class Renderer {
         texture.active(context);
         texture.bind(context);
     }
-    createAttributes(drawobject: Drawobject, program: Program, name: string, type: "FLOAT", size: number, attribute: number[]) {
+    createAttributes(drawobject: Drawobject, program: Program, name: string, type: "FLOAT" | "INT", size: number, attribute: number[], divisor = 0) {
         const context = this.context
         program.active(context);
         drawobject.bind(context);
-        drawobject.createAttribute(context, program, name, new Float32Array(attribute), context[type], size);
+        drawobject.createAttribute(context, program, name, type === "FLOAT" ? new Float32Array(attribute) : new Int32Array(attribute), context[type], size, divisor);
         drawobject.unbind(context);
         program.deactive(context);
     }

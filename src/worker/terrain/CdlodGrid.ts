@@ -91,19 +91,20 @@ export default class CdlodGrid {
     }
     getAttributes(): {
         name: string;
-        type: "FLOAT";
+        type: "FLOAT" | "INT";
         value: number[];
         size: number;
+        divisor?: number;
     }[] {
         return [
             { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
+            { name: "a_scale", type: "FLOAT", value: this.scales, size: 1, divisor: 1 },
+            { name: "a_offset", type: "FLOAT", value: this.offsets, size: 2, divisor: 1 },
+            { name: "a_edge", type: "INT", value: this.edges, size: 1, divisor: 1 },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1fv" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
         return [
-            { name: "u_scales", type: "1fv", value: this.scales },
-            { name: "u_offsets", type: "2fv", value: this.offsets },
-            { name: "u_edges", type: "1iv", value: this.edges },
             { name: "u_texture", type: "1i", value: [0] },
             { name: "u_textureDepth", type: "1i", value: [1] },
             { name: "u_textureNormal", type: "1i", value: [2] },

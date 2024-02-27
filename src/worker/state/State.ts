@@ -70,6 +70,15 @@ export default class State {
                 break;
         }
     }
+    onResponse(data: WorkerResponse) {
+        switch (data.type) {
+            case "SendState":
+                if (data.args) {
+                    Object.assign(this.state, data.args[0]);
+                }
+                break;
+        }
+    }
     send(data: WorkerResponse) {
         throw new Error("Abstract method.")
     }

@@ -1,5 +1,4 @@
 #version 300 es 
-#define TILES 52
 #define RESOLUTION 64.0f
 #define EDGE_MORPH_TOP 1
 #define EDGE_MORPH_LEFT 2
@@ -9,20 +8,19 @@
 
 
 layout(location = 0) in vec3 a_position;
+layout(location = 1) in int a_edge;
+layout(location = 2) in vec2 a_offset;
+layout(location = 3) in float a_scale;
 uniform mat4 u_model;
 uniform mat4 u_projection;
 uniform mat4 u_viewInverse;
-uniform int u_edges[TILES];
-uniform vec2 u_offsets[TILES];
-uniform float u_scales[TILES];
 uniform sampler2D u_textureDepth;
 
 out vec2 v_texcoord;
 
  // Poor man's bitwise &
 bool edgePresent(int edge) {
-    int u_edge = u_edges[gl_InstanceID];
-    int e = u_edge / edge;
+    int e = a_edge / edge;
     return 2 * (e / 2) != e;
 }
 
@@ -50,19 +48,16 @@ float calculateMorph(vec2 p) {
 }
 
 vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
-    float u_scale = u_scales[gl_InstanceID];
     vec2 fraction = fract(a_position.xz * RESOLUTION * 0.5f) * 2.0f / RESOLUTION;
-    return position - fraction * morphK * u_scale;
+    return position - fraction * morphK * a_scale;
 }
 
 void main() {
 
-    float u_scale = u_scales[gl_InstanceID];
-    vec2 u_offset = u_offsets[gl_InstanceID];
     vec2 origin = a_position.xz;
      // Morph between zoom layers
     float morphK = calculateMorph(origin);
-    vec2 position = origin * u_scale + u_offset;
+    vec2 position = origin * a_scale + a_offset;
     position = calculateNoMorphNeighbour(position, morphK);
     position = clamp(position, -0.9f, 0.9f);
     v_texcoord = position * 0.5f + 0.5f;
