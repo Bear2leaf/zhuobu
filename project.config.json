@@ -4,11 +4,7 @@
   "packOptions": {
     "ignore": [
       {
-        "value": "src-engine",
-        "type": "folder"
-      },
-      {
-        "value": "src-worker",
+        "value": "src",
         "type": "folder"
       },
       {
@@ -20,11 +16,15 @@
         "type": "file"
       },
       {
-        "value": "dist/webcomponent",
+        "value": "dist/engine/webcomponent",
         "type": "folder"
       },
       {
-        "value": "dist/device/BrowserDevice.js",
+        "value": "dist/engine/device/BrowserDevice.js",
+        "type": "file"
+      },
+      {
+        "value": "tsconfig.json",
         "type": "file"
       }
     ],

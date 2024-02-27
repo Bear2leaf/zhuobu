@@ -54,7 +54,7 @@ export default class Server {
         else if (url.startsWith("/c")) {
             this.createWebcomponentPage(url, response);
         }
-        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/third") || url.startsWith("/dist-worker")) {
+        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/third") ) {
             readFile(filePath, function (error, content) {
                 if (error) {
                     if (error.code == 'ENOENT') {
@@ -88,7 +88,7 @@ export default class Server {
         response.writeHead(200, { 'Content-Type': 'text/html' });
         response.end(`
         <script type="module">
-            import ${componentClassName} from "/dist/webcomponent/${componentClassName}.js";
+            import ${componentClassName} from "/dist/engine/webcomponent/${componentClassName}.js";
             customElements.define("${component}", ${componentClassName});
         </script>
         <${component}></${component}>
@@ -104,9 +104,6 @@ export default class Server {
     }
     init() {
         watch("./dist", { recursive: true }, () => {
-            this.broadcast(JSON.stringify({ type: "Refresh" }));
-        });
-        watch("./dist-worker", { recursive: true }, () => {
             this.broadcast(JSON.stringify({ type: "Refresh" }));
         });
         watch("./resources", { recursive: true }, () => {
