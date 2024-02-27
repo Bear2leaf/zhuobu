@@ -11,17 +11,18 @@ export default class CdlodGrid {
     private readonly scales: number[] = [];
     private readonly offsets: number[] = [];
     private readonly edges: number[] = [];
+    private readonly resolution = 64;
     static create() {
         const grid = new CdlodGrid();
         grid.initGridTiles();
         const vertices: number[] = grid.vertices;
-        const TILE_RESOLUTION = 64;
-        for (let i = 0; i < TILE_RESOLUTION; i++) {
-            for (let j = 0; j < TILE_RESOLUTION; j++) {
-                const x0 = i / TILE_RESOLUTION;
-                const x1 = (i + 1) / TILE_RESOLUTION;
-                const z0 = j / TILE_RESOLUTION;
-                const z1 = (j + 1) / TILE_RESOLUTION;
+        const resolution = grid.resolution;
+        for (let i = 0; i < resolution; i++) {
+            for (let j = 0; j < resolution; j++) {
+                const x0 = i / resolution;
+                const x1 = (i + 1) / resolution;
+                const z0 = j / resolution;
+                const z1 = (j + 1) / resolution;
                 vertices.push(
                     x0, 0, z1,
                     x1, 0, z1,
@@ -103,11 +104,12 @@ export default class CdlodGrid {
             { name: "a_edge", type: "INT", value: this.edges, size: 1, divisor: 1 },
         ]
     }
-    getUniforms(): { name: string; type: "1iv" | "1i" | "1fv" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
+    getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
         return [
             { name: "u_texture", type: "1i", value: [0] },
             { name: "u_textureDepth", type: "1i", value: [1] },
             { name: "u_textureNormal", type: "1i", value: [2] },
+            { name: "u_resolution", type: "1f", value: [this.resolution] },
         ]
     }
     getInstanceCount() {

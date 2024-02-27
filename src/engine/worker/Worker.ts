@@ -66,7 +66,7 @@ export default class Worker {
             this.initAttributes!(name, name, attribute.name, attribute.type, attribute.size, attribute.value, attribute.divisor)
         });
     }
-    buildUniformsData(name: string, ...batch: { name: string, value: number[], type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv' }[]) {
+    buildUniformsData(name: string, ...batch: { name: string, value: number[], type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv' }[]) {
         batch.forEach(uniform => {
             this.updateUniforms!(name, uniform.name, uniform.type, uniform.value);
         })
@@ -100,7 +100,7 @@ export default class Worker {
             }]
         })
     }
-    updateUniforms?: (programName: string, uniformName: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => void;
+    updateUniforms?: (programName: string, uniformName: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => void;
     updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
     updateModelAnimation?: (animation: boolean) => void;

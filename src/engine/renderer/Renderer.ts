@@ -44,7 +44,7 @@ export default class Renderer {
         drawobject.unbind(context);
         program.deactive(context);
     }
-    updateUniform(program: Program, name: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', ...values: number[]): void {
+    updateUniform(program: Program, name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', ...values: number[]): void {
         const context = this.context;
         program.active(context);
         if (type === '1i') {
@@ -53,7 +53,7 @@ export default class Renderer {
             program.updateUniform1iv(context, name, values);
         } else if (type === '2fv') {
             program.updateUniform2fv(context, name, values);
-        } else if (type === '1fv') {
+        } else if (type === '1f') {
             program.updateUniform1fv(context, name, values);
         } else if (type === '3fv') {
             program.updateUniform3fv(context, name, values);

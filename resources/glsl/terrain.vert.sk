@@ -1,5 +1,4 @@
 #version 300 es 
-#define RESOLUTION 64.0f
 #define EDGE_MORPH_TOP 1
 #define EDGE_MORPH_LEFT 2
 #define EDGE_MORPH_BOTTOM 4
@@ -14,6 +13,7 @@ layout(location = 3) in float a_scale;
 uniform mat4 u_model;
 uniform mat4 u_projection;
 uniform mat4 u_viewInverse;
+uniform float u_resolution;
 uniform sampler2D u_textureDepth;
 
 out vec2 v_texcoord;
@@ -48,7 +48,7 @@ float calculateMorph(vec2 p) {
 }
 
 vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
-    vec2 fraction = fract(a_position.xz * RESOLUTION * 0.5f) * 2.0f / RESOLUTION;
+    vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
     return position - fraction * morphK * a_scale;
 }
 

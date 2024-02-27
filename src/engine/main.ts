@@ -47,7 +47,7 @@ export default class Engine {
             const program = this.programs.find(p => p.name === programName)!
             this.renderer.createAttributes(object, program, name, type, size, attribute, divisor);
         };
-        this.worker.updateUniforms = (programName: string, uniformName: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => {
+        this.worker.updateUniforms = (programName: string, uniformName: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => {
             const program = this.programs.find(p => p.name === programName)!;
             this.renderer.updateUniform(program, uniformName, type, ...values);
         };

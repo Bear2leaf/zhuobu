@@ -4,7 +4,7 @@ declare type WorkerResponse =
     { type: "WorkerInit"; }
     | { type: "Refresh"; }
     | { type: "SendState"; broadcast: true; args: [StateData] }
-    | { type: "SendUniforms"; broadcast: true; args: [string, ...{ name: string, type: '1iv' | '1i' | '1fv' | '2fv' | '3fv' | 'Matrix4fv', value: number[] }[]] }
+    | { type: "SendUniforms"; broadcast: true; args: [string, ...{ name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', value: number[] }[]] }
     | { type: "SendAttributes"; broadcast: true; args: [string, ...{ name: string, type: "FLOAT" | "INT", value: number[], size: number }[]] }
     | { type: "SendInstanceCount"; broadcast: true; args: [string, number] }
     | { type: "SendCreateObjects"; broadcast: true; args: [string[], string[], string[]] }
