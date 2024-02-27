@@ -13,7 +13,6 @@ export default class SocketState extends State {
         }
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            this.onResponse(data);
             this.device.emit(data);
         }
     }

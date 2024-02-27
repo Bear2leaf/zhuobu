@@ -9,7 +9,6 @@ export default class StandaloneState extends State {
         console.log("This is StandaloneState.")
     }
     send(data: WorkerResponse) {
-        this.onResponse(data);
         this.device.emit(data);
     }
 }

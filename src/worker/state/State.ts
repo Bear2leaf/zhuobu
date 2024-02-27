@@ -26,10 +26,34 @@ export default class State {
                 });
                 break;
             case "GetState":
-                this.sync();
+                this.send({
+                    type: "RequestSync",
+                    broadcast: true
+                });
                 break;
             case "RequestTerrain":
-                this.requestTerrain();
+                const factory = Terrain.create();
+                const gridFactory = CdlodGrid.create();
+                this.send({
+                    type: "SendAttributes",
+                    args: ["terrainFBO", ...factory.getAttributes()],
+                    broadcast: true
+                })
+                this.send({
+                    type: "SendAttributes",
+                    args: ["terrain", ...gridFactory.getAttributes()],
+                    broadcast: true
+                })
+                this.send({
+                    type: "SendUniforms",
+                    args: ["terrain", ...gridFactory.getUniforms()],
+                    broadcast: true
+                })
+                this.send({
+                    type: "SendInstanceCount",
+                    args: ["terrain", gridFactory.getInstanceCount()],
+                    broadcast: true
+                })
                 break;
             case "RequestLoadStart":
                 this.send({
@@ -46,53 +70,7 @@ export default class State {
                 break;
         }
     }
-    requestTerrain() {
-        const factory = Terrain.create();
-        const gridFactory = CdlodGrid.create();
-        this.send({
-            type: "SendAttributes",
-            args: ["terrainFBO", ...factory.getAttributes()],
-            broadcast: true
-        })
-        this.send({
-            type: "SendAttributes",
-            args: ["terrain", ...gridFactory.getAttributes()],
-            broadcast: true
-        })
-        this.send({
-            type: "SendUniforms",
-            args: ["terrain", ...gridFactory.getUniforms()],
-            broadcast: true
-        })
-        this.send({
-            type: "SendInstanceCount",
-            args: ["terrain", gridFactory.getInstanceCount()],
-            broadcast: true
-        })
-    }
-    onResponse(data: WorkerResponse) {
-        switch (data.type) {
-            case "SendState":
-                if (data.args) {
-                    Object.assign(this.state, data.args[0]);
-                }
-                break;
-        }
-    }
-    changeModelTranslation(translation: [number, number, number]): void {
-        this.send({
-            type: "SendState",
-            broadcast: true,
-            args: [{ modelTranslation: translation }]
-        })
-    }
-    sync() {
-        this.send({
-            type: "RequestSync",
-            broadcast: true
-        });
-    }
     send(data: WorkerResponse) {
-        console.log("State.Send", data);
+        throw new Error("Abstract method.")
     }
 }
