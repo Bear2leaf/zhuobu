@@ -5,6 +5,8 @@ import Texture from "../texture/Texture.js";
 import Program from "../program/Program.js";
 import Drawobject from "../drawobject/Drawobject.js";
 import Framebuffer from "../framebuffer/Framebuffer.js";
+import { m4 } from "../third/twgl/m4.js";
+import { v3 } from "../third/twgl/v3.js";
 
 
 
@@ -64,7 +66,7 @@ export default class Renderer {
         }
         program.deactive(context);
     }
-    renderDrawobject(drawobject: Drawobject) {
+    draw(drawobject: Drawobject) {
         const context = this.context;
         drawobject.bind(context);
         if (drawobject.instanceCount) {
@@ -73,6 +75,28 @@ export default class Renderer {
             drawobject.draw(context);
         }
         drawobject.unbind(context);
+    }
+    render(program: Program, object: Drawobject, windowInfo: WindowInfo, delta: number, framebuffer?: Framebuffer) {
+
+        if (framebuffer) {
+            this.activeFramebuffer(framebuffer);
+        } else {
+            const viewInverse = m4.identity();
+            const projection = m4.identity();
+            m4.rotateY(object.model, 0.001 * delta, object.model);
+            m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse);
+            m4.perspective(Math.PI / 8, 1, 0.1, 10, projection);
+            this.updateUniform(program, "u_model", "Matrix4fv", ...object.model);
+            this.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse);
+            this.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
+        }
+        this.activeProgram(program);
+        this.prepare(windowInfo);
+        this.draw(object);
+        this.deactiveProgram(program);
+        if (framebuffer) {
+            this.deactiveFramebuffer(framebuffer);
+        }
     }
     initShaderProgram(program: Program) {
         const context = this.context;

@@ -88,25 +88,8 @@ export default class Engine {
                 const terrainProgram = this.programs.find(p => p.name === "terrain")!
                 const terrainFBO = this.objects.find(o => o.name === "terrainFBO")!;
                 const terrain = this.objects.find(o => o.name === "terrain")!;
-                renderer.activeProgram(terrainFBOProgram);
-                renderer.activeFramebuffer(this.framebuffers[0]);
-                renderer.prepare(windowInfo);
-                renderer.renderDrawobject(terrainFBO);
-                renderer.deactiveFramebuffer(this.framebuffers[0]);
-                renderer.deactiveProgram(terrainFBOProgram);
-                const viewInverse = m4.identity();
-                const projection = m4.identity();
-                m4.rotateY(terrain.model, 0.001 * this.ticker.delta, terrain.model)
-                m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse)
-                m4.perspective(Math.PI / 8, 1, 0.1, 10, projection)
-                renderer.updateUniform(terrainProgram, "u_model", "Matrix4fv", ...terrain.model)
-                renderer.updateUniform(terrainProgram, "u_viewInverse", "Matrix4fv", ...viewInverse)
-                renderer.updateUniform(terrainProgram, "u_projection", "Matrix4fv", ...projection)
-
-                renderer.activeProgram(terrainProgram);
-                renderer.prepare(windowInfo);
-                renderer.renderDrawobject(terrain);
-                renderer.deactiveProgram(terrainProgram);
+                this.renderer.render(terrainFBOProgram, terrainFBO, windowInfo, this.ticker.delta, this.framebuffers[0]);
+                this.renderer.render(terrainProgram, terrain, windowInfo, this.ticker.delta);
             }
             requestAnimationFrame(t => this.ticker.tick(t));
         }
