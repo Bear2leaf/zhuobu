@@ -1,10 +1,11 @@
 import WorkerDevice from "../device/WorkerDevice.js";
 import CdlodGrid from "../terrain/CdlodGrid.js";
 import Terrain from "../terrain/Terrain.js";
-import { createWorld } from "../third/bitecs/index.js";
+import { IWorld, createWorld, defineDeserializer, defineSerializer } from "../third/bitecs/index.js";
 export default class State {
     private readonly world = createWorld();
-    readonly state: StateData = {};
+    private readonly state: StateData = {};
+    private readonly systems: ((world: IWorld) => void)[] = [];
     constructor(readonly device: WorkerDevice) {
         console.log("State Inited.")
     }
@@ -23,49 +24,53 @@ export default class State {
                     type: "SendState",
                     broadcast: true,
                     args: [this.state]
-                });
+                })
                 break;
-            case "GetState":
+            case "CreateTerrain":
+                Object.assign(this.state, {
+                    modelTranslation: [0, 0, 0],
+                    objects: [
+                        "terrain",
+                        "terrainFBO"
+                    ],
+                    programs: [
+                        "terrain",
+                        "terrainFBO"
+                    ],
+                    textures: [
+                        "diffuse",
+                        "depth",
+                        "normal",
+                    ],
+                    framebuffers: [
+                        "terrainFBO"
+                    ]
+                })
                 this.send({
-                    type: "RequestSync",
-                    broadcast: true
-                });
+                    type: "SendState",
+                    broadcast: true,
+                    args: [this.state]
+                })
                 break;
-            case "RequestTerrain":
+            case "TerrainCreated":
                 const factory = Terrain.create();
                 const gridFactory = CdlodGrid.create();
                 this.send({
-                    type: "SendAttributes",
-                    args: ["terrainFBO", ...factory.getAttributes()],
-                    broadcast: true
-                })
-                this.send({
-                    type: "SendAttributes",
-                    args: ["terrain", ...gridFactory.getAttributes()],
-                    broadcast: true
-                })
-                this.send({
-                    type: "SendUniforms",
-                    args: ["terrain", ...gridFactory.getUniforms()],
-                    broadcast: true
-                })
-                this.send({
-                    type: "SendInstanceCount",
-                    args: ["terrain", gridFactory.getInstanceCount()],
-                    broadcast: true
-                })
-                break;
-            case "RequestLoadStart":
-                this.send({
-                    type: "SendCreateObjects",
-                    args: [["terrain", "terrainFBO"], ["terrain", "terrainFBO"], ["diffuse", "depth", "normal"]],
-                    broadcast: true
-                })
-                break;
-            case "RequestObjectCreated":
-                this.send({
-                    type: "SendObjectCreated",
-                    broadcast: true
+                    type: "SendState",
+                    broadcast: true,
+                    args: [{
+                        attributes: {
+                            "terrainFBO": factory.getAttributes(),
+                            "terrain": gridFactory.getAttributes()
+                        },
+                        uniforms: {
+                            "terrain": gridFactory.getUniforms()
+                        },
+                        instanceCounts: {
+                            "terrain": gridFactory.getInstanceCount()
+                        },
+                        animation: true
+                    }]
                 })
                 break;
         }

@@ -27,6 +27,7 @@ export default class SocketState extends State {
         }
     }
     send(data: WorkerResponse) {
+        this.onResponse(data);
         this.responseQueue.push(data);
     }
     init() {

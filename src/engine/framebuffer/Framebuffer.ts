@@ -2,8 +2,12 @@ import Texture from "../texture/Texture.js";
 
 export default class Framebuffer {
     private framebuffer: WebGLFramebuffer | null = null;
-    static create() {
-        return new Framebuffer();
+    readonly name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    static create(name: string) {
+        return new Framebuffer(name);
     }
     bind(context: WebGL2RenderingContext) {
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);

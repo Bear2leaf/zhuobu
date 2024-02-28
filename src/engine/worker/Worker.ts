@@ -22,17 +22,6 @@ export default class Worker {
     decodeMessage(data: WorkerResponse) {
         switch (data.type) {
             case "WorkerInit":
-                this.requestQueue.push({
-                    type: "SyncState",
-                    args: [{
-                        foo: "bar1"
-                    }]
-                });
-                break;
-            case "RequestSync":
-                this.requestQueue.push({
-                    type: "SyncState"
-                });
                 break;
             case "Refresh":
                 this.reload!();
@@ -40,26 +29,41 @@ export default class Worker {
             case "SendState":
                 this.decodeState(data.args[0]);
                 break;
-            case "SendUniforms":
-                this.buildUniformsData(...data.args);
-                break;
-            case "SendAttributes":
-                this.buildAttributes(...data.args);
-                break;
-            case "SendInstanceCount":
-                this.updateInstanceCount!(...data.args);
-                break;
-            case "SendCreateObjects":
-                this.createObjects!(...data.args);
-                break;
-            case "SendObjectCreated":
-                this.onObjectCreated!();
-                break;
         }
     }
     decodeState(state: StateData) {
         state.modelTranslation && this.updateModelTranslation && this.updateModelTranslation(state.modelTranslation);
         state.animation !== undefined && this.updateModelAnimation && this.updateModelAnimation(state.animation);
+        if (state.objects && state.programs && state.textures && state.framebuffers) {
+            this.createObjects!(state.programs, state.objects, state.textures, state.framebuffers);
+        }
+        if (state.attributes) {
+            for (const key in state.attributes) {
+                if (Object.prototype.hasOwnProperty.call(state.attributes, key)) {
+                    const element = state.attributes[key];
+                    this.buildAttributes(key, ...element);
+
+                }
+            }
+        }
+        if (state.uniforms) {
+            for (const key in state.uniforms) {
+                if (Object.prototype.hasOwnProperty.call(state.uniforms, key)) {
+                    const element = state.uniforms[key];
+                    this.buildUniformsData(key, ...element);
+
+                }
+            }
+        }
+        if (state.instanceCounts) {
+            for (const key in state.instanceCounts) {
+                if (Object.prototype.hasOwnProperty.call(state.instanceCounts, key)) {
+                    const element = state.instanceCounts[key];
+                    this.updateInstanceCount!(key, element);
+
+                }
+            }
+        }
     }
     buildAttributes(name: string, ...batch: { name: string, value: number[], type: "FLOAT" | "INT", size: number, divisor?: number }[]) {
         batch.forEach(attribute => {
@@ -73,39 +77,19 @@ export default class Worker {
     }
     requestTerrain() {
         this.requestQueue.push({
-            type: "RequestTerrain"
+            type: "CreateTerrain"
         });
     }
-    requestLoadStart() {
+    terrainCreated() {
         this.requestQueue.push({
-            type: "RequestLoadStart"
+            type: "TerrainCreated"
         });
-    }
-    requestObjectCreated() {
-        this.requestQueue.push({
-            type: "RequestObjectCreated"
-        });
-    }
-    initStates() {
-        this.requestQueue.push({
-            type: "SyncState",
-            args: [{
-                animation: true
-            }]
-        });
-        this.requestQueue.push({
-            type: "SyncState",
-            args: [{
-                modelTranslation: [0, 0, 0]
-            }]
-        })
     }
     updateUniforms?: (programName: string, uniformName: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => void;
     updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
     updateModelAnimation?: (animation: boolean) => void;
     initAttributes?: (objectName: string, programName: string, name: string, type: "FLOAT" | "INT", size: number, attribute: number[], divisor?: number) => void;
-    createObjects?: (programs: string[], objects: string[], textures: string[]) => void;
-    onObjectCreated?: () => void;
+    createObjects?: (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => void;
 
 }

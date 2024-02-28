@@ -14,9 +14,6 @@ export default class StateViewer extends HTMLElement {
         device.createWorker("/dist/worker/index.js", (data, sendMessage) => {
             switch (data.type) {
                 case "WorkerInit":
-                    sendMessage({
-                        type: "GetState"
-                    });
                     break;
                 case "SendState":
                     this.decodeState(...data.args);
@@ -29,11 +26,16 @@ export default class StateViewer extends HTMLElement {
     }
     decodeState(state: StateData) {
         const codeBox = document.querySelector("pre")!;
-        const listOfState: string[] = [];
+        const listOfState: string[] = codeBox.innerText.split("\n");
         for (const key in state) {
             if (Object.prototype.hasOwnProperty.call(state, key)) {
                 const element = state[key as keyof StateData];
-                listOfState.push(`${key}=${element}`)
+                const keyIndex = listOfState.findIndex(s => s.startsWith(`${key}=`));
+                if (keyIndex !== -1) {
+                    listOfState[keyIndex] = `${key}=${element}`;
+                } else {
+                    listOfState.push(`${key}=${element}`)
+                }
             }
         }
         codeBox.innerText = listOfState.join("\n");

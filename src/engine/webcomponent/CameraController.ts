@@ -42,9 +42,6 @@ export default class CameraController extends HTMLElement {
             this.sendMessage = sendMessage;
             switch (data.type) {
                 case "WorkerInit":
-                    sendMessage({
-                        type: "GetState"
-                    });
                     break;
                 case "SendState":
                     this.animation.checked = !!data.args[0].animation;
