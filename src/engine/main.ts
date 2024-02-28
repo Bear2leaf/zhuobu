@@ -17,6 +17,7 @@ export default class Engine {
     private readonly objects: Drawobject[] = [];
     private readonly textures: Texture[] = [];
     private readonly framebuffers: Framebuffer[] = [];
+    private readonly renderCalls: [string, string, string, [string, GLUniformType, m4.Mat4][]][] = [];
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
@@ -48,13 +49,16 @@ export default class Engine {
             const program = this.programs.find(p => p.name === programName)!
             this.renderer.createAttributes(object, program, name, type, size, attribute, divisor);
         };
-        this.worker.updateUniforms = (programName: string, uniformName: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => {
+        this.worker.updateUniforms = (programName: string, uniformName: string, type: GLUniformType, values: number[]) => {
             const program = this.programs.find(p => p.name === programName)!;
             this.renderer.updateUniform(program, uniformName, type, ...values);
         };
         this.worker.updateInstanceCount = (objectName: string, count: number) => {
             const object = this.objects.find(o => o.name === objectName)!;
             object.instanceCount = count;
+        }
+        this.worker.updateRenderCalls = (program, object, framebuffer, uniforms) => {
+            this.renderCalls.push([program, object, framebuffer, uniforms]);
         }
         this.worker.createObjects = (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => {
             programs.forEach(name => this.programs.push(Program.create(name)));
@@ -84,12 +88,24 @@ export default class Engine {
         this.ticker.callback = () => {
             this.worker.process();
             if (!this.ticker.pause) {
-                const terrainFBOProgram = this.programs.find(p => p.name === "terrainFBO")!
-                const terrainProgram = this.programs.find(p => p.name === "terrain")!
-                const terrainFBO = this.objects.find(o => o.name === "terrainFBO")!;
-                const terrain = this.objects.find(o => o.name === "terrain")!;
-                this.renderer.render(terrainFBOProgram, terrainFBO, windowInfo, this.ticker.delta, this.framebuffers[0]);
-                this.renderer.render(terrainProgram, terrain, windowInfo, this.ticker.delta);
+                for (const iterator of this.renderCalls) {
+                    const program = this.programs.find(o => o.name === iterator[0])!;
+                    const object = this.objects.find(o => o.name === iterator[0])!;
+                    const framebuffer = this.framebuffers.find(o => o.name === iterator[0])!;
+                    const uniforms = iterator[3];
+                    if (object.name === "terrain") {
+                        const model = object.model;
+                        const viewInverse = m4.identity();
+                        const projection = m4.identity();
+                        m4.rotateY(model, 0.001 * this.ticker.delta, model);
+                        m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse);
+                        m4.perspective(Math.PI / 8, 1, 0.1, 10, projection);
+                        uniforms.push(["u_model", "Matrix4fv", model])
+                        uniforms.push(["u_viewInverse", "Matrix4fv", viewInverse])
+                        uniforms.push(["u_projection", "Matrix4fv", projection])
+                    }
+                    this.renderer.render(program, object, windowInfo, uniforms, framebuffer);
+                }
             }
             requestAnimationFrame(t => this.ticker.tick(t));
         }

@@ -92,7 +92,7 @@ export default class CdlodGrid {
     }
     getAttributes(): {
         name: string;
-        type: "FLOAT" | "INT";
+        type: GLType;
         value: number[];
         size: number;
         divisor?: number;

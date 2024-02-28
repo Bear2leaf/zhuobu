@@ -55,6 +55,11 @@ export default class Worker {
                 }
             }
         }
+        if (state.renderCalls) {
+            for (const [prgram, object, framebuffer, uniforms] of state.renderCalls) {
+                this.updateRenderCalls!(prgram, object, framebuffer, uniforms)
+            }
+        }
         if (state.instanceCounts) {
             for (const key in state.instanceCounts) {
                 if (Object.prototype.hasOwnProperty.call(state.instanceCounts, key)) {
@@ -65,12 +70,12 @@ export default class Worker {
             }
         }
     }
-    buildAttributes(name: string, ...batch: { name: string, value: number[], type: "FLOAT" | "INT", size: number, divisor?: number }[]) {
+    buildAttributes(name: string, ...batch: { name: string, value: number[], type: GLType, size: number, divisor?: number }[]) {
         batch.forEach(attribute => {
             this.initAttributes!(name, name, attribute.name, attribute.type, attribute.size, attribute.value, attribute.divisor)
         });
     }
-    buildUniformsData(name: string, ...batch: { name: string, value: number[], type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv' }[]) {
+    buildUniformsData(name: string, ...batch: { name: string, value: number[], type: GLUniformType }[]) {
         batch.forEach(uniform => {
             this.updateUniforms!(name, uniform.name, uniform.type, uniform.value);
         })
@@ -85,11 +90,12 @@ export default class Worker {
             type: "TerrainCreated"
         });
     }
-    updateUniforms?: (programName: string, uniformName: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', values: number[]) => void;
+    updateRenderCalls?:(prgram: string, object: string, framebuffer: string, uniforms: [string, GLUniformType, number[] | Float32Array][])=> void;
+    updateUniforms?: (programName: string, uniformName: string, type: GLUniformType, values: number[]) => void;
     updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
     updateModelAnimation?: (animation: boolean) => void;
-    initAttributes?: (objectName: string, programName: string, name: string, type: "FLOAT" | "INT", size: number, attribute: number[], divisor?: number) => void;
+    initAttributes?: (objectName: string, programName: string, name: string, type: GLType, size: number, attribute: number[], divisor?: number) => void;
     createObjects?: (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => void;
 
 }

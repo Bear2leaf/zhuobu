@@ -38,7 +38,7 @@ export default class Renderer {
         texture.active(context);
         texture.bind(context);
     }
-    createAttributes(drawobject: Drawobject, program: Program, name: string, type: "FLOAT" | "INT", size: number, attribute: number[], divisor = 0) {
+    createAttributes(drawobject: Drawobject, program: Program, name: string, type: GLType, size: number, attribute: number[], divisor = 0) {
         const context = this.context
         program.active(context);
         drawobject.bind(context);
@@ -46,7 +46,7 @@ export default class Renderer {
         drawobject.unbind(context);
         program.deactive(context);
     }
-    updateUniform(program: Program, name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', ...values: number[]): void {
+    updateUniform(program: Program, name: string, type: GLUniformType, ...values: number[]): void {
         const context = this.context;
         program.active(context);
         if (type === '1i') {
@@ -76,20 +76,12 @@ export default class Renderer {
         }
         drawobject.unbind(context);
     }
-    render(program: Program, object: Drawobject, windowInfo: WindowInfo, delta: number, framebuffer?: Framebuffer) {
+    render(program: Program, object: Drawobject, windowInfo: WindowInfo, uniforms: [string, GLUniformType, m4.Mat4][], framebuffer?: Framebuffer) {
 
         if (framebuffer) {
             this.activeFramebuffer(framebuffer);
-        } else {
-            const viewInverse = m4.identity();
-            const projection = m4.identity();
-            m4.rotateY(object.model, 0.001 * delta, object.model);
-            m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse);
-            m4.perspective(Math.PI / 8, 1, 0.1, 10, projection);
-            this.updateUniform(program, "u_model", "Matrix4fv", ...object.model);
-            this.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse);
-            this.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
         }
+        uniforms.forEach(u => this.updateUniform(program, u[0], u[1], ...u[2]))
         this.activeProgram(program);
         this.prepare(windowInfo);
         this.draw(object);

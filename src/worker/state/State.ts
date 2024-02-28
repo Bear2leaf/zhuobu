@@ -44,7 +44,7 @@ export default class State {
                     ],
                     framebuffers: [
                         "terrainFBO"
-                    ]
+                    ],
                 })
                 this.send({
                     type: "SendState",
@@ -69,6 +69,10 @@ export default class State {
                         instanceCounts: {
                             "terrain": gridFactory.getInstanceCount()
                         },
+                        renderCalls: [
+                            ["terrainFBO", "terrainFBO", "terrainFBO", []],
+                            ["terrain", "terrain", "terrain", []]
+                        ],
                         animation: true
                     }]
                 })
