@@ -100,6 +100,7 @@ export default class Engine {
                         m4.rotateY(model, 0.001 * this.ticker.delta, model);
                         m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse);
                         m4.perspective(Math.PI / 8, 1, 0.1, 10, projection);
+                        uniforms.splice(0, uniforms.length);
                         uniforms.push(["u_model", "Matrix4fv", model])
                         uniforms.push(["u_viewInverse", "Matrix4fv", viewInverse])
                         uniforms.push(["u_projection", "Matrix4fv", projection])
