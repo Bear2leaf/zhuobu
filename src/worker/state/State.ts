@@ -27,7 +27,7 @@ export default class State {
                 })
                 break;
             case "CreateTerrain":
-                Object.assign(this.state, {
+                Object.assign<StateData, StateData>(this.state, {
                     modelTranslation: [0, 0, 0],
                     objects: [
                         "terrain",
@@ -59,6 +59,20 @@ export default class State {
                     type: "SendState",
                     broadcast: true,
                     args: [{
+                        cameras: [{
+                            programName: "terrain",
+                            eye: [0, 1, 3],
+                            target: [0, 0, 0],
+                            up: [0, 1, 0],
+                            fieldOfViewYInRadians: Math.PI / 8,
+                            aspect: 1,
+                            zNear: 0.1,
+                            zFar: 10,
+                        }],
+                        updateCalls: [
+                            "rotateTerrain"
+                        ]
+                        ,
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
                             "terrain": gridFactory.getAttributes()

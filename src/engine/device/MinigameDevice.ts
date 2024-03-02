@@ -31,17 +31,17 @@ export default class MinigameDevice implements Device {
     reload(): void {
         throw new Error("MiniGame not support reload.")
     }
-    async loadSubpackage(): Promise<null> {
-        await new Promise<null>(resolve => {
+    async loadSubpackage(): Promise<Record<string, scriptCallback>> {
+        return await new Promise<Record<string, scriptCallback>>(resolve => {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: { errMsg: string }) {
                     console.debug("load resources success", res)
-                    resolve(null)
+                    //@ts-ignore
+                    import("../../../resources/game.js").then(resolve);
                 },
                 fail(res: { errMsg: string }) {
                     console.error("load resources fail", res)
-                    resolve(null)
                 },
                 complete() {
                     console.debug("load resources complete");
@@ -52,7 +52,6 @@ export default class MinigameDevice implements Device {
                 console.debug(`onProgressUpdate: ${res.progress}, ${res.totalBytesExpectedToWrite}, ${res.totalBytesWritten}`)
             })
         });
-        return null;
     }
     createImage(): HTMLImageElement {
         return wx.createImage() as HTMLImageElement;

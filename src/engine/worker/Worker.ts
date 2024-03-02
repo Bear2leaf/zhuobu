@@ -56,8 +56,13 @@ export default class Worker {
             }
         }
         if (state.renderCalls) {
-            for (const [prgram, object, framebuffer, uniforms] of state.renderCalls) {
-                this.updateRenderCalls!(prgram, object, framebuffer, uniforms)
+            for (const [program, object, framebuffer, uniforms] of state.renderCalls) {
+                this.updateRenderCalls!(program, object, framebuffer, uniforms)
+            }
+        }
+        if (state.cameras) {
+            for (const { programName, eye, target, up, fieldOfViewYInRadians, zFar, zNear, aspect } of state.cameras) {
+                this.updateCamera!(programName, eye, target, up, fieldOfViewYInRadians, aspect, zNear, zFar);
             }
         }
         if (state.instanceCounts) {
@@ -68,6 +73,9 @@ export default class Worker {
 
                 }
             }
+        }
+        if (state.updateCalls) {
+            this.updateUpdateCalls!(state.updateCalls)
         }
     }
     buildAttributes(name: string, ...batch: { name: string, value: number[], type: GLType, size: number, divisor?: number }[]) {
@@ -90,12 +98,15 @@ export default class Worker {
             type: "TerrainCreated"
         });
     }
-    updateRenderCalls?:(prgram: string, object: string, framebuffer: string, uniforms: [string, GLUniformType, number[] | Float32Array][])=> void;
+    updateUpdateCalls?: (callbackNames: "rotateTerrain"[]) => void;
+    updateRenderCalls?: (program: string, object: string, framebuffer: string, uniforms: [string, GLUniformType, number[] | Float32Array][]) => void;
     updateUniforms?: (programName: string, uniformName: string, type: GLUniformType, values: number[]) => void;
     updateInstanceCount?: (objectName: string, count: number) => void;
     updateModelTranslation?: (translation: number[]) => void;
     updateModelAnimation?: (animation: boolean) => void;
     initAttributes?: (objectName: string, programName: string, name: string, type: GLType, size: number, attribute: number[], divisor?: number) => void;
     createObjects?: (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => void;
+    updateCamera?: (programName: string, eye: [number, number, number], target: [number, number, number], up: [number, number, number], fieldOfViewYInRadians: number, aspect: number, zNear: number, zFar: number) => void;
+
 
 }

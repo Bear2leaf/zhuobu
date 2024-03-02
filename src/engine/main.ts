@@ -6,18 +6,19 @@ import Texture from "./texture/Texture.js";
 import Framebuffer from "./framebuffer/Framebuffer.js";
 import Drawobject from "./drawobject/Drawobject.js";
 import { m4 } from "./third/twgl/m4.js";
-import { v3 } from "./third/twgl/v3.js";
 import Program from "./program/Program.js";
 
 export default class Engine {
-    private readonly renderer: Renderer;
+    readonly renderer: Renderer;
+    readonly ticker: Ticker;
+    readonly programs: Program[] = [];
+    readonly objects: Drawobject[] = [];
     private readonly worker: Worker;
-    private readonly ticker: Ticker;
-    private readonly programs: Program[] = [];
-    private readonly objects: Drawobject[] = [];
     private readonly textures: Texture[] = [];
     private readonly framebuffers: Framebuffer[] = [];
     private readonly renderCalls: [string, string, string, [string, GLUniformType, m4.Mat4][]][] = [];
+    private readonly updateCalls: "rotateTerrain"[] = [];
+    private readonly scripts: Record<string, scriptCallback> = {};
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
@@ -60,12 +61,32 @@ export default class Engine {
         this.worker.updateRenderCalls = (program, object, framebuffer, uniforms) => {
             this.renderCalls.push([program, object, framebuffer, uniforms]);
         }
+        this.worker.updateCamera = (
+            programName: string,
+            eye: [number, number, number],
+            target: [number, number, number],
+            up: [number, number, number],
+            fieldOfViewYInRadians: number,
+            aspect: number,
+            zNear: number,
+            zFar: number) => {
+            const program = this.programs.find(p => p.name === programName)!;
+            const viewInverse = m4.identity();
+            const projection = m4.identity();
+            m4.inverse(m4.lookAt(eye, target, up), viewInverse);
+            m4.perspective(fieldOfViewYInRadians, aspect, zNear, zFar, projection);
+            this.renderer.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse)
+            this.renderer.updateUniform(program, "u_projection", "Matrix4fv", ...projection)
+        }
+        this.worker.updateUpdateCalls = (callbackNames) => {
+            this.updateCalls.splice(0, this.updateCalls.length, ...callbackNames);
+        }
         this.worker.createObjects = (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => {
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
             textures.forEach(name => this.textures.push(Texture.create(name, this.textures.length, w, h)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
-            this.load(device).then(() => {
+            this.load(device).then((m) => {
                 this.programs.forEach(program => renderer.initShaderProgram(program))
                 this.objects.forEach(object => renderer.createDrawobject(object))
                 this.textures.forEach(texture => {
@@ -80,6 +101,11 @@ export default class Engine {
                     this.textures.find(t => t.name === "normal")!
                 );
                 this.worker.terrainCreated();
+                m.resourcesInited({
+                    m4,
+                    engine: this
+                })
+                Object.assign(this.scripts, m)
             });
         }
         const renderer = this.renderer;
@@ -88,23 +114,14 @@ export default class Engine {
         this.ticker.callback = () => {
             this.worker.process();
             if (!this.ticker.pause) {
+                for (const iterator of this.updateCalls) {
+                    this.scripts[iterator](this);
+                }
                 for (const iterator of this.renderCalls) {
                     const program = this.programs.find(o => o.name === iterator[0])!;
                     const object = this.objects.find(o => o.name === iterator[0])!;
                     const framebuffer = this.framebuffers.find(o => o.name === iterator[0])!;
                     const uniforms = iterator[3];
-                    if (object.name === "terrain") {
-                        const model = object.model;
-                        const viewInverse = m4.identity();
-                        const projection = m4.identity();
-                        m4.rotateY(model, 0.001 * this.ticker.delta, model);
-                        m4.inverse(m4.lookAt(v3.create(0, 1, 3), v3.create(), v3.create(0, 1, 0)), viewInverse);
-                        m4.perspective(Math.PI / 8, 1, 0.1, 10, projection);
-                        uniforms.splice(0, uniforms.length);
-                        uniforms.push(["u_model", "Matrix4fv", model])
-                        uniforms.push(["u_viewInverse", "Matrix4fv", viewInverse])
-                        uniforms.push(["u_projection", "Matrix4fv", projection])
-                    }
                     this.renderer.render(program, object, windowInfo, uniforms, framebuffer);
                 }
             }
@@ -114,10 +131,11 @@ export default class Engine {
         this.worker.requestTerrain();
     }
     async load(device: Device) {
-        await device.loadSubpackage();
+        const m = await device.loadSubpackage();
         for await (const iterator of this.programs) {
             await iterator.loadShaderSource(device);
         }
+        return m;
     }
 
 }

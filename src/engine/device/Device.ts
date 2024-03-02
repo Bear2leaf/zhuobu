@@ -4,7 +4,7 @@ export default interface Device {
   getWindowInfo(): WindowInfo;
   contextGL: WebGL2RenderingContext;
   now(): number;
-  loadSubpackage(): Promise<null>;
+  loadSubpackage(): Promise<Record<string, scriptCallback>>;
   createImage(): HTMLImageElement;
   createWorker(path: string, onMessageCallback: (data: WorkerResponse, callback: (data: WorkerRequest) => void) => void): void;
   createWebAudioContext(): AudioContext;
