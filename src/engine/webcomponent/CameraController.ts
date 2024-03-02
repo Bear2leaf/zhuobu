@@ -41,8 +41,6 @@ export default class CameraController extends HTMLElement {
         device.createWorker("/dist/worker/index.js", (data, sendMessage) => {
             this.sendMessage = sendMessage;
             switch (data.type) {
-                case "WorkerInit":
-                    break;
                 case "SendState":
                     this.animation.checked = !!data.args[0].animation;
                     this.translation.value = data.args[0].modelTranslation ? data.args[0].modelTranslation[1].toString() : "";

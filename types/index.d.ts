@@ -3,15 +3,13 @@
 
 
 declare type WorkerResponse =
-    { type: "WorkerInit"; }
     | { type: "Refresh"; }
     | { type: "SendState"; broadcast: true; args: [StateData] }
 
     | never;
 declare type WorkerRequest =
     | { type: "SyncState"; args?: [StateData]; broadcast?: boolean }
-    | { type: "TerrainCreated"; }
-    | { type: "CreateTerrain"; }
+    | { type: "EngineLoaded"; }
     | never;
 
 declare type StateData = {
@@ -32,7 +30,7 @@ declare type StateData = {
     programs?: string[];
     textures?: string[];
     framebuffers?: string[];
-    attributes?: Record<string, { name: string, type: "FLOAT" | "INT", value: number[], size: number }[]>;
+    attributes?: Record<string, { name: string, type: "FLOAT" | "INT", value: number[], size: number, divisor?: number }[]>;
     uniforms?: Record<string, { name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv', value: number[] }[]>;
     renderCalls?: [string, string, string, [string, GLUniformType, number[] | Float32Array][]][];
     instanceCounts?: Record<string, number>;
@@ -43,5 +41,3 @@ declare type TouchInfo = { x: number, y: number }
 declare type TouchInfoFunction = (info?: TouchInfo) => void
 declare type GLUniformType = '1iv' | '1i' | '1f' | '2fv' | '3fv' | 'Matrix4fv';
 declare type GLType = "FLOAT" | "INT";
-
-declare type scriptCallback = (engine: any) => void;

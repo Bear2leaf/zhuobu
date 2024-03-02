@@ -1,6 +1,4 @@
 import Device from "./Device.js";
-//@ts-ignore
-import * as m from "../../../resources/game.js";
 
 export default class BrowserDevice implements Device {
     private isMouseDown: boolean;
@@ -42,8 +40,8 @@ export default class BrowserDevice implements Device {
     reload(): void {
         window.location.reload();
     }
-    async loadSubpackage(): Promise<Record<string, scriptCallback>> {
-        return m;
+    async loadSubpackage() {
+        return null;
     }
     createImage(): HTMLImageElement {
         return new Image();

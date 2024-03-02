@@ -13,8 +13,6 @@ export default class StateViewer extends HTMLElement {
         device.hideCanvas();
         device.createWorker("/dist/worker/index.js", (data, sendMessage) => {
             switch (data.type) {
-                case "WorkerInit":
-                    break;
                 case "SendState":
                     this.decodeState(...data.args);
                     break;

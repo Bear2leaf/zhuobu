@@ -1,5 +1,6 @@
 
 dist
+resources/**/*.js
 node_modules
 package-lock.json
 project.private.config.json

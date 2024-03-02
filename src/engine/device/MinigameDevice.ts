@@ -1,7 +1,6 @@
 import Device from "./Device.js";
 
 
-
 export default class MinigameDevice implements Device {
     private readonly divideTimeBy: number;
     private readonly canvasGL: WechatMinigame.Canvas;
@@ -31,14 +30,13 @@ export default class MinigameDevice implements Device {
     reload(): void {
         throw new Error("MiniGame not support reload.")
     }
-    async loadSubpackage(): Promise<Record<string, scriptCallback>> {
-        return await new Promise<Record<string, scriptCallback>>(resolve => {
+    async loadSubpackage() {
+        return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
                 name: "resources",
                 success(res: { errMsg: string }) {
                     console.debug("load resources success", res)
-                    //@ts-ignore
-                    import("../../../resources/game.js").then(resolve);
+                    resolve(null);
                 },
                 fail(res: { errMsg: string }) {
                     console.error("load resources fail", res)
