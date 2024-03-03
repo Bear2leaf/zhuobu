@@ -130,4 +130,16 @@ export default class Renderer {
     createDrawobject(drawobject: Drawobject) {
         drawobject.generateVAO(this.context);
     }
+    destoryProgram(iterator: Program) {
+        iterator.destory(this.context);
+    }
+    destoryObject(iterator: Drawobject) {
+        iterator.destory(this.context);
+    }
+    destoryTexture(iterator: Texture) {
+        iterator.destory(this.context);
+    }
+    destoryFramebuffer(iterator: Framebuffer) {
+        iterator.destory(this.context);
+    }
 }

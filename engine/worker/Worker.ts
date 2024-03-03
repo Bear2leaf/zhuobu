@@ -1,7 +1,6 @@
 import Device from "../device/Device.js";
 export function scriptModule() {
-    //@ts-ignore
-    return import("../../../resources/game.js")
+    return import("../../resource/game.js")
 }
 export default class Worker {
     private readonly requestQueue: WorkerRequest[] = [];

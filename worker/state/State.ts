@@ -38,12 +38,19 @@ export default class State {
             case "SyncState":
                 if (data.args) {
                     Object.assign(this.state, data.args[0]);
+                    this.send({
+                        type: "SendState",
+                        broadcast: true,
+                        args: data.args
+                    })
+                } else {
+
+                    this.send({
+                        type: "SendState",
+                        broadcast: true,
+                        args: [this.state]
+                    })
                 }
-                this.send({
-                    type: "SendState",
-                    broadcast: true,
-                    args: [this.state]
-                })
                 break;
             case "EngineLoaded":
                 const factory = Terrain.create();

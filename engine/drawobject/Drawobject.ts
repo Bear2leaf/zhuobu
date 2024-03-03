@@ -45,4 +45,9 @@ export default class Drawobject {
             this.count = data.length / size;
         }
     }
+    destory(context: WebGL2RenderingContext) {
+        this.bufferMap.forEach(buffer => context.deleteBuffer(buffer));
+        context.deleteVertexArray(this.vao);
+        this.bufferMap.clear();
+    }
 }

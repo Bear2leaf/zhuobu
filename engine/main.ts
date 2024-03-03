@@ -11,16 +11,16 @@ import Program from "./program/Program.js";
 type ScriptType = Awaited<ReturnType<typeof scriptModule>>;
 
 export default class Engine {
-    readonly renderer: Renderer;
-    readonly ticker: Ticker;
-    readonly programs: Program[] = [];
-    readonly objects: Drawobject[] = [];
-    readonly renderCalls: [string, string, string, [string, GLUniformType, m4.Mat4][]][] = [];
     readonly updateCalls: (keyof ScriptType["updateCalls"])[] = [];
     private readonly worker: Worker;
     private readonly textures: Texture[] = [];
     private readonly framebuffers: Framebuffer[] = [];
     private script?: ScriptType;
+    readonly renderer: Renderer;
+    readonly ticker: Ticker;
+    readonly programs: Program[] = [];
+    readonly objects: Drawobject[] = [];
+    readonly renderCalls: [string, string, string, [string, GLUniformType, m4.Mat4][]][] = [];
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
@@ -30,6 +30,7 @@ export default class Engine {
         const h = windowInfo.height;
         this.worker.init(device);
         this.worker.createObjects = (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => {
+            this.clean();
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
             textures.forEach(name => this.textures.push(Texture.create(name, this.textures.length, w, h)));
@@ -55,24 +56,50 @@ export default class Engine {
 
         this.ticker.callback = () => {
             this.worker.process();
-            if (!this.ticker.pause) {
-                if (!this.script) {
-                    throw new Error("script not set");
-                }
-                for (const iterator of this.updateCalls) {
-                    this.script.updateCalls[iterator](this, m4);
-                }
-                for (const iterator of this.renderCalls) {
-                    const program = this.programs.find(o => o.name === iterator[0])!;
-                    const object = this.objects.find(o => o.name === iterator[0])!;
-                    const framebuffer = this.framebuffers.find(o => o.name === iterator[0])!;
-                    const uniforms = iterator[3];
-                    this.renderer.render(program, object, windowInfo, uniforms, framebuffer);
-                }
+            if (this.ticker.pause) {
+                requestAnimationFrame(t => this.ticker.tick(t));
+                return;
+            }
+            for (const iterator of this.updateCalls) {
+                this.script!.updateCalls[iterator](this, m4);
+            }
+            for (const iterator of this.renderCalls) {
+                const program = this.programs.find(o => o.name === iterator[0])!;
+                const object = this.objects.find(o => o.name === iterator[0])!;
+                const framebuffer = this.framebuffers.find(o => o.name === iterator[0])!;
+                const uniforms = iterator[3];
+                this.renderer.render(program, object, windowInfo, uniforms, framebuffer);
             }
             requestAnimationFrame(t => this.ticker.tick(t));
         }
-        this.ticker.tick(0)
+        requestAnimationFrame(t => this.ticker.tick(t));
+
+    }
+    start() {
+        this.ticker.pause = false;
+    }
+    stop() {
+        this.ticker.pause = true;
+    }
+    clean() {
+        const programs = this.programs.splice(0, this.programs.length)
+        const objects = this.objects.splice(0, this.objects.length)
+        const textures = this.textures.splice(0, this.textures.length)
+        const framebuffers = this.framebuffers.splice(0, this.framebuffers.length)
+        for (const iterator of programs) {
+            this.renderer.destoryProgram(iterator);
+        }
+        for (const iterator of objects) {
+            this.renderer.destoryObject(iterator);
+        }
+        for (const iterator of textures) {
+            this.renderer.destoryTexture(iterator);
+        }
+        for (const iterator of framebuffers) {
+            this.renderer.destoryFramebuffer(iterator);
+        }
+        this.renderCalls.splice(0, this.renderCalls.length)
+        this.updateCalls.splice(0, this.updateCalls.length)
     }
     async load(device: Device) {
         await device.loadSubpackage();

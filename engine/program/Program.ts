@@ -73,14 +73,19 @@ export default class Program {
     }
 
     async loadShaderSource(device: Device) {
-        this.vertexShaderSource = await device.readText(`resources/glsl/${this.name}.vert.sk`)
-        this.fragmentShaderSource = await device.readText(`resources/glsl/${this.name}.frag.sk`)
+        this.vertexShaderSource = await device.readText(`resource/glsl/${this.name}.vert.sk`)
+        this.fragmentShaderSource = await device.readText(`resource/glsl/${this.name}.frag.sk`)
     }
     active(context: WebGL2RenderingContext) {
         context.useProgram(this.program);
     }
     deactive(context: WebGL2RenderingContext) {
         context.useProgram(null);
+    }
+    destory(context: WebGL2RenderingContext) {
+        context.deleteProgram(this.program);
+        this.locMap.clear();
+        this.valueMap.clear();
     }
     init(context: WebGL2RenderingContext) {
         this.program = context.createProgram()!;
@@ -115,8 +120,8 @@ export default class Program {
             console.error(context.getProgramInfoLog(program));
             throw new Error("Failed to link program");
         }
-        if (this.vertexShaderSource === undefined || this.fragmentShaderSource === undefined) {
-            throw new Error("Shader source is undefined");
-        }
+        context.deleteShader(vertexShader)
+        context.deleteShader(fragmentShader)
+
     }
 }

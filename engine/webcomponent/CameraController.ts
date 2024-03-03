@@ -42,8 +42,12 @@ export default class CameraController extends HTMLElement {
             this.sendMessage = sendMessage;
             switch (data.type) {
                 case "SendState":
-                    this.animation.checked = !!data.args[0].animation;
-                    this.translation.value = data.args[0].modelTranslation ? data.args[0].modelTranslation[1].toString() : "";
+                    if (data.args[0].animation !== undefined) {
+                        this.animation.checked = data.args[0].animation;
+                    }
+                    if (data.args[0].modelTranslation !== undefined) {
+                        this.translation.value = data.args[0].modelTranslation[1].toString();
+                    }
                     break;
                 case "Refresh":
                     device.reload();

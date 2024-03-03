@@ -1,6 +1,6 @@
 
 dist
-resources/**/*.js
+resource/**/*.js
 node_modules
 package-lock.json
 project.private.config.json

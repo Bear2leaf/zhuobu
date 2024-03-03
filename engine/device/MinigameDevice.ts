@@ -33,16 +33,16 @@ export default class MinigameDevice implements Device {
     async loadSubpackage() {
         return await new Promise<null>(resolve => {
             const task = wx.loadSubpackage({
-                name: "resources",
+                name: "resource",
                 success(res: { errMsg: string }) {
-                    console.debug("load resources success", res)
+                    console.debug("load resource success", res)
                     resolve(null);
                 },
                 fail(res: { errMsg: string }) {
-                    console.error("load resources fail", res)
+                    console.error("load resource fail", res)
                 },
                 complete() {
-                    console.debug("load resources complete");
+                    console.debug("load resource complete");
                 }
             })
 

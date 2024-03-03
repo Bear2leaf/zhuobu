@@ -54,7 +54,7 @@ export default class Server {
         else if (url.startsWith("/c")) {
             this.createWebcomponentPage(url, response);
         }
-        else if (url.startsWith("/dist") || url.startsWith("/resources") || url.startsWith("/third") ) {
+        else if (url.startsWith("/dist") || url.startsWith("/resource") || url.startsWith("/third") ) {
             readFile(filePath, function (error, content) {
                 if (error) {
                     if (error.code == 'ENOENT') {
@@ -106,7 +106,7 @@ export default class Server {
         watch("./dist", { recursive: true }, () => {
             this.broadcast(JSON.stringify({ type: "Refresh" }));
         });
-        watch("./resources", { recursive: true }, () => {
+        watch("./resource", { recursive: true }, () => {
             this.broadcast(JSON.stringify({ type: "Refresh" }));
         });
         const wss = this.wss = new WebSocketServer({ noServer: true });

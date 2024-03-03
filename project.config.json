@@ -4,7 +4,11 @@
   "packOptions": {
     "ignore": [
       {
-        "value": "src",
+        "value": "engine",
+        "type": "folder"
+      },
+      {
+        "value": "worker",
         "type": "folder"
       },
       {
@@ -44,7 +48,5 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  },
-  "appid": "wxd826cd1b3a0d6ab3",
-  "projectname": "%E5%8D%93%E5%8D%9C"
+  }
 }
