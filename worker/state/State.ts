@@ -1,5 +1,6 @@
 import WorkerDevice from "../device/WorkerDevice.js";
 import CdlodGrid from "../terrain/CdlodGrid.js";
+import Sky from "../terrain/Sky.js";
 import Terrain from "../terrain/Terrain.js";
 import { IWorld, createWorld, defineDeserializer, defineSerializer } from "../third/bitecs/index.js";
 export default class State {
@@ -7,11 +8,13 @@ export default class State {
     private readonly state: StateData = {
         objects: [
             "terrain",
-            "terrainFBO"
+            "terrainFBO",
+            "sky"
         ],
         programs: [
             "terrain",
-            "terrainFBO"
+            "terrainFBO",
+            "sky"
         ],
         textures: [
             "diffuse",
@@ -55,6 +58,7 @@ export default class State {
             case "EngineLoaded":
                 const factory = Terrain.create();
                 const gridFactory = CdlodGrid.create();
+                const skyFactory = Sky.create();
                 this.send({
                     type: "SendState",
                     broadcast: true,
@@ -69,24 +73,28 @@ export default class State {
                             aspect: 1,
                             zNear: 0.1,
                             zFar: 10,
-                        }],
+                        },
+                        ],
                         updateCalls: [
                             "rotateTerrain"
                         ]
                         ,
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
-                            "terrain": gridFactory.getAttributes()
+                            "terrain": gridFactory.getAttributes(),
+                            "sky": skyFactory.getAttributes()
                         },
                         uniforms: {
-                            "terrain": gridFactory.getUniforms()
+                            "terrain": gridFactory.getUniforms(),
+                            "sky": skyFactory.getUniforms()
                         },
                         instanceCounts: {
                             "terrain": gridFactory.getInstanceCount()
                         },
                         renderCalls: [
                             ["terrainFBO", "terrainFBO", "terrainFBO", []],
-                            ["terrain", "terrain", "terrain", []]
+                            ["sky", "sky", "", []],
+                            ["terrain", "terrain", "", []],
                         ],
                         animation: true
                     }]

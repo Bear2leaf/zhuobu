@@ -6,7 +6,6 @@ import Program from "../program/Program.js";
 import Drawobject from "../drawobject/Drawobject.js";
 import Framebuffer from "../framebuffer/Framebuffer.js";
 import { m4 } from "../third/twgl/m4.js";
-import { v3 } from "../third/twgl/v3.js";
 
 
 
@@ -46,6 +45,14 @@ export default class Renderer {
         drawobject.unbind(context);
         program.deactive(context);
     }
+    createIndices(drawobject: Drawobject, program: Program, name: string, attribute: number[]) {
+        const context = this.context
+        program.active(context);
+        drawobject.bind(context);
+        drawobject.createIndices(context, name, new Uint16Array(attribute));
+        drawobject.unbind(context);
+        program.deactive(context);
+    }
     updateUniform(program: Program, name: string, type: GLUniformType, ...values: number[]): void {
         const context = this.context;
         program.active(context);
@@ -59,6 +66,8 @@ export default class Renderer {
             program.updateUniform1fv(context, name, values);
         } else if (type === '3fv') {
             program.updateUniform3fv(context, name, values);
+        } else if (type === '4fv') {
+            program.updateUniform4fv(context, name, values);
         } else if (type === 'Matrix4fv') {
             program.updateUniformMatrix4fv(context, name, values);
         } else {
@@ -79,11 +88,12 @@ export default class Renderer {
     render(program: Program, object: Drawobject, windowInfo: WindowInfo, uniforms: [string, GLUniformType, m4.Mat4][], framebuffer?: Framebuffer) {
 
         if (framebuffer) {
+            this.prepare(windowInfo);
             this.activeFramebuffer(framebuffer);
+            this.prepare(windowInfo);
         }
         uniforms.forEach(u => this.updateUniform(program, u[0], u[1], ...u[2]))
         this.activeProgram(program);
-        this.prepare(windowInfo);
         this.draw(object);
         this.deactiveProgram(program);
         if (framebuffer) {

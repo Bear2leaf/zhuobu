@@ -88,5 +88,13 @@ export const workerCalls = {
         const object = engine.objects.find(o => o.name === objectName)!;
         const program = engine.programs.find(p => p.name === programName)!;
         engine.renderer.createAttributes(object, program, name, type, size, attribute, divisor);
+    },
+    initIndices(objectName: string, programName: string, name: string, attribute: number[]): void {
+
+        const engine = module.engine!;
+        const m4 = module.m4!;
+        const object = engine.objects.find(o => o.name === objectName)!;
+        const program = engine.programs.find(p => p.name === programName)!;
+        engine.renderer.createIndices(object, program, name, attribute);
     }
 };

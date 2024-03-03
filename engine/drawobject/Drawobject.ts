@@ -26,7 +26,16 @@ export default class Drawobject {
         this.vao = context.createVertexArray()!
     }
     draw(context: WebGL2RenderingContext) {
-        this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
+        if (this.bufferMap.has("indices")) {
+            context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, this.bufferMap.get("indices") || null);
+            context.disable(context.DEPTH_TEST)
+            this.count && context.drawElements(context.TRIANGLES, this.count, context.UNSIGNED_SHORT, this.first);
+            context.enable(context.DEPTH_TEST)
+            context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
+        } else {
+            this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
+        }
+
     }
     drawInstanced(context: WebGL2RenderingContext) {
         this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
@@ -44,6 +53,17 @@ export default class Drawobject {
         if (!divisor) {
             this.count = data.length / size;
         }
+    }
+    createIndices(context: WebGL2RenderingContext, name: string, data: Uint16Array) {
+        let buffer = this.bufferMap.get(name);
+        if (!buffer) {
+            buffer = context.createBuffer();
+            this.bufferMap.set(name, buffer);
+        }
+        context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, buffer);
+        context.bufferData(context.ELEMENT_ARRAY_BUFFER, data, context.STATIC_DRAW);
+        context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
+        this.count = data.length;
     }
     destory(context: WebGL2RenderingContext) {
         this.bufferMap.forEach(buffer => context.deleteBuffer(buffer));

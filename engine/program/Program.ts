@@ -55,6 +55,9 @@ export default class Program {
     updateUniform3fv(context: WebGL2RenderingContext, name: string, values: number[]) {
         this.sameVal(name, values) || context.uniform3fv(this.cacheLoc(context, name), values);
     }
+    updateUniform4fv(context: WebGL2RenderingContext, name: string, values: number[]) {
+        this.sameVal(name, values) || context.uniform4fv(this.cacheLoc(context, name), values);
+    }
     updateUniformMatrix4fv(context: WebGL2RenderingContext, name: string, values: number[]) {
         this.sameVal(name, values) || context.uniformMatrix4fv(this.cacheLoc(context, name), false, values);
     }
