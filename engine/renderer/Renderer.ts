@@ -85,8 +85,28 @@ export default class Renderer {
         }
         drawobject.unbind(context);
     }
-    render(program: Program, object: Drawobject, windowInfo: WindowInfo, textures: Texture[], framebuffer?: Framebuffer, clear?: boolean) {
+    updateCamera(
+        program: Program,
+        eye: [number, number, number],
+        target: [number, number, number],
+        up: [number, number, number],
+        fieldOfViewYInRadians: number,
+        aspect: number,
+        zNear: number,
+        zFar: number
+    ) {
+        const viewInverse = m4.identity();
+        const projection = m4.identity();
+        m4.inverse(m4.lookAt(eye, target, up), viewInverse);
+        m4.perspective(fieldOfViewYInRadians, aspect, zNear, zFar, projection);
+        this.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse);
+        this.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
+    }
 
+    render(program: Program, object: Drawobject, windowInfo: WindowInfo, textures: Texture[], camera?: Camera, framebuffer?: Framebuffer, clear?: boolean) {
+        if (camera) {
+            this.updateCamera(program, camera.eye, camera.target, camera.up, camera.fieldOfViewYInRadians, camera.aspect, camera.zNear, camera.zFar)
+        }
         this.activeProgram(program);
         textures.forEach(texture => {
             texture.active(this.context);
@@ -141,8 +161,10 @@ export default class Renderer {
     createFramebuffer(fboName: string, framebuffer: Framebuffer, ...textures: Texture[]): void {
         if (fboName === "terrainFBO") {
             framebuffer.generateTerrainFramebuffer(this.context, ...textures);
-        } else if (fboName === "waterFBO") {
-            framebuffer.generateWaterFramebuffer(this.context, ...textures);
+        } else if (fboName === "refractFBO") {
+            framebuffer.generateRefractFramebuffer(this.context, ...textures);
+        } else if (fboName === "reflectFBO") {
+            framebuffer.generateReflectFramebuffer(this.context, ...textures);
         } else {
             throw new Error("unsupoort FBO name.")
         }

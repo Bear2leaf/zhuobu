@@ -31,6 +31,8 @@ const float THREE_OVER_SIXTEENPI = 0.05968310365946075;
 		// 1.0 / ( 4.0 * pi )
 const float ONE_OVER_FOURPI = 0.07957747154594767;
 
+const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
+
 float rayleighPhase(float cosTheta) {
     return THREE_OVER_SIXTEENPI * (1.0 + pow(cosTheta, 2.0));
 }
@@ -87,7 +89,16 @@ void main() {
 
     // gl_FragColor = vec4(1.0);
     o_color = vec4(retColor * exposure, 1.0);
-    o_refract = vec4(retColor * exposure, 1.0);
-    o_reflect = vec4(retColor * exposure, 1.0);
+    float factor = dot(plane, vec4(vWorldPosition, 1.0f));
+    if(factor < -1.0f) {
+        o_refract = o_color;
+        o_reflect = vec4(0.0f);
+    } else if (factor > 1.0f) {
+        o_refract = vec4(0.0f);
+        o_reflect = o_color;
+    } else {
+        o_refract = o_color;
+        o_reflect = o_color;
+    }
 
 }

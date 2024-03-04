@@ -14,16 +14,7 @@ declare type WorkerRequest =
 
 declare type StateData = {
     modelTranslation?: [number, number, number];
-    cameras?: {
-        programName: string;
-        eye: [number, number, number];
-        target: [number, number, number];
-        up: [number, number, number];
-        fieldOfViewYInRadians: number;
-        aspect: number;
-        zNear: number;
-        zFar: number;
-    }[];
+    cameras?: Camera[];
     updateCalls?: "rotateTerrain"[];
     animation?: boolean;
     objects?: string[];
@@ -33,8 +24,18 @@ declare type StateData = {
     textureFBOBindings?: string[][];
     attributes?: Record<string, { name: string, type?: "FLOAT" | "INT", value: number[], size?: number, divisor?: number }[]>;
     uniforms?: Record<string, { name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | '4fv' | 'Matrix4fv', value: number[] }[]>;
-    renderCalls?: [string, string, string, boolean][];
+    renderCalls?: [string, string, string, string, boolean][];
     instanceCounts?: Record<string, number>;
+}
+declare type Camera = {
+    name: string;
+    eye: [number, number, number];
+    target: [number, number, number];
+    up: [number, number, number];
+    fieldOfViewYInRadians: number;
+    aspect: number;
+    zNear: number;
+    zFar: number;
 }
 declare type Matrix = number[] | Float32Array;
 declare type WindowInfo = { width: number; height: number; }

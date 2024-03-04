@@ -33,8 +33,8 @@ export default class Worker {
         }
     }
     decodeState(state: StateData) {
-        if (state.objects && state.programs && state.textures && state.framebuffers && state.textureFBOBindings) {
-            this.createObjects!(state.programs, state.objects, state.textures, state.framebuffers, state.textureFBOBindings);
+        if (state.objects && state.programs && state.textures && state.framebuffers && state.textureFBOBindings && state.cameras) {
+            this.createObjects!(state.programs, state.objects, state.textures, state.framebuffers, state.cameras, state.textureFBOBindings);
             return;
         }
         if (!this.callScript) {
@@ -70,11 +70,6 @@ export default class Worker {
         if (state.renderCalls) {
             this.callScript.updateRenderCalls(state.renderCalls);
         }
-        if (state.cameras) {
-            for (const { programName, eye, target, up, fieldOfViewYInRadians, zFar, zNear, aspect } of state.cameras) {
-                this.callScript.updateCamera(programName, eye, target, up, fieldOfViewYInRadians, aspect, zNear, zFar);
-            }
-        }
         if (state.instanceCounts) {
             for (const key in state.instanceCounts) {
                 if (Object.prototype.hasOwnProperty.call(state.instanceCounts, key)) {
@@ -92,5 +87,5 @@ export default class Worker {
             type: "EngineLoaded"
         });
     }
-    createObjects?: (programs: string[], objects: string[], textures: [string, number, string][], framebuffers: string[], textureFBOBindings:string[][]) => void;
+    createObjects?: (programs: string[], objects: string[], textures: [string, number, string][], framebuffers: string[], cameras: Camera[], textureFBOBindings:string[][]) => void;
 }

@@ -10,6 +10,7 @@ out vec4 color;
 
 void main() {
     vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
-    vec4 refractColor = texture(u_textureRefract, ndc.xy);
-    color = vec4(refractColor.rgb, 1.0f);
+    vec3 refractColor = texture(u_textureRefract, vec2(ndc.x, ndc.y)).rgb;
+    vec3 reflectColor = texture(u_textureReflect, vec2(ndc.x,  1.0 - ndc.y)).rgb;
+    color = vec4(mix(refractColor, reflectColor, 0.5f), 1.0f);
 }

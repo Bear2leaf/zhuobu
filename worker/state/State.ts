@@ -26,11 +26,34 @@ export default class State {
         ],
         framebuffers: [
             "terrainFBO",
-            "waterFBO"
+            "refractFBO",
+            "reflectFBO"
+        ],
+        cameras: [
+            {
+                name: "refract",
+                eye: [0, 0.5, 3],
+                target: [0, 0, 0],
+                up: [0, 1, 0],
+                fieldOfViewYInRadians: Math.PI / 8,
+                aspect: 1,
+                zNear: 0.1,
+                zFar: 10,
+            }, {
+                name: "reflect",
+                eye: [0, -0.5, 3],
+                target: [0, 0, 0],
+                up: [0, 1, 0],
+                fieldOfViewYInRadians: Math.PI / 8,
+                aspect: 1,
+                zNear: 0.1,
+                zFar: 10,
+            },
         ],
         textureFBOBindings: [
             ["terrainFBO", "diffuse", "depth", "normal"],
-            ["waterFBO", "refract", "reflect"]
+            ["refractFBO", "refract"],
+            ["reflectFBO", "reflect"]
         ],
     };
     constructor(readonly device: WorkerDevice) {
@@ -72,37 +95,6 @@ export default class State {
                     broadcast: true,
                     args: [{
                         modelTranslation: [0, 0, 0],
-                        cameras: [{
-                            programName: "terrain",
-                            eye: [0, 1, 3],
-                            target: [0, 0, 0],
-                            up: [0, 1, 0],
-                            fieldOfViewYInRadians: Math.PI / 8,
-                            aspect: 1,
-                            zNear: 0.1,
-                            zFar: 10,
-                        },
-                        {
-                            programName: "water",
-                            eye: [0, 1, 3],
-                            target: [0, 0, 0],
-                            up: [0, 1, 0],
-                            fieldOfViewYInRadians: Math.PI / 8,
-                            aspect: 1,
-                            zNear: 0.1,
-                            zFar: 10,
-                        },
-                        {
-                            programName: "sky",
-                            eye: [0, 1, 3],
-                            target: [0, 0, 0],
-                            up: [0, 1, 0],
-                            fieldOfViewYInRadians: Math.PI / 8,
-                            aspect: 1,
-                            zNear: 0.1,
-                            zFar: 10,
-                        },
-                        ],
                         updateCalls: [
                             "rotateTerrain"
                         ]
@@ -122,12 +114,14 @@ export default class State {
                             "terrain": gridFactory.getInstanceCount()
                         },
                         renderCalls: [
-                            ["terrainFBO", "terrainFBO", "terrainFBO", true],
-                            ["sky", "sky", "waterFBO", true],
-                            ["terrain", "terrain", "waterFBO", false],
-                            ["sky", "sky", "", true],
-                            ["terrain", "terrain", "", false],
-                            ["water", "water", "", false],
+                            ["terrainFBO", "terrainFBO", "terrainFBO", "terrainFBO", true],
+                            ["sky", "sky", "refractFBO", "refract", true],
+                            ["terrain", "terrain", "refractFBO", "refract", false],
+                            ["sky", "sky", "reflectFBO", "reflect", true],
+                            ["terrain", "terrain", "reflectFBO", "reflect", false],
+                            ["sky", "sky", "", "refract", true],
+                            ["terrain", "terrain", "", "refract", false],
+                            ["water", "water", "", "refract", false],
                         ],
                         animation: true
                     }]

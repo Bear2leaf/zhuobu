@@ -15,27 +15,6 @@ export const workerCalls = {
         module.engine = engine;
         module.m4 = m;
     },
-    updateCamera(
-        programName: string,
-        eye: [number, number, number],
-        target: [number, number, number],
-        up: [number, number, number],
-        fieldOfViewYInRadians: number,
-        aspect: number,
-        zNear: number,
-        zFar: number
-    ) {
-        const engine = module.engine!;
-        const m4 = module.m4!;
-        const program = engine.programs.find(p => p.name === programName)!;
-        const viewInverse = m4.identity();
-        const projection = m4.identity();
-        m4.inverse(m4.lookAt(eye, target, up), viewInverse);
-        m4.perspective(fieldOfViewYInRadians, aspect, zNear, zFar, projection);
-        engine.renderer.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse);
-        engine.renderer.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
-    },
-
     updateModelAnimation(animation: boolean): void {
 
         const engine = module.engine!;
@@ -50,7 +29,7 @@ export const workerCalls = {
         const m4 = module.m4!;
         engine.updateCalls.splice(0, engine.updateCalls.length, ...callbackNames);
     },
-    updateRenderCalls(callbacks: [string, string, string, boolean][]): void {
+    updateRenderCalls(callbacks: [string, string, string, string, boolean][]): void {
 
         const engine = module.engine!;
         const m4 = module.m4!;
