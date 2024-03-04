@@ -26,19 +26,38 @@ export default class Drawobject {
         this.vao = context.createVertexArray()!
     }
     draw(context: WebGL2RenderingContext) {
+        if (this.name === "sky") {
+            context.disable(context.DEPTH_TEST);
+            context.depthMask(false);
+        }
+        if (this.name === "water") {
+            context.enable(context.BLEND);
+        }
         if (this.bufferMap.has("indices")) {
             context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, this.bufferMap.get("indices") || null);
-            context.disable(context.DEPTH_TEST)
             this.count && context.drawElements(context.TRIANGLES, this.count, context.UNSIGNED_SHORT, this.first);
-            context.enable(context.DEPTH_TEST)
             context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
         } else {
             this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
         }
+        if (this.name === "water") {
+            context.disable(context.BLEND);
+        }
+        if (this.name === "sky") {
+            context.depthMask(true);
+            context.enable(context.DEPTH_TEST);
+        }
 
     }
     drawInstanced(context: WebGL2RenderingContext) {
+        if (this.name === "terrain") {
+            context.enable(context.BLEND);
+        }
         this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
+
+        if (this.name === "terrain") {
+            context.disable(context.BLEND);
+        }
     }
     createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array, type: number, size: number, divisor = 0) {
         let buffer = this.bufferMap.get(name);

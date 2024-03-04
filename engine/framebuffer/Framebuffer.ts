@@ -15,16 +15,26 @@ export default class Framebuffer {
     unbind(context: WebGL2RenderingContext) {
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
-    generateTerrainFramebuffer(context: WebGL2RenderingContext, diffuse: Texture, depth: Texture, normal: Texture) {
+    generateTerrainFramebuffer(context: WebGL2RenderingContext, ...textures: Texture[]) {
         this.framebuffer = context.createFramebuffer();
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
-        diffuse.attachToFramebuffer(context, context.COLOR_ATTACHMENT0);
-        diffuse.bind(context);
-        depth.attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
-        depth.bind(context);
-        normal.attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
-        normal.bind(context);
+        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT0);
+        textures[0].bind(context);
+        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[1].bind(context);
+        textures[2].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
+        textures[2].bind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1]);
+        context.bindFramebuffer(context.FRAMEBUFFER, null);
+    }
+    generateWaterFramebuffer(context: WebGL2RenderingContext, ...textures: Texture[]) {
+        this.framebuffer = context.createFramebuffer();
+        context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
+        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
+        textures[0].bind(context);
+        textures[1].attachToFramebuffer(context, context.COLOR_ATTACHMENT2);
+        textures[1].bind(context);
+        context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
     destory(context: WebGL2RenderingContext) {

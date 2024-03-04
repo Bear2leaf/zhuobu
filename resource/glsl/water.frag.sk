@@ -1,0 +1,15 @@
+#version 300 es 
+precision highp float;
+
+in vec4 v_clipspacePosition;
+
+uniform sampler2D u_textureRefract;
+uniform sampler2D u_textureReflect;
+
+out vec4 color;
+
+void main() {
+    vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
+    vec4 refractColor = texture(u_textureRefract, ndc.xy);
+    color = vec4(refractColor.rgb, 1.0f);
+}

@@ -1,21 +1,21 @@
-attribute vec3 a_position;
+#version 300 es 
+layout(location = 0) in vec3 a_position;
 
 uniform vec3 sunPosition;
 uniform float rayleigh;
 uniform float turbidity;
 uniform float mieCoefficient;
 uniform vec3 u_up;
-uniform mat4 modelMatrix;
-uniform vec4 u_perspective;
-uniform vec3 u_eye;
-uniform vec3 u_target;
+uniform mat4 u_model;
+uniform mat4 u_viewInverse;
+uniform mat4 u_projection;
 
-varying vec3 vWorldPosition;
-varying vec3 vSunDirection;
-varying float vSunfade;
-varying vec3 vBetaR;
-varying vec3 vBetaM;
-varying float vSunE;
+out vec3 vWorldPosition;
+out vec3 vSunDirection;
+out float vSunfade;
+out vec3 vBetaR;
+out vec3 vBetaM;
+out float vSunE;
 
 		// constants for atmospheric scattering
 const float e = 2.71828182845904523536028747135266249775724709369995957;
@@ -50,28 +50,13 @@ vec3 totalMie(float T) {
     return 0.434 * c * MieConst;
 }
 
-mat4 projection() {
-    float fov = u_perspective.x;
-    float aspect = u_perspective.y;
-    float near = u_perspective.z;
-    float far = u_perspective.w;
-    float f = 1.0 / tan(fov / 2.0);
-    return mat4(f / aspect, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, 0.0, 0.0, (far + near) / (near - far), -1.0, 0.0, 0.0, (2.0 * far * near) / (near - far), 0.0);
-
-}
-mat4 modelView() {
-    vec3 f = normalize(u_target - u_eye);
-    vec3 r = normalize(cross(f, u_up));
-    vec3 u = cross(r, f);
-    return mat4(r.x, u.x, -f.x, 0.0, r.y, u.y, -f.y, 0.0, r.z, u.z, -f.z, 0.0, -dot(r, u_eye), -dot(u, u_eye), dot(f, u_eye), 1.0);
-}
 void main() {
 
-    vec4 worldPosition = modelMatrix * vec4(a_position, 1.0);
+    vec4 worldPosition = u_model * vec4(a_position, 1.0);
     vWorldPosition = worldPosition.xyz;
 
-    gl_Position = projection() * modelView() * vec4(a_position, 1.0);
-    gl_Position.z = gl_Position.w; // set z to camera.far
+    gl_Position = u_projection * u_viewInverse * vec4(a_position, 1.0);
+    gl_Position.z = gl_Position.w;
 
     vSunDirection = normalize(sunPosition);
 

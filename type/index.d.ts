@@ -28,15 +28,16 @@ declare type StateData = {
     animation?: boolean;
     objects?: string[];
     programs?: string[];
-    textures?: string[];
+    textures?: [string, number, string][];
     framebuffers?: string[];
+    textureFBOBindings?: string[][];
     attributes?: Record<string, { name: string, type?: "FLOAT" | "INT", value: number[], size?: number, divisor?: number }[]>;
     uniforms?: Record<string, { name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | '4fv' | 'Matrix4fv', value: number[] }[]>;
-    renderCalls?: [string, string, string, [string, GLUniformType, number[] | Float32Array][]][];
+    renderCalls?: [string, string, string, boolean][];
     instanceCounts?: Record<string, number>;
 }
 declare type Matrix = number[] | Float32Array;
-declare type WindowInfo = { width: number; height: number; ratio: number; }
+declare type WindowInfo = { width: number; height: number; }
 declare type TouchInfo = { x: number, y: number }
 declare type TouchInfoFunction = (info?: TouchInfo) => void
 declare type GLUniformType = '1iv' | '1i' | '1f' | '2fv' | '3fv' | '4fv' | 'Matrix4fv';

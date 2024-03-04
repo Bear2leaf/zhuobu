@@ -8,8 +8,8 @@ export default class BrowserDevice implements Device {
     readonly context2D: CanvasRenderingContext2D;
     constructor() {
         const canvasGL = document.createElement("canvas");
-        canvasGL.width = 512;
-        canvasGL.height = 512;
+        canvasGL.width = 512 * devicePixelRatio;
+        canvasGL.height = 512 * devicePixelRatio;
         canvasGL.style.width = "100%";
         document.body.append(canvasGL);
         const canvas2D = document.createElement("canvas");
@@ -24,8 +24,7 @@ export default class BrowserDevice implements Device {
     getWindowInfo(): WindowInfo {
         return {
             width: this.canvasGL.width,
-            height: this.canvasGL.height,
-            ratio: window.devicePixelRatio
+            height: this.canvasGL.height
         }
     }
     hideCanvas() {

@@ -1,15 +1,16 @@
+#version 300 es
 precision highp float;
 
-varying vec3 vWorldPosition;
-varying vec3 vSunDirection;
-varying float vSunfade;
-varying vec3 vBetaR;
-varying vec3 vBetaM;
-varying float vSunE;
+in vec3 vWorldPosition;
+in vec3 vSunDirection;
+in float vSunfade;
+in vec3 vBetaR;
+in vec3 vBetaM;
+in float vSunE;
 
 uniform float mieDirectionalG;
 uniform vec3 u_up;
-uniform vec3 cameraPosition;
+uniform vec3 u_cameraPosition;
 
 uniform float exposure;
 
@@ -40,9 +41,13 @@ float hgPhase(float cosTheta, float g) {
     return ONE_OVER_FOURPI * ((1.0 - g2) * inverse);
 }
 
+layout(location = 0) out vec4 o_color;
+layout(location = 1) out vec4 o_refract;
+layout(location = 2) out vec4 o_reflect;
+
 void main() {
 
-    vec3 direction = normalize(vWorldPosition - cameraPosition);
+    vec3 direction = normalize(vWorldPosition - u_cameraPosition);
 
 			// optical length
 			// cutoff angle at 90 to avoid singularity in next formula.
@@ -81,6 +86,8 @@ void main() {
     vec3 retColor = pow(texColor, vec3(1.0 / (1.2 + (1.2 * vSunfade))));
 
     // gl_FragColor = vec4(1.0);
-    gl_FragColor = vec4(retColor * exposure, 1.0);
+    o_color = vec4(retColor * exposure, 1.0);
+    o_refract = vec4(retColor * exposure, 1.0);
+    o_reflect = vec4(retColor * exposure, 1.0);
 
 }

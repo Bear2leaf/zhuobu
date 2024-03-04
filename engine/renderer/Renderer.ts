@@ -20,7 +20,7 @@ export default class Renderer {
         context.clearColor(0, 0, 0, 1);
         context.enable(context.DEPTH_TEST);
         context.enable(context.CULL_FACE);
-        context.enable(context.SCISSOR_TEST)
+        context.enable(context.SCISSOR_TEST);
         context.blendFunc(context.ONE, context.ONE_MINUS_SRC_ALPHA);
         context.blendFuncSeparate(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA, context.ONE, context.ONE);
     }
@@ -85,20 +85,27 @@ export default class Renderer {
         }
         drawobject.unbind(context);
     }
-    render(program: Program, object: Drawobject, windowInfo: WindowInfo, uniforms: [string, GLUniformType, m4.Mat4][], framebuffer?: Framebuffer) {
+    render(program: Program, object: Drawobject, windowInfo: WindowInfo, textures: Texture[], framebuffer?: Framebuffer, clear?: boolean) {
 
+        this.activeProgram(program);
+        textures.forEach(texture => {
+            texture.active(this.context);
+            texture.bind(this.context);
+        });
         if (framebuffer) {
-            this.prepare(windowInfo);
             this.activeFramebuffer(framebuffer);
+        }
+        if (clear) {
             this.prepare(windowInfo);
         }
-        uniforms.forEach(u => this.updateUniform(program, u[0], u[1], ...u[2]))
-        this.activeProgram(program);
         this.draw(object);
-        this.deactiveProgram(program);
         if (framebuffer) {
             this.deactiveFramebuffer(framebuffer);
         }
+        textures.forEach(texture => {
+            texture.unbind(this.context);
+        });
+        this.deactiveProgram(program);
     }
     initShaderProgram(program: Program) {
         const context = this.context;
@@ -123,19 +130,22 @@ export default class Renderer {
             texture.generateDepth(this.context)
         } else if (texture.name === "normal") {
             texture.generateNormal(this.context)
+        } else if (texture.name === "refract") {
+            texture.generateDiffuse(this.context)
+        } else if (texture.name === "reflect") {
+            texture.generateDiffuse(this.context)
         } else {
             throw new Error("unsupport texture name.")
         }
     }
-    createDepthTexture(texture: Texture) {
-        texture.generateDepth(this.context)
-    }
-    createNormalTexture(texture: Texture) {
-        texture.generateNormal(this.context)
-    }
-    createTerrainFramebuffer(framebuffer: Framebuffer, diffuseTexture: Texture, depthTexture: Texture, normalTexture: Texture) {
-        framebuffer.generateTerrainFramebuffer(this.context, diffuseTexture, depthTexture, normalTexture);
-
+    createFramebuffer(fboName: string, framebuffer: Framebuffer, ...textures: Texture[]): void {
+        if (fboName === "terrainFBO") {
+            framebuffer.generateTerrainFramebuffer(this.context, ...textures);
+        } else if (fboName === "waterFBO") {
+            framebuffer.generateWaterFramebuffer(this.context, ...textures);
+        } else {
+            throw new Error("unsupoort FBO name.")
+        }
     }
     createDrawobject(drawobject: Drawobject) {
         drawobject.generateVAO(this.context);

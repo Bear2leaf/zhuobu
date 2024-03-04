@@ -106,6 +106,15 @@ export default class CdlodGrid {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
         return [
+            {
+                name: "u_model", type: "Matrix4fv", value: [
+
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
             { name: "u_texture", type: "1i", value: [0] },
             { name: "u_textureDepth", type: "1i", value: [1] },
             { name: "u_textureNormal", type: "1i", value: [2] },

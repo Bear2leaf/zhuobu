@@ -13,14 +13,14 @@ type ScriptType = Awaited<ReturnType<typeof scriptModule>>;
 export default class Engine {
     readonly updateCalls: (keyof ScriptType["updateCalls"])[] = [];
     private readonly worker: Worker;
-    private readonly textures: Texture[] = [];
-    private readonly framebuffers: Framebuffer[] = [];
     private script?: ScriptType;
+    readonly framebuffers: Framebuffer[] = [];
+    readonly textures: Texture[] = [];
     readonly renderer: Renderer;
     readonly ticker: Ticker;
     readonly programs: Program[] = [];
     readonly objects: Drawobject[] = [];
-    readonly renderCalls: [string, string, string, [string, GLUniformType, m4.Mat4][]][] = [];
+    readonly renderCalls: [string, string, string, boolean][] = [];
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
@@ -29,27 +29,13 @@ export default class Engine {
         const w = windowInfo.width;
         const h = windowInfo.height;
         this.worker.init(device);
-        this.worker.createObjects = (programs: string[], objects: string[], textures: string[], framebuffers: string[]) => {
+        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string][], framebuffers: string[], textureFBOBindings: string[][]) => {
             this.clean();
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
-            textures.forEach(name => this.textures.push(Texture.create(name, this.textures.length, w, h)));
+            textures.forEach(([name, unit, p]) => this.textures.push(Texture.create(name, unit, p, w, h)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
-            this.load(device).then(() => {
-                this.programs.forEach(program => renderer.initShaderProgram(program))
-                this.objects.forEach(object => renderer.createDrawobject(object))
-                this.textures.forEach(texture => {
-                    renderer.createTexture(texture);
-                });
-                this.textures.forEach(texture => {
-                    renderer.enableTexture(texture);
-                });
-                renderer.createTerrainFramebuffer(this.framebuffers[0],
-                    this.textures.find(t => t.name === "diffuse")!,
-                    this.textures.find(t => t.name === "depth")!,
-                    this.textures.find(t => t.name === "normal")!
-                );
-            });
+            this.load(device).then(() => this.worker.callScript!.onEngineLoaded(textureFBOBindings));
         }
         const renderer = this.renderer;
         renderer.initContextState();
@@ -64,11 +50,12 @@ export default class Engine {
                 this.script!.updateCalls[iterator](this, m4);
             }
             for (const iterator of this.renderCalls) {
-                const program = this.programs.find(o => o.name === iterator[0])!;
                 const object = this.objects.find(o => o.name === iterator[0])!;
-                const framebuffer = this.framebuffers.find(o => o.name === iterator[0])!;
-                const uniforms = iterator[3];
-                this.renderer.render(program, object, windowInfo, uniforms, framebuffer);
+                const program = this.programs.find(o => o.name === iterator[1])!;
+                const framebuffer = this.framebuffers.find(o => o.name === iterator[2])!;
+                const clear = iterator[3];
+                const textures = this.textures.filter(t => t.program === program.name);
+                this.renderer.render(program, object, windowInfo, textures, framebuffer, clear);
             }
             requestAnimationFrame(t => this.ticker.tick(t));
         }

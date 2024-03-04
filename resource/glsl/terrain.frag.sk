@@ -2,13 +2,17 @@
 precision highp float;
 
 in vec2 v_texcoord;
+in vec4 v_modelPosition;
 
 uniform sampler2D u_texture;
 uniform sampler2D u_textureNormal;
 
 const vec3 sun = vec3(0.0f, 1.0f, 0.5f);
+const vec4 plane = vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
-out vec4 color;
+layout(location = 0) out vec4 o_color;
+layout(location = 1) out vec4 o_refract;
+layout(location = 2) out vec4 o_reflect;
 
 vec3 getDiffuse() {
     return texture(u_texture, v_texcoord).rgb;
@@ -21,5 +25,12 @@ float getLight() {
 }
 
 void main() {
-    color = vec4(getDiffuse() * getLight(), 1.0f);
+    o_color = vec4(getDiffuse() * getLight(), 1.0f);
+    if(dot(plane, vec4(v_modelPosition)) < 0.0f) {
+        o_refract = o_color;
+        o_reflect = vec4(0.0f);
+    } else {
+        o_refract = vec4(0.0f);
+        o_reflect = o_color;
+    }
 }

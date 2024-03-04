@@ -4,14 +4,16 @@ export default class Texture {
     private readonly width: number;
     private readonly height: number;
     readonly name: string;
-    constructor(name: string, unit: number, width: number, height: number) {
+    readonly program: string;
+    constructor(name: string, unit: number, program: string, width: number, height: number) {
         this.name = name;
+        this.program = program;
         this.unit = unit;
         this.width = width;
         this.height = height;
     }
-    static create(name: string, unit: number, width: number, height: number) {
-        return new Texture(name, unit, width, height);
+    static create(name: string, unit: number, program: string, width: number, height: number) {
+        return new Texture(name, unit, program, width, height);
     }
     attachToFramebuffer(context: WebGL2RenderingContext, attachment: number) {
         context.framebufferTexture2D(context.FRAMEBUFFER, attachment, context.TEXTURE_2D, this.texture, 0);

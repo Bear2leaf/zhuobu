@@ -12,16 +12,19 @@ export default class MinigameDevice implements Device {
         this.canvas2D = wx.createCanvas()
         this.contextGL = this.canvasGL.getContext("webgl2")!;
         this.context2D = this.canvas2D.getContext("2d")!;
+        const info = wx.getWindowInfo();
+        (this.canvasGL.width) = info.windowWidth * info.pixelRatio;
+        (this.canvasGL.height) = info.windowHeight * info.pixelRatio;
+        (this.canvas2D.width) = info.windowWidth * info.pixelRatio;
+        (this.canvas2D.height) = info.windowHeight * info.pixelRatio;
         const isDevTool = wx.getSystemInfoSync().platform === "devtools";
         this.divideTimeBy = isDevTool ? 1 : 1000;
     }
 
     getWindowInfo(): WindowInfo {
-        const info = wx.getWindowInfo();
         return {
-            width: info.windowWidth,
-            height: info.windowHeight,
-            ratio: info.pixelRatio
+            width: this.canvasGL.width,
+            height: this.canvasGL.height
         };
     }
     now(): number {
