@@ -33,7 +33,6 @@ declare type Camera = {
     target: [number, number, number];
     up: [number, number, number];
     fieldOfViewYInRadians: number;
-    aspect: number;
     zNear: number;
     zFar: number;
 }

@@ -105,7 +105,7 @@ export default class Renderer {
 
     render(program: Program, object: Drawobject, windowInfo: WindowInfo, textures: Texture[], camera?: Camera, framebuffer?: Framebuffer, clear?: boolean) {
         if (camera) {
-            this.updateCamera(program, camera.eye, camera.target, camera.up, camera.fieldOfViewYInRadians, camera.aspect, camera.zNear, camera.zFar)
+            this.updateCamera(program, camera.eye, camera.target, camera.up, camera.fieldOfViewYInRadians, windowInfo.width / windowInfo.height, camera.zNear, camera.zFar)
         }
         this.activeProgram(program);
         textures.forEach(texture => {

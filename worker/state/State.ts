@@ -33,20 +33,18 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.5, 3],
+                eye: [0, 0.3, 1.5],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
-                aspect: 1,
                 zNear: 0.1,
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.5, 3],
+                eye: [0, -0.3, 1.5],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
-                aspect: 1,
                 zNear: 0.1,
                 zFar: 10,
             },

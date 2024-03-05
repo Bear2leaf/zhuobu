@@ -30,7 +30,7 @@ enum BiomeColor {
 };
 export default class Terrain {
     private readonly spacing = 16;
-    private readonly distanceRNG = new SeedableRandom(40);
+    private readonly distanceRNG = new SeedableRandom(42);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
     private readonly map: Map;
