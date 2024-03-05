@@ -22,7 +22,8 @@ export default class State {
             ["depth", 1, "terrain"],
             ["normal", 2, "terrain"],
             ["refract", 0, "water"],
-            ["reflect", 1, "water"]
+            ["reflect", 1, "water"],
+            ["waterDepth", 2, "water"]
         ],
         framebuffers: [
             "terrainFBO",
@@ -52,8 +53,8 @@ export default class State {
         ],
         textureFBOBindings: [
             ["terrainFBO", "diffuse", "depth", "normal"],
-            ["refractFBO", "refract"],
-            ["reflectFBO", "reflect"]
+            ["refractFBO", "refract", "waterDepth"],
+            ["reflectFBO", "reflect", "waterDepth"]
         ],
     };
     constructor(readonly device: WorkerDevice) {

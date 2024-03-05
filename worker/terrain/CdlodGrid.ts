@@ -112,7 +112,7 @@ export default class CdlodGrid {
                     1, 0, 0, 0,
                     0, 1, 0, 0,
                     0, 0, 1, 0,
-                    0, 0, 0, 1
+                    0, -0.02, 0, 1
                 ]
             },
             { name: "u_texture", type: "1i", value: [0] },

@@ -32,6 +32,8 @@ export default class Framebuffer {
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
         textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
         textures[0].bind(context);
+        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[1].bind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
@@ -40,6 +42,8 @@ export default class Framebuffer {
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
         textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT2);
         textures[0].bind(context);
+        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[1].bind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }

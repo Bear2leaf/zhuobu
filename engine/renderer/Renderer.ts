@@ -154,6 +154,8 @@ export default class Renderer {
             texture.generateDiffuse(this.context)
         } else if (texture.name === "reflect") {
             texture.generateDiffuse(this.context)
+        } else if (texture.name === "waterDepth") {
+            texture.generateDepth(this.context)
         } else {
             throw new Error("unsupport texture name.")
         }
