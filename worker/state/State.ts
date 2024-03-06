@@ -97,8 +97,7 @@ export default class State {
                         modelTranslation: [0, 0, 0],
                         updateCalls: [
                             "rotateTerrain"
-                        ]
-                        ,
+                        ],
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
                             "terrain": gridFactory.getAttributes(),

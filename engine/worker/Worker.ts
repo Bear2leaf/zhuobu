@@ -41,6 +41,7 @@ export default class Worker {
             throw new Error("call script not set.")
         }
         state.modelTranslation && this.callScript.updateModelTranslation && this.callScript.updateModelTranslation(state.modelTranslation);
+        state.cameras && this.callScript.updateCameras && this.callScript.updateCameras(state.cameras);
         state.animation !== undefined && this.callScript.updateModelAnimation && this.callScript.updateModelAnimation(state.animation);
         if (state.attributes) {
             for (const key in state.attributes) {

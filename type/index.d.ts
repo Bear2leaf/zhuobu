@@ -29,12 +29,12 @@ declare type StateData = {
 }
 declare type Camera = {
     name: string;
-    eye: [number, number, number];
-    target: [number, number, number];
-    up: [number, number, number];
-    fieldOfViewYInRadians: number;
-    zNear: number;
-    zFar: number;
+    eye?: [number, number, number];
+    target?: [number, number, number];
+    up?: [number, number, number];
+    fieldOfViewYInRadians?: number;
+    zNear?: number;
+    zFar?: number;
 }
 declare type Matrix = number[] | Float32Array;
 declare type WindowInfo = { width: number; height: number; }

@@ -43,8 +43,8 @@ export default class Texture {
         context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, this.width, this.height, 0, context.RGBA, context.UNSIGNED_BYTE, null);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
-        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
-        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR);
         context.bindTexture(context.TEXTURE_2D, null);
     }
     generateNormal(context: WebGL2RenderingContext) {
@@ -53,8 +53,8 @@ export default class Texture {
         context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, this.width, this.height, 0, context.RGBA, context.UNSIGNED_BYTE, null);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
-        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
-        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR);
         context.bindTexture(context.TEXTURE_2D, null);
     }
     destory(context: WebGL2RenderingContext) {

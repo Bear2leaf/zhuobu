@@ -60,6 +60,12 @@ export const workerCalls = {
         }
 
     },
+    updateCameras(cameras: Camera[]): void {
+        const engine = module.engine!;
+        for (const iterator of cameras) {
+            Object.assign(engine.cameras.find(c => c.name === iterator.name)!, iterator);
+        }
+    },
     initAttributes(objectName: string, programName: string, name: string, type: GLType, size: number, attribute: number[], divisor?: number): void {
 
         const engine = module.engine!;
