@@ -22,8 +22,8 @@ export default class Framebuffer {
         textures[0].bind(context);
         textures[1].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
         textures[1].bind(context);
-        // textures[2].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
-        // textures[2].bind(context);
+        textures[2].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[2].bind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }

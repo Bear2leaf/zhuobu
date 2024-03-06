@@ -112,12 +112,12 @@ export default class CdlodGrid {
                     1, 0, 0, 0,
                     0, 1, 0, 0,
                     0, 0, 1, 0,
-                    0, -0.02, 0, 1
+                    0, 0, 0, 1
                 ]
             },
             { name: "u_texture", type: "1i", value: [0] },
             { name: "u_textureNormal", type: "1i", value: [1] },
-            // { name: "u_textureDepth", type: "1i", value: [2] },
+            { name: "u_textureDepth", type: "1i", value: [2] },
             { name: "u_resolution", type: "1f", value: [this.resolution] },
         ]
     }

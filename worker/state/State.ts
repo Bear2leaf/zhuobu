@@ -19,12 +19,12 @@ export default class State {
             "water"
         ],
         textures: [
-            ["diffuse", 0, "terrain", {width: this.textureSize, height: this.textureSize}],
-            ["normal", 1, "terrain", {width: this.textureSize, height: this.textureSize}],
-            // ["depth", 2, "terrain", {width: this.textureSize, height: this.textureSize}],
-            ["refract", 0, "water", {width: 0, height: 0}],
-            ["reflect", 1, "water", {width: 0, height: 0}],
-            ["waterDepth", 2, "water", {width: 0, height: 0}]
+            ["diffuse", 0, "terrain", { width: this.textureSize, height: this.textureSize }],
+            ["normal", 1, "terrain", { width: this.textureSize, height: this.textureSize }],
+            ["depth", 2, "terrain", {width: this.textureSize, height: this.textureSize}],
+            ["refract", 0, "water", { width: 0, height: 0 }],
+            ["reflect", 1, "water", { width: 0, height: 0 }],
+            ["waterDepth", 2, "water", { width: 0, height: 0 }]
         ],
         framebuffers: [
             "terrainFBO",
@@ -34,7 +34,7 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.3, 1.5],
+                eye: [0, 0.3, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
@@ -42,7 +42,7 @@ export default class State {
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.3, 1.5],
+                eye: [0, -0.3, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
@@ -51,7 +51,7 @@ export default class State {
             },
         ],
         textureFBOBindings: [
-            ["terrainFBO", "diffuse", "normal"/*, "depth"*/],
+            ["terrainFBO", "diffuse", "normal", "depth"],
             ["refractFBO", "refract", "waterDepth"],
             ["reflectFBO", "reflect", "waterDepth"]
         ],
@@ -114,14 +114,14 @@ export default class State {
                             "terrain": gridFactory.getInstanceCount()
                         },
                         renderCalls: [
-                            ["terrainFBO", "terrainFBO", {width:this.textureSize, height: this.textureSize}, "terrainFBO", "terrainFBO", true],
-                            ["sky", "sky", {width:0, height: 0}, "refractFBO", "refract", true],
-                            ["terrain", "terrain", {width:0, height: 0}, "refractFBO", "refract", false],
-                            ["sky", "sky", {width:0, height: 0}, "reflectFBO", "reflect", true],
-                            ["terrain", "terrain", {width:0, height: 0}, "reflectFBO", "reflect", false],
-                            ["sky", "sky", {width:0, height: 0}, "", "refract", true],
-                            ["terrain", "terrain", {width:0, height: 0}, "", "refract", false],
-                            ["water", "water", {width:0, height: 0}, "", "refract", false],
+                            ["terrainFBO", "terrainFBO", { width: this.textureSize, height: this.textureSize }, "terrainFBO", "terrainFBO", true],
+                            ["sky", "sky", { width: 0, height: 0 }, "refractFBO", "refract", true],
+                            ["terrain", "terrain", { width: 0, height: 0 }, "refractFBO", "refract", false],
+                            ["sky", "sky", { width: 0, height: 0 }, "reflectFBO", "reflect", true],
+                            ["terrain", "terrain", { width: 0, height: 0 }, "reflectFBO", "reflect", false],
+                            ["sky", "sky", { width: 0, height: 0 }, "", "refract", true],
+                            ["terrain", "terrain", { width: 0, height: 0 }, "", "refract", false],
+                            ["water", "water", { width: 0, height: 0 }, "", "refract", false],
                         ],
                         animation: true
                     }]
