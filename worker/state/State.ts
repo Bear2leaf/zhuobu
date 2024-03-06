@@ -20,8 +20,8 @@ export default class State {
         ],
         textures: [
             ["diffuse", 0, "terrain", {width: this.textureSize, height: this.textureSize}],
-            ["depth", 1, "terrain", {width: this.textureSize, height: this.textureSize}],
-            ["normal", 2, "terrain", {width: this.textureSize, height: this.textureSize}],
+            ["normal", 1, "terrain", {width: this.textureSize, height: this.textureSize}],
+            // ["depth", 2, "terrain", {width: this.textureSize, height: this.textureSize}],
             ["refract", 0, "water", {width: 0, height: 0}],
             ["reflect", 1, "water", {width: 0, height: 0}],
             ["waterDepth", 2, "water", {width: 0, height: 0}]
@@ -51,7 +51,7 @@ export default class State {
             },
         ],
         textureFBOBindings: [
-            ["terrainFBO", "diffuse", "depth", "normal"],
+            ["terrainFBO", "diffuse", "normal"/*, "depth"*/],
             ["refractFBO", "refract", "waterDepth"],
             ["reflectFBO", "reflect", "waterDepth"]
         ],
