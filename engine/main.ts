@@ -21,7 +21,7 @@ export default class Engine {
     readonly programs: Program[] = [];
     readonly objects: Drawobject[] = [];
     readonly cameras: Camera[] = [];
-    readonly renderCalls: [string, string, string, string, boolean][] = [];
+    readonly renderCalls: [string, string, WindowInfo, string, string, boolean][] = [];
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
@@ -30,11 +30,11 @@ export default class Engine {
         const w = windowInfo.width;
         const h = windowInfo.height;
         this.worker.init(device);
-        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
+        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string, WindowInfo][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
             this.clean();
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
-            textures.forEach(([name, unit, p]) => this.textures.push(Texture.create(name, unit, p, w, h)));
+            textures.forEach(([name, unit, p, { width, height }]) => this.textures.push(Texture.create(name, unit, p, width || w, height || h)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
             cameras.forEach(c => this.cameras.push(c));
             this.load(device).then(() => this.worker.callScript!.onEngineLoaded(textureFBOBindings));
@@ -43,9 +43,9 @@ export default class Engine {
         renderer.initContextState();
 
         this.ticker.callback = () => {
+            requestAnimationFrame(t => this.ticker.tick(t));
             this.worker.process();
             if (this.ticker.pause) {
-                requestAnimationFrame(t => this.ticker.tick(t));
                 return;
             }
             for (const iterator of this.updateCalls) {
@@ -54,13 +54,13 @@ export default class Engine {
             for (const iterator of this.renderCalls) {
                 const object = this.objects.find(o => o.name === iterator[0])!;
                 const program = this.programs.find(o => o.name === iterator[1])!;
-                const framebuffer = this.framebuffers.find(o => o.name === iterator[2])!;
-                const clear = iterator[4];
+                const dimensions = iterator[2];
+                const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
+                const clear = iterator[5];
                 const textures = this.textures.filter(t => t.program === program.name);
-                const camera = this.cameras.find(c => c.name === iterator[3]);
-                this.renderer.render(program, object, windowInfo, textures, camera, framebuffer, clear);
+                const camera = this.cameras.find(c => c.name === iterator[4]);
+                this.renderer.render(program, object, { width: dimensions.width || w, height: dimensions.height || h }, textures, camera, framebuffer, clear);
             }
-            requestAnimationFrame(t => this.ticker.tick(t));
         }
         requestAnimationFrame(t => this.ticker.tick(t));
 

@@ -19,12 +19,12 @@ declare type StateData = {
     animation?: boolean;
     objects?: string[];
     programs?: string[];
-    textures?: [string, number, string][];
+    textures?: [string, number, string, WindowInfo][];
     framebuffers?: string[];
     textureFBOBindings?: string[][];
     attributes?: Record<string, { name: string, type?: "FLOAT" | "INT", value: number[], size?: number, divisor?: number }[]>;
     uniforms?: Record<string, { name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | '4fv' | 'Matrix4fv', value: number[] }[]>;
-    renderCalls?: [string, string, string, string, boolean][];
+    renderCalls?: [string, string, WindowInfo, string, string, boolean][];
     instanceCounts?: Record<string, number>;
 }
 declare type Camera = {

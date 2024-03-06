@@ -29,7 +29,7 @@ export const workerCalls = {
         const m4 = module.m4!;
         engine.updateCalls.splice(0, engine.updateCalls.length, ...callbackNames);
     },
-    updateRenderCalls(callbacks: [string, string, string, string, boolean][]): void {
+    updateRenderCalls(callbacks: [string, string, WindowInfo, string, string, boolean][]): void {
 
         const engine = module.engine!;
         const m4 = module.m4!;
@@ -81,19 +81,19 @@ export const workerCalls = {
         const renderer = engine.renderer;
         const m4 = module.m4!;
         engine.programs.forEach(program => renderer.initShaderProgram(program))
-                engine.objects.forEach(object => renderer.createDrawobject(object))
-                engine.textures.forEach(texture => {
-                    renderer.createTexture(texture);
-                });
-                engine.textures.forEach(texture => {
-                    renderer.enableTexture(texture);
-                });
-                for (const iterator of textureFBOBindings) {
-                    const fboName = iterator[0];
-                    const fboTextures = iterator.slice(1);
-                    renderer.createFramebuffer(fboName, engine.framebuffers.find(f => f.name === fboName)!,
-                        ...fboTextures.map(t => engine.textures.find(tex => tex.name === t)!)
-                    );
-                }
+        engine.objects.forEach(object => renderer.createDrawobject(object))
+        engine.textures.forEach(texture => {
+            renderer.createTexture(texture);
+        });
+        engine.textures.forEach(texture => {
+            renderer.enableTexture(texture);
+        });
+        for (const iterator of textureFBOBindings) {
+            const fboName = iterator[0];
+            const fboTextures = iterator.slice(1);
+            renderer.createFramebuffer(fboName, engine.framebuffers.find(f => f.name === fboName)!,
+                ...fboTextures.map(t => engine.textures.find(tex => tex.name === t)!)
+            );
+        }
     }
 };

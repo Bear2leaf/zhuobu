@@ -87,5 +87,5 @@ export default class Worker {
             type: "EngineLoaded"
         });
     }
-    createObjects?: (programs: string[], objects: string[], textures: [string, number, string][], framebuffers: string[], cameras: Camera[], textureFBOBindings:string[][]) => void;
+    createObjects?: (programs: string[], objects: string[], textures: [string, number, string, WindowInfo][], framebuffers: string[], cameras: Camera[], textureFBOBindings:string[][]) => void;
 }

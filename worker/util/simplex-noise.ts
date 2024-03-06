@@ -479,7 +479,7 @@ export function createNoise4D(random: RandomFn = Math.random): NoiseFunction4D {
  * Do not rely on this export.
  * @private
  */
-export function buildPermutationTable(random: RandomFn): Uint8Array {
+function buildPermutationTable(random: RandomFn): Uint8Array {
   const tableSize = 512;
   const p = new Uint8Array(tableSize);
   for (let i = 0; i < tableSize / 2; i++) {

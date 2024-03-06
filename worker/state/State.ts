@@ -4,6 +4,7 @@ import Sky from "../terrain/Sky.js";
 import Terrain from "../terrain/Terrain.js";
 import Water from "../terrain/Water.js";
 export default class State {
+    private readonly textureSize = 2048;
     private readonly state: StateData = {
         objects: [
             "terrainFBO",
@@ -18,12 +19,12 @@ export default class State {
             "water"
         ],
         textures: [
-            ["diffuse", 0, "terrain"],
-            ["depth", 1, "terrain"],
-            ["normal", 2, "terrain"],
-            ["refract", 0, "water"],
-            ["reflect", 1, "water"],
-            ["waterDepth", 2, "water"]
+            ["diffuse", 0, "terrain", {width: this.textureSize, height: this.textureSize}],
+            ["depth", 1, "terrain", {width: this.textureSize, height: this.textureSize}],
+            ["normal", 2, "terrain", {width: this.textureSize, height: this.textureSize}],
+            ["refract", 0, "water", {width: 0, height: 0}],
+            ["reflect", 1, "water", {width: 0, height: 0}],
+            ["waterDepth", 2, "water", {width: 0, height: 0}]
         ],
         framebuffers: [
             "terrainFBO",
@@ -113,14 +114,14 @@ export default class State {
                             "terrain": gridFactory.getInstanceCount()
                         },
                         renderCalls: [
-                            ["terrainFBO", "terrainFBO", "terrainFBO", "terrainFBO", true],
-                            ["sky", "sky", "refractFBO", "refract", true],
-                            ["terrain", "terrain", "refractFBO", "refract", false],
-                            ["sky", "sky", "reflectFBO", "reflect", true],
-                            ["terrain", "terrain", "reflectFBO", "reflect", false],
-                            ["sky", "sky", "", "refract", true],
-                            ["terrain", "terrain", "", "refract", false],
-                            ["water", "water", "", "refract", false],
+                            ["terrainFBO", "terrainFBO", {width:this.textureSize, height: this.textureSize}, "terrainFBO", "terrainFBO", true],
+                            ["sky", "sky", {width:0, height: 0}, "refractFBO", "refract", true],
+                            ["terrain", "terrain", {width:0, height: 0}, "refractFBO", "refract", false],
+                            ["sky", "sky", {width:0, height: 0}, "reflectFBO", "reflect", true],
+                            ["terrain", "terrain", {width:0, height: 0}, "reflectFBO", "reflect", false],
+                            ["sky", "sky", {width:0, height: 0}, "", "refract", true],
+                            ["terrain", "terrain", {width:0, height: 0}, "", "refract", false],
+                            ["water", "water", {width:0, height: 0}, "", "refract", false],
                         ],
                         animation: true
                     }]
