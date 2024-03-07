@@ -24,12 +24,10 @@ export default class Renderer {
         context.blendFunc(context.ONE, context.ONE_MINUS_SRC_ALPHA);
         context.blendFuncSeparate(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA, context.ONE, context.ONE);
     }
-    prepare(windowInfo: WindowInfo) {
+    prepare(viewport: [number, number, number, number]) {
         const context = this.context;
-        const width = windowInfo.width;
-        const height = windowInfo.height;
-        context.viewport(0, 0, width, height);
-        context.scissor(0, 0, width, height);
+        context.viewport(...viewport);
+        context.scissor(...viewport);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
     }
     enableTexture(texture: Texture) {
@@ -103,27 +101,28 @@ export default class Renderer {
         this.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
     }
 
-    render(program: Program, object: Drawobject, windowInfo: WindowInfo, textures: Texture[], camera?: Camera, framebuffer?: Framebuffer, clear?: boolean) {
+    render(program: Program, object: Drawobject, textures: Texture[], camera: Camera, framebuffer: Framebuffer | null, clear: boolean, width: number, height: number, aspect: number) {
+        const context = this.context;
         if (camera) {
-            this.updateCamera(program, camera.eye!, camera.target!, camera.up!, camera.fieldOfViewYInRadians!, windowInfo.width / windowInfo.height, camera.zNear!, camera.zFar!)
+            this.updateCamera(program, camera.eye!, camera.target!, camera.up!, camera.fieldOfViewYInRadians!, aspect, camera.zNear!, camera.zFar!)
         }
         this.activeProgram(program);
         textures.forEach(texture => {
-            texture.active(this.context);
-            texture.bind(this.context);
+            texture.active(context);
+            texture.bind(context);
         });
         if (framebuffer) {
             this.activeFramebuffer(framebuffer);
         }
         if (clear) {
-            this.prepare(windowInfo);
+            this.prepare([0, 0, width, height]);
         }
         this.draw(object);
         if (framebuffer) {
             this.deactiveFramebuffer(framebuffer);
         }
         textures.forEach(texture => {
-            texture.unbind(this.context);
+            texture.unbind(context);
         });
         this.deactiveProgram(program);
     }

@@ -21,20 +21,19 @@ export default class Engine {
     readonly programs: Program[] = [];
     readonly objects: Drawobject[] = [];
     readonly cameras: Camera[] = [];
-    readonly renderCalls: [string, string, WindowInfo, string, string, boolean][] = [];
+    readonly renderCalls: [string, string, string, string | null, boolean, number | null][] = [];
+    readonly windowInfo: WindowInfo;
     constructor(device: Device) {
         this.ticker = new Ticker();
         this.renderer = new Renderer(device);
         this.worker = new Worker();
-        const windowInfo = device.getWindowInfo();
-        const w = windowInfo.width;
-        const h = windowInfo.height;
+        this.windowInfo = device.getWindowInfo();
         this.worker.init(device);
-        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string, WindowInfo][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
+        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string, number | null][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
             this.clean();
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
-            textures.forEach(([name, unit, p, { width, height }]) => this.textures.push(Texture.create(name, unit, p, width || w, height || h)));
+            textures.forEach(([name, unit, p, size]) => this.textures.push(Texture.create(name, unit, p, size || this.windowInfo.width, size || this.windowInfo.height)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
             cameras.forEach(c => this.cameras.push(c));
             this.load(device).then(() => this.worker.callScript!.onEngineLoaded(textureFBOBindings));
@@ -54,12 +53,15 @@ export default class Engine {
             for (const iterator of this.renderCalls) {
                 const object = this.objects.find(o => o.name === iterator[0])!;
                 const program = this.programs.find(o => o.name === iterator[1])!;
-                const dimensions = iterator[2];
+                const textures = this.textures.filter(t => t.program === program.name)!;
+                const camera = this.cameras.find(c => c.name === iterator[2])!;
                 const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
-                const clear = iterator[5];
-                const textures = this.textures.filter(t => t.program === program.name);
-                const camera = this.cameras.find(c => c.name === iterator[4]);
-                this.renderer.render(program, object, { width: dimensions.width || w, height: dimensions.height || h }, textures, camera, framebuffer, clear);
+                const clear = iterator[4];
+                const size = iterator[5];
+                const aspect = this.windowInfo.width / this.windowInfo.height;
+                const width = size || this.windowInfo.width;
+                const height = size || this.windowInfo.height;
+                this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
             }
         }
         requestAnimationFrame(t => this.ticker.tick(t));

@@ -29,7 +29,7 @@ export const workerCalls = {
         const m4 = module.m4!;
         engine.updateCalls.splice(0, engine.updateCalls.length, ...callbackNames);
     },
-    updateRenderCalls(callbacks: [string, string, WindowInfo, string, string, boolean][]): void {
+    updateRenderCalls(callbacks: [string, string, string, string | null, boolean, number | null][]): void {
 
         const engine = module.engine!;
         const m4 = module.m4!;
