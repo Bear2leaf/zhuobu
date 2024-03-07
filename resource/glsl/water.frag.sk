@@ -1,16 +1,84 @@
 #version 300 es 
 precision highp float;
 
-in vec4 v_clipspacePosition;
+const vec3 waterColour = vec3(0.604f, 0.867f, 0.851f);
+const float fresnelReflective = 0.5f;
+const float edgeSoftness = 0.005f;
+const float minBlueness = 0.1f;
+const float maxBlueness = 0.8f;
+const float murkyDepth = 14.0f;
 
-uniform sampler2D u_textureRefract;
+out vec4 o_color;
+
+in vec4 v_clipSpaceGrid;
+in vec4 v_clipSpaceReal;
+in vec3 v_normal;
+in vec3 v_toCameraVector;
+in vec3 v_specular;
+in vec3 v_diffuse;
+
 uniform sampler2D u_textureReflect;
+uniform sampler2D u_textureRefract;
+uniform sampler2D u_textureDepth;
+uniform vec2 u_nearFarPlanes;
 
-out vec4 color;
+vec3 applyMurkiness(vec3 refractColour, float waterDepth) {
+    float murkyFactor = clamp(waterDepth / murkyDepth, 0.0f, 1.0f);
+    float murkiness = minBlueness + murkyFactor * (maxBlueness - minBlueness);
+    return mix(refractColour, waterColour, murkiness);
+}
 
-void main() {
-    vec4 ndc = (v_clipspacePosition / v_clipspacePosition.w) / 2.0f + 0.5f;
-    vec3 refractColor = texture(u_textureRefract, vec2(ndc.x, ndc.y)).rgb;
-    vec3 reflectColor = texture(u_textureReflect, vec2(ndc.x,  1.0 - ndc.y)).rgb;
-    color = vec4(mix(refractColor, reflectColor, 0.5f), 1.0f);
+float toLinearDepth(float zDepth) {
+    float near = u_nearFarPlanes.x;
+    float far = u_nearFarPlanes.y;
+    return 2.0f * near * far / (far + near - (2.0f * zDepth - 1.0f) * (far - near));
+}
+
+float calculateWaterDepth(vec2 texCoords) {
+    float depth = texture(u_textureDepth, texCoords).r;
+    float floorDistance = toLinearDepth(depth);
+    depth = gl_FragCoord.z;
+    float waterDistance = toLinearDepth(depth);
+    return floorDistance - waterDistance;
+}
+
+float calculateFresnel() {
+    vec3 viewVector = normalize(v_toCameraVector);
+    vec3 normal = normalize(v_normal);
+    float refractiveFactor = dot(viewVector, normal);
+    refractiveFactor = pow(refractiveFactor, fresnelReflective);
+    return clamp(refractiveFactor, 0.0f, 1.0f);
+}
+
+vec2 clipSpaceToTexCoords(vec4 clipSpace) {
+    vec2 ndc = (clipSpace.xy / clipSpace.w);
+    vec2 texCoords = ndc / 2.0f + 0.5f;
+    return texCoords;
+}
+
+void main(void) {
+
+    vec2 texCoordsReal = clipSpaceToTexCoords(v_clipSpaceReal);
+    vec2 texCoordsGrid = clipSpaceToTexCoords(v_clipSpaceGrid);
+
+    vec2 refractionTexCoords = texCoordsGrid;
+    vec2 reflectionTexCoords = vec2(texCoordsGrid.x, 1.0f - texCoordsGrid.y);
+    float waterDepth = calculateWaterDepth(texCoordsReal);
+
+
+    vec3 refractColour = texture(u_textureRefract, refractionTexCoords).rgb;
+    vec3 reflectColour = texture(u_textureReflect, reflectionTexCoords).rgb;
+
+	//apply some blueness
+    refractColour = applyMurkiness(refractColour, waterDepth);
+    reflectColour = mix(reflectColour, waterColour, minBlueness);
+
+    vec3 finalColour = mix(reflectColour, refractColour, calculateFresnel());
+    finalColour = finalColour * v_diffuse + v_specular;
+
+    o_color = vec4(finalColour, 1.0f);
+
+	//apply soft edges
+    o_color.a = clamp(waterDepth / edgeSoftness, 0.0f, 1.0f);
+
 }

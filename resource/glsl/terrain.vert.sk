@@ -15,6 +15,7 @@ uniform mat4 u_projection;
 uniform mat4 u_viewInverse;
 uniform float u_resolution;
 uniform sampler2D u_textureDepth;
+uniform vec3 u_eye;
 
 out vec2 v_texcoord;
 out vec4 v_modelPosition;
@@ -58,7 +59,8 @@ void main() {
     vec2 origin = a_position.xz;
      // Morph between zoom layers
     float morphK = calculateMorph(origin);
-    vec2 position = origin * a_scale + a_offset;
+    vec4 worldOffset = inverse(u_model) * vec4(u_eye.x, 0.0f, u_eye.z, 1.0f);
+    vec2 position = origin * a_scale + a_offset + worldOffset.xz;
     position = calculateNoMorphNeighbour(position, morphK);
     position = clamp(position, -0.9f, 0.9f);
     v_texcoord = position * 0.5f + 0.5f;

@@ -69,14 +69,6 @@ export default class Sky {
         const perspective = [fov, aspect, near, far];
 
         return [
-            {
-                name: "u_model", type: "Matrix4fv", value: [
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    0, 0, 0, 1
-                ]
-            },
             { name: "rayleigh", type: "1f", value: [5.5] },
             { name: "turbidity", type: "1f", value: [2] },
             { name: "exposure", type: "1f", value: [0.4] },

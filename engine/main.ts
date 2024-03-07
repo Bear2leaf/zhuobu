@@ -7,6 +7,7 @@ import Framebuffer from "./framebuffer/Framebuffer.js";
 import Drawobject from "./drawobject/Drawobject.js";
 import { m4 } from "./third/twgl/m4.js";
 import Program from "./program/Program.js";
+import { v3 } from "./third/twgl/v3.js";
 
 type ScriptType = Awaited<ReturnType<typeof scriptModule>>;
 
@@ -44,12 +45,6 @@ export default class Engine {
         this.ticker.callback = () => {
             requestAnimationFrame(t => this.ticker.tick(t));
             this.worker.process();
-            if (this.ticker.pause) {
-                return;
-            }
-            for (const iterator of this.updateCalls) {
-                this.script!.updateCalls[iterator](this, m4);
-            }
             for (const iterator of this.renderCalls) {
                 const object = this.objects.find(o => o.name === iterator[0])!;
                 const program = this.programs.find(o => o.name === iterator[1])!;
@@ -62,6 +57,12 @@ export default class Engine {
                 const width = size || this.windowInfo.width;
                 const height = size || this.windowInfo.height;
                 this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
+            }
+            if (this.ticker.pause) {
+                return;
+            }
+            for (const iterator of this.updateCalls) {
+                this.script!.updateCalls[iterator](this, m4);
             }
         }
         requestAnimationFrame(t => this.ticker.tick(t));
@@ -100,7 +101,7 @@ export default class Engine {
         }
         await scriptModule()
             .then((m) => {
-                m.initSubpackage(this, m4);
+                m.initSubpackage(this, m4, v3);
                 this.script = m;
                 this.worker.callScript = m.workerCalls;
                 this.worker.engineLoaded();

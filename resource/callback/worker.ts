@@ -1,19 +1,22 @@
 
 import type Engine from "../../engine/main.js";
 import type { m4 } from "../../engine/third/twgl/m4";
+import type { v3 } from "../../engine/third/twgl/v3";
 
 
 const module: {
     engine?: Engine
     m4?: typeof m4
+    v3?: typeof v3
 } = {
 
 }
 
 export const workerCalls = {
-    init(engine: Engine, m: typeof m4) {
+    init(engine: Engine, m: typeof m4, v: typeof v3) {
         module.engine = engine;
         module.m4 = m;
+        module.v3 = v;
     },
     updateModelAnimation(animation: boolean): void {
 

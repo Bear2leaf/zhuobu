@@ -99,6 +99,8 @@ export default class Renderer {
         m4.perspective(fieldOfViewYInRadians, aspect, zNear, zFar, projection);
         this.updateUniform(program, "u_viewInverse", "Matrix4fv", ...viewInverse);
         this.updateUniform(program, "u_projection", "Matrix4fv", ...projection);
+        this.updateUniform(program, "u_eye", "3fv", ...eye);
+        this.updateUniform(program, "u_nearFarPlanes", "2fv", zNear, zFar);
     }
 
     render(program: Program, object: Drawobject, textures: Texture[], camera: Camera, framebuffer: Framebuffer | null, clear: boolean, width: number, height: number, aspect: number) {

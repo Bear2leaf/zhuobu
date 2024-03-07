@@ -36,7 +36,8 @@ export default class CdlodGrid {
         return grid;
     }
     initGridTiles() {
-        const TILE_LEVEL = 4;
+        const TILE_LEVEL = 2;
+        const RANGE = 4;
         let initialScale = 1 / Math.pow(2, TILE_LEVEL);
 
         // Create center layer first
@@ -61,7 +62,7 @@ export default class CdlodGrid {
         // +---+---+---+---+
         // | A | A | A | A |
         // +---+---+---+---+
-        for (let scale = initialScale; scale < 1; scale *= 2) {
+        for (let scale = initialScale; scale < RANGE; scale *= 2) {
             this.createTile(-2 * scale, -2 * scale, scale, Edge.BOTTOM | Edge.LEFT);
 
             this.createTile(-2 * scale, -scale, scale, Edge.LEFT);
@@ -106,15 +107,6 @@ export default class CdlodGrid {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {
         return [
-            {
-                name: "u_model", type: "Matrix4fv", value: [
-
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    0, 0, 0, 1
-                ]
-            },
             { name: "u_texture", type: "1i", value: [0] },
             { name: "u_textureNormal", type: "1i", value: [1] },
             { name: "u_textureDepth", type: "1i", value: [2] },

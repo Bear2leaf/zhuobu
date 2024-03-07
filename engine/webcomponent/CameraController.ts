@@ -4,6 +4,7 @@ export default class CameraController extends HTMLElement {
     private readonly elChildren: HTMLElement[] = []
     private readonly modelY = document.createElement("input");
     private readonly eyeY = document.createElement("input");
+    private readonly eyeZ = document.createElement("input");
     private readonly animation = document.createElement("input");
     private sendMessage?: (data: WorkerRequest) => void;
     addChildren(el: HTMLElement) {
@@ -32,11 +33,32 @@ export default class CameraController extends HTMLElement {
                         cameras: [
                             {
                                 name: "refract",
-                                eye: [0, parseFloat(this.eyeY.value), 3]
+                                eye: [0, parseFloat(this.eyeY.value), parseFloat(this.eyeZ.value)]
                             },
                             {
                                 name: "reflect",
-                                eye: [0, -parseFloat(this.eyeY.value), 3]
+                                eye: [0, -parseFloat(this.eyeY.value), parseFloat(this.eyeZ.value)]
+                            }
+                        ]
+                    }]
+                })
+            }
+        }))
+        this.addChildren(Object.assign(document.createElement("p"), { innerText: "eyeZ:" }))
+        this.addChildren(Object.assign(this.eyeZ, {
+            type: "number", step: "0.1", onchange: () => {
+                this.sendMessage!({
+                    type: "SyncState",
+                    broadcast: true,
+                    args: [{
+                        cameras: [
+                            {
+                                name: "refract",
+                                eye: [0, parseFloat(this.eyeY.value), parseFloat(this.eyeZ.value)]
+                            },
+                            {
+                                name: "reflect",
+                                eye: [0, -parseFloat(this.eyeY.value), parseFloat(this.eyeZ.value)]
                             }
                         ]
                     }]
@@ -70,6 +92,10 @@ export default class CameraController extends HTMLElement {
                     }
                     if (data.args[0].modelTranslation !== undefined) {
                         this.modelY.value = data.args[0].modelTranslation[1].toString();
+                    }
+                    if (data.args[0].cameras !== undefined) {
+                        this.eyeY.value = data.args[0].cameras[0].eye![1].toString();
+                        this.eyeZ.value = data.args[0].cameras[0].eye![2].toString();
                     }
                     break;
                 case "Refresh":

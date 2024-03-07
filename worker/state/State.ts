@@ -35,7 +35,7 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.3, 2],
+                eye: [0, 0.3, 1.5],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
@@ -43,7 +43,7 @@ export default class State {
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.3, 2],
+                eye: [0, -0.3, 1.5],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 8,
@@ -54,7 +54,7 @@ export default class State {
         textureFBOBindings: [
             ["terrainFBO", "diffuse", "normal", "depth"],
             ["refractFBO", "refract", "waterDepth"],
-            ["reflectFBO", "reflect", "waterDepth"]
+            ["reflectFBO", "reflect"]
         ],
     };
     constructor(readonly device: WorkerDevice) {
@@ -95,7 +95,8 @@ export default class State {
                     type: "SendState",
                     broadcast: true,
                     args: [{
-                        modelTranslation: [0, 0, 0],
+                        modelTranslation: [0, -0.002, 0],
+                        cameras: this.state.cameras,
                         updateCalls: [
                             "rotateTerrain"
                         ],
