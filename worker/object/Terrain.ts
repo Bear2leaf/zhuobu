@@ -33,7 +33,7 @@ export default class Terrain {
     private readonly distanceRNG = new SeedableRandom(42);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
-    private readonly map: Map;
+    readonly map: Map;
     private readonly vertices: number[] = []
     private readonly colors: number[] = []
     constructor() {
@@ -102,10 +102,6 @@ export default class Terrain {
         return terrain;
     }
     adjustHeight(height: number) {
-
-        // return (smoothstep(-1.0, 1.0, Math.pow(height, 3)) - 0.5) * 2;
-        // return Math.pow(height, 3);
-        // return Math.sign(height) * Math.sqrt(Math.abs(height) / 8);
         return height / 8;
     }
     getAttributes(): {

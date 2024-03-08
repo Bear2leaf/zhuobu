@@ -1,21 +1,24 @@
 import WorkerDevice from "../device/WorkerDevice.js";
-import Sky from "../terrain/Sky.js";
-import Terrain from "../terrain/Terrain.js";
-import TerrainGrid from "../terrain/TerrainGrid.js";
-import Water from "../terrain/Water.js";
+import Plant from "../object/Plant.js";
+import Sky from "../object/Sky.js";
+import Terrain from "../object/Terrain.js";
+import TerrainGrid from "../object/TerrainGrid.js";
+import Water from "../object/Water.js";
 export default class State {
-    private readonly terrainTextureSize = 512;
+    private readonly terrainTextureSize = 2048;
     private readonly waterTextureSize = 256;
     private readonly state: StateData = {
         objects: [
             "terrainFBO",
             "terrain",
+            "plant",
             "sky",
             "water"
         ],
         programs: [
             "terrainGrid",
             "terrainFBO",
+            "plant",
             "sky",
             "water"
         ],
@@ -90,6 +93,7 @@ export default class State {
                 const gridFactory = TerrainGrid.create();
                 const skyFactory = Sky.create();
                 const waterFactory = Water.create();
+                const plantFactory = Plant.create();
                 this.send({
                     type: "SendState",
                     broadcast: true,
@@ -102,11 +106,13 @@ export default class State {
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
                             "terrainGrid": gridFactory.getAttributes(),
+                            "plant": plantFactory.getAttributes(),
                             "sky": skyFactory.getAttributes(),
                             "water": waterFactory.getAttributes()
                         },
                         uniforms: {
                             "terrainGrid": gridFactory.getUniforms(),
+                            "plant": plantFactory.getUniforms(),
                             "sky": skyFactory.getUniforms(),
                             "water": waterFactory.getUniforms(),
                         },
@@ -120,6 +126,7 @@ export default class State {
                             ["terrain", "terrainGrid", "reflect", "reflectFBO", false, this.waterTextureSize],
                             ["sky", "sky", "refract", null, true, null],
                             ["terrain", "terrainGrid", "refract", null, false, null],
+                            ["plant", "plant", "refract", null, false, null],
                             ["water", "water", "refract", null, false, null],
                         ],
                         animation: true
