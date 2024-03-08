@@ -1,8 +1,8 @@
 export default class Texture {
     private texture: WebGLTexture | null = null;
-    private readonly unit: number;
     private readonly width: number;
     private readonly height: number;
+    readonly unit: number;
     readonly name: string;
     readonly program: string;
     constructor(name: string, unit: number, program: string, width: number, height: number) {

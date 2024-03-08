@@ -94,9 +94,6 @@ export const workerCalls = {
         engine.textures.forEach(texture => {
             renderer.createTexture(texture);
         });
-        engine.textures.forEach(texture => {
-            renderer.enableTexture(texture);
-        });
         for (const iterator of textureFBOBindings) {
             const fboName = iterator[0];
             const fboTextures = iterator.slice(1);

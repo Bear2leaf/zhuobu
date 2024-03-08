@@ -18,30 +18,38 @@ export default class Framebuffer {
     generateTerrainFramebuffer(context: WebGL2RenderingContext, ...textures: Texture[]) {
         this.framebuffer = context.createFramebuffer();
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
-        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT0);
+        textures[0].active(context);
         textures[0].bind(context);
-        textures[1].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
+        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT0);
+        textures[0].unbind(context);
+        textures[1].active(context);
         textures[1].bind(context);
-        textures[2].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
-        textures[2].bind(context);
-        context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1]);
+        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[1].unbind(context);
+        context.drawBuffers([context.COLOR_ATTACHMENT0]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
     generateRefractFramebuffer(context: WebGL2RenderingContext, ...textures: Texture[]) {
         this.framebuffer = context.createFramebuffer();
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
-        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT1);
+        textures[0].active(context);
         textures[0].bind(context);
-        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT0);
+        textures[0].unbind(context);
+        textures[1].active(context);
         textures[1].bind(context);
+        textures[1].attachToFramebuffer(context, context.DEPTH_ATTACHMENT);
+        textures[1].unbind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
     generateReflectFramebuffer(context: WebGL2RenderingContext, ...textures: Texture[]) {
         this.framebuffer = context.createFramebuffer();
         context.bindFramebuffer(context.FRAMEBUFFER, this.framebuffer);
-        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT2);
+        textures[0].active(context);
         textures[0].bind(context);
+        textures[0].attachToFramebuffer(context, context.COLOR_ATTACHMENT2);
+        textures[0].unbind(context);
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }

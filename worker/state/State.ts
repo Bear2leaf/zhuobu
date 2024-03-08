@@ -1,5 +1,4 @@
 import WorkerDevice from "../device/WorkerDevice.js";
-import CdlodGrid from "../terrain/CdlodGrid.js";
 import Sky from "../terrain/Sky.js";
 import Terrain from "../terrain/Terrain.js";
 import TerrainGrid from "../terrain/TerrainGrid.js";
@@ -22,8 +21,7 @@ export default class State {
         ],
         textures: [
             ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
-            ["normal", 1, "terrainGrid", this.terrainTextureSize],
-            ["depth", 2, "terrainGrid", this.terrainTextureSize],
+            ["depth", 1, "terrainGrid", this.terrainTextureSize],
             ["refract", 0, "water", this.waterTextureSize],
             ["reflect", 1, "water", this.waterTextureSize],
             ["waterDepth", 2, "water", this.waterTextureSize]
@@ -53,7 +51,7 @@ export default class State {
             },
         ],
         textureFBOBindings: [
-            ["terrainFBO", "diffuse", "normal", "depth"],
+            ["terrainFBO", "diffuse", "depth"],
             ["refractFBO", "refract", "waterDepth"],
             ["reflectFBO", "reflect"]
         ],

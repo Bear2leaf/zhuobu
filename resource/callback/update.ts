@@ -32,7 +32,7 @@ export const updateCalls: Record<string, Function> = {
             const program = engine.programs.find(p => p.name === pName)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
-            m4.multiply(model, m4.rotationY(delta), model);
+            m4.rotateY(model, delta, model);
             engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
         }
         {
@@ -40,9 +40,7 @@ export const updateCalls: Record<string, Function> = {
             const program = engine.programs.find(p => p.name === name)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
-            m4.scaling(v3.create(0.02, 0.02, 0.02), model);
-            m4.rotateY(model, time, model);
-            m4.translate(model, v3.create(-50, 0, -50), model);
+            m4.rotateY(model, delta, model);
             engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
             engine.renderer.updateUniform(program, "u_time", "1f", time);
         }
@@ -51,7 +49,7 @@ export const updateCalls: Record<string, Function> = {
             const program = engine.programs.find(p => p.name === name)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
-            m4.rotationY(-time, model);
+            m4.rotateY(model, -delta, model);
             engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
         }
     }

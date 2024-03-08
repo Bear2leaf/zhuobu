@@ -30,11 +30,6 @@ export default class Renderer {
         context.scissor(...viewport);
         context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT | context.STENCIL_BUFFER_BIT);
     }
-    enableTexture(texture: Texture) {
-        const context = this.context;
-        texture.active(context);
-        texture.bind(context);
-    }
     createAttributes(drawobject: Drawobject, program: Program, name: string, type: GLType, size: number, attribute: number[], divisor = 0) {
         const context = this.context
         program.active(context);
@@ -109,23 +104,26 @@ export default class Renderer {
             this.updateCamera(program, camera.eye!, camera.target!, camera.up!, camera.fieldOfViewYInRadians!, aspect, camera.zNear!, camera.zFar!)
         }
         this.activeProgram(program);
-        textures.forEach(texture => {
-            texture.active(context);
-            texture.bind(context);
-        });
         if (framebuffer) {
             this.activeFramebuffer(framebuffer);
         }
+        textures.forEach(texture => {
+            texture.active(context);
+            texture.bind(context);
+            const uniformName = `u_texture${texture.name[0].toUpperCase()}${texture.name.slice(1)}`;
+            program.updateUniform1i(context, uniformName, [texture.unit]);
+        });
         if (clear) {
             this.prepare([0, 0, width, height]);
         }
         this.draw(object);
+        textures.forEach(texture => {
+            texture.active(context);
+            texture.unbind(context);
+        });
         if (framebuffer) {
             this.deactiveFramebuffer(framebuffer);
         }
-        textures.forEach(texture => {
-            texture.unbind(context);
-        });
         this.deactiveProgram(program);
     }
     initShaderProgram(program: Program) {

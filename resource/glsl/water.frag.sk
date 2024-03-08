@@ -6,7 +6,7 @@ const float fresnelReflective = 0.5f;
 const float edgeSoftness = 0.005f;
 const float minBlueness = 0.1f;
 const float maxBlueness = 0.8f;
-const float murkyDepth = 14.0f;
+const float murkyDepth = 0.14f;
 
 out vec4 o_color;
 
@@ -19,7 +19,7 @@ in vec3 v_diffuse;
 
 uniform sampler2D u_textureReflect;
 uniform sampler2D u_textureRefract;
-uniform sampler2D u_textureDepth;
+uniform sampler2D u_textureWaterDepth;
 uniform vec2 u_nearFarPlanes;
 
 vec3 applyMurkiness(vec3 refractColour, float waterDepth) {
@@ -35,7 +35,7 @@ float toLinearDepth(float zDepth) {
 }
 
 float calculateWaterDepth(vec2 texCoords) {
-    float depth = texture(u_textureDepth, texCoords).r;
+    float depth = texture(u_textureWaterDepth, texCoords).r;
     float floorDistance = toLinearDepth(depth);
     depth = gl_FragCoord.z;
     float waterDistance = toLinearDepth(depth);

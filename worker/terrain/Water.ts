@@ -117,11 +117,13 @@ function getIndicators(currentVertex: number, vertexPositions: number[][], verte
     return [...offset1, ...offset2];
 }
 
+const SIZE = 100;
+
 export default class Water {
     private readonly vertices: number[] = []
     private readonly indicators: number[] = []
     constructor() {
-        const data = this.createMeshData(100);
+        const data = this.createMeshData(SIZE);
         this.vertices = data[0];
         this.indicators = data[1];
     }
@@ -141,9 +143,9 @@ export default class Water {
     getAttributes(): {
         object: string
         name: string;
-        type?: "FLOAT";
+        type: GLType;
         value: number[];
-        size?: number;
+        size: number;
     }[] {
         return [
             { object: "water", name: "a_position", type: "FLOAT", value: this.vertices, size: 2 },
@@ -152,15 +154,12 @@ export default class Water {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {
         return [
-            { name: "u_textureRefract", type: "1i", value: [0] },
-            { name: "u_textureReflect", type: "1i", value: [1] },
-            { name: "u_textureDepth", type: "1i", value: [2] },
         ]
     }
 
 }
 
 function packVertexData(arg0: number[], arg1: number[], buffer: number[][]) {
-    buffer[0].push(...arg0);
-    buffer[1].push(...arg1);
+    buffer[0].push(...arg0.map(a => a / SIZE * 2 - 1.0));
+    buffer[1].push(...arg1.map(a => a / SIZE));
 }
