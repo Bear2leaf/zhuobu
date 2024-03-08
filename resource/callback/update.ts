@@ -28,7 +28,8 @@ export const updateCalls: Record<string, Function> = {
         time += delta;
         {
             const name = "terrain";
-            const program = engine.programs.find(p => p.name === name)!;
+            const pName = "terrainGrid";
+            const program = engine.programs.find(p => p.name === pName)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
             m4.rotateY(model, delta, model);

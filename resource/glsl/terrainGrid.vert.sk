@@ -1,0 +1,26 @@
+#version 300 es 
+#define EDGE_MORPH_TOP 1
+#define EDGE_MORPH_LEFT 2
+#define EDGE_MORPH_BOTTOM 4
+#define EDGE_MORPH_RIGHT 8
+#define MORPH_REGION 0.3f
+
+layout(location = 0) in vec2 a_position;
+uniform mat4 u_model;
+uniform mat4 u_projection;
+uniform mat4 u_viewInverse;
+uniform sampler2D u_textureDepth;
+
+out vec2 v_texcoord;
+out vec4 v_modelPosition;
+
+void main() {
+
+    vec2 position = a_position;
+    position = clamp(position, -0.9f, 0.9f);
+    v_texcoord = position * 0.5f + 0.5f;
+    float height = texture(u_textureDepth, v_texcoord).r;
+    height = height * 2.0f - 1.0f;
+    gl_Position = u_projection * u_viewInverse * u_model * vec4(position.x, height, position.y, 1.0f);
+    v_modelPosition = u_model * vec4(position.x, height, position.y, 1.0f);
+}

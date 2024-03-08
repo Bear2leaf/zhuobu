@@ -2,6 +2,7 @@ import WorkerDevice from "../device/WorkerDevice.js";
 import CdlodGrid from "../terrain/CdlodGrid.js";
 import Sky from "../terrain/Sky.js";
 import Terrain from "../terrain/Terrain.js";
+import TerrainGrid from "../terrain/TerrainGrid.js";
 import Water from "../terrain/Water.js";
 export default class State {
     private readonly terrainTextureSize = 1024;
@@ -14,15 +15,15 @@ export default class State {
             "water"
         ],
         programs: [
-            "terrain",
+            "terrainGrid",
             "terrainFBO",
             "sky",
             "water"
         ],
         textures: [
-            ["diffuse", 0, "terrain", this.terrainTextureSize],
-            ["normal", 1, "terrain", this.terrainTextureSize],
-            ["depth", 2, "terrain", this.terrainTextureSize],
+            ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
+            ["normal", 1, "terrainGrid", this.terrainTextureSize],
+            ["depth", 2, "terrainGrid", this.terrainTextureSize],
             ["refract", 0, "water", this.waterTextureSize],
             ["reflect", 1, "water", this.waterTextureSize],
             ["waterDepth", 2, "water", this.waterTextureSize]
@@ -88,40 +89,39 @@ export default class State {
                 break;
             case "EngineLoaded":
                 const factory = Terrain.create();
-                const gridFactory = CdlodGrid.create();
+                const gridFactory = TerrainGrid.create();
                 const skyFactory = Sky.create();
                 const waterFactory = Water.create();
                 this.send({
                     type: "SendState",
                     broadcast: true,
                     args: [{
-                        modelTranslation: [0, -0.002, 0],
+                        modelTranslation: [0, -0.005, 0],
                         cameras: this.state.cameras,
                         updateCalls: [
                             "rotateTerrain"
                         ],
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
-                            "terrain": gridFactory.getAttributes(),
+                            "terrainGrid": gridFactory.getAttributes(),
                             "sky": skyFactory.getAttributes(),
                             "water": waterFactory.getAttributes()
                         },
                         uniforms: {
-                            "terrain": gridFactory.getUniforms(),
+                            "terrainGrid": gridFactory.getUniforms(),
                             "sky": skyFactory.getUniforms(),
                             "water": waterFactory.getUniforms(),
                         },
                         instanceCounts: {
-                            "terrain": gridFactory.getInstanceCount()
                         },
                         renderCalls: [
                             ["terrainFBO", "terrainFBO", "terrainFBO", "terrainFBO", true, this.terrainTextureSize],
                             ["sky", "sky", "refract", "refractFBO", true, this.waterTextureSize],
-                            ["terrain", "terrain", "refract", "refractFBO", false, this.waterTextureSize],
+                            ["terrain", "terrainGrid", "refract", "refractFBO", false, this.waterTextureSize],
                             ["sky", "sky", "reflect", "reflectFBO", true, this.waterTextureSize],
-                            ["terrain", "terrain", "reflect", "reflectFBO", false, this.waterTextureSize],
+                            ["terrain", "terrainGrid", "reflect", "reflectFBO", false, this.waterTextureSize],
                             ["sky", "sky", "refract", null, true, null],
-                            ["terrain", "terrain", "refract", null, false, null],
+                            ["terrain", "terrainGrid", "refract", null, false, null],
                             ["water", "water", "refract", null, false, null],
                         ],
                         animation: true

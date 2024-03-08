@@ -51,7 +51,7 @@ export default class Worker {
                         if (attribute.type === undefined && attribute.size == undefined && attribute.name === "indices") {
                             this.callScript.initIndices(key, key, attribute.name, attribute.value)
                         } else if (attribute.type !== undefined && attribute.size !== undefined) {
-                            this.callScript.initAttributes(key, key, attribute.name, attribute.type, attribute.size, attribute.value, attribute.divisor)
+                            this.callScript.initAttributes(attribute.object, key, attribute.name, attribute.type, attribute.size, attribute.value, attribute.divisor)
                         } else {
                             throw new Error("unsupport attribute type.")
                         }

@@ -139,14 +139,15 @@ export default class Water {
         return buffer;
     }
     getAttributes(): {
+        object: string
         name: string;
         type?: "FLOAT";
         value: number[];
         size?: number;
     }[] {
         return [
-            { name: "a_position", type: "FLOAT", value: this.vertices, size: 2 },
-            { name: "a_indicator", type: "FLOAT", value: this.indicators, size: 4 },
+            { object: "water", name: "a_position", type: "FLOAT", value: this.vertices, size: 2 },
+            { object: "water", name: "a_indicator", type: "FLOAT", value: this.indicators, size: 4 },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

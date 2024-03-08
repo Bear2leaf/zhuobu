@@ -109,14 +109,15 @@ export default class Terrain {
         return height / 8;
     }
     getAttributes(): {
+        object: string
         name: string;
         type: "FLOAT";
         value: number[];
         size: number;
     }[] {
         return [
-            { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
-            { name: "a_color", type: "FLOAT", value: this.colors, size: 3 }
+            { object: "terrainFBO", name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
+            { object: "terrainFBO", name: "a_color", type: "FLOAT", value: this.colors, size: 3 }
         ]
     }
 }

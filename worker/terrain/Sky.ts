@@ -51,13 +51,14 @@ export default class Sky {
         return object;
     }
     getAttributes(): {
+        object: string
         name: string;
         type?: "FLOAT";
         value: number[];
         size?: number;
     }[] {
         return [
-            { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
+            { object: "sky", name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

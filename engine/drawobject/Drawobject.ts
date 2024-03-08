@@ -30,7 +30,7 @@ export default class Drawobject {
             context.disable(context.DEPTH_TEST);
             context.depthMask(false);
         }
-        if (this.name === "water") {
+        if (this.name === "water" || this.name === "terrain") {
             context.enable(context.BLEND);
         }
         if (this.bufferMap.has("indices")) {
@@ -40,7 +40,7 @@ export default class Drawobject {
         } else {
             this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
         }
-        if (this.name === "water") {
+        if (this.name === "water" || this.name === "terrain") {
             context.disable(context.BLEND);
         }
         if (this.name === "sky") {
@@ -50,14 +50,7 @@ export default class Drawobject {
 
     }
     drawInstanced(context: WebGL2RenderingContext) {
-        if (this.name === "terrain") {
-            context.enable(context.BLEND);
-        }
         this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
-
-        if (this.name === "terrain") {
-            context.disable(context.BLEND);
-        }
     }
     createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array, type: number, size: number, divisor = 0) {
         let buffer = this.bufferMap.get(name);

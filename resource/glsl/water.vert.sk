@@ -25,7 +25,7 @@ out vec3 v_diffuse;
 
 /*uniform*/ const vec3 lightDirection = vec3(0.0f, -1.0f, -1.0f);
 /*uniform*/ const vec3 lightColour = vec3(1.0f);
-/*uniform*/ const vec2 lightBias = vec2(0.3f);
+/*uniform*/ const vec2 lightBias = vec2(0.4f);
 
 vec3 calcSpecularLighting(vec3 toCamVector, vec3 toLightVector, vec3 normal) {
     vec3 reflectedLightDirection = reflect(-toLightVector, normal);

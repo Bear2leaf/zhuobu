@@ -24,19 +24,19 @@ export default class CdlodGrid {
                 const z0 = j / resolution;
                 const z1 = (j + 1) / resolution;
                 vertices.push(
-                    x0, 0, z1,
-                    x1, 0, z1,
-                    x1, 0, z0,
-                    x1, 0, z0,
-                    x0, 0, z0,
-                    x0, 0, z1,
+                    x0, z1,
+                    x1, z1,
+                    x1, z0,
+                    x1, z0,
+                    x0, z0,
+                    x0, z1,
                 );
             }
         }
         return grid;
     }
     initGridTiles() {
-        const TILE_LEVEL = 2;
+        const TILE_LEVEL = 4;
         const RANGE = 4;
         let initialScale = 1 / Math.pow(2, TILE_LEVEL);
 
@@ -92,6 +92,7 @@ export default class CdlodGrid {
 
     }
     getAttributes(): {
+        object: string
         name: string;
         type: GLType;
         value: number[];
@@ -99,10 +100,10 @@ export default class CdlodGrid {
         divisor?: number;
     }[] {
         return [
-            { name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
-            { name: "a_scale", type: "FLOAT", value: this.scales, size: 1, divisor: 1 },
-            { name: "a_offset", type: "FLOAT", value: this.offsets, size: 2, divisor: 1 },
-            { name: "a_edge", type: "INT", value: this.edges, size: 1, divisor: 1 },
+            { object: "terrain", name: "a_position", type: "FLOAT", value: this.vertices, size: 2 },
+            { object: "terrain", name: "a_scale", type: "FLOAT", value: this.scales, size: 1, divisor: 1 },
+            { object: "terrain", name: "a_offset", type: "FLOAT", value: this.offsets, size: 2, divisor: 1 },
+            { object: "terrain", name: "a_edge", type: "INT", value: this.edges, size: 1, divisor: 1 },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "Matrix4fv"; value: number[]; }[] {

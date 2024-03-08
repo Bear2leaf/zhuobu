@@ -6,7 +6,7 @@
 #define MORPH_REGION 0.3f
 
 
-layout(location = 0) in vec3 a_position;
+layout(location = 0) in vec2 a_position;
 layout(location = 1) in int a_edge;
 layout(location = 2) in vec2 a_offset;
 layout(location = 3) in float a_scale;
@@ -50,13 +50,13 @@ float calculateMorph(vec2 p) {
 }
 
 vec2 calculateNoMorphNeighbour(vec2 position, float morphK) {
-    vec2 fraction = fract(a_position.xz * u_resolution * 0.5f) * 2.0f / u_resolution;
+    vec2 fraction = fract(a_position.xy * u_resolution * 0.5f) * 2.0f / u_resolution;
     return position - fraction * morphK * a_scale;
 }
 
 void main() {
 
-    vec2 origin = a_position.xz;
+    vec2 origin = a_position.xy;
      // Morph between zoom layers
     float morphK = calculateMorph(origin);
     vec4 worldOffset = inverse(u_model) * vec4(u_eye.x, 0.0f, u_eye.z, 1.0f);
