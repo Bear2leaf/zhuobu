@@ -56,7 +56,6 @@ void main() {
     vWorldPosition = worldPosition.xyz;
 
     gl_Position = u_projection * u_viewInverse * vec4(a_position, 1.0);
-    gl_Position.z = gl_Position.w;
 
     vSunDirection = normalize(sunPosition);
 

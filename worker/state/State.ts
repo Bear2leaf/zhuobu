@@ -36,18 +36,18 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.3, 1.5],
+                eye: [0, 0.3, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
-                fieldOfViewYInRadians: Math.PI / 8,
+                fieldOfViewYInRadians: Math.PI / 4,
                 zNear: 0.1,
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.3, 1.5],
+                eye: [0, -0.3, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
-                fieldOfViewYInRadians: Math.PI / 8,
+                fieldOfViewYInRadians: Math.PI / 4,
                 zNear: 0.1,
                 zFar: 10,
             },
@@ -117,8 +117,8 @@ export default class State {
                         renderCalls: [
                             ["terrainFBO", "terrainFBO", "terrainFBO", "terrainFBO", true, this.terrainTextureSize],
                             ["sky", "sky", "refract", "refractFBO", true, this.waterTextureSize],
-                            ["terrain", "terrainGrid", "refract", "refractFBO", false, this.waterTextureSize],
                             ["sky", "sky", "reflect", "reflectFBO", true, this.waterTextureSize],
+                            ["terrain", "terrainGrid", "refract", "refractFBO", false, this.waterTextureSize],
                             ["terrain", "terrainGrid", "reflect", "reflectFBO", false, this.waterTextureSize],
                             ["sky", "sky", "refract", null, true, null],
                             ["terrain", "terrainGrid", "refract", null, false, null],

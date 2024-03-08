@@ -63,7 +63,7 @@ export default class Sky {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {
         const up = [0, 1, 0];
-        const fov = Math.PI / 8;
+        const fov = Math.PI / 4;
         const aspect = 1;
         const near = 0.1;
         const far = 1;
