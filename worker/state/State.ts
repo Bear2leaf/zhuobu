@@ -4,7 +4,7 @@ import Terrain from "../terrain/Terrain.js";
 import TerrainGrid from "../terrain/TerrainGrid.js";
 import Water from "../terrain/Water.js";
 export default class State {
-    private readonly terrainTextureSize = 1024;
+    private readonly terrainTextureSize = 512;
     private readonly waterTextureSize = 256;
     private readonly state: StateData = {
         objects: [

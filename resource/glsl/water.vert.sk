@@ -4,7 +4,7 @@ layout(location = 1) in vec4 a_indicator;
 
 const float PI = 3.1415926535897932384626433832795f;
 
-const float waveLength = 0.040f;
+const float waveLength = 0.020f;
 const float waveAmplitude = 0.002f;
 const float specularReflectivity = 0.4f;
 const float shineDamper = 20.0f;
