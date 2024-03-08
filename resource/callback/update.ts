@@ -32,7 +32,7 @@ export const updateCalls: Record<string, Function> = {
             const program = engine.programs.find(p => p.name === pName)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
-            m4.rotateY(model, delta, model);
+            m4.multiply(model, m4.rotationY(delta), model);
             engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
         }
         {
