@@ -63,11 +63,6 @@ export default class Sky {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {
         const up = [0, 1, 0];
-        const fov = Math.PI / 4;
-        const aspect = 1;
-        const near = 0.1;
-        const far = 1;
-        const perspective = [fov, aspect, near, far];
 
         return [
             { name: "rayleigh", type: "1f", value: [5.5] },
@@ -78,7 +73,6 @@ export default class Sky {
             { name: "u_up", type: "3fv", value: up },
             { name: "u_cameraPosition", type: "3fv", value: [0, 0, 0.5] },
             { name: "sunPosition", type: "3fv", value: [0, 1, 2] },
-            { name: "u_perspective", type: "4fv", value: perspective },
         ]
     }
 }
