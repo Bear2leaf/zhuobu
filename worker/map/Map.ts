@@ -143,3 +143,27 @@ class Map {
 }
 
 export default Map;
+
+export enum BiomeColor {
+    BARE = 136 << 16 | 136 << 8 | 136,
+    BEACH = 160 << 16 | 144 << 8 | 119,
+    COAST = 51 << 16 | 51 << 8 | 90,
+    GRASSLAND = 136 << 16 | 170 << 8 | 85,
+    ICE = 153 << 16 | 255 << 8 | 255,
+    LAKE = 51 << 16 | 102 << 8 | 153,
+    LAKESHORE = 34 << 16 | 85 << 8 | 136,
+    MARSH = 47 << 16 | 102 << 8 | 102,
+    OCEAN = 68 << 16 | 68 << 8 | 122,
+    RIVER = 34 << 16 | 85 << 8 | 136,
+    SCORCHED = 85 << 16 | 85 << 8 | 85,
+    SHRUBLAND = 136 << 16 | 153 << 8 | 119,
+    SNOW = 255 << 16 | 255 << 8 | 255,
+    SUBTROPICAL_DESERT = 210 << 16 | 185 << 8 | 139,
+    TAIGA = 153 << 16 | 170 << 8 | 119,
+    TEMPERATE_DECIDUOUS_FOREST = 103 << 16 | 148 << 8 | 89,
+    TEMPERATE_DESERT = 201 << 16 | 210 << 8 | 155,
+    TEMPERATE_RAIN_FOREST = 68 << 16 | 136 << 8 | 85,
+    TROPICAL_RAIN_FOREST = 51 << 16 | 119 << 8 | 85,
+    TROPICAL_SEASONAL_FOREST = 85 << 16 | 153 << 8 | 68,
+    TUNDRA = 187 << 16 | 187 << 8 | 170,
+};

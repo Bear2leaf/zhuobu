@@ -1,4 +1,5 @@
 import WorkerDevice from "../device/WorkerDevice.js";
+import Icon from "../object/Icon.js";
 import Plant from "../object/Plant.js";
 import Sky from "../object/Sky.js";
 import Terrain from "../object/Terrain.js";
@@ -12,6 +13,7 @@ export default class State {
             "terrainFBO",
             "terrain",
             "plant",
+            "icon",
             "sky",
             "water"
         ],
@@ -19,6 +21,7 @@ export default class State {
             "terrainGrid",
             "terrainFBO",
             "plant",
+            "icon",
             "sky",
             "water"
         ],
@@ -93,12 +96,13 @@ export default class State {
                 const gridFactory = TerrainGrid.create();
                 const skyFactory = Sky.create();
                 const waterFactory = Water.create();
-                const plantFactory = Plant.create();
+                const plantFactory = Plant.create(factory.map);
+                const iconFactory = Icon.create(factory.map);
                 this.send({
                     type: "SendState",
                     broadcast: true,
                     args: [{
-                        modelTranslation: [0, -0.005, 0],
+                        modelTranslation: [0, 0, 0],
                         cameras: this.state.cameras,
                         updateCalls: [
                             "rotateTerrain"
@@ -107,16 +111,19 @@ export default class State {
                             "terrainFBO": factory.getAttributes(),
                             "terrainGrid": gridFactory.getAttributes(),
                             "plant": plantFactory.getAttributes(),
+                            "icon": iconFactory.getAttributes(),
                             "sky": skyFactory.getAttributes(),
                             "water": waterFactory.getAttributes()
                         },
                         uniforms: {
                             "terrainGrid": gridFactory.getUniforms(),
                             "plant": plantFactory.getUniforms(),
+                            "icon": iconFactory.getUniforms(),
                             "sky": skyFactory.getUniforms(),
                             "water": waterFactory.getUniforms(),
                         },
                         instanceCounts: {
+                            "plant": plantFactory.getInstanceCount(),
                         },
                         renderCalls: [
                             ["terrainFBO", "terrainFBO", "terrainFBO", "terrainFBO", true, this.terrainTextureSize],
@@ -127,6 +134,7 @@ export default class State {
                             ["sky", "sky", "refract", null, true, null],
                             ["terrain", "terrainGrid", "refract", null, false, null],
                             ["plant", "plant", "refract", null, false, null],
+                            ["icon", "icon", "refract", null, false, null],
                             ["water", "water", "refract", null, false, null],
                         ],
                         animation: true

@@ -1,33 +1,10 @@
-import Map from "../map/Map.js";
+import Map, { BiomeColor } from "../map/Map.js";
 import MeshBuilder from "../map/MeshBuilder.js";
 import TriangleMesh from "../map/TriangleMesh.js";
 import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
 import SeedableRandom from "../util/SeedableRandom.js";
 import { createNoise2D } from "../util/simplex-noise.js";
 
-enum BiomeColor {
-    BARE = 136 << 16 | 136 << 8 | 136,
-    BEACH = 160 << 16 | 144 << 8 | 119,
-    COAST = 51 << 16 | 51 << 8 | 90,
-    GRASSLAND = 136 << 16 | 170 << 8 | 85,
-    ICE = 153 << 16 | 255 << 8 | 255,
-    LAKE = 51 << 16 | 102 << 8 | 153,
-    LAKESHORE = 34 << 16 | 85 << 8 | 136,
-    MARSH = 47 << 16 | 102 << 8 | 102,
-    OCEAN = 68 << 16 | 68 << 8 | 122,
-    RIVER = 34 << 16 | 85 << 8 | 136,
-    SCORCHED = 85 << 16 | 85 << 8 | 85,
-    SHRUBLAND = 136 << 16 | 153 << 8 | 119,
-    SNOW = 255 << 16 | 255 << 8 | 255,
-    SUBTROPICAL_DESERT = 210 << 16 | 185 << 8 | 139,
-    TAIGA = 153 << 16 | 170 << 8 | 119,
-    TEMPERATE_DECIDUOUS_FOREST = 103 << 16 | 148 << 8 | 89,
-    TEMPERATE_DESERT = 201 << 16 | 210 << 8 | 155,
-    TEMPERATE_RAIN_FOREST = 68 << 16 | 136 << 8 | 85,
-    TROPICAL_RAIN_FOREST = 51 << 16 | 119 << 8 | 85,
-    TROPICAL_SEASONAL_FOREST = 85 << 16 | 153 << 8 | 68,
-    TUNDRA = 187 << 16 | 187 << 8 | 170,
-};
 export default class Terrain {
     private readonly spacing = 16;
     private readonly distanceRNG = new SeedableRandom(42);
@@ -75,12 +52,12 @@ export default class Terrain {
             //     const flow = 2 * Math.sqrt(map.s_flow[s]);
             //     rivers.push([[...pos2, adjustHeight(map.t_elevation[t1]), flow], [...pos3, adjustHeight(map.t_elevation[t2]), flow]]);
             // }
-            pos1[0] = pos1[0] / 512.0 - 1.0;
-            pos1[1] = pos1[1] / 512.0 - 1.0;
-            pos2[0] = pos2[0] / 512.0 - 1.0;
-            pos2[1] = pos2[1] / 512.0 - 1.0;
-            pos3[0] = pos3[0] / 512.0 - 1.0;
-            pos3[1] = pos3[1] / 512.0 - 1.0;
+            pos1[0] = pos1[0] / 500.0 - 1.0;
+            pos1[1] = pos1[1] / 500.0 - 1.0;
+            pos2[0] = pos2[0] / 500.0 - 1.0;
+            pos2[1] = pos2[1] / 500.0 - 1.0;
+            pos3[0] = pos3[0] / 500.0 - 1.0;
+            pos3[1] = pos3[1] / 500.0 - 1.0;
             vertices.push(...pos1, terrain.adjustHeight(map.r_elevation[r]));
             vertices.push(...pos2, terrain.adjustHeight(map.t_elevation[t1]));
             vertices.push(...pos3, terrain.adjustHeight(map.t_elevation[t2]));

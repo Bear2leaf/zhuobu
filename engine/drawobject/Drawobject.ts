@@ -38,12 +38,10 @@ export default class Drawobject {
             this.count && context.drawElements(context.TRIANGLES, this.count, context.UNSIGNED_SHORT, this.first);
             context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
         } else {
-            if (this.name === "plant") {
+            if (this.name === "icon") {
                 this.count && context.drawArrays(context.POINTS, this.first, this.count)
-
             } else {
                 this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
-
             }
         }
         if (this.name === "water" || this.name === "terrain") {
