@@ -26,9 +26,9 @@ void main() {
     vec3 vertex2 = currentVertex + vec3(a_indicator.z, 0.0f, a_indicator.w);
     vec2 texcoord1 = a_position + vec2(a_indicator.x, a_indicator.y);
     vec2 texcoord2 = a_position + vec2(a_indicator.z, a_indicator.w);
-    v_texcoord = clamp(v_texcoord * 0.5f + 0.5f, 0.0f, 1.0f);
-    texcoord1 = clamp(texcoord1 * 0.5f + 0.5f, 0.0f, 1.0f);
-    texcoord2 = clamp(texcoord2 * 0.5f + 0.5f, 0.0f, 1.0f);
+    v_texcoord = clamp(v_texcoord * 0.5f + 0.5f, 0.01f, 0.99f);
+    texcoord1 = clamp(texcoord1 * 0.5f + 0.5f, 0.01f, 0.99f);
+    texcoord2 = clamp(texcoord2 * 0.5f + 0.5f, 0.01f, 0.99f);
     currentVertex.y = texture(u_textureDepth, v_texcoord).r * 2.0f - 1.0f;
     vertex1.y = texture(u_textureDepth, texcoord1).r * 2.0f - 1.0f;
     vertex2.y = texture(u_textureDepth, texcoord2).r * 2.0f - 1.0f;
