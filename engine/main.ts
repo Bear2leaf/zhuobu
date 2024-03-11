@@ -30,11 +30,11 @@ export default class Engine {
         this.worker = new Worker();
         this.windowInfo = device.getWindowInfo();
         this.worker.init(device);
-        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string, number | null][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
+        this.worker.createObjects = (programs: string[], objects: string[], textures: [string, number, string, number | null, boolean?][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
             this.clean();
             programs.forEach(name => this.programs.push(Program.create(name)));
             objects.forEach(name => this.objects.push(Drawobject.create(name)));
-            textures.forEach(([name, unit, p, size]) => this.textures.push(Texture.create(name, unit, p, size || this.windowInfo.width, size || this.windowInfo.height)));
+            textures.forEach(([name, unit, p, size, load]) => this.textures.push(Texture.create(name, unit, p, size || this.windowInfo.width, size || this.windowInfo.height, load)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
             cameras.forEach(c => this.cameras.push(c));
             this.load(device).then(() => this.worker.callScript!.onEngineLoaded(textureFBOBindings));
@@ -98,6 +98,9 @@ export default class Engine {
         await device.loadSubpackage();
         for await (const iterator of this.programs) {
             await iterator.loadShaderSource(device);
+        }
+        for await (const iterator of this.textures) {
+            await iterator.loadImage(device);
         }
         await scriptModule()
             .then((m) => {

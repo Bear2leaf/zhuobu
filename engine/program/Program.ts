@@ -64,8 +64,8 @@ export default class Program {
     activeVertexAttribArray(context: WebGL2RenderingContext, name: string, size: number, type: number, divisor: number = 0) {
         const attributeLocation = context.getAttribLocation(this.program!, name);
         context.enableVertexAttribArray(attributeLocation);
-        if (type === context.INT) {
-            // DONT USE TYPE SIZE LESS THAN INT IN MINIGAME, PERF ISSUE!
+        if (type === context.INT || type === context.UNSIGNED_BYTE) {
+            // TRY NOT USE TYPE SIZE LESS THAN INT IN MINIGAME, INSTANCED DRAWING PERF ISSUE!
             context.vertexAttribIPointer(attributeLocation, size, type, 0, 0);
         } else {
             context.vertexAttribPointer(attributeLocation, size, type, false, 0, 0);

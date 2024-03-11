@@ -34,7 +34,20 @@ export default class Renderer {
         const context = this.context
         program.active(context);
         drawobject.bind(context);
-        drawobject.createAttribute(context, program, name, type === "FLOAT" ? new Float32Array(attribute) : new Int32Array(attribute), context[type], size, divisor);
+        switch (type) {
+            case "FLOAT":
+                drawobject.createAttribute(context, program, name, new Float32Array(attribute), context[type], size, divisor);
+                break;
+            case "UNSIGNED_BYTE":
+                drawobject.createAttribute(context, program, name, new Uint8Array(attribute), context[type], size, divisor);
+                break;
+            case "INT":
+                drawobject.createAttribute(context, program, name, new Int32Array(attribute), context[type], size, divisor);
+                break;
+
+            default:
+                throw new Error("Unsupport type: " + type);
+        }
         drawobject.unbind(context);
         program.deactive(context);
     }
@@ -153,6 +166,8 @@ export default class Renderer {
             texture.generateDiffuse(this.context)
         } else if (texture.name === "reflect") {
             texture.generateDiffuse(this.context)
+        } else if (texture.name === "iconSpritesheet") {
+            texture.generateSpritesheet(this.context)
         } else if (texture.name === "waterDepth") {
             texture.generateDepth(this.context)
         } else {

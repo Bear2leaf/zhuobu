@@ -29,6 +29,7 @@ export default class Icon {
         }
     }
     generatePointByRegion(map: Map, r: number) {
+        const scale = 100;
         const elevation = map.r_elevation[r];
         const x = map.mesh.r_x(r);
         const y = map.mesh.r_y(r);
@@ -36,21 +37,21 @@ export default class Icon {
         const vertices: number[] = this.vertices;
         const scales: number[] = this.scales;
         vertices.push(x / 500 - 1);
-        vertices.push(elevation / 8);
+        vertices.push((elevation + 0.5) / 8);
         vertices.push(y / 500 - 1);
-        scales.push(50)
+        scales.push(scale)
         const biome = map.r_biome[r] as keyof typeof BiomeColor;
-        const color: BiomeColor = BiomeColor[biome];
-        colors.push(...[
-            color >> 16
-            , color >> 8
-            , color
-        ].map(x => (x & 0xff) / 255));
+        colors.push(
+            Math.floor(Math.random() * 512)
+            , Math.floor(Math.random() * 512)
+            , 128
+            , 128
+        );
     }
     getAttributes(): {
         object: string
         name: string;
-        type?: "FLOAT";
+        type?: GLType;
         value: number[];
         size?: number;
         divisor?: number;
@@ -58,7 +59,7 @@ export default class Icon {
         return [
             { object: "icon", name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
             { object: "icon", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
-            { object: "icon", name: "a_color", type: "FLOAT", value: this.colors, size: 3 },
+            { object: "icon", name: "a_color", type: "UNSIGNED_BYTE", value: this.colors, size: 4 },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

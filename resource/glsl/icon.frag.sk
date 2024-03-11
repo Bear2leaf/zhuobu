@@ -1,9 +1,16 @@
 #version 300 es
 precision highp float;
-in vec3 v_color;
+flat in uvec4 v_color;
+
+uniform sampler2D u_textureIconSpritesheet;
+
 
 layout(location = 0) out vec4 o_color;
 
 void main() {
-    o_color = vec4(v_color, 1.0f);
+    ivec2 size = textureSize(u_textureIconSpritesheet, 0);
+    vec2 texcoord;
+    texcoord.x = mix(float(v_color.x) / float(size.x), float(v_color.x + v_color.z)/ float(size.y), gl_PointCoord.x);
+    texcoord.y = mix(float(v_color.y) / float(size.x), float(v_color.y + v_color.w)/ float(size.y), gl_PointCoord.y);
+    o_color = texture(u_textureIconSpritesheet, texcoord);
 }

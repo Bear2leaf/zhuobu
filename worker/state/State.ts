@@ -31,7 +31,8 @@ export default class State {
             ["depth", 1, "terrainGrid", this.terrainTextureSize],
             ["refract", 0, "water", this.waterTextureSize],
             ["reflect", 1, "water", this.waterTextureSize],
-            ["waterDepth", 2, "water", this.waterTextureSize]
+            ["waterDepth", 2, "water", this.waterTextureSize],
+            ["iconSpritesheet", 0, "icon", null, true]
         ],
         framebuffers: [
             "terrainFBO",
