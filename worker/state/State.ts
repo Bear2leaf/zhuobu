@@ -5,6 +5,7 @@ import Sky from "../object/Sky.js";
 import Terrain from "../object/Terrain.js";
 import TerrainGrid from "../object/TerrainGrid.js";
 import Water from "../object/Water.js";
+import main from "../third/goap/main.js";
 export default class State {
     private readonly terrainTextureSize = 2048;
     private readonly waterTextureSize = 256;
@@ -64,6 +65,7 @@ export default class State {
     };
     constructor(readonly device: WorkerDevice) {
         console.log("State Inited.")
+        main();
     }
     init() {
         this.send({
