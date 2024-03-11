@@ -30,6 +30,29 @@ export default function main(): number {
 
     goap_actionplanner_clear(ap);
 
+    goap_set_pre(ap, "scout", "armedwithinsecticide", true);
+    goap_set_pst(ap, "scout", "bugvisible", true);
+
+    goap_set_pre(ap, "approach", "bugvisible", true);
+    goap_set_pst(ap, "approach", "nearbug", true);
+
+    goap_set_pre(ap, "aim", "bugvisible", true);
+    goap_set_pre(ap, "aim", "insecticideloaded", true);
+    goap_set_pst(ap, "aim", "buglinedup", true);
+
+    goap_set_pre(ap, "shoot", "buglinedup", true);
+    goap_set_pst(ap, "shoot", "bugalive", false);
+
+    goap_set_pre(ap, "load", "armedwithinsecticide", true);
+    goap_set_pst(ap, "load", "insecticideloaded", true);
+
+    goap_set_pre(ap, "snap", "armedwithglove", true);
+    goap_set_pre(ap, "snap", "nearbug", true);
+    goap_set_pst(ap, "snap", "gloveclean", false);
+    goap_set_pst(ap, "snap", "bugalive", false);
+
+    goap_set_pre(ap, "flee", "bugvisible", true);
+    goap_set_pst(ap, "flee", "nearbug", false);
 
 
     const desc: [string] = ["actions:\n"];
@@ -37,13 +60,24 @@ export default function main(): number {
     LOGI(desc[0]);
     let fr: worldstate_t = { values: 0, dontcare: 0 };
     goap_worldstate_clear(fr);
+    goap_worldstate_set(ap, fr, "bugvisible", false);
+    goap_worldstate_set(ap, fr, "armedwithinsecticide", true);
+    goap_worldstate_set(ap, fr, "insecticideloaded", false);
+    goap_worldstate_set(ap, fr, "buglinedup", false);
+    goap_worldstate_set(ap, fr, "bugalive", true);
+    goap_worldstate_set(ap, fr, "armedwithglove", true);
+    goap_worldstate_set(ap, fr, "nearbug", false);
+    goap_worldstate_set(ap, fr, "gloveclean", true);
 
+    goap_set_cost(ap, "snap", 0);	// make glove dirty more expensive than using insecticide.
 
     const goal: worldstate_t = {
         values: 0,
         dontcare: 0
     };
     goap_worldstate_clear(goal);
+    goap_worldstate_set(ap, goal, "bugalive", false);
+    // goap_worldstate_set(ap, goal, "gloveclean", true); // add this to avoid glove dirty actions in plan.
     const STATESIZE = 16;
     const states = Array<worldstate_t>(STATESIZE);
     for (let index = 0; index < STATESIZE; index++) {
