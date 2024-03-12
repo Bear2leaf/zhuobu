@@ -5,6 +5,10 @@ export default class Icon {
     private readonly scales: number[] = []
     private readonly vertices: number[] = []
     private readonly colors: number[] = []
+    private readonly rng = new SeedableRandom(1)
+    private readonly colorRNG = new SeedableRandom(1)
+    private readonly textureSize: number = 512;
+    private readonly tileSize: number = 64;
     constructor() {
         this.scales = [
         ];
@@ -15,16 +19,15 @@ export default class Icon {
     }
     static create(map: Map) {
         const object = new Icon();
-        object.generatePoints(map, 50);
+        object.generatePoints(map, 500);
         return object;
     }
     generatePoints(map: Map, count: number) {
-        const rng = new SeedableRandom(1)
         this.scales.splice(0, this.scales.length);
         this.vertices.splice(0, this.vertices.length);
         this.colors.splice(0, this.colors.length);
         for (let index = 0; index < count; index++) {
-            const r = parseInt((rng.nextFloat() * map.mesh.numRegions).toFixed())
+            const r = parseInt((this.rng.nextFloat() * map.mesh.numRegions).toFixed())
             this.generatePointByRegion(map, r);
         }
     }
@@ -40,12 +43,12 @@ export default class Icon {
         vertices.push((elevation) / 8);
         vertices.push(y / 500 - 1);
         scales.push(scale)
-        const biome = map.r_biome[r] as keyof typeof BiomeColor;
+        const frames = this.textureSize / this.tileSize;
         colors.push(
-            Math.floor(Math.random() * 512)
-            , Math.floor(Math.random() * 512)
-            , 128
-            , 128
+            0
+            , Math.floor(this.colorRNG.nextFloat() * frames)
+            , 0
+            , frames - 1
         );
     }
     getAttributes(): {
@@ -64,6 +67,7 @@ export default class Icon {
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {
         return [
+            { name: "u_size", type: "1f", value: [this.tileSize] },
         ];
     }
 }
