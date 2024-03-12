@@ -9,6 +9,7 @@ uniform mat4 u_viewInverse;
 flat out uvec4 v_color;
 void main() {
     gl_Position = u_projection * u_viewInverse * u_model * vec4(a_position, 1.0f);
-    gl_PointSize = a_scale / gl_Position.z;
+    gl_PointSize = a_scale;
+    gl_Position.y += a_scale / 2048.0f;
     v_color = a_color;
 }

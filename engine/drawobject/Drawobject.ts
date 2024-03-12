@@ -54,9 +54,13 @@ export default class Drawobject {
 
     }
     drawInstanced(context: WebGL2RenderingContext) {
-        this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
+        if (this.name === "plant") {
+            this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
+        } else {
+            this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
+        }
     }
-    createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array| Uint8Array, type: number, size: number, divisor = 0) {
+    createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array | Uint8Array, type: number, size: number, divisor = 0) {
         let buffer = this.bufferMap.get(name);
         if (!buffer) {
             buffer = context.createBuffer();

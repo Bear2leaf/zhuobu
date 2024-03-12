@@ -7,12 +7,58 @@ export default class Plant {
     private readonly colors: number[] = []
     constructor() {
         this.translations = [
-            32
-        ];
-        this.vertices = [
         ];
         this.colors = [
         ]
+
+        const size = 0.02;
+        const k = size / 2;
+
+        this.vertices = [
+            -1, -1,  -1,
+            -1,  1,  -1,
+             1, -1,  -1,
+            -1,  1,  -1,
+             1,  1,  -1,
+             1, -1,  -1,
+        
+            -1, -1,   1,
+             1, -1,   1,
+            -1,  1,   1,
+            -1,  1,   1,
+             1, -1,   1,
+             1,  1,   1,
+        
+            -1,   1, -1,
+            -1,   1,  1,
+             1,   1, -1,
+            -1,   1,  1,
+             1,   1,  1,
+             1,   1, -1,
+        
+            -1,  -1, -1,
+             1,  -1, -1,
+            -1,  -1,  1,
+            -1,  -1,  1,
+             1,  -1, -1,
+             1,  -1,  1,
+        
+            -1,  -1, -1,
+            -1,  -1,  1,
+            -1,   1, -1,
+            -1,  -1,  1,
+            -1,   1,  1,
+            -1,   1, -1,
+        
+             1,  -1, -1,
+             1,   1, -1,
+             1,  -1,  1,
+             1,  -1,  1,
+             1,   1, -1,
+             1,   1,  1,
+        
+            ].map(v => v * k);
+
     }
     static create(map: Map) {
         const object = new Plant();
@@ -22,7 +68,6 @@ export default class Plant {
     generatePoints(map: Map, count: number) {
         const rng = new SeedableRandom(1)
         this.translations.splice(0, this.translations.length);
-        this.vertices.splice(0, this.vertices.length);
         this.colors.splice(0, this.colors.length);
         for (let index = 0; index < count; index++) {
             const r = parseInt((rng.nextFloat() * map.mesh.numRegions).toFixed())
@@ -33,21 +78,11 @@ export default class Plant {
         const elevation = map.r_elevation[r];
         const x = map.mesh.r_x(r);
         const y = map.mesh.r_y(r);
-        const scale = 50;
         const colors: number[] = this.colors;
-        const vertices: number[] = this.vertices;
         const translations: number[] = this.translations;
         translations.push(x / 500 - 1);
         translations.push(elevation / 8);
         translations.push(y / 500 - 1);
-        vertices.push(
-            -1 / scale, -1 / scale, 0,
-            1 / scale, -1 / scale, 0,
-            1 / scale, 1 / scale, 0,
-            1 / scale, 1 / scale, 0,
-            -1 / scale, 1 / scale, 0,
-            -1 / scale, -1 / scale, 0
-        )
         const biome = map.r_biome[r] as keyof typeof BiomeColor;
         const color: BiomeColor = BiomeColor[biome];
         colors.push(...[
