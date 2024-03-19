@@ -5,16 +5,18 @@ export default class Program {
     private program: WebGLProgram | null = null;
     private readonly locMap: Map<string, WebGLUniformLocation | null>;
     private readonly valueMap: Map<string, number[]>;
+    private readonly varyings?: string[];
     private vertexShaderSource = "";
     private fragmentShaderSource = "";
     readonly name;
-    constructor(name: string) {
+    constructor(name: string, varyings?: string[]) {
         this.name = name;
         this.locMap = new Map();
         this.valueMap = new Map();
+        this.varyings = varyings;
     }
-    static create(name: string): Program {
-        return new Program(name);
+    static create(name: string, varyings?: string[]): Program {
+        return new Program(name, varyings);
     }
     cacheLoc(context: WebGL2RenderingContext, name: string) {
         let loc = this.locMap.get(name);
@@ -118,6 +120,9 @@ export default class Program {
             throw new Error("Failed to compile fragment shader");
         }
         context.attachShader(program, fragmentShader);
+        if (this.varyings) {
+            context.transformFeedbackVaryings(this.program, this.varyings, context.SEPARATE_ATTRIBS);
+        }
         context.linkProgram(program);
         if (!context.getProgramParameter(program, context.LINK_STATUS)) {
             console.error(context.getProgramInfoLog(program));

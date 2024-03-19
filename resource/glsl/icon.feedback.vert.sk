@@ -1,0 +1,7 @@
+#version 300 es 
+layout(location = 0) in float a_scale;
+
+out float v_scale;
+void main() {
+    v_scale = a_scale;
+}

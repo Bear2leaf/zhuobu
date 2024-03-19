@@ -20,6 +20,7 @@ declare type StateData = {
     animation?: boolean;
     objects?: string[];
     programs?: string[];
+    varyings?: string[][];
     textures?: [string, number, string, number | null, boolean?][];
     framebuffers?: string[];
     textureFBOBindings?: string[][];

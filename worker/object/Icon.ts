@@ -65,6 +65,18 @@ export default class Icon {
             { object: "icon", name: "a_color", type: "UNSIGNED_BYTE", value: this.colors, size: 4 },
         ]
     }
+    getFeedbackAttributes(): {
+        object: string
+        name: string;
+        type?: GLType;
+        value: number[];
+        size?: number;
+        divisor?: number;
+    }[] {
+        return [
+            { object: "icon", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
+        ]
+    }
     getRandomAttributes(): {
         object: string
         name: string;

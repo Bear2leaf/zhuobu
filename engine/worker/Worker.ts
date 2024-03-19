@@ -33,8 +33,8 @@ export default class Worker {
         }
     }
     decodeState(state: StateData) {
-        if (state.objects && state.programs && state.textures && state.framebuffers && state.textureFBOBindings && state.cameras) {
-            this.createObjects!(state.programs, state.objects, state.textures, state.framebuffers, state.cameras, state.textureFBOBindings);
+        if (state.objects && state.programs && state.varyings && state.textures && state.framebuffers && state.textureFBOBindings && state.cameras) {
+            this.createObjects!(state.programs, state.varyings, state.objects, state.textures, state.framebuffers, state.cameras, state.textureFBOBindings);
             return;
         }
         if (!this.callScript) {
@@ -97,5 +97,5 @@ export default class Worker {
             type: "EngineLoaded"
         });
     }
-    createObjects?: (programs: string[], objects: string[], textures: [string, number, string, number | null, boolean?][], framebuffers: string[], cameras: Camera[], textureFBOBindings:string[][]) => void;
+    createObjects?: (programs: string[], varyings: string[][], objects: string[], textures: [string, number, string, number | null, boolean?][], framebuffers: string[], cameras: Camera[], textureFBOBindings:string[][]) => void;
 }

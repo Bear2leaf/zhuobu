@@ -26,6 +26,9 @@ export default class State {
             "sky",
             "water"
         ],
+        varyings: [
+            ["icon", "v_scale"]
+        ],
         textures: [
             ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
             ["depth", 1, "terrainGrid", this.terrainTextureSize],
@@ -108,8 +111,8 @@ export default class State {
                         modelTranslation: [0, 0, 0],
                         cameras: this.state.cameras,
                         updateCalls: [
-                            ["rotateY", ["terrain", "terrainGrid"], "plant", "icon", "water","sky"],
-                            ["updateModel", ["terrain", "terrainGrid"], "plant", "icon", "water","sky"],
+                            ["rotateY", ["terrain", "terrainGrid"], "plant", "icon", "water", "sky"],
+                            ["updateModel", ["terrain", "terrainGrid"], "plant", "icon", "water", "sky"],
                             ["updateTime"]
                         ],
                         attributes: {
@@ -117,6 +120,7 @@ export default class State {
                             "terrainGrid": gridFactory.getAttributes(),
                             "plant": plantFactory.getAttributes(),
                             "icon": iconFactory.getAttributes(),
+                            "icon.feedback": iconFactory.getFeedbackAttributes(),
                             "sky": skyFactory.getAttributes(),
                             "water": waterFactory.getAttributes()
                         },

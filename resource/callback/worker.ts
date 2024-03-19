@@ -92,12 +92,9 @@ export const workerCalls = {
     onEngineLoaded(textureFBOBindings: string[][]) {
         const engine = module.engine!;
         const renderer = engine.renderer;
-        const m4 = module.m4!;
         engine.programs.forEach(program => renderer.initShaderProgram(program))
         engine.objects.forEach(object => renderer.createDrawobject(object))
-        engine.textures.forEach(texture => {
-            renderer.createTexture(texture);
-        });
+        engine.textures.forEach(texture => renderer.createTexture(texture));
         for (const iterator of textureFBOBindings) {
             const fboName = iterator[0];
             const fboTextures = iterator.slice(1);
