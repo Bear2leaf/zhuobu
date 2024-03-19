@@ -45,6 +45,12 @@ export default class Engine {
         this.ticker.callback = () => {
             requestAnimationFrame(t => this.ticker.tick(t));
             this.worker.process();
+            if (this.ticker.pause) {
+                return;
+            }
+            for (const iterator of this.updateCalls) {
+                this.script!.updateCalls[iterator[0]](iterator.slice(1));
+            }
             for (const iterator of this.renderCalls) {
                 const object = this.objects.find(o => o.name === iterator[0])!;
                 const program = this.programs.find(o => o.name === iterator[1])!;
@@ -57,12 +63,6 @@ export default class Engine {
                 const width = size || this.windowInfo.width;
                 const height = size || this.windowInfo.height;
                 this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
-            }
-            if (this.ticker.pause) {
-                return;
-            }
-            for (const iterator of this.updateCalls) {
-                this.script!.updateCalls[iterator[0]](iterator.slice(1));
             }
         }
         requestAnimationFrame(t => this.ticker.tick(t));
