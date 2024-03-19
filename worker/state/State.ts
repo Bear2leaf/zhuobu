@@ -109,6 +109,7 @@ export default class State {
                         cameras: this.state.cameras,
                         updateCalls: [
                             ["rotateY", ["terrain", "terrainGrid"], "plant", "icon", "water","sky"],
+                            ["updateModel", ["terrain", "terrainGrid"], "plant", "icon", "water","sky"],
                             ["updateTime"]
                         ],
                         attributes: {
@@ -144,6 +145,19 @@ export default class State {
                         animation: true
                     }]
                 })
+                setInterval(() => {
+
+                    this.send({
+                        type: "SendState",
+                        broadcast: true,
+                        args: [{
+                            changeAttributes: {
+                                "icon": iconFactory.getRandomAttributes(),
+                            }
+                        }]
+                    })
+                    this.state.changeAttributes = undefined;
+                }, 1000)
                 break;
         }
     }

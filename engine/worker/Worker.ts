@@ -58,6 +58,15 @@ export default class Worker {
                     };
                 }
             }
+        } else if (state.changeAttributes) {
+            for (const key in state.changeAttributes) {
+                if (Object.prototype.hasOwnProperty.call(state.changeAttributes, key)) {
+                    const element = state.changeAttributes[key];
+                    for (const attribute of element) {
+                        this.callScript.updateAttributes(attribute.object, attribute.name, attribute.value)
+                    };
+                }
+            }
         }
         if (state.uniforms) {
             for (const key in state.uniforms) {

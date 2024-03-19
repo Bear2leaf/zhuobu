@@ -51,6 +51,12 @@ export default class Renderer {
         drawobject.unbind(context);
         program.deactive(context);
     }
+    updateAttributes(drawobject: Drawobject, name: string, attribute: number[]) {
+        const context = this.context
+        drawobject.bind(context);
+        drawobject.updateAttribute(context, name, new Float32Array(attribute));
+        drawobject.unbind(context);
+    }
     createIndices(drawobject: Drawobject, program: Program, name: string, attribute: number[]) {
         const context = this.context
         program.active(context);

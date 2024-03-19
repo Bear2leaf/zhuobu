@@ -43,27 +43,29 @@ export default class Engine {
         renderer.initContextState();
 
         this.ticker.callback = () => {
-            requestAnimationFrame(t => this.ticker.tick(t));
-            this.worker.process();
-            if (this.ticker.pause) {
-                return;
-            }
-            for (const iterator of this.updateCalls) {
-                this.script!.updateCalls[iterator[0]](iterator.slice(1));
-            }
-            for (const iterator of this.renderCalls) {
-                const object = this.objects.find(o => o.name === iterator[0])!;
-                const program = this.programs.find(o => o.name === iterator[1])!;
-                const textures = this.textures.filter(t => t.program === program.name)!;
-                const camera = this.cameras.find(c => c.name === iterator[2])!;
-                const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
-                const clear = iterator[4];
-                const size = iterator[5];
-                const aspect = this.windowInfo.width / this.windowInfo.height;
-                const width = size || this.windowInfo.width;
-                const height = size || this.windowInfo.height;
-                this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
-            }
+            requestAnimationFrame(t => {
+                this.worker.process();
+                if (this.ticker.pause) {
+                    return;
+                }
+                for (const iterator of this.updateCalls) {
+                    this.script!.updateCalls[iterator[0]](iterator.slice(1));
+                }
+                for (const iterator of this.renderCalls) {
+                    const object = this.objects.find(o => o.name === iterator[0])!;
+                    const program = this.programs.find(o => o.name === iterator[1])!;
+                    const textures = this.textures.filter(t => t.program === program.name)!;
+                    const camera = this.cameras.find(c => c.name === iterator[2])!;
+                    const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
+                    const clear = iterator[4];
+                    const size = iterator[5];
+                    const aspect = this.windowInfo.width / this.windowInfo.height;
+                    const width = size || this.windowInfo.width;
+                    const height = size || this.windowInfo.height;
+                    this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
+                }
+                this.ticker.tick(t)
+            });
         }
         requestAnimationFrame(t => this.ticker.tick(t));
 

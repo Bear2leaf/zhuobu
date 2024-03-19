@@ -20,19 +20,15 @@ export const updateCalls: Record<string, Function> = {
         module.m4 = m;
         module.v3 = v;
     },
-    rotateY(objectProgramPairs: string[][]) {
+    rotateY(objectProgramPairs: [string, string] | string[][]) {
         const engine = module.engine!;
         const m4 = module.m4!;
-        const v3 = module.v3!;
         const delta = 0.0002 * engine.ticker.delta;
         objectProgramPairs.forEach(objectProgramPair => {
             const name = typeof objectProgramPair === "string" ? objectProgramPair : objectProgramPair[0];
-            const pName = typeof objectProgramPair === "string" ? objectProgramPair : objectProgramPair[1];
-            const program = engine.programs.find(p => p.name === pName)!;
             const object = engine.objects.find(o => o.name === name)!;
             const model = object.model;
             m4.rotateY(model, name === "sky" ? -delta : delta, model);
-            engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
         })
     },
     updateTime() {
@@ -44,5 +40,16 @@ export const updateCalls: Record<string, Function> = {
                 engine.renderer.updateUniform(program, "u_time", "1f", time);
             })
         }
+    },
+    updateModel(objectProgramPairs: [string, string] | string[][]) {
+        const engine = module.engine!;
+        objectProgramPairs.forEach(objectProgramPair => {
+            const name = typeof objectProgramPair === "string" ? objectProgramPair : objectProgramPair[0];
+            const pName = typeof objectProgramPair === "string" ? objectProgramPair : objectProgramPair[1];
+            const program = engine.programs.find(p => p.name === pName)!;
+            const object = engine.objects.find(o => o.name === name)!;
+            const model = object.model;
+            engine.renderer.updateUniform(program, "u_model", "Matrix4fv", ...model);
+        })
     }
 };

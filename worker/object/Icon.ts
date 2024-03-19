@@ -32,7 +32,7 @@ export default class Icon {
         }
     }
     generatePointByRegion(map: Map, r: number) {
-        const scale = 50;
+        const scale = 20;
         const elevation = map.r_elevation[r];
         const x = map.mesh.r_x(r);
         const y = map.mesh.r_y(r);
@@ -63,6 +63,15 @@ export default class Icon {
             { object: "icon", name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
             { object: "icon", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
             { object: "icon", name: "a_color", type: "UNSIGNED_BYTE", value: this.colors, size: 4 },
+        ]
+    }
+    getRandomAttributes(): {
+        object: string
+        name: string;
+        value: number[];
+    }[] {
+        return [
+            { object: "icon", name: "a_scale", value: this.scales.map(s => 50 * Math.random()), },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

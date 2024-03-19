@@ -67,12 +67,22 @@ export default class Drawobject {
             this.bufferMap.set(name, buffer);
         }
         context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        context.bufferData(context.ARRAY_BUFFER, data, context.STATIC_DRAW);
+        context.bufferData(context.ARRAY_BUFFER, data.byteLength, context.STATIC_DRAW);
+        context.bufferSubData(context.ARRAY_BUFFER, 0, data);
         program.activeVertexAttribArray(context, name, size, type, divisor);
         context.bindBuffer(context.ARRAY_BUFFER, null);
         if (!divisor) {
             this.count = data.length / size;
         }
+    }
+    updateAttribute(context: WebGL2RenderingContext, name: string, data: ArrayBufferLike) {
+        let buffer = this.bufferMap.get(name);
+        if (!buffer) {
+            throw new Error("buffer not exist");
+        }
+        context.bindBuffer(context.ARRAY_BUFFER, buffer);
+        context.bufferSubData(context.ARRAY_BUFFER, 0, data);
+        context.bindBuffer(context.ARRAY_BUFFER, null);
     }
     createIndices(context: WebGL2RenderingContext, name: string, data: Uint16Array) {
         let buffer = this.bufferMap.get(name);

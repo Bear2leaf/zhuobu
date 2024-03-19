@@ -13,6 +13,7 @@ declare type WorkerRequest =
     | never;
 
 declare type StateData = {
+    changeAttributes?: Record<string, { object: string, name: string, value: number[]}[]>;
     modelTranslation?: [number, number, number];
     cameras?: Camera[];
     updateCalls?: UpdateCalls;
