@@ -27,7 +27,7 @@ export const workerCalls = {
         }
     },
 
-    updateUpdateCalls(callbackNames: "rotateTerrain"[]): void {
+    updateUpdateCalls(callbackNames: UpdateCalls): void {
         const engine = module.engine!;
         const m4 = module.m4!;
         engine.updateCalls.splice(0, engine.updateCalls.length, ...callbackNames);

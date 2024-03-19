@@ -12,7 +12,7 @@ import { v3 } from "./third/twgl/v3.js";
 type ScriptType = Awaited<ReturnType<typeof scriptModule>>;
 
 export default class Engine {
-    readonly updateCalls: (keyof ScriptType["updateCalls"])[] = [];
+    readonly updateCalls: UpdateCalls = [];
     private readonly worker: Worker;
     private script?: ScriptType;
     readonly framebuffers: Framebuffer[] = [];
@@ -62,7 +62,7 @@ export default class Engine {
                 return;
             }
             for (const iterator of this.updateCalls) {
-                this.script!.updateCalls[iterator](this, m4);
+                this.script!.updateCalls[iterator[0]](iterator.slice(1));
             }
         }
         requestAnimationFrame(t => this.ticker.tick(t));

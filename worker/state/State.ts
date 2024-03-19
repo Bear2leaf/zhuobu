@@ -108,7 +108,8 @@ export default class State {
                         modelTranslation: [0, 0, 0],
                         cameras: this.state.cameras,
                         updateCalls: [
-                            "rotateTerrain"
+                            ["rotateY", ["terrain", "terrainGrid"], "plant", "icon", "water","sky"],
+                            ["updateTime"]
                         ],
                         attributes: {
                             "terrainFBO": factory.getAttributes(),

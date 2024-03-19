@@ -15,7 +15,7 @@ declare type WorkerRequest =
 declare type StateData = {
     modelTranslation?: [number, number, number];
     cameras?: Camera[];
-    updateCalls?: "rotateTerrain"[];
+    updateCalls?: UpdateCalls;
     animation?: boolean;
     objects?: string[];
     programs?: string[];
@@ -36,6 +36,7 @@ declare type Camera = {
     zNear?: number;
     zFar?: number;
 }
+declare type UpdateCalls = [string, ...([string, string] | string)[]][];
 declare type Matrix = number[] | Float32Array;
 declare type WindowInfo = { width: number; height: number; }
 declare type TouchInfo = { x: number, y: number }
