@@ -91,13 +91,13 @@ export default class Drawobject {
             this.count = data.length / size;
         }
     }
-    updateAttribute(context: WebGL2RenderingContext, name: string, data: ArrayBufferLike) {
+    updateAttribute(context: WebGL2RenderingContext, name: string, start: number, data: ArrayBufferLike) {
         let buffer = this.bufferMap.get(name);
         if (!buffer) {
             throw new Error("buffer not exist");
         }
         context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        context.bufferSubData(context.ARRAY_BUFFER, 0, data);
+        context.bufferSubData(context.ARRAY_BUFFER, start, data);
         context.bindBuffer(context.ARRAY_BUFFER, null);
     }
     createIndices(context: WebGL2RenderingContext, name: string, data: Uint16Array) {

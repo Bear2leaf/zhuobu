@@ -51,10 +51,10 @@ export default class Renderer {
         drawobject.unbind(context);
         program.deactive(context);
     }
-    updateAttributes(drawobject: Drawobject, name: string, attribute: number[]) {
+    updateAttributes(drawobject: Drawobject, name: string, start: number, attribute: number[]) {
         const context = this.context
         drawobject.bind(context);
-        drawobject.updateAttribute(context, name, new Float32Array(attribute));
+        drawobject.updateAttribute(context, name, start, new Float32Array(attribute));
         drawobject.unbind(context);
     }
     createIndices(drawobject: Drawobject, program: Program, name: string, attribute: number[]) {
@@ -102,12 +102,11 @@ export default class Renderer {
         context.enable(context.RASTERIZER_DISCARD);
         feedback.bind(context);
         feedback.bindFeedbackBuffers(context, program);
-        context.beginTransformFeedback(context.POINTS);
         drawobject.bind(context);
+        context.beginTransformFeedback(context.POINTS);
         drawobject.draw(context);
-        drawobject.unbind(context);
         context.endTransformFeedback();
-        feedback.unbindFeedbackBuffers(context, program);
+        drawobject.unbind(context);
         feedback.unbind(context);
         context.disable(context.RASTERIZER_DISCARD);
     }

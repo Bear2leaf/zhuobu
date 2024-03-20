@@ -76,15 +76,29 @@ export default class Icon {
         return [
             { object: "icon.feedback", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
             { object: "icon.feedback", name: "a_scaleTo", type: "FLOAT", value: this.scales, size: 1 },
+            { object: "icon.feedback", name: "a_position", type: "FLOAT", value: this.vertices, size: 3 },
+            { object: "icon.feedback", name: "a_positionTo", type: "FLOAT", value: this.vertices, size: 3 },
         ]
     }
     getRandomAttributes(): {
         object: string
         name: string;
+        start: number;
         value: number[];
     }[] {
         return [
-            { object: "icon.feedback", name: "a_scaleTo", value: this.scales.map(s => 50 * Math.random()), },
+            { object: "icon.feedback", name: "a_scale", start: 0, value: this.scales.map(s => 50 * Math.random()), },
+            { object: "icon.feedback", name: "a_scaleTo", start: 0, value: this.scales.map(s => 50 * Math.random()), },
+            {
+                object: "icon.feedback", name: "a_position", start: 0, value: this.vertices.map((v, i) => {
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * Math.random(); return v;
+                }),
+            },
+            {
+                object: "icon.feedback", name: "a_positionTo", start: 0, value: this.vertices.map((v, i) => {
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * Math.random(); return v;
+                }),
+            },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

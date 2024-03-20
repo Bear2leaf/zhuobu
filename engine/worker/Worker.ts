@@ -63,7 +63,7 @@ export default class Worker {
                 if (Object.prototype.hasOwnProperty.call(state.changeAttributes, key)) {
                     const element = state.changeAttributes[key];
                     for (const attribute of element) {
-                        this.callScript.updateAttributes(attribute.object, attribute.name, attribute.value)
+                        this.callScript.updateAttributes(attribute.object, attribute.name, attribute.start, attribute.value)
                     };
                 }
             }
