@@ -30,8 +30,8 @@ export default class State {
         ],
         varyings: [
             // varings index should be THE SAME with attribute layout in vertex transform shader.
-            // eg. v_scale:0, v_position:0 ---> layout(location = 0) in xxx a_scale; layout(location = 1) in xxx a_position;
-            ["icon.feedback", "icon.feedback", "v_scale", "v_position"]
+            // eg. v_scale:0, v_position:1 ---> layout(location = 0) in xxx a_scale; layout(location = 1) in xxx a_position;
+            ["icon.feedback", "icon.feedback", "v_scale", "v_position"],
         ],
         textures: [
             ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
