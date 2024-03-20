@@ -97,6 +97,20 @@ export default class Renderer {
         }
         drawobject.unbind(context);
     }
+    drawFeedback(program: Program, drawobject: Drawobject, feedback: Drawobject) {
+        const context = this.context;
+        context.enable(context.RASTERIZER_DISCARD);
+        feedback.bind(context);
+        feedback.bindFeedbackBuffers(context, program, drawobject);
+        context.beginTransformFeedback(context.POINTS);
+        drawobject.bind(context);
+        drawobject.draw(context);
+        drawobject.unbind(context);
+        context.endTransformFeedback();
+        feedback.unbindFeedbackBuffers(context, program, drawobject);
+        feedback.unbind(context);
+        context.disable(context.RASTERIZER_DISCARD);
+    }
     updateCamera(
         program: Program,
         eye: [number, number, number],
@@ -116,15 +130,21 @@ export default class Renderer {
         this.updateUniform(program, "u_eye", "3fv", ...eye);
         this.updateUniform(program, "u_nearFarPlanes", "2fv", zNear, zFar);
     }
+    transformFeedback(program: Program, srcObject: Drawobject, dstObject: Drawobject) {
+        const context = this.context;
+        program.active(context);
+        this.drawFeedback(program, srcObject, dstObject);
+        program.deactive(context);
 
+    }
     render(program: Program, object: Drawobject, textures: Texture[], camera: Camera, framebuffer: Framebuffer | null, clear: boolean, width: number, height: number, aspect: number) {
         const context = this.context;
         if (camera) {
             this.updateCamera(program, camera.eye!, camera.target!, camera.up!, camera.fieldOfViewYInRadians!, aspect, camera.zNear!, camera.zFar!)
         }
-        this.activeProgram(program);
+        program.active(context);
         if (framebuffer) {
-            this.activeFramebuffer(framebuffer);
+            framebuffer.bind(context);
         }
         textures.forEach(texture => {
             texture.active(context);
@@ -141,25 +161,13 @@ export default class Renderer {
             texture.unbind(context);
         });
         if (framebuffer) {
-            this.deactiveFramebuffer(framebuffer);
+            framebuffer.unbind(context);
         }
-        this.deactiveProgram(program);
+        program.deactive(context);
     }
     initShaderProgram(program: Program) {
         const context = this.context;
         program.init(context);
-    }
-    activeFramebuffer(framebuffer: Framebuffer) {
-        framebuffer.bind(this.context);
-    }
-    deactiveFramebuffer(framebuffer: Framebuffer) {
-        framebuffer.unbind(this.context);
-    }
-    activeProgram(program: Program) {
-        program.active(this.context);
-    }
-    deactiveProgram(program: Program) {
-        program.deactive(this.context);
     }
     createTexture(texture: Texture) {
         if (texture.name === "diffuse") {

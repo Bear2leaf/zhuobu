@@ -3,7 +3,9 @@ import Device from "../device/Device.js";
 export default class Program {
 
     private program: WebGLProgram | null = null;
+    private transformFeedback: WebGLTransformFeedback | null = null;
     private readonly locMap: Map<string, WebGLUniformLocation | null>;
+    private readonly attrLocMap: Map<string, number>;
     private readonly valueMap: Map<string, number[]>;
     private readonly varyings?: string[];
     private vertexShaderSource = "";
@@ -12,6 +14,7 @@ export default class Program {
     constructor(name: string, varyings?: string[]) {
         this.name = name;
         this.locMap = new Map();
+        this.attrLocMap = new Map();
         this.valueMap = new Map();
         this.varyings = varyings;
     }
@@ -24,6 +27,15 @@ export default class Program {
         } else {
             loc = context.getUniformLocation(this.program!, name);
             this.locMap.set(name, loc);
+        }
+        return loc;
+    }
+    cacheAttrLoc(context: WebGL2RenderingContext, name: string) {
+        let loc = this.attrLocMap.get(name);
+        if (loc !== undefined) {
+        } else {
+            loc = context.getAttribLocation(this.program!, name);
+            this.attrLocMap.set(name, loc);
         }
         return loc;
     }
@@ -83,8 +95,10 @@ export default class Program {
     }
     active(context: WebGL2RenderingContext) {
         context.useProgram(this.program);
+        context.bindTransformFeedback(context.TRANSFORM_FEEDBACK, this.transformFeedback);
     }
     deactive(context: WebGL2RenderingContext) {
+        context.bindTransformFeedback(context.TRANSFORM_FEEDBACK, null);
         context.useProgram(null);
     }
     destory(context: WebGL2RenderingContext) {
@@ -121,6 +135,7 @@ export default class Program {
         }
         context.attachShader(program, fragmentShader);
         if (this.varyings) {
+            this.transformFeedback = context.createTransformFeedback()!;
             context.transformFeedbackVaryings(this.program, this.varyings, context.SEPARATE_ATTRIBS);
         }
         context.linkProgram(program);

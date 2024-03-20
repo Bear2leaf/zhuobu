@@ -15,6 +15,7 @@ export default class State {
             "terrain",
             "plant",
             "icon",
+            "icon.feedback",
             "sky",
             "water"
         ],
@@ -23,11 +24,12 @@ export default class State {
             "terrainFBO",
             "plant",
             "icon",
+            "icon.feedback",
             "sky",
             "water"
         ],
         varyings: [
-            ["icon", "v_scale"]
+            ["icon.feedback", "icon.feedback", "v_scale"]
         ],
         textures: [
             ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
@@ -119,8 +121,8 @@ export default class State {
                             "terrainFBO": factory.getAttributes(),
                             "terrainGrid": gridFactory.getAttributes(),
                             "plant": plantFactory.getAttributes(),
-                            "icon": iconFactory.getAttributes(),
                             "icon.feedback": iconFactory.getFeedbackAttributes(),
+                            "icon": iconFactory.getAttributes(),
                             "sky": skyFactory.getAttributes(),
                             "water": waterFactory.getAttributes()
                         },
@@ -143,25 +145,26 @@ export default class State {
                             ["sky", "sky", "refract", null, true, null],
                             ["terrain", "terrainGrid", "refract", null, false, null],
                             ["plant", "plant", "refract", null, false, null],
+                            ["icon.feedback", "icon.feedback", "refract", null, false, null],
                             ["icon", "icon", "refract", null, false, null],
                             ["water", "water", "refract", null, false, null],
                         ],
                         animation: true
                     }]
                 })
-                setInterval(() => {
+                // setInterval(() => {
 
-                    this.send({
-                        type: "SendState",
-                        broadcast: true,
-                        args: [{
-                            changeAttributes: {
-                                "icon": iconFactory.getRandomAttributes(),
-                            }
-                        }]
-                    })
-                    this.state.changeAttributes = undefined;
-                }, 1000)
+                //     this.send({
+                //         type: "SendState",
+                //         broadcast: true,
+                //         args: [{
+                //             changeAttributes: {
+                //                 "icon": iconFactory.getRandomAttributes(),
+                //             }
+                //         }]
+                //     })
+                //     this.state.changeAttributes = undefined;
+                // }, 1000);
                 break;
         }
     }

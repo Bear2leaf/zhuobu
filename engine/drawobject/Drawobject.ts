@@ -25,6 +25,20 @@ export default class Drawobject {
     generateVAO(context: WebGL2RenderingContext) {
         this.vao = context.createVertexArray()!
     }
+    bindFeedbackBuffers(context: WebGL2RenderingContext, program: Program, source: Drawobject) {
+        source.bufferMap.forEach((value, key) => {
+            const buffer = this.bufferMap.get(key);
+            if (!buffer) {
+                throw new Error("feedback source buffer not exist")
+            }
+            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, key), buffer);
+        })
+    }
+    unbindFeedbackBuffers(context: WebGL2RenderingContext, program: Program, source: Drawobject) {
+        source.bufferMap.forEach((value, key) => {
+            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, key), null);
+        })
+    }
     draw(context: WebGL2RenderingContext) {
         if (this.name === "sky") {
             context.disable(context.DEPTH_TEST);
@@ -38,7 +52,7 @@ export default class Drawobject {
             this.count && context.drawElements(context.TRIANGLES, this.count, context.UNSIGNED_SHORT, this.first);
             context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
         } else {
-            if (this.name === "icon") {
+            if (this.name === "icon" || this.name.replace(".feedback", "") === "icon") {
                 this.count && context.drawArrays(context.POINTS, this.first, this.count)
             } else {
                 this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)

@@ -74,7 +74,7 @@ export default class Icon {
         divisor?: number;
     }[] {
         return [
-            { object: "icon", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
+            { object: "icon.feedback", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
         ]
     }
     getRandomAttributes(): {

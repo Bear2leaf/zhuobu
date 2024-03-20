@@ -34,12 +34,20 @@ export default class Engine {
             this.clean();
             programs.forEach(name => {
                 const varing = varyings.find(varing => varing[0] === name);
-                this.programs.push(Program.create(name));
                 if (varing) {
-                    this.programs.push(Program.create(name + ".feedback", varing.slice(1)));
+                    this.programs.push(Program.create(name, varing.slice(2)));
+                } else {
+                    this.programs.push(Program.create(name));
                 }
             });
-            objects.forEach(name => this.objects.push(Drawobject.create(name)));
+            objects.forEach(name => {
+                const varing = varyings.find(varing => varing[1] === name);
+                if (varing) {
+                    this.objects.push(Drawobject.create(name));
+                } else {
+                    this.objects.push(Drawobject.create(name));
+                }
+            });
             textures.forEach(([name, unit, p, size, load]) => this.textures.push(Texture.create(name, unit, p, size || this.windowInfo.width, size || this.windowInfo.height, load)));
             framebuffers.forEach(name => this.framebuffers.push(Framebuffer.create(name)));
             cameras.forEach(c => this.cameras.push(c));
@@ -68,7 +76,11 @@ export default class Engine {
                     const aspect = this.windowInfo.width / this.windowInfo.height;
                     const width = size || this.windowInfo.width;
                     const height = size || this.windowInfo.height;
-                    this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
+                    if (object.name.endsWith(".feedback") && program.name.endsWith(".feedback")) {
+                        this.renderer.transformFeedback(program, object, this.objects.find(o => o.name === object.name.replace(".feedback", ""))!);
+                    } else {
+                        this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
+                    }
                 }
                 this.ticker.tick(t)
             });
