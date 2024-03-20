@@ -11,7 +11,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import { LOGI } from "./log.js";
 import { LOGE } from "./log.js";
 import { worldstate_t, MAXATOMS, actionplanner_t, MAXACTIONS, goap_get_possible_state_transitions, bfield_t } from "./goap.js";
-import { Tuple } from "./tuple.js";
 
 //!< A node in our network of world states.
 type astarnode_t =
@@ -35,8 +34,8 @@ const MAXOPEN = 512;	//!< The maximum number of nodes we can store in the opened
 const MAXCLOS = 512;	//!< The maximum number of nodes we can store in the closed set.
 
 
-let openedSet: Tuple<astarnode_t, typeof MAXOPEN> = new Array(MAXOPEN) as Tuple<astarnode_t, typeof MAXOPEN>;	//!< The set of nodes we should consider.
-let closedSet: Tuple<astarnode_t, typeof MAXCLOS> = new Array(MAXCLOS) as Tuple<astarnode_t, typeof MAXCLOS>;	//!< The set of nodes we already visited.
+let openedSet: astarnode_t[] = new Array(MAXOPEN);	//!< The set of nodes we should consider.
+let closedSet: astarnode_t[] = new Array(MAXCLOS);	//!< The set of nodes we already visited.
 
 let numOpened = 0;	//!< The nr of nodes in our opened set.
 let numClosed = 0;	//!< The nr of nodes in our closed set.
@@ -171,9 +170,9 @@ export default function astar_plan(
         closedSet[numClosed++] = cur;
         if (numClosed === MAXCLOS) { LOGI("Closed set overflow"); return -1; } // ran out of storage for closed set
         // iterate over neighbours
-        const actionnames = new Array<string>(MAXACTIONS) as Tuple<string, typeof MAXACTIONS>;
-        const actioncosts = new Array<number>(MAXACTIONS) as Tuple<number, typeof MAXACTIONS>;
-        const to = new Array<worldstate_t>(MAXACTIONS) as Tuple<worldstate_t, typeof MAXACTIONS>;
+        const actionnames = new Array<string>(MAXACTIONS);
+        const actioncosts = new Array<number>(MAXACTIONS);
+        const to = new Array<worldstate_t>(MAXACTIONS);
         const numtransitions: number = goap_get_possible_state_transitions(ap, cur.ws, to, actionnames, actioncosts, MAXACTIONS);
         //LOGI( "%d neighbours", numtransitions );
         for (let i = 0; i < numtransitions; ++i) {

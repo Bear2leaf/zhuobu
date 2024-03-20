@@ -1,4 +1,3 @@
-import { Tuple } from "./tuple.js";
 
 export const MAXATOMS = 32;
 export const MAXACTIONS = 32;
@@ -16,13 +15,13 @@ export type worldstate_t =
 //!< Action planner that keeps track of world state atoms and its action repertoire.
 export type actionplanner_t =
     {
-        readonly atm_names: Tuple<string, typeof MAXATOMS>;	//!< Names associated with all world state atoms.
+        readonly atm_names: string[];	//!< Names associated with all world state atoms.
         numatoms: number;				//!< Number of world state atoms.
 
-        readonly act_names: Tuple<string, typeof MAXACTIONS>;	//!< Names of all actions in repertoire.
-        act_pre: Tuple<worldstate_t, typeof MAXACTIONS>;	//!< Preconditions for all actions.
-        act_pst: Tuple<worldstate_t, typeof MAXACTIONS>;	//!< Postconditions for all actions (action effects).
-        act_costs: Tuple<number, typeof MAXACTIONS>;		//!< Cost for all actions.
+        readonly act_names: string[];	//!< Names of all actions in repertoire.
+        act_pre: worldstate_t[];	//!< Preconditions for all actions.
+        act_pst: worldstate_t[];	//!< Postconditions for all actions (action effects).
+        act_costs: number[];		//!< Cost for all actions.
         numactions: number;				//!< The number of actions in out repertoire.
 
     };
@@ -128,7 +127,7 @@ export function goap_description(ap: actionplanner_t, buf: [string]): void {
         for (let i = 0; i < MAXATOMS; ++i)
             if ((pre.dontcare & (1 << i)) === 0) {
                 const v = (pre.values & (1 << i)) !== 0;
-                buf[0] += `  ${ap.atm_names[i]}===${v}\n`;
+                buf[0] += `  ${ap.atm_names[i]}==${v}\n`;
             }
         for (let i = 0; i < MAXATOMS; ++i)
             if ((pst.dontcare & (1 << i)) === 0) {
@@ -161,7 +160,7 @@ function goap_do_action(ap: actionplanner_t, actionnr: number, fr: worldstate_t)
 }
 
 //!< Given the specified 'from' state, list all possible 'to' states along with the action required, and the action cost. For internal use.
-export function goap_get_possible_state_transitions(ap: actionplanner_t, fr: worldstate_t, to: Tuple<worldstate_t, typeof MAXACTIONS>, actionnames: string[], actioncosts: number[], cnt: number): number {
+export function goap_get_possible_state_transitions(ap: actionplanner_t, fr: worldstate_t, to: worldstate_t[], actionnames: string[], actioncosts: number[], cnt: number): number {
     let writer = 0;
     for (let i = 0; i < ap.numactions && writer < cnt; ++i) {
         // see if precondition is met

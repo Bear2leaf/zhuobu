@@ -1,6 +1,6 @@
-import Map, { BiomeColor } from "../map/Map.js";
-import MeshBuilder from "../map/MeshBuilder.js";
-import TriangleMesh from "../map/TriangleMesh.js";
+import Map, { BiomeColor } from "../third/map/Map.js";
+import MeshBuilder from "../third/map/MeshBuilder.js";
+import TriangleMesh from "../third/map/TriangleMesh.js";
 import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
 import SeedableRandom from "../util/SeedableRandom.js";
 import { createNoise2D } from "../util/simplex-noise.js";
@@ -14,7 +14,7 @@ export default class Terrain {
     private readonly vertices: number[] = []
     private readonly colors: number[] = []
     constructor() {
-        this.map = new Map(new TriangleMesh(new MeshBuilder().addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
+        this.map = new Map(new TriangleMesh(new MeshBuilder({ boundarySpacing: this.spacing }).addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
             amplitude: 0.5,
             length: 4,
         }, () => (N) => Math.round(this.rng.nextFloat() * N));
@@ -37,8 +37,7 @@ export default class Terrain {
             const r = map.mesh.s_begin_r(s),
                 t1 = map.mesh.s_inner_t(s),
                 t2 = map.mesh.s_outer_t(s);
-            const biome = map.r_biome[r] as keyof typeof BiomeColor;
-            const color: BiomeColor = BiomeColor[biome];
+            const color: BiomeColor = map.r_biome[r];
             const pos1: [number, number] = [0, 0];
             const pos2: [number, number] = [0, 0];
             const pos3: [number, number] = [0, 0];

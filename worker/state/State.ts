@@ -5,7 +5,6 @@ import Sky from "../object/Sky.js";
 import Terrain from "../object/Terrain.js";
 import TerrainGrid from "../object/TerrainGrid.js";
 import Water from "../object/Water.js";
-import main from "../third/goap/main.js";
 export default class State {
     private readonly terrainTextureSize = 2048;
     private readonly waterTextureSize = 256;
@@ -52,7 +51,7 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.3, 1],
+                eye: [0, 0.5, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 4,
@@ -60,7 +59,7 @@ export default class State {
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.3, 1],
+                eye: [0, -0.5, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 4,
@@ -76,7 +75,6 @@ export default class State {
     };
     constructor(readonly device: WorkerDevice) {
         console.log("State Inited.")
-        main();
     }
     init() {
         this.send({
@@ -167,8 +165,8 @@ export default class State {
                         broadcast: true,
                         args: [{
                             changeAttributes: {
-                                "icon.feedback": iconFactory.getRandomAttributes(),
-                                "plant.feedback": plantFactory.getRandomAttributes(),
+                                "icon.feedback": iconFactory.getRandomAttributes(factory.map),
+                                "plant.feedback": plantFactory.getRandomAttributes(factory.map),
                             }
                         }]
                     })

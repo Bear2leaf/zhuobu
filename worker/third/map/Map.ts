@@ -14,14 +14,14 @@
  */
 
 import TriangleMesh from './TriangleMesh.js';
-import { randomShuffle } from '../util/math.js';
+import { randomShuffle } from '../../util/math.js';
 import { assign_r_water, assign_r_ocean } from './water.js';
 import { assign_t_elevation, redistribute_t_elevation, assign_r_elevation } from './elevation.js';
 import { find_spring_t, assign_s_flow } from './rivers.js';
 import { assign_r_moisture, find_moisture_seeds_r, redistribute_r_moisture } from './moisture.js';
 import { assign_r_coast, assign_r_temperature, assign_r_biome } from './biomes.js';
 import { assign_s_segments } from './noisy-edges.js';
-import { NoiseFunction2D } from '../util/simplex-noise.js';
+import { NoiseFunction2D } from '../../util/simplex-noise.js';
 
 /**
  * Map generator
@@ -45,7 +45,7 @@ class Map {
     readonly r_water: boolean[];
     readonly s_lines: number[][][];
     readonly s_flow: number[];
-    readonly r_biome: string[];
+    readonly r_biome: BiomeColor[];
     readonly r_elevation: number[];
     readonly t_elevation: number[];
     readonly spring_t: number[];

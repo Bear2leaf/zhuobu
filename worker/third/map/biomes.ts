@@ -7,36 +7,37 @@
 'use strict';
 
 import TriangleMesh from './TriangleMesh.js';
-import { mix } from '../util/math.js';
+import { mix } from '../../util/math.js';
+import { BiomeColor } from './Map.js';
 
-function biome(ocean: boolean, water: boolean, coast: boolean, temperature: number, moisture: number) {
+function biome(ocean: boolean, water: boolean, coast: boolean, temperature: number, moisture: number):  BiomeColor {
     if (ocean) {
-        return 'OCEAN';
+        return BiomeColor.OCEAN;
     } else if (water) {
-        if (temperature > 0.9) return 'MARSH';
-        if (temperature < 0.2) return 'ICE';
-        return 'LAKE';
+        if (temperature > 0.9) return BiomeColor.MARSH;
+        if (temperature < 0.2) return BiomeColor.ICE;
+        return BiomeColor.LAKE;
     } else if (coast) {
-        return 'BEACH';
+        return BiomeColor.BEACH;
     } else if (temperature < 0.2) {
-        if (moisture > 0.50) return 'SNOW';
-        else if (moisture > 0.33) return 'TUNDRA';
-        else if (moisture > 0.16) return 'BARE';
-        else return 'SCORCHED';
+        if (moisture > 0.50) return BiomeColor.SNOW;
+        else if (moisture > 0.33) return BiomeColor.TUNDRA;
+        else if (moisture > 0.16) return BiomeColor.BARE;
+        else return BiomeColor.SCORCHED;
     } else if (temperature < 0.4) {
-        if (moisture > 0.66) return 'TAIGA';
-        else if (moisture > 0.33) return 'SHRUBLAND';
-        else return 'TEMPERATE_DESERT';
+        if (moisture > 0.66) return BiomeColor.TAIGA;
+        else if (moisture > 0.33) return BiomeColor.SHRUBLAND;
+        else return BiomeColor.TEMPERATE_DESERT;
     } else if (temperature < 0.7) {
-        if (moisture > 0.83) return 'TEMPERATE_RAIN_FOREST';
-        else if (moisture > 0.50) return 'TEMPERATE_DECIDUOUS_FOREST';
-        else if (moisture > 0.16) return 'GRASSLAND';
-        else return 'TEMPERATE_DESERT';
+        if (moisture > 0.83) return BiomeColor.TEMPERATE_RAIN_FOREST;
+        else if (moisture > 0.50) return BiomeColor.TEMPERATE_DECIDUOUS_FOREST;
+        else if (moisture > 0.16) return BiomeColor.GRASSLAND;
+        else return BiomeColor.TEMPERATE_DESERT;
     } else {
-        if (moisture > 0.66) return 'TROPICAL_RAIN_FOREST';
-        else if (moisture > 0.33) return 'TROPICAL_SEASONAL_FOREST';
-        else if (moisture > 0.16) return 'GRASSLAND';
-        else return 'SUBTROPICAL_DESERT';
+        if (moisture > 0.66) return BiomeColor.TROPICAL_RAIN_FOREST;
+        else if (moisture > 0.33) return BiomeColor.TROPICAL_SEASONAL_FOREST;
+        else if (moisture > 0.16) return BiomeColor.GRASSLAND;
+        else return BiomeColor.SUBTROPICAL_DESERT;
     }
 }
 
@@ -101,7 +102,7 @@ export function assign_r_temperature(
  * Biomes assignment -- see the biome() function above
  */
 export function assign_r_biome(
-    r_biome: string[],
+    r_biome: BiomeColor[],
     mesh: TriangleMesh,
     r_ocean: boolean[], r_water: boolean[], r_coast: boolean[], r_temperature: number[], r_moisture: number[]
 ) {
