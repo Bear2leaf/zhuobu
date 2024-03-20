@@ -7,7 +7,7 @@ export default class Program {
     private readonly locMap: Map<string, WebGLUniformLocation | null>;
     private readonly attrLocMap: Map<string, number>;
     private readonly valueMap: Map<string, number[]>;
-    private readonly varyings?: string[];
+    readonly varyings?: string[];
     private vertexShaderSource = "";
     private fragmentShaderSource = "";
     readonly name;

@@ -75,6 +75,7 @@ export default class Icon {
     }[] {
         return [
             { object: "icon.feedback", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
+            { object: "icon.feedback", name: "a_scaleTo", type: "FLOAT", value: this.scales, size: 1 },
         ]
     }
     getRandomAttributes(): {
@@ -83,7 +84,7 @@ export default class Icon {
         value: number[];
     }[] {
         return [
-            { object: "icon", name: "a_scale", value: this.scales.map(s => 50 * Math.random()), },
+            { object: "icon.feedback", name: "a_scaleTo", value: this.scales.map(s => 50 * Math.random()), },
         ]
     }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {

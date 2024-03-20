@@ -101,13 +101,13 @@ export default class Renderer {
         const context = this.context;
         context.enable(context.RASTERIZER_DISCARD);
         feedback.bind(context);
-        feedback.bindFeedbackBuffers(context, program, drawobject);
+        feedback.bindFeedbackBuffers(context, program);
         context.beginTransformFeedback(context.POINTS);
         drawobject.bind(context);
         drawobject.draw(context);
         drawobject.unbind(context);
         context.endTransformFeedback();
-        feedback.unbindFeedbackBuffers(context, program, drawobject);
+        feedback.unbindFeedbackBuffers(context, program);
         feedback.unbind(context);
         context.disable(context.RASTERIZER_DISCARD);
     }

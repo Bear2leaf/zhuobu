@@ -1,9 +1,10 @@
 #version 300 es 
 layout(location = 0) in float a_scale;
+layout(location = 1) in float a_scaleTo;
 
 uniform float u_time;
 
 out float v_scale;
 void main() {
-    v_scale = a_scale * (sin(u_time * 10.0f) + 1.0f);
+    v_scale = mix(a_scale, a_scaleTo, sin(u_time * 10.0f) * 0.5f + 0.5f);
 }

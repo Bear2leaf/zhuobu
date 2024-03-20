@@ -152,19 +152,19 @@ export default class State {
                         animation: true
                     }]
                 })
-                // setInterval(() => {
+                setInterval(() => {
 
-                //     this.send({
-                //         type: "SendState",
-                //         broadcast: true,
-                //         args: [{
-                //             changeAttributes: {
-                //                 "icon": iconFactory.getRandomAttributes(),
-                //             }
-                //         }]
-                //     })
-                //     this.state.changeAttributes = undefined;
-                // }, 1000);
+                    this.send({
+                        type: "SendState",
+                        broadcast: true,
+                        args: [{
+                            changeAttributes: {
+                                "icon.feedback": iconFactory.getRandomAttributes(),
+                            }
+                        }]
+                    })
+                    this.state.changeAttributes = undefined;
+                }, 1000);
                 break;
         }
     }

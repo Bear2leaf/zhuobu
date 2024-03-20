@@ -25,18 +25,20 @@ export default class Drawobject {
     generateVAO(context: WebGL2RenderingContext) {
         this.vao = context.createVertexArray()!
     }
-    bindFeedbackBuffers(context: WebGL2RenderingContext, program: Program, source: Drawobject) {
-        source.bufferMap.forEach((value, key) => {
-            const buffer = this.bufferMap.get(key);
+    bindFeedbackBuffers(context: WebGL2RenderingContext, program: Program) {
+        program.varyings?.forEach((key) => {
+            const attribute = key.replace("v_", "a_");
+            const buffer = this.bufferMap.get(attribute);
             if (!buffer) {
                 throw new Error("feedback source buffer not exist")
             }
-            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, key), buffer);
+            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, attribute), buffer);
         })
     }
-    unbindFeedbackBuffers(context: WebGL2RenderingContext, program: Program, source: Drawobject) {
-        source.bufferMap.forEach((value, key) => {
-            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, key), null);
+    unbindFeedbackBuffers(context: WebGL2RenderingContext, program: Program) {
+        program.varyings?.forEach((key) => {
+            const attribute = key.replace("v_", "a_");
+            context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, attribute), null);
         })
     }
     draw(context: WebGL2RenderingContext) {
