@@ -97,6 +97,38 @@ export default class Plant {
             { object: "plant", name: "a_color", type: "FLOAT", value: this.colors, size: 3, divisor: this.translations.length / 3 },
         ]
     }
+    getFeedbackAttributes(): {
+        object: string
+        name: string;
+        type?: "FLOAT";
+        value: number[];
+        size?: number;
+    }[] {
+        return [
+            { object: "plant.feedback", name: "a_translation", type: "FLOAT", value: this.translations, size: 3 },
+            { object: "plant.feedback", name: "a_translationTo", type: "FLOAT", value: this.translations, size: 3 },
+        ]
+    }
+    getRandomAttributes(): {
+        object: string
+        name: string;
+        start: number;
+        value: number[];
+    }[] {
+        const rngPosition = new SeedableRandom(10);
+        return [
+            {
+                object: "plant.feedback", name: "a_translation", start: 0, value: this.translations.map((v, i) => {
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * rngPosition.nextFloat(); return v;
+                }),
+            },
+            {
+                object: "plant.feedback", name: "a_translationTo", start: 0, value: this.translations.map((v, i) => {
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * rngPosition.nextFloat(); return v;
+                }),
+            },
+        ]
+    }
     getUniforms(): { name: string; type: "1iv" | "1i" | "1f" | "2fv" | "3fv" | "4fv" | "Matrix4fv"; value: number[]; }[] {
         return [
         ];

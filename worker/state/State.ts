@@ -14,6 +14,7 @@ export default class State {
             "terrainFBO",
             "terrain",
             "plant",
+            "plant.feedback",
             "icon",
             "icon.feedback",
             "sky",
@@ -23,6 +24,7 @@ export default class State {
             "terrainGrid",
             "terrainFBO",
             "plant",
+            "plant.feedback",
             "icon",
             "icon.feedback",
             "sky",
@@ -32,6 +34,7 @@ export default class State {
             // varings index should be THE SAME with attribute layout in vertex transform shader.
             // eg. v_scale:0, v_position:1 ---> layout(location = 0) in xxx a_scale; layout(location = 1) in xxx a_position;
             ["icon.feedback", "icon.feedback", "v_scale", "v_position"],
+            ["plant.feedback", "plant.feedback", "v_translation"],
         ],
         textures: [
             ["diffuse", 0, "terrainGrid", this.terrainTextureSize],
@@ -122,6 +125,7 @@ export default class State {
                         attributes: {
                             "terrainFBO": factory.getAttributes(),
                             "terrainGrid": gridFactory.getAttributes(),
+                            "plant.feedback": plantFactory.getFeedbackAttributes(),
                             "plant": plantFactory.getAttributes(),
                             "icon.feedback": iconFactory.getFeedbackAttributes(),
                             "icon": iconFactory.getAttributes(),
@@ -136,6 +140,7 @@ export default class State {
                             "water": waterFactory.getUniforms(),
                         },
                         instanceCounts: {
+                            "plant.feedback": plantFactory.getInstanceCount(),
                             "plant": plantFactory.getInstanceCount(),
                         },
                         renderCalls: [
@@ -146,10 +151,11 @@ export default class State {
                             ["terrain", "terrainGrid", "reflect", "reflectFBO", false, this.waterTextureSize],
                             ["sky", "sky", "refract", null, true, null],
                             ["terrain", "terrainGrid", "refract", null, false, null],
+                            ["plant.feedback", "plant.feedback", "refract", null, false, null],
                             ["plant", "plant", "refract", null, false, null],
+                            ["water", "water", "refract", null, false, null],
                             ["icon.feedback", "icon.feedback", "refract", null, false, null],
                             ["icon", "icon", "refract", null, false, null],
-                            ["water", "water", "refract", null, false, null],
                         ],
                         animation: true
                     }]
@@ -162,6 +168,7 @@ export default class State {
                         args: [{
                             changeAttributes: {
                                 "icon.feedback": iconFactory.getRandomAttributes(),
+                                "plant.feedback": plantFactory.getRandomAttributes(),
                             }
                         }]
                     })

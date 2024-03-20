@@ -7,8 +7,8 @@ export default class Icon {
     private readonly colors: number[] = []
     private readonly rng = new SeedableRandom(1)
     private readonly colorRNG = new SeedableRandom(1)
-    private readonly textureSize: number = 512;
-    private readonly tileSize: number = 64;
+    private readonly textureSize: number = 64;
+    private readonly tileSize: number = 16;
     constructor() {
         this.scales = [
         ];
@@ -71,7 +71,6 @@ export default class Icon {
         type?: GLType;
         value: number[];
         size?: number;
-        divisor?: number;
     }[] {
         return [
             { object: "icon.feedback", name: "a_scale", type: "FLOAT", value: this.scales, size: 1 },
@@ -86,17 +85,19 @@ export default class Icon {
         start: number;
         value: number[];
     }[] {
+        const rngScale = new SeedableRandom(10);
+        const rngPosition = new SeedableRandom(10);
         return [
-            { object: "icon.feedback", name: "a_scale", start: 0, value: this.scales.map(s => 50 * Math.random()), },
-            { object: "icon.feedback", name: "a_scaleTo", start: 0, value: this.scales.map(s => 50 * Math.random()), },
+            { object: "icon.feedback", name: "a_scale", start: 0, value: this.scales.map(s => 50), },
+            { object: "icon.feedback", name: "a_scaleTo", start: 0, value: this.scales.map(s => 50 + 50 * rngScale.nextFloat()), },
             {
                 object: "icon.feedback", name: "a_position", start: 0, value: this.vertices.map((v, i) => {
-                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * Math.random(); return v;
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * rngPosition.nextFloat(); return v;
                 }),
             },
             {
                 object: "icon.feedback", name: "a_positionTo", start: 0, value: this.vertices.map((v, i) => {
-                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * Math.random(); return v;
+                    if (i % 3 === 0 || i % 3 === 1) v += 0.1 * rngPosition.nextFloat(); return v;
                 }),
             },
         ]

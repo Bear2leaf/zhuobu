@@ -46,7 +46,10 @@ export default class Drawobject {
             context.disable(context.DEPTH_TEST);
             context.depthMask(false);
         }
-        if (this.name === "water" || this.name === "terrain") {
+        if (this.name === "icon") {
+            context.depthMask(false);
+        }
+        if (this.name === "water" || this.name === "terrain" || this.name === "icon") {
             context.enable(context.BLEND);
         }
         if (this.bufferMap.has("indices")) {
@@ -54,14 +57,17 @@ export default class Drawobject {
             this.count && context.drawElements(context.TRIANGLES, this.count, context.UNSIGNED_SHORT, this.first);
             context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
         } else {
-            if (this.name === "icon" || this.name.replace(".feedback", "") === "icon") {
+            if (this.name === "icon" || this.name.endsWith(".feedback")) {
                 this.count && context.drawArrays(context.POINTS, this.first, this.count)
             } else {
                 this.count && context.drawArrays(context.TRIANGLES, this.first, this.count)
             }
         }
-        if (this.name === "water" || this.name === "terrain") {
+        if (this.name === "water" || this.name === "terrain" || this.name === "icon") {
             context.disable(context.BLEND);
+        }
+        if (this.name === "icon") {
+            context.depthMask(true);
         }
         if (this.name === "sky") {
             context.depthMask(true);
@@ -70,11 +76,7 @@ export default class Drawobject {
 
     }
     drawInstanced(context: WebGL2RenderingContext) {
-        if (this.name === "plant") {
-            this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
-        } else {
-            this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
-        }
+        this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
     }
     createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array | Uint8Array, type: number, size: number, divisor = 0) {
         let buffer = this.bufferMap.get(name);

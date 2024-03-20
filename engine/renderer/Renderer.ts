@@ -23,6 +23,7 @@ export default class Renderer {
         context.enable(context.SCISSOR_TEST);
         context.blendFunc(context.ONE, context.ONE_MINUS_SRC_ALPHA);
         context.blendFuncSeparate(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA, context.ONE, context.ONE);
+        context.pixelStorei(context.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     }
     prepare(viewport: [number, number, number, number]) {
         const context = this.context;

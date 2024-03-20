@@ -1,0 +1,10 @@
+#version 300 es 
+layout(location = 0) in vec3 a_translation;
+layout(location = 1) in vec3 a_translationTo;
+
+uniform float u_time;
+
+out vec3 v_translation;
+void main() {
+    v_translation = mix(a_translation, a_translationTo, sin(u_time * 10.0f) * 0.5f + 0.5f);
+}
