@@ -81,18 +81,18 @@ export default class Island {
     }
     generateBorderPoints() {
         const translations: number[] = [];
-        this.regions.splice(0, this.regions.length);
-        this.aps.splice(0, this.aps.length);
+        this.regions.length = this.map.mesh.numBoundaryRegions;
+        this.aps.length = this.map.mesh.numBoundaryRegions;
         for (let index = 0; index < this.map.mesh.numBoundaryRegions; index++) {
-            this.regions.push(index);
-            this.aps.push(createap());
+            this.regions[index] = index;
+            this.aps[index] = createap();
             translations.push(...this.generatePointByRegion(index));
         }
         return translations;
     }
-    updateVertices(vertices: number[]) {
+    updateRegions() {
         const map = this.map;
-        for(let index = 0; index < map.mesh.numBoundaryRegions; index++) {
+        for (let index = 0; index < map.mesh.numBoundaryRegions; index++) {
             const region: number = this.regions[index];
             const costMap = new Map<string, number>();
             costMap.set("move_to_beach", this.toBeachPoints(map, region).length);
@@ -100,14 +100,21 @@ export default class Island {
             if (plancost !== 0) {
                 const higherRegion = this.findHigherRegion(map, region);
                 if (higherRegion) {
-                    const position = this.getRegionPosition(map, higherRegion);
-                    const elevation = map.r_elevation[higherRegion];
-                    vertices[index * 3 + 0] = this.adjustXY(position[0]);
-                    vertices[index * 3 + 1] = this.adjustHeight(elevation);
-                    vertices[index * 3 + 2] = this.adjustXY(position[1]);
                     this.regions[index] = higherRegion;
                 }
             }
+        }
+    }
+    updateVertices(vertices: number[]) {
+        const map = this.map;
+        for (let index = 0; index < this.regions.length; index++) {
+            const region = this.regions[index];
+            const position = this.getRegionPosition(map, region);
+            const elevation = map.r_elevation[region];
+            vertices[index * 3 + 0] = this.adjustXY(position[0]);
+            vertices[index * 3 + 1] = this.adjustHeight(elevation);
+            vertices[index * 3 + 2] = this.adjustXY(position[1]);
+
         }
     }
     generatePointByRegion(r: number) {

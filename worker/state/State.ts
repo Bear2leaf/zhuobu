@@ -161,7 +161,7 @@ export default class State {
                     }]
                 })
                 setInterval(() => {
-
+                    island.updateRegions();
                     this.send({
                         type: "SendState",
                         broadcast: true,
