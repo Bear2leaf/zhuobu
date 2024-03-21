@@ -92,15 +92,16 @@ export default class Island {
         }
         this.positions.splice(0, this.positions.length, ...positions);
     }
-    updateRegions() {
+    updatePlans() {
         const map = this.map;
         for (let index = 0; index < map.mesh.numBoundaryRegions; index++) {
+            this.aps[index] = createap();
             const region: number = this.regions[index];
             const costMap = new Map<string, number>();
-            costMap.set("move_to_beach", this.toBeachPoints(map, region).length);
+            costMap.set("move_to_beach", this.toBeachPoints(region).length);
             const plancost = this.executeReachBeachPlan(this.aps[index], costMap);
             if (plancost !== 0) {
-                const higherRegion = this.findHigherRegion(map, region);
+                const higherRegion = this.findHigherRegion(region);
                 if (higherRegion) {
                     this.regions[index] = higherRegion;
                 }
@@ -111,7 +112,7 @@ export default class Island {
         const map = this.map;
         for (let index = 0; index < this.regions.length; index++) {
             const region = this.regions[index];
-            const position = this.getRegionPosition(map, region);
+            const position = this.getRegionPosition(region);
             const elevation = map.r_elevation[region];
             vertices[index * 3 + 0] = this.adjustXY(position[0]);
             vertices[index * 3 + 1] = this.adjustHeight(elevation);
@@ -176,40 +177,38 @@ export default class Island {
         }
         return plancost;
     }
-    private findHigherRegion(map: IslandMap, region: number) {
+    private findHigherRegion(region: number) {
+        const map = this.map;
         const circulateRegions: number[] = [];
         map.mesh.r_circulate_r(circulateRegions, region);
-        return circulateRegions.find(v => v > region)!;
+        return circulateRegions.find(v => map.r_elevation[v] > map.r_elevation[region])!;
     }
-    private toCenterRegionPoints(map: IslandMap, region: number) {
+    private toHighestRegionPoints(region: number) {
+        const map = this.map;
         const regions: [number, number][] = [];
         let start = region;
         while (start !== undefined && start < map.mesh.numRegions) {
             const x = map.mesh.r_x(start);
             const y = map.mesh.r_y(start);
             regions.push([x, y]);
-            start = this.findHigherRegion(map, start);
+            start = this.findHigherRegion(start);
         }
         return regions
     }
-    private toBeachPoints(map: IslandMap, region: number) {
+    private toBeachPoints(region: number) {
+        const map = this.map;
         const regions: [number, number][] = [];
         let start = region;
         while (start !== undefined && start < map.mesh.numRegions && map.r_biome[region] !== BiomeColor.BEACH) {
             const x = map.mesh.r_x(start);
             const y = map.mesh.r_y(start);
             regions.push([x, y]);
-            start = this.findHigherRegion(map, start);
+            start = this.findHigherRegion(start);
         }
         return regions
     }
-    private isRegionBeach(map: IslandMap, region: number) {
-        return map.r_biome[region] === BiomeColor.BEACH;
-    }
-    private isRegionOcean(map: IslandMap, region: number) {
-        return map.r_biome[region] === BiomeColor.OCEAN;
-    }
-    private getRegionPosition(map: IslandMap, region: number): [number, number] {
+    private getRegionPosition(region: number): [number, number] {
+        const map = this.map;
         return map.mesh.r_pos([], region);
     }
 }

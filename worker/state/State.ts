@@ -162,7 +162,7 @@ export default class State {
                     }]
                 })
                 setInterval(() => {
-                    island.updateRegions();
+                    island.updatePlans();
                     this.send({
                         type: "SendState",
                         broadcast: true,
