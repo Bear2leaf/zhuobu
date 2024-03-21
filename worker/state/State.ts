@@ -1,4 +1,5 @@
 import WorkerDevice from "../device/WorkerDevice.js";
+import Island from "../island/Island.js";
 import Icon from "../object/Icon.js";
 import Plant from "../object/Plant.js";
 import Sky from "../object/Sky.js";
@@ -103,12 +104,13 @@ export default class State {
                 }
                 break;
             case "EngineLoaded":
-                const factory = Terrain.create();
+                const island = new Island();
+                const factory = Terrain.create(island);
                 const gridFactory = TerrainGrid.create();
                 const skyFactory = Sky.create();
                 const waterFactory = Water.create();
-                const plantFactory = Plant.create(factory.map);
-                const iconFactory = Icon.create(factory.map);
+                const plantFactory = Plant.create(island);
+                const iconFactory = Icon.create(island);
                 this.send({
                     type: "SendState",
                     broadcast: true,
@@ -165,8 +167,8 @@ export default class State {
                         broadcast: true,
                         args: [{
                             changeAttributes: {
-                                "icon.feedback": iconFactory.getRandomAttributes(factory.map),
-                                "plant.feedback": plantFactory.getRandomAttributes(factory.map),
+                                "icon.feedback": iconFactory.getRandomAttributes(island),
+                                "plant.feedback": plantFactory.getRandomAttributes(island),
                             }
                         }]
                     })
