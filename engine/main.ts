@@ -1,7 +1,7 @@
 import Device from "./device/Device.js";
 import Worker, { scriptModule } from "./worker/Worker.js";
 import Renderer from "./renderer/Renderer.js";
-import Ticker from "./ticker/Ticker.js";
+import Clock from "./clock/Clock.js";
 import Texture from "./texture/Texture.js";
 import Framebuffer from "./framebuffer/Framebuffer.js";
 import Drawobject from "./drawobject/Drawobject.js";
@@ -18,14 +18,14 @@ export default class Engine {
     readonly framebuffers: Framebuffer[] = [];
     readonly textures: Texture[] = [];
     readonly renderer: Renderer;
-    readonly ticker: Ticker;
+    readonly ticker: Clock;
     readonly programs: Program[] = [];
     readonly objects: Drawobject[] = [];
     readonly cameras: Camera[] = [];
     readonly renderCalls: [string, string, string, string | null, boolean, number | null][] = [];
     readonly windowInfo: WindowInfo;
     constructor(device: Device) {
-        this.ticker = new Ticker();
+        this.ticker = new Clock();
         this.renderer = new Renderer(device);
         this.worker = new Worker();
         this.windowInfo = device.getWindowInfo();
@@ -55,37 +55,37 @@ export default class Engine {
         }
         const renderer = this.renderer;
         renderer.initContextState();
-
-        this.ticker.callback = () => {
+        const tick = (t: number) => {
+            this.worker.process();
+            this.ticker.tick(t)
             requestAnimationFrame(t => {
-                this.worker.process();
-                if (this.ticker.pause) {
-                    return;
-                }
-                for (const iterator of this.updateCalls) {
-                    this.script!.updateCalls[iterator[0]](iterator.slice(1));
-                }
-                for (const iterator of this.renderCalls) {
-                    const object = this.objects.find(o => o.name === iterator[0])!;
-                    const program = this.programs.find(o => o.name === iterator[1])!;
-                    const textures = this.textures.filter(t => t.program === program.name)!;
-                    const camera = this.cameras.find(c => c.name === iterator[2])!;
-                    const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
-                    const clear = iterator[4];
-                    const size = iterator[5];
-                    const aspect = this.windowInfo.width / this.windowInfo.height;
-                    const width = size || this.windowInfo.width;
-                    const height = size || this.windowInfo.height;
-                    if (object.name.endsWith(".feedback") && program.name.endsWith(".feedback")) {
-                        this.renderer.transformFeedback(program, object, this.objects.find(o => o.name === object.name.replace(".feedback", ""))!);
-                    } else {
-                        this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
-                    }
-                }
-                this.ticker.tick(t)
+                tick(t);
             });
+            if (this.ticker.pause) {
+                return;
+            }
+            for (const iterator of this.updateCalls) {
+                this.script!.updateCalls[iterator[0]](iterator.slice(1));
+            }
+            for (const iterator of this.renderCalls) {
+                const object = this.objects.find(o => o.name === iterator[0])!;
+                const program = this.programs.find(o => o.name === iterator[1])!;
+                const textures = this.textures.filter(t => t.program === program.name)!;
+                const camera = this.cameras.find(c => c.name === iterator[2])!;
+                const framebuffer = this.framebuffers.find(o => o.name === iterator[3])!;
+                const clear = iterator[4];
+                const size = iterator[5];
+                const aspect = this.windowInfo.width / this.windowInfo.height;
+                const width = size || this.windowInfo.width;
+                const height = size || this.windowInfo.height;
+                if (object.name.endsWith(".feedback") && program.name.endsWith(".feedback")) {
+                    this.renderer.transformFeedback(program, object, this.objects.find(o => o.name === object.name.replace(".feedback", ""))!);
+                } else {
+                    this.renderer.render(program, object, textures, camera, framebuffer, clear, width, height, aspect);
+                }
+            }
         }
-        requestAnimationFrame(t => this.ticker.tick(t));
+        tick(0);
 
     }
     start() {

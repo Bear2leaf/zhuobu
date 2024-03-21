@@ -12,8 +12,17 @@ declare type WorkerRequest =
     | { type: "EngineLoaded"; }
     | never;
 
+declare type GOAPAction = {
+    preconditions: GOAPState;
+    effects: GOAPState;
+    cost: number;
+    name: string;
+}
+
+declare type GOAPState = Record<string, boolean>;
+
 declare type StateData = {
-    changeAttributes?: Record<string, { object: string, name: string, start: number, value: number[]}[]>;
+    changeAttributes?: Record<string, { object: string, name: string, start: number, value: number[] }[]>;
     modelTranslation?: [number, number, number];
     cameras?: Camera[];
     updateCalls?: UpdateCalls;
@@ -26,7 +35,7 @@ declare type StateData = {
     textureFBOBindings?: string[][];
     attributes?: Record<string, { object: string, name: string, type?: GLType, value: number[], size?: number, divisor?: number }[]>;
     uniforms?: Record<string, { name: string, type: '1iv' | '1i' | '1f' | '2fv' | '3fv' | '4fv' | 'Matrix4fv', value: number[] }[]>;
-    renderCalls?: [string, string, string, string| null, boolean, number | null][];
+    renderCalls?: [string, string, string, string | null, boolean, number | null][];
     instanceCounts?: Record<string, number>;
 }
 declare type Camera = {

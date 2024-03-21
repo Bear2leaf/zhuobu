@@ -14,12 +14,10 @@ export default class Island {
     private readonly distanceRNG = new SeedableRandom(42);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
-    private readonly aps: actionplanner_t[];
     private readonly regions: number[];
     readonly positions: number[];
     readonly map: IslandMap;
     constructor() {
-        this.aps = [];
         this.regions = [];
         this.positions = [];
         this.map = new IslandMap(new TriangleMesh(new MeshBuilder({ boundarySpacing: this.spacing }).addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
@@ -84,10 +82,8 @@ export default class Island {
     generateBorderPoints() {
         const positions: number[] = [];
         this.regions.length = this.map.mesh.numBoundaryRegions;
-        this.aps.length = this.map.mesh.numBoundaryRegions;
         for (let index = 0; index < this.map.mesh.numBoundaryRegions; index++) {
             this.regions[index] = index;
-            this.aps[index] = createap();
             positions.push(...this.generatePointByRegion(index));
         }
         this.positions.splice(0, this.positions.length, ...positions);
@@ -95,17 +91,45 @@ export default class Island {
     updatePlans() {
         const map = this.map;
         for (let index = 0; index < map.mesh.numBoundaryRegions; index++) {
-            this.aps[index] = createap();
             const region: number = this.regions[index];
-            const costMap = new Map<string, number>();
-            costMap.set("move_to_beach", this.toBeachPoints(region).length);
-            const plancost = this.executeReachBeachPlan(this.aps[index], costMap);
-            if (plancost !== 0) {
-                const higherRegion = this.findHigherRegion(region);
-                if (higherRegion) {
-                    this.regions[index] = higherRegion;
+            this.execute(
+                [
+                    {
+                        name: "move_to_beach",
+                        preconditions: {
+                            "region_biome_ocean": true,
+                            "region_biome_beach": false,
+                        },
+                        cost: this.toBeachPoints(region).length,
+                        effects: {
+                            "region_biome_ocean": false,
+                            "region_biome_beach": true,
+                        }
+                    }
+                ],
+                {
+                    region_biome_ocean: true,
+                    region_biome_beach: false,
+                },
+                {
+                    region_biome_ocean: false,
+                    region_biome_beach: true,
+                },
+                {
+                    pathNotFoundCallback: () => {
+                        console.log("Plan Not Found!")
+                    },
+                    completeCallback: () => {
+                        console.log("Plan Complete!")
+                    },
+                    runningCallback: () => {
+                        const higherRegion = this.findHigherRegion(region);
+                        if (higherRegion) {
+                            this.regions[index] = higherRegion;
+                        }
+                    }
                 }
-            }
+            );
         }
     }
     updateVertices(vertices: number[]) {
@@ -137,26 +161,55 @@ export default class Island {
     private adjustHeight(height: number) {
         return height / 8;
     }
-    private executeReachBeachPlan(ap: actionplanner_t, costMap: Map<string, number>) {
-        goap_set_pre(ap, "move_to_beach", "region_biome_ocean", true);
-        goap_set_pst(ap, "move_to_beach", "ship_reach_beach", true);
-        goap_set_pst(ap, "move_to_beach", "region_biome_ocean", false);
-        costMap.forEach(function (value, key) {
-            goap_set_cost(ap, key, value);
-        });
+    private execute(actions: GOAPAction[], currentState: GOAPState, goalState: GOAPState, {
+        pathNotFoundCallback,
+        completeCallback,
+        runningCallback,
+    }: {
+        pathNotFoundCallback: VoidFunction
+        completeCallback: VoidFunction
+        runningCallback: VoidFunction
+    }) {
+        const ap = createap();
+        for (const action of actions) {
+            for (const key in action.preconditions) {
+                if (Object.prototype.hasOwnProperty.call(action.preconditions, key)) {
+                    const element = action.preconditions[key];
+                    goap_set_pre(ap, action.name, key, element);
+
+                }
+            }
+            for (const key in action.effects) {
+                if (Object.prototype.hasOwnProperty.call(action.effects, key)) {
+                    const element = action.effects[key];
+                    goap_set_pst(ap, action.name, key, element);
+                }
+            }
+            goap_set_cost(ap, action.name, action.cost);
+        }
         const desc: [string] = ["actions:\n"];
         goap_description(ap, desc);
         LOGI(desc[0]);
         const fr: worldstate_t = { values: 0, dontcare: 0 };
         goap_worldstate_clear(fr);
-        goap_worldstate_set(ap, fr, "region_biome_ocean", true);
+        for (const key in currentState) {
+            if (Object.prototype.hasOwnProperty.call(currentState, key)) {
+                const element = currentState[key];
+                goap_worldstate_set(ap, fr, key, element);
+
+            }
+        }
         const goal: worldstate_t = {
             values: 0,
             dontcare: 0
         };
         goap_worldstate_clear(goal);
-        goap_worldstate_set(ap, goal, "region_biome_ocean", false);
-        goap_worldstate_set(ap, goal, "ship_reach_beach", true);
+        for (const key in goalState) {
+            if (Object.prototype.hasOwnProperty.call(goalState, key)) {
+                const element = goalState[key];
+                goap_worldstate_set(ap, goal, key, element);
+            }
+        }
         const STATESIZE = 16;
         const states = Array<worldstate_t>(STATESIZE);
         for (let index = 0; index < STATESIZE; index++) {
@@ -175,7 +228,13 @@ export default class Island {
             goap_worldstate_description(ap, states[i], desc);
             LOGI(`${i}: [${plan[i]}] ${desc[0]}`);
         }
-        return plancost;
+        if (plancost === -1) {
+            pathNotFoundCallback();
+        } else if (plancost === 0) {
+            completeCallback();
+        } else {
+            runningCallback();
+        }
     }
     private findHigherRegion(region: number) {
         const map = this.map;
