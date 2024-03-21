@@ -4,10 +4,11 @@ layout(location = 1) in vec3 a_position;
 layout(location = 2) in vec3 a_positionTo;
 
 uniform float u_delta;
+uniform float u_time;
 
 out float v_scale;
 out vec3 v_position;
 void main() {
-    v_scale = a_scale;
-    v_position = mix(a_position, a_positionTo, u_delta);
+    v_scale = a_scale + (sin(u_time * 10.0f) * 0.5f);
+    v_position = mix(a_position, a_positionTo, u_delta * 10.0f);
 }

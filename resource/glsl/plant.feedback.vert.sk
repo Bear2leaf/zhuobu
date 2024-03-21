@@ -6,5 +6,5 @@ uniform float u_delta;
 
 out vec3 v_translation;
 void main() {
-    v_translation = mix(a_translation, a_translationTo, u_delta);
+    v_translation = mix(a_translation, a_translationTo, u_delta * 10.0f);
 }

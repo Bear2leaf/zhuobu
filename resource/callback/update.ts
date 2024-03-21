@@ -33,12 +33,12 @@ export const updateCalls: Record<string, Function> = {
     },
     updateTime() {
         const engine = module.engine!;
-        const delta = 0.0002 * engine.ticker.delta;
+        const delta = 0.001 * engine.ticker.delta;
         time += delta;
         {
             engine.programs.forEach(program => {
                 engine.renderer.updateUniform(program, "u_time", "1f", time);
-                engine.renderer.updateUniform(program, "u_delta", "1f", delta * 10);
+                engine.renderer.updateUniform(program, "u_delta", "1f", delta);
             })
         }
     },
