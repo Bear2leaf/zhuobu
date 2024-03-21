@@ -22,12 +22,12 @@ export default class Icon {
         object.vertices.push(...island.positions);
         for (let index = 0; index < object.vertices.length / 3; index++) {
             object.scales.push(object.scale)
-            const frames = object.textureSize / object.tileSize;
+            const frames = Math.floor(object.textureSize / object.tileSize);
             object.colors.push(
                 0
                 , Math.floor(object.colorRNG.nextFloat() * frames)
                 , 0
-                , frames - 1
+                , frames
             );
             
         }

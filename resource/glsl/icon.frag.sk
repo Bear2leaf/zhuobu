@@ -16,7 +16,7 @@ void main() {
     frame.y = float(v_color.y) * u_size / float(textureSize.x);
     frame.z = (float(v_color.x) * u_size + u_size) / float(textureSize.y);
     frame.w = (float(v_color.y) * u_size + u_size) / float(textureSize.y);
-    uint totalFrames = v_color.z + v_color.w + 1u;
+    uint totalFrames = v_color.w - v_color.z;
     uint currentFrame = uint(u_time * 10.0f) % totalFrames;
     texcoord.x = mix(frame.x, frame.z, gl_PointCoord.x) + float(currentFrame) * u_size / float(textureSize.x);
     texcoord.y = mix(frame.y, frame.w, gl_PointCoord.y);
