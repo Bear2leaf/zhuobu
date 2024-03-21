@@ -19,7 +19,7 @@ export default class Icon {
     }
     static create(island: Island) {
         const object = new Icon();
-        object.vertices.push(...island.generateBorderPoints());
+        object.vertices.push(...island.positions);
         for (let index = 0; index < object.vertices.length / 3; index++) {
             object.scales.push(object.scale)
             const frames = object.textureSize / object.tileSize;

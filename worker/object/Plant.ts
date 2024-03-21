@@ -63,7 +63,7 @@ export default class Plant {
     }
     static create(island: Island) {
         const object = new Plant();
-        object.translations.push(...island.generateBorderPoints());
+        object.translations.push(...island.positions);
         return object;
     }
     getAttributes(): {

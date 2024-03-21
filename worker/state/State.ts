@@ -105,6 +105,7 @@ export default class State {
                 break;
             case "EngineLoaded":
                 const island = new Island();
+                island.generateBorderPoints();
                 const factory = Terrain.create(island);
                 const gridFactory = TerrainGrid.create();
                 const skyFactory = Sky.create();
