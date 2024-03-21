@@ -14,11 +14,9 @@ export default class Island {
     private readonly distanceRNG = new SeedableRandom(42);
     private readonly simplex = { noise2D: createNoise2D(() => this.distanceRNG.nextFloat()) };
     private readonly rng = new SeedableRandom(25);
-    private readonly aps: actionplanner_t[];
     private readonly regions: number[];
     readonly map: IslandMap;
     constructor() {
-        this.aps = [];
         this.regions = [];
         this.map = new IslandMap(new TriangleMesh(new MeshBuilder({ boundarySpacing: this.spacing }).addPoisson(PoissonDiskSampling, this.spacing, () => this.rng.nextFloat()).create()), {
             amplitude: 0.5,
@@ -82,10 +80,8 @@ export default class Island {
     generateBorderPoints() {
         const translations: number[] = [];
         this.regions.length = this.map.mesh.numBoundaryRegions;
-        this.aps.length = this.map.mesh.numBoundaryRegions;
         for (let index = 0; index < this.map.mesh.numBoundaryRegions; index++) {
             this.regions[index] = index;
-            this.aps[index] = createap();
             translations.push(...this.generatePointByRegion(index));
         }
         return translations;
@@ -96,7 +92,7 @@ export default class Island {
             const region: number = this.regions[index];
             const costMap = new Map<string, number>();
             costMap.set("move_to_beach", this.toBeachPoints(map, region).length);
-            const plancost = this.executeReachBeachPlan(this.aps[index], costMap);
+            const plancost = this.executeReachBeachPlan(createap(), costMap);
             if (plancost !== 0) {
                 const higherRegion = this.findHigherRegion(map, region);
                 if (higherRegion) {
