@@ -3,10 +3,11 @@ import { m4 } from "../third/twgl/m4.js";
 
 export default class Drawobject {
     private readonly bufferMap: Map<string, WebGLBuffer | null>;
-    private vao: WebGLVertexArrayObject | null = null;
+    readonly vaos: WebGLVertexArrayObject[] = [];
     private readonly first = 0;
     readonly name: string;
     readonly model: Matrix = m4.identity();
+    vaoIndex = 0;
     private count = 0;
     instanceCount = 0;
     constructor(name: string) {
@@ -17,18 +18,18 @@ export default class Drawobject {
         return new Drawobject(name);
     }
     bind(context: WebGL2RenderingContext) {
-        context.bindVertexArray(this.vao);
+        context.bindVertexArray(this.vaos[this.vaoIndex]);
     }
     unbind(context: WebGL2RenderingContext) {
         context.bindVertexArray(null)
     }
     generateVAO(context: WebGL2RenderingContext) {
-        this.vao = context.createVertexArray()!
+        this.vaos.push(context.createVertexArray()!)
     }
     bindFeedbackBuffers(context: WebGL2RenderingContext, program: Program) {
         program.varyings?.forEach((key) => {
             const attribute = key.replace("v_", "a_");
-            const buffer = this.bufferMap.get(attribute);
+            const buffer = this.bufferMap.get(attribute + this.vaoIndex);
             if (!buffer) {
                 throw new Error("feedback source buffer not exist")
             }
@@ -40,6 +41,9 @@ export default class Drawobject {
             const attribute = key.replace("v_", "a_");
             context.bindBufferBase(context.TRANSFORM_FEEDBACK_BUFFER, program.cacheAttrLoc(context, attribute), null);
         })
+    }
+    bindFeedbackTarget(context: WebGL2RenderingContext) {
+        context.bindVertexArray(this.vaos[(this.vaoIndex + 1) % this.vaos.length])
     }
     draw(context: WebGL2RenderingContext) {
         if (this.name === "sky") {
@@ -79,28 +83,38 @@ export default class Drawobject {
         this.instanceCount && this.count && context.drawArraysInstanced(context.TRIANGLES, this.first, this.count, this.instanceCount);
     }
     createAttribute(context: WebGL2RenderingContext, program: Program, name: string, data: Float32Array | Int32Array | Uint8Array, type: number, size: number, divisor = 0) {
-        let buffer = this.bufferMap.get(name);
-        if (!buffer) {
-            buffer = context.createBuffer();
-            this.bufferMap.set(name, buffer);
-        }
-        context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        context.bufferData(context.ARRAY_BUFFER, data.byteLength, context.STATIC_DRAW);
-        context.bufferSubData(context.ARRAY_BUFFER, 0, data);
-        program.activeVertexAttribArray(context, name, size, type, divisor);
-        context.bindBuffer(context.ARRAY_BUFFER, null);
-        if (!divisor) {
-            this.count = data.length / size;
+        for (let index = 0; index < this.vaos.length; index++) {
+            const vao = this.vaos[index];
+            context.bindVertexArray(vao);
+            let buffer = this.bufferMap.get(name + index);
+            if (!buffer) {
+                buffer = context.createBuffer();
+                this.bufferMap.set(name + index, buffer);
+            }
+            context.bindBuffer(context.ARRAY_BUFFER, buffer);
+            context.bufferData(context.ARRAY_BUFFER, data.byteLength, context.STATIC_DRAW);
+            context.bufferSubData(context.ARRAY_BUFFER, 0, data);
+            program.activeVertexAttribArray(context, name, size, type, divisor);
+            context.bindBuffer(context.ARRAY_BUFFER, null);
+            if (!divisor) {
+                this.count = data.length / size;
+            }
+            context.bindVertexArray(null);
         }
     }
     updateAttribute(context: WebGL2RenderingContext, name: string, start: number, data: ArrayBufferLike) {
-        let buffer = this.bufferMap.get(name);
-        if (!buffer) {
-            throw new Error("buffer not exist");
+        for (let index = 0; index < this.vaos.length; index++) {
+            const vao = this.vaos[index];
+            context.bindVertexArray(vao);
+            let buffer = this.bufferMap.get(name + index);
+            if (!buffer) {
+                throw new Error("buffer not exist");
+            }
+            context.bindBuffer(context.ARRAY_BUFFER, buffer);
+            context.bufferSubData(context.ARRAY_BUFFER, start, data);
+            context.bindBuffer(context.ARRAY_BUFFER, null);
+            context.bindVertexArray(null);
         }
-        context.bindBuffer(context.ARRAY_BUFFER, buffer);
-        context.bufferSubData(context.ARRAY_BUFFER, start, data);
-        context.bindBuffer(context.ARRAY_BUFFER, null);
     }
     createIndices(context: WebGL2RenderingContext, name: string, data: Uint16Array) {
         let buffer = this.bufferMap.get(name);
@@ -112,10 +126,5 @@ export default class Drawobject {
         context.bufferData(context.ELEMENT_ARRAY_BUFFER, data, context.STATIC_DRAW);
         context.bindBuffer(context.ELEMENT_ARRAY_BUFFER, null);
         this.count = data.length;
-    }
-    destory(context: WebGL2RenderingContext) {
-        this.bufferMap.forEach(buffer => context.deleteBuffer(buffer));
-        context.deleteVertexArray(this.vao);
-        this.bufferMap.clear();
     }
 }

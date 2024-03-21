@@ -34,7 +34,6 @@ export default class Renderer {
     createAttributes(drawobject: Drawobject, program: Program, name: string, type: GLType, size: number, attribute: number[], divisor = 0) {
         const context = this.context
         program.active(context);
-        drawobject.bind(context);
         switch (type) {
             case "FLOAT":
                 drawobject.createAttribute(context, program, name, new Float32Array(attribute), context[type], size, divisor);
@@ -49,14 +48,11 @@ export default class Renderer {
             default:
                 throw new Error("Unsupport type: " + type);
         }
-        drawobject.unbind(context);
         program.deactive(context);
     }
     updateAttributes(drawobject: Drawobject, name: string, start: number, attribute: number[]) {
         const context = this.context
-        drawobject.bind(context);
         drawobject.updateAttribute(context, name, start, new Float32Array(attribute));
-        drawobject.unbind(context);
     }
     createIndices(drawobject: Drawobject, program: Program, name: string, attribute: number[]) {
         const context = this.context
@@ -101,13 +97,21 @@ export default class Renderer {
     drawFeedback(program: Program, drawobject: Drawobject, feedback: Drawobject) {
         const context = this.context;
         context.enable(context.RASTERIZER_DISCARD);
-        feedback.bind(context);
+        drawobject.bind(context);
+        drawobject.bindFeedbackBuffers(context, program);
+        drawobject.unbind(context);
+        drawobject.vaoIndex = (drawobject.vaoIndex + 1) % drawobject.vaos.length;
+        drawobject.bind(context);
+        context.beginTransformFeedback(context.POINTS);
+        drawobject.draw(context);
+        context.endTransformFeedback();
         feedback.bindFeedbackBuffers(context, program);
         drawobject.bind(context);
         context.beginTransformFeedback(context.POINTS);
         drawobject.draw(context);
         context.endTransformFeedback();
         drawobject.unbind(context);
+        drawobject.unbindFeedbackBuffers(context, program);
         feedback.unbind(context);
         context.disable(context.RASTERIZER_DISCARD);
     }
@@ -201,17 +205,8 @@ export default class Renderer {
     }
     createDrawobject(drawobject: Drawobject) {
         drawobject.generateVAO(this.context);
-    }
-    destoryProgram(iterator: Program) {
-        iterator.destory(this.context);
-    }
-    destoryObject(iterator: Drawobject) {
-        iterator.destory(this.context);
-    }
-    destoryTexture(iterator: Texture) {
-        iterator.destory(this.context);
-    }
-    destoryFramebuffer(iterator: Framebuffer) {
-        iterator.destory(this.context);
+        if (drawobject.name.endsWith(".feedback")) {
+            drawobject.generateVAO(this.context);
+        }
     }
 }

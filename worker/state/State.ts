@@ -51,7 +51,7 @@ export default class State {
         cameras: [
             {
                 name: "refract",
-                eye: [0, 0.5, 1],
+                eye: [0, 1, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 4,
@@ -59,7 +59,7 @@ export default class State {
                 zFar: 10,
             }, {
                 name: "reflect",
-                eye: [0, -0.5, 1],
+                eye: [0, -1, 1],
                 target: [0, 0, 0],
                 up: [0, 1, 0],
                 fieldOfViewYInRadians: Math.PI / 4,

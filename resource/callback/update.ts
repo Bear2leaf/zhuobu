@@ -38,6 +38,7 @@ export const updateCalls: Record<string, Function> = {
         {
             engine.programs.forEach(program => {
                 engine.renderer.updateUniform(program, "u_time", "1f", time);
+                engine.renderer.updateUniform(program, "u_delta", "1f", delta * 10);
             })
         }
     },

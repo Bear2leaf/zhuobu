@@ -2,9 +2,9 @@
 layout(location = 0) in vec3 a_translation;
 layout(location = 1) in vec3 a_translationTo;
 
-uniform float u_time;
+uniform float u_delta;
 
 out vec3 v_translation;
 void main() {
-    v_translation = mix(a_translation, a_translationTo, 1.0f);
+    v_translation = mix(a_translation, a_translationTo, u_delta);
 }

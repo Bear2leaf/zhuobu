@@ -53,7 +53,4 @@ export default class Framebuffer {
         context.drawBuffers([context.COLOR_ATTACHMENT0, context.COLOR_ATTACHMENT1, context.COLOR_ATTACHMENT2]);
         context.bindFramebuffer(context.FRAMEBUFFER, null);
     }
-    destory(context: WebGL2RenderingContext) {
-        context.deleteFramebuffer(this.framebuffer);
-    }
 }

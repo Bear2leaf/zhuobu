@@ -83,8 +83,5 @@ export default class Texture {
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
         context.bindTexture(context.TEXTURE_2D, null);
     }
-    destory(context: WebGL2RenderingContext) {
-        context.deleteTexture(this.texture);
-    }
 
 }

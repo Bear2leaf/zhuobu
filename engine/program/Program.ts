@@ -101,11 +101,6 @@ export default class Program {
         context.bindTransformFeedback(context.TRANSFORM_FEEDBACK, null);
         context.useProgram(null);
     }
-    destory(context: WebGL2RenderingContext) {
-        context.deleteProgram(this.program);
-        this.locMap.clear();
-        this.valueMap.clear();
-    }
     init(context: WebGL2RenderingContext) {
         this.program = context.createProgram()!;
         if (this.vertexShaderSource === undefined || this.fragmentShaderSource === undefined) {

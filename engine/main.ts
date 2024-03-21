@@ -95,22 +95,10 @@ export default class Engine {
         this.ticker.pause = true;
     }
     clean() {
-        const programs = this.programs.splice(0, this.programs.length)
-        const objects = this.objects.splice(0, this.objects.length)
-        const textures = this.textures.splice(0, this.textures.length)
-        const framebuffers = this.framebuffers.splice(0, this.framebuffers.length)
-        for (const iterator of programs) {
-            this.renderer.destoryProgram(iterator);
-        }
-        for (const iterator of objects) {
-            this.renderer.destoryObject(iterator);
-        }
-        for (const iterator of textures) {
-            this.renderer.destoryTexture(iterator);
-        }
-        for (const iterator of framebuffers) {
-            this.renderer.destoryFramebuffer(iterator);
-        }
+        this.programs.splice(0, this.programs.length)
+        this.objects.splice(0, this.objects.length)
+        this.textures.splice(0, this.textures.length)
+        this.framebuffers.splice(0, this.framebuffers.length)
         this.renderCalls.splice(0, this.renderCalls.length)
         this.updateCalls.splice(0, this.updateCalls.length)
     }
