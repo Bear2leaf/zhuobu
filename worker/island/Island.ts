@@ -4,10 +4,8 @@ import TriangleMesh from "../third/map/TriangleMesh.js";
 import PoissonDiskSampling from "../poisson/PoissonDiskSampling.js";
 import SeedableRandom from "../util/SeedableRandom.js";
 import { createNoise2D } from "../util/simplex-noise.js";
-import astar_plan from "../third/goap/astar.js";
-import { actionplanner_t, goap_set_pre, goap_set_pst, goap_set_cost, goap_description, worldstate_t, goap_worldstate_clear, goap_worldstate_set, goap_worldstate_description } from "../third/goap/goap.js";
-import { LOGI } from "../third/goap/log.js";
-import { createap } from "../third/goap/main.js";
+import { execute } from "../third/goap/index.js";
+import { createShipMoveToBeachPlan } from "../plan/index.js";
 
 export default class Island {
     private readonly spacing = 16;
@@ -92,44 +90,12 @@ export default class Island {
         const map = this.map;
         for (let index = 0; index < map.mesh.numBoundaryRegions; index++) {
             const region: number = this.regions[index];
-            this.execute(
-                [
-                    {
-                        name: "move_to_beach",
-                        preconditions: {
-                            "region_biome_ocean": true,
-                            "region_biome_beach": false,
-                        },
-                        cost: this.toBeachPoints(region).length,
-                        effects: {
-                            "region_biome_ocean": false,
-                            "region_biome_beach": true,
-                        }
-                    }
-                ],
-                {
-                    region_biome_ocean: true,
-                    region_biome_beach: false,
-                },
-                {
-                    region_biome_ocean: false,
-                    region_biome_beach: true,
-                },
-                {
-                    pathNotFoundCallback: () => {
-                        console.log("Plan Not Found!")
-                    },
-                    completeCallback: () => {
-                        console.log("Plan Complete!")
-                    },
-                    runningCallback: () => {
-                        const higherRegion = this.findHigherRegion(region);
-                        if (higherRegion) {
-                            this.regions[index] = higherRegion;
-                        }
-                    }
+            execute(createShipMoveToBeachPlan(this.toBeachPoints(region).length, () => {
+                const higherRegion = this.findHigherRegion(region);
+                if (higherRegion) {
+                    this.regions[index] = higherRegion;
                 }
-            );
+            }));
         }
     }
     updateVertices(vertices: number[]) {
@@ -160,81 +126,6 @@ export default class Island {
     }
     private adjustHeight(height: number) {
         return height / 8;
-    }
-    private execute(actions: GOAPAction[], currentState: GOAPState, goalState: GOAPState, {
-        pathNotFoundCallback,
-        completeCallback,
-        runningCallback,
-    }: {
-        pathNotFoundCallback: VoidFunction
-        completeCallback: VoidFunction
-        runningCallback: VoidFunction
-    }) {
-        const ap = createap();
-        for (const action of actions) {
-            for (const key in action.preconditions) {
-                if (Object.prototype.hasOwnProperty.call(action.preconditions, key)) {
-                    const element = action.preconditions[key];
-                    goap_set_pre(ap, action.name, key, element);
-
-                }
-            }
-            for (const key in action.effects) {
-                if (Object.prototype.hasOwnProperty.call(action.effects, key)) {
-                    const element = action.effects[key];
-                    goap_set_pst(ap, action.name, key, element);
-                }
-            }
-            goap_set_cost(ap, action.name, action.cost);
-        }
-        const desc: [string] = ["actions:\n"];
-        goap_description(ap, desc);
-        LOGI(desc[0]);
-        const fr: worldstate_t = { values: 0, dontcare: 0 };
-        goap_worldstate_clear(fr);
-        for (const key in currentState) {
-            if (Object.prototype.hasOwnProperty.call(currentState, key)) {
-                const element = currentState[key];
-                goap_worldstate_set(ap, fr, key, element);
-
-            }
-        }
-        const goal: worldstate_t = {
-            values: 0,
-            dontcare: 0
-        };
-        goap_worldstate_clear(goal);
-        for (const key in goalState) {
-            if (Object.prototype.hasOwnProperty.call(goalState, key)) {
-                const element = goalState[key];
-                goap_worldstate_set(ap, goal, key, element);
-            }
-        }
-        const STATESIZE = 16;
-        const states = Array<worldstate_t>(STATESIZE);
-        for (let index = 0; index < STATESIZE; index++) {
-            states[index] = { values: 0, dontcare: 0 };
-        }
-        const plan = Array<string>(STATESIZE).fill("");
-        const plansz: [number] = [STATESIZE];
-        const plancost = astar_plan(ap, fr, goal, plan, states, plansz);
-        LOGI(`plancost = ${plancost}`);
-        desc[0] = "init states:\n";
-        goap_worldstate_description(ap, fr, desc);
-        LOGI(`${desc[0]}`);
-        LOGI("plan actions:");
-        for (let i = 0; i < plansz[0] && i < STATESIZE; ++i) {
-            desc[0] = "";
-            goap_worldstate_description(ap, states[i], desc);
-            LOGI(`${i}: [${plan[i]}] ${desc[0]}`);
-        }
-        if (plancost === -1) {
-            pathNotFoundCallback();
-        } else if (plancost === 0) {
-            completeCallback();
-        } else {
-            runningCallback();
-        }
     }
     private findHigherRegion(region: number) {
         const map = this.map;

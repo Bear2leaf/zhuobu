@@ -19,6 +19,17 @@ declare type GOAPAction = {
     name: string;
 }
 
+declare type GOAPPlan = {
+    actions: GOAPAction[],
+    currentState: GOAPState,
+    goalState: GOAPState,
+    callbacks: {
+        pathNotFoundCallback: VoidFunction
+        completeCallback: VoidFunction
+        runningCallback: VoidFunction
+    }
+}
+
 declare type GOAPState = Record<string, boolean>;
 
 declare type StateData = {
