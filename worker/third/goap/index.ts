@@ -2,7 +2,23 @@ import astar_plan from "./astar.js";
 import { worldstate_t, actionplanner_t, MAXATOMS, MAXACTIONS, goap_actionplanner_clear, goap_description, goap_set_cost, goap_set_pre, goap_set_pst, goap_worldstate_description, goap_worldstate_clear, goap_worldstate_set } from "./goap.js";
 import { LOGI } from "./log.js";
 
-
+export type GOAPAction = {
+    preconditions: GOAPState;
+    effects: GOAPState;
+    cost: number;
+    onExecute: () => void;
+    onComplete?: () => void;
+}
+export type GOAPPlan = {
+    name: string,
+    actions: Record<string, GOAPAction>,
+    currentState: GOAPState,
+    goalState: GOAPState,
+    onPlanExecute?: () => void;
+    onPlanComplete?: () => void;
+    onPlanNotFound?: () => void;
+}
+export type GOAPState = Record<string, boolean>;
 
 const atm_names = new Array<string>(MAXATOMS);
 const act_names = new Array<string>(MAXACTIONS);
@@ -24,32 +40,31 @@ const ap: actionplanner_t = {
 };
 
 
-export function execute({
-    actions,
-    currentState,
-    goalState,
-    callbacks: {
-        pathNotFoundCallback,
-        completeCallback,
-        runningCallback
-    }
-}: GOAPPlan) {
+export function execute(goapPlan: GOAPPlan) {
+    const {
+        actions,
+        currentState,
+        goalState
+    } = goapPlan;
     goap_actionplanner_clear(ap);
-    for (const action of actions) {
-        for (const key in action.preconditions) {
-            if (Object.prototype.hasOwnProperty.call(action.preconditions, key)) {
-                const element = action.preconditions[key];
-                goap_set_pre(ap, action.name, key, element);
+    for (const actionname in actions) {
+        if (Object.prototype.hasOwnProperty.call(actions, actionname)) {
+            const action = actions[actionname];
+            for (const key in action.preconditions) {
+                if (Object.prototype.hasOwnProperty.call(action.preconditions, key)) {
+                    const element = action.preconditions[key];
+                    goap_set_pre(ap, actionname, key, element);
+                }
+            }
+            for (const key in action.effects) {
+                if (Object.prototype.hasOwnProperty.call(action.effects, key)) {
+                    const element = action.effects[key];
+                    goap_set_pst(ap, actionname, key, element);
+                }
+            }
+            goap_set_cost(ap, actionname, action.cost);
 
-            }
         }
-        for (const key in action.effects) {
-            if (Object.prototype.hasOwnProperty.call(action.effects, key)) {
-                const element = action.effects[key];
-                goap_set_pst(ap, action.name, key, element);
-            }
-        }
-        goap_set_cost(ap, action.name, action.cost);
     }
     const desc: [string] = ["actions:\n"];
     goap_description(ap, desc);
@@ -92,12 +107,25 @@ export function execute({
         goap_worldstate_description(ap, states[i], desc);
         LOGI(`${i}: [${plan[i]}] ${desc[0]}`);
     }
-    if (plancost === -1) {
-        pathNotFoundCallback();
-    } else if (plancost === 0) {
-        completeCallback();
-    } else {
-        runningCallback();
+    const element = plan[0];
+    if (element) {
+        if (actions[element].cost === 0) {
+            Object.assign(currentState, actions[element].effects);
+            const callback = actions[element].onComplete;
+            callback && callback();
+        } else if (actions[element].cost > 0) {
+            const action = actions[element];
+            action.onExecute();
+        } else {
+            throw new Error(`action: ${element} error cost: ${actions[element].cost}`);
+        }
     }
+        if (plancost === -1) {
+            goapPlan.onPlanNotFound && goapPlan.onPlanNotFound();
+        } else if (plancost === 0) {
+            goapPlan.onPlanComplete && goapPlan.onPlanComplete();
+        } else {
+            goapPlan.onPlanExecute && goapPlan.onPlanExecute();
+        }
 }
 

@@ -92,7 +92,7 @@ export default class Plant {
             { object: "plant.feedback", name: "a_translationTo", type: "FLOAT", value: this.translations, size: 3 },
         ]
     }
-    getRandomAttributes(island: Island): {
+    getUpdatedAttributes(island: Island): {
         object: string
         name: string;
         start: number;

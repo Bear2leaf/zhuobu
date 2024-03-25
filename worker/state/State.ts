@@ -168,8 +168,8 @@ export default class State {
                         broadcast: true,
                         args: [{
                             changeAttributes: {
-                                "icon.feedback": iconFactory.getRandomAttributes(island),
-                                "plant.feedback": plantFactory.getRandomAttributes(island),
+                                "icon.feedback": iconFactory.getUpdatedAttributes(island),
+                                "plant.feedback": plantFactory.getUpdatedAttributes(island),
                             }
                         }]
                     })

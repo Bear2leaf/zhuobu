@@ -16,19 +16,19 @@ declare type GOAPAction = {
     preconditions: GOAPState;
     effects: GOAPState;
     cost: number;
-    name: string;
+    onExecute: () => void;
+    onComplete?: () => void;
 }
-
 declare type GOAPPlan = {
-    actions: GOAPAction[],
+    name: string,
+    actions: Record<string, GOAPAction>,
     currentState: GOAPState,
     goalState: GOAPState,
-    callbacks: {
-        pathNotFoundCallback: VoidFunction
-        completeCallback: VoidFunction
-        runningCallback: VoidFunction
-    }
+    onPlanExecute?: () => void;
+    onPlanComplete?: () => void;
+    onPlanNotFound?: () => void;
 }
+
 
 declare type GOAPState = Record<string, boolean>;
 

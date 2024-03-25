@@ -60,7 +60,7 @@ export default class Icon {
             { object: "icon.feedback", name: "a_positionTo", type: "FLOAT", value: this.vertices, size: 3 },
         ]
     }
-    getRandomAttributes(island: Island): {
+    getUpdatedAttributes(island: Island): {
         object: string
         name: string;
         start: number;
