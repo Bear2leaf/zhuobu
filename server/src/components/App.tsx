@@ -5,16 +5,16 @@ import { Container } from './Container';
 
 
 function App() {
+  const [show, setShow] = React.useState(false);
   return (
-    <React.StrictMode>
-      <ReactBootstrap.Container>
-        <Header></Header>
-        <ReactBootstrap.Row>
-          <Container></Container>
-        </ReactBootstrap.Row>
-      </ReactBootstrap.Container>
-
-    </React.StrictMode>
+    <ReactBootstrap.Container>
+      <ReactBootstrap.Row>
+        <Header onToggleOffcanvas={() => setShow(true)}></Header>
+      </ReactBootstrap.Row>
+      <ReactBootstrap.Row>
+        <Container show={show} onHide={() => setShow(false)}></Container>
+      </ReactBootstrap.Row>
+    </ReactBootstrap.Container>
   )
 }
 

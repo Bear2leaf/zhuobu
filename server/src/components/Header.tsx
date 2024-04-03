@@ -2,16 +2,22 @@ import * as React from 'react';
 import * as ReactBootstrap from 'react-bootstrap';
 import { Title } from './Title';
 
-export function Header() {
+export function Header({ onToggleOffcanvas }: { onToggleOffcanvas: () => void }) {
   return (
-    <ReactBootstrap.Row>
+    <>
       <ReactBootstrap.Col>
         <Title></Title>
       </ReactBootstrap.Col>
       <ReactBootstrap.Col>
         <ReactBootstrap.Button>Hah2</ReactBootstrap.Button>
       </ReactBootstrap.Col>
-    </ReactBootstrap.Row>);
+      <ReactBootstrap.Col>
+        <ReactBootstrap.Button variant="primary" onClick={onToggleOffcanvas}>
+          Launch
+        </ReactBootstrap.Button>
+      </ReactBootstrap.Col>
+    </>
+  );
 }
 
 
