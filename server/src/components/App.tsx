@@ -1,19 +1,19 @@
 import * as React from 'react'
-import { BrowserDevice, Engine, Worker } from 'src/lib.js';
+import * as ReactBootstrap from 'react-bootstrap';
+import { Header } from './Header';
+import { Container } from './Container';
 
-function Title() {
-  const [msg, setMsg] = React.useState("Hello6")
-  return (
-    <><h1>{msg}</h1></>)
-}
+
 function App() {
-  const device = new BrowserDevice();
-  device.setWorker(new Worker())
-  const engine = new Engine(device);
-  engine.start();
   return (
     <React.StrictMode>
-      <Title></Title>
+      <ReactBootstrap.Container>
+        <Header></Header>
+        <ReactBootstrap.Row>
+          <Container></Container>
+        </ReactBootstrap.Row>
+      </ReactBootstrap.Container>
+
     </React.StrictMode>
   )
 }

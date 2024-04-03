@@ -3,19 +3,15 @@ import Device from "./Device.js";
 export default class BrowserDevice implements Device {
     private worker?: Worker;
     private isMouseDown: boolean;
-    private readonly canvasGL: HTMLCanvasElement;
-    private readonly canvas2D: HTMLCanvasElement;
+    readonly canvasGL: HTMLCanvasElement;
+    readonly canvas2D: HTMLCanvasElement;
     readonly contextGL: WebGL2RenderingContext;
     readonly context2D: CanvasRenderingContext2D;
-    constructor() {
-        const canvasGL = document.createElement("canvas");
+    constructor(canvasGL: HTMLCanvasElement, canvas2D: HTMLCanvasElement) {
         canvasGL.width = 512 * devicePixelRatio;
         canvasGL.height = 512 * devicePixelRatio;
         canvasGL.style.width = "100%";
-        document.body.append(canvasGL);
-        const canvas2D = document.createElement("canvas");
         canvas2D.style.display = "none";
-        document.body.append(canvas2D);
         this.contextGL = canvasGL.getContext("webgl2")!;
         this.context2D = canvas2D.getContext("2d")!;
         this.canvasGL = canvasGL;
