@@ -9,6 +9,7 @@ import Water from "../object/Water.js";
 export default class State {
     private readonly terrainTextureSize = 2048;
     private readonly waterTextureSize = 256;
+    private interval = 0;
     private readonly state: StateData = {
         objects: [
             "terrainFBO",
@@ -161,7 +162,8 @@ export default class State {
                         animation: true
                     }]
                 })
-                setInterval(() => {
+                clearInterval(this.interval);
+                this.interval = setInterval(() => {
                     island.updatePlans();
                     this.send({
                         type: "SendState",

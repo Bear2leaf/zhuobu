@@ -11,7 +11,7 @@ let device: WorkerDevice;
 let state: State;
 if (typeof worker === 'undefined') {
     device = new BrowserWorker();
-    state = new SocketState(device);
+    state = new StandaloneState(device);
 } else {
     device = new MinigameWorker();
     state = new StandaloneState(device);

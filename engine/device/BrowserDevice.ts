@@ -1,6 +1,7 @@
 import Device from "./Device.js";
 
 export default class BrowserDevice implements Device {
+    private worker?: Worker;
     private isMouseDown: boolean;
     private readonly canvasGL: HTMLCanvasElement;
     private readonly canvas2D: HTMLCanvasElement;
@@ -48,9 +49,19 @@ export default class BrowserDevice implements Device {
     createWebAudioContext(): AudioContext {
         return new AudioContext();
     }
+    setWorker(worker: Worker) {
+        this.worker = worker;
+    }
     createWorker(path: string, onMessageCallback: (data: WorkerResponse, callback: (data: WorkerRequest) => void) => void): void {
-        const worker = new Worker(path, { type: "module" });
-        worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data, worker.postMessage.bind(worker))
+        if (this.worker) {
+            const worker = this.worker;
+            this.worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data, worker.postMessage.bind(worker))
+            return;
+        } else {
+            const worker = new Worker(path, { type: "module" });
+            worker.onmessage = (e: MessageEvent) => onMessageCallback(e.data, worker.postMessage.bind(worker))
+            this.worker = worker;
+        }
     }
     onTouchStart(listener: TouchInfoFunction): void {
         const windowInfo = this.getWindowInfo();
