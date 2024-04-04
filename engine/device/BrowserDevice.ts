@@ -10,8 +10,6 @@ export default class BrowserDevice implements Device {
     constructor(canvasGL: HTMLCanvasElement, canvas2D: HTMLCanvasElement) {
         canvasGL.width = 512 * devicePixelRatio;
         canvasGL.height = 512 * devicePixelRatio;
-        canvasGL.style.width = "100%";
-        canvas2D.style.display = "none";
         this.contextGL = canvasGL.getContext("webgl2")!;
         this.context2D = canvas2D.getContext("2d")!;
         this.canvasGL = canvasGL;

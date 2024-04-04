@@ -1,18 +1,21 @@
 import * as React from 'react'
 import * as ReactBootstrap from 'react-bootstrap';
 import { Header } from './Header';
-import { Container } from './Container';
+import { Body } from './Body';
+import { Footer } from './Footer.js';
 
 
 function App() {
-  const [show, setShow] = React.useState(false);
   return (
-    <ReactBootstrap.Container>
+    <ReactBootstrap.Container fluid>
       <ReactBootstrap.Row>
         <Header ></Header>
       </ReactBootstrap.Row>
       <ReactBootstrap.Row>
-        <Container></Container>
+        <Body></Body>
+      </ReactBootstrap.Row>
+      <ReactBootstrap.Row>
+        <Footer></Footer>
       </ReactBootstrap.Row>
     </ReactBootstrap.Container>
   )
