@@ -35,7 +35,6 @@ export const workerCalls = {
     updateRenderCalls(callbacks: [string, string, string, string | null, boolean, number | null][]): void {
 
         const engine = module.engine!;
-        const m4 = module.m4!;
         engine.renderCalls.splice(0, engine.renderCalls.length, ...callbacks);
     },
     updateUniforms(programName: string, uniformName: string, type: GLUniformType, values: number[]): void {

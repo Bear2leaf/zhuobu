@@ -7,7 +7,7 @@ import { Footer } from './Footer.js';
 
 function App() {
   return (
-    <ReactBootstrap.Container fluid>
+    <ReactBootstrap.Container>
       <ReactBootstrap.Row>
         <Header ></Header>
       </ReactBootstrap.Row>

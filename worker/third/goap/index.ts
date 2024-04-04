@@ -10,6 +10,7 @@ export type GOAPAction = {
     onComplete?: () => void;
 }
 export type GOAPPlan = {
+    id?: number,
     name: string,
     actions: Record<string, GOAPAction>,
     currentState: GOAPState,

@@ -10,7 +10,9 @@ export const engineContainer: {
 }
 
 export function createGame(canvasGL: HTMLCanvasElement, canvas2D: HTMLCanvasElement) {
-
+    if (engineContainer.engine) {
+        return;
+    }
     const device = new BrowserDevice(canvasGL, canvas2D);
     device.setWorker(new Worker());
     const engine = new Engine(device);

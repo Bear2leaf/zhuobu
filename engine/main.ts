@@ -31,7 +31,6 @@ export default class Engine {
         this.windowInfo = device.getWindowInfo();
         this.worker.init(device);
         this.worker.createObjects = (programs: string[], varyings: string[][], objects: string[], textures: [string, number, string, number | null, boolean?][], framebuffers: string[], cameras: Camera[], textureFBOBindings: string[][]) => {
-            this.clean();
             programs.forEach(name => {
                 const varing = varyings.find(varing => varing[0] === name);
                 if (varing) {
@@ -93,14 +92,6 @@ export default class Engine {
     }
     stop() {
         this.ticker.pause = true;
-    }
-    clean() {
-        this.programs.splice(0, this.programs.length)
-        this.objects.splice(0, this.objects.length)
-        this.textures.splice(0, this.textures.length)
-        this.framebuffers.splice(0, this.framebuffers.length)
-        this.renderCalls.splice(0, this.renderCalls.length)
-        this.updateCalls.splice(0, this.updateCalls.length)
     }
     async load(device: Device) {
         await device.loadSubpackage();
