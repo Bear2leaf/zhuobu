@@ -9,10 +9,10 @@ function App() {
   return (
     <ReactBootstrap.Container>
       <ReactBootstrap.Row>
-        <Header onToggleOffcanvas={() => setShow(true)}></Header>
+        <Header ></Header>
       </ReactBootstrap.Row>
       <ReactBootstrap.Row>
-        <Container show={show} onHide={() => setShow(false)}></Container>
+        <Container></Container>
       </ReactBootstrap.Row>
     </ReactBootstrap.Container>
   )

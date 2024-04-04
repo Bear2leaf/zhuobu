@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { BrowserDevice, Engine, Worker } from '../lib.js';
-import Offcanvas from './Offcanvas.js';
 
-export function Container({ show, onHide }: { show: boolean, onHide: VoidFunction }) {
+export function Container() {
   const canvasGLRef = React.useRef<HTMLCanvasElement>(null);
   const canvas2DRef = React.useRef<HTMLCanvasElement>(null);
   const [engineLoaded, setEngineLoaded] = React.useState(false);
@@ -24,8 +23,6 @@ export function Container({ show, onHide }: { show: boolean, onHide: VoidFunctio
     <>
       <canvas ref={canvasGLRef}></canvas>
       <canvas ref={canvas2DRef}></canvas>
-      <Offcanvas show={show} onHide={onHide}>
-      </Offcanvas>
     </>
   );
 }
