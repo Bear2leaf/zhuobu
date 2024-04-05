@@ -15,7 +15,7 @@ function App() {
         <Body></Body>
       </ReactBootstrap.Row>
       <ReactBootstrap.Row>
-        <Footer></Footer>
+        {/* <Footer></Footer> */}
       </ReactBootstrap.Row>
     </ReactBootstrap.Container>
   )

@@ -1,45 +1,49 @@
 import * as React from "react";
 import * as ReactBootstrap from 'react-bootstrap';
-import PlanDataBase from "../db/PlanDataBase.js";
 import { GOAPPlan } from "../../../worker/third/goap/index.js";
 
-export function Browser({onSelectItem}: {onSelectItem: (plan: GOAPPlan) => void}) {
-    const db = new PlanDataBase();
+export function Browser({ onSelectItem }: { onSelectItem: (plan: GOAPPlan) => void }) {
+    const [page, setPage] = React.useState(0);
+    const [totalPlans, setTotalPlans] = React.useState(0);
     const [plans, setPlans] = React.useState<GOAPPlan[]>([]);
+    const [activePlan, setActivePlan] = React.useState<number | null>(null);
+    let items = [
+        <ReactBootstrap.Pagination.Item key={0} active>
+            {page}
+        </ReactBootstrap.Pagination.Item>,];
+
     React.useEffect(() => {
-        db.transaction('rw', db.plans, async () => {
+        fetch("/resource/json/plans.json").then(response => response.json().then((plans) => {
+            setTotalPlans(plans.length);
+            setPlans(plans.filter(((plan: GOAPPlan, index: number) => index > page * 10 && index <= (page + 1) * 10)))
+        }));
 
-            // Make sure we have something in DB:
-            if ((await db.plans.count()) === 0) {
-                const plans = await (await fetch("/resource/json/plans.json")).json();
-                for (const plan of plans) {
-
-                    const id = await db.plans.add(plan);
-                    console.log(`Addded plan with id ${id}`);
-                }
-
-            }
-
-
-            // Query:
-            const someplans = await db.plans.where("name").equals("Animal GOAP plan").toArray();
-            setPlans(someplans);
-
-            // // Show result:
-            // console.log("My young friends: " + JSON.stringify(youngFriends));
-
-        }).catch(e => {
-            console.log(e.stack || e);
-        });
     }, [plans]);
     const planItems = plans.map((plan, index) => (
-        <ReactBootstrap.Col key={index}>
-            <ReactBootstrap.Button onClick={() => onSelectItem(plan)}>{index}</ReactBootstrap.Button>
-        </ReactBootstrap.Col>
+        <ReactBootstrap.ListGroup.Item active={activePlan === index} key={index} onClick={() => {
+            setActivePlan(index);
+            onSelectItem(plan);
+        }}>{plan.name}
+        </ReactBootstrap.ListGroup.Item>
     ))
     return (
         <>
-            {planItems}
+
+            <ReactBootstrap.Row>
+                <ReactBootstrap.ListGroup>
+                    {planItems}
+                </ReactBootstrap.ListGroup>
+            </ReactBootstrap.Row>
+            <ReactBootstrap.Row>
+                <ReactBootstrap.Pagination>
+                    <ReactBootstrap.Pagination.First onClick={() => setPage(0)} />
+                    <ReactBootstrap.Pagination.Prev onClick={() => setPage(Math.max(0, page - 1))} />
+                    {items}
+                    <ReactBootstrap.Pagination.Next onClick={() => setPage(Math.min(Math.floor(totalPlans / 10), page + 1))} />
+                    <ReactBootstrap.Pagination.Last onClick={() => setPage(Math.floor(totalPlans / 10))} />
+                </ReactBootstrap.Pagination>
+            </ReactBootstrap.Row>
+
         </>
     )
 }
